@@ -720,27 +720,26 @@ namespace View3D.view
 
         public void UploadMeshToGPU()
         {
-            vertices.Clear();
-
-            ModelData modelData = null;
-            if (MainWindow.main.objectPlacement.modelDatas.Count > 0)
-                modelData = MainWindow.main.objectPlacement.modelDatas[0];
-
-            if (modelData == null || modelData.originalModel == null)
+            if (MainWindow.main.objectPlacement.modelDatas.Count == 0)
                 return;
 
-            foreach (var t in modelData.originalModel.triangles.triangles)
-            {
-                // [x y z nx ny nz]
-                for (int i = 0; i < 3; i++)
-                {
-                    vertices.Add((float)t.vertices[i].pos.x);
-                    vertices.Add((float)t.vertices[i].pos.y);
-                    vertices.Add((float)t.vertices[i].pos.z);
+            vertices.Clear();
 
-                    vertices.Add((float)t.normal.x);
-                    vertices.Add((float)t.normal.y);
-                    vertices.Add((float)t.normal.z);
+            foreach (var m in MainWindow.main.objectPlacement.modelDatas)
+            {
+                foreach (var t in m.originalModel.triangles.triangles)
+                {
+                    // [x y z nx ny nz]
+                    for (int i = 0; i < 3; i++)
+                    {
+                        vertices.Add((float)t.vertices[i].pos.x);
+                        vertices.Add((float)t.vertices[i].pos.y);
+                        vertices.Add((float)t.vertices[i].pos.z);
+
+                        vertices.Add((float)t.normal.x);
+                        vertices.Add((float)t.normal.y);
+                        vertices.Add((float)t.normal.z);
+                    }
                 }
             }
 
@@ -748,7 +747,6 @@ namespace View3D.view
             stlVbo = GL.GenBuffer();
 
             GL.BindVertexArray(stlVao);
-
             GL.BindBuffer(BufferTarget.ArrayBuffer, stlVbo);
 
             GL.BufferData(
@@ -782,10 +780,9 @@ namespace View3D.view
 
             GL.UniformMatrix4(stlModelLoc, false, ref model);
             GL.UniformMatrix4(stlViewLoc, false, ref view);
-            GL.UniformMatrix4(stlProjLoc, false, ref proj); 
-
+            GL.UniformMatrix4(stlProjLoc, false, ref proj);
+           
             GL.BindVertexArray(stlVao);
-
             GL.DrawArrays(PrimitiveType.Triangles, 0, vertices.Count / 6);
         }
  
