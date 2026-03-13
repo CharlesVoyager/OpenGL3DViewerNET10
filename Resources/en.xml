@@ -1,0 +1,629 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+<translation revision="0.9" language="English" languageInEnglish="English" author="XYZ">
+<t id="B_IMPORT">Import</t>
+<t id="B_EXPORT">Export</t>
+<t id="B_SAVE">Save</t>
+<t id="B_SAVING">Saving…</t>
+<t id="B_PRINT">Print</t>
+<t id="B_SETTING">Setting</t>
+<t id="B_VIEW">View</t>
+<t id="B_TOP">Top</t>
+<t id="B_LEFT">Left</t>
+<t id="B_RIGHT">Right</t>
+<t id="B_FRONT">Front</t>
+<t id="B_BACK">Back</t>
+<t id="B_BOTTOM">Bottom</t>
+<t id="B_RESET">Reset</t>
+<t id="B_MOVE">Move</t>
+<t id="B_ROTATE">Rotate</t>
+<t id="L_MIN">Min</t>
+<t id="L_MAX">Max</t>
+<t id="B_SCALE">Scale</t>
+<t id="B_INFO">Info</t>
+<t id="B_REMOVE">Remove</t>
+<t id="M_REMOVE_ALL">Remove all</t>
+<t id="L_SLICING">Object Slicing…</t>
+<t id="L_TRANSMITTING">Object Transmitting…</t>
+<t id="L_DONE">Done</t>
+<t id="W_PRINT">Print</t>
+<t id="L_PRINTER">Printer</t>
+<t id="L_QUALITY">Quality</t>
+<t id="QUALITY_FINE">Good</t>
+<t id="QUALITY_STANDARD">Normal</t>
+<t id="QUALITY_SUPERFINE">Superfine</t>
+<t id="L_X_Axis_Scaling">X Axis Scaling</t>
+<t id="L_Y_Axis_Scaling">Y Axis Scaling</t>
+<t id="L_SUPPORTS">Support</t>
+<t id="L_PROFILES">Profiles</t>
+<t id="PROFILES_NEW">New</t>
+<t id="PROFILES_CREATE">Create</t>
+<t id="PROFILES_DELETE">Delete</t>
+<t id="PROFILES_UPDATE">Update</t>
+<t id="KEYIN_PROFILE_NAME">Please input a file name.</t>
+<t id="L_NOT_SHOW_OPEN_MODE_INSTRUCTIONS">Don't show the instructions again</t>
+<t id="L_MSG_UNABLE_TO_IMPORT_TITLE">Unable to import the profile</t>
+<t id="FILL_DENSITY_SMALL">Low</t>
+<t id="FILL_DENSITY_MEDIUM">Medium</t>
+<t id="FILL_DENSITY_LARGE">High</t>
+<t id="L_LAYER_HEIGHT">Layer Height</t>
+<t id="B_MORE">Advanced</t>
+<t id="B_LESS">Basic</t>
+<t id="L_ADVANCED_SETTING">Advanced</t>
+<t id="B_CANCEL">Cancel</t>
+<t id="W_EXPORT">Export </t>
+<t id="L_FOR_PRINTER">To Print</t>
+<t id="W_OBJECT_INFOMATION">Object Information</t>
+<t id="L_FILENAME">Filename</t>
+<t id="L_VOLUME">Volume</t>
+<t id="L_COLLISION">Object Collision</t>
+<t id="L_DIMENSION">Dimension</t>
+<t id="L_POSITION">Position</t>
+<t id="L_SIZE">Size</t>
+<t id="B_CLOSE">Close</t>
+<t id="B_ABOUT">About</t>
+<t id="W_ABOUT">About</t>
+<t id="G_VERSION">Version</t>
+<t id="L_SOFTWARE">Software</t>
+<t id="L_FIRMWARE">Firmware</t>
+<t id="L_COPYRIGHTS">Copyrights</t>
+<t id="B_ONLINE_GUIDE">Online Help</t>
+<t id="W_SETTING">Settings</t>
+<t id="G_LANGUAGE">Language</t>
+<t id="L_VERSION">Version</t>
+<t id="W_FW_UPGRADE">Firmware Upgrade</t>
+<t id="B_FW_UPGRADE">Firmware Upgrade</t>
+<t id="L_FW_UPGRADING">FW Upgrading</t>
+<t id="L_FW_PLEASE_WAIT">Waiting…</t>
+<t id="L_FW_UPGRAD_FAILED">FW Upgrade Failed!</t>
+<t id="L_FW_UPGRAD_SUCCESS">Your printer is now updated!
+&#x000A;
+Press OK and start using it.</t>
+<t id="W_PRINTING_STATUS">Printing Status</t>
+<t id="L_PRINTING">Printing…</t>
+<t id="B_HIDE">Hide</t>
+<t id="B_YES">Yes</t>
+<t id="B_NO">No</t>
+<t id="W_IMPORT_FILE">Import File</t>
+<t id="L_FILE_NOT_FOUND">File not found.</t>
+<t id="W_SAVE_FILE_STL">Save As (*stl)</t>
+<t id="W_SAVE_FILE_3WN">Save As (*3wn)</t>
+<t id="M_NO_OBJECT_LOADED">Object not found</t>
+<t id="M_MACHINE_ERROR">Printer Error</t>
+<t id="M_MACHINEMODEL_ERROR">Printer mismatch - Please change your printer settings and make sure you have selected the correct printer model.
+
+For troubleshooting, please refer to our user guide.</t>
+<t id="M_MACHINE_BUSY">Printer is busy. Please try again later.</t>
+<t id="M_NONE_DEVICE">Device not found</t>
+<t id="L_GCODE_NOT_FOUND_INFO_1">Generate *3wn files fail!</t>
+<t id="L_GCODE_NOT_FOUND_INFO_2">Reasons:</t>
+<t id="L_GCODE_NOT_FOUND_INFO_3">a. Object slicer error or slicing uncomplete.</t>
+<t id="L_GCODE_NOT_FOUND_INFO_4">b. Unknown object slicer file type.</t>
+<t id="W_PRINTER_BED_FULL">Message</t>
+<t id="M_PRINTER_BED_FULL_TEXT">Printing area full. New loading objects will not be printed.</t>
+<t id="W_CONFIRM_SAVE">Confirm</t>
+<t id="M_CONFIRM_SAVE">Save Now?</t>
+<t id="W_OBJECTS_OUTSIDE_SLICE_QUEST">Message</t>
+<t id="M_OBJECTS_OUTSIDE_SLICE_QUEST">Objects are out of the print area or collision, continue?</t>
+<t id="W_OBJECT_IS_NON_MANIFOLD">Manifold Error</t>
+<t id="M_OBJECT_IS_NON_MANIFOLD">This *stl file non-manifold and slicing might have failed, continue? </t>
+<t id="W_LOAD_STL_FILE_ERROR">Format Error</t>
+<t id="M_LOAD_STL_FILE_ERROR">Please load *stl type of files</t>
+<t id="B_LAND">Land</t>
+<t id="L_MODELING">Loading model…</t>
+<t id="W_OBJ_TOO_SMALL">Object is too small</t>
+<t id="M_OBJ_SCALE_DOWN">The object is too large for the platform. To fit the object in the platform, do you want to scale it down?
+Scale by</t>
+<t id="L_ELAPSED_TIME">Elapsed Time</t>
+<t id="L_PRODUCT_REGISTRATION">Register Printer</t>
+<t id="G_SERIAL_NUMBER">Serial Number</t>
+<t id="G_REGISTATION_STATUS">Registration Status</t>
+<t id="L_REGISTATION_STATUS_TEXT">Printer not registered. Take a minute to finish the registration, and enjoy the benefit with us!</t>
+<t id="B_YES_DO_IT">Register Now</t>
+<t id="B_NO_NOT_YET">Later</t>
+<t id="L_PRINTER_MONITOR">Printer Monitor</t>
+<t id="L_ESTIMATED_TIME">Estimated Time</t>
+<t id="L_DOWNLOADING">Downloading update file…</t>
+<t id="M_ALREADY_LAST_VERSION">Already up to the latest version</t>
+<t id="M_ONLINE_SERVICE_UNAVAILABLE">Oops! Online service is unavailable. Please try again later!</t>
+<t id="M_HAVE_NEW_VERSION">New version available. Update now ?</t>
+<t id="W_HAVE_NEW_VERSION">New version found</t>
+<t id="B_SW_UPGRADE">Software Update</t>
+<t id="G_PRINTER_TYPE">Printer Type</t>
+<t id="G_TO_PRINTER">To Printer</t>
+<t id="G_RESIN_MODEL">Resin Model</t>
+<t id="G_AUTO_FEEDBACK">Auto Feedback</t>
+<t id="M_FW_UPDATE_ERROR">Update firmware Error.
+Please try again later.</t>
+<t id="G_AUTO_POSITION">Auto Position</t>
+<t id="L_AUTO_POSITION">Import object (s) with auto position</t>
+<t id="L_REMAINING_MATERIALS">Current Capacity</t>
+<t id="M_OPGNGL_ERROR">has been detected in your system. 
+However, OpenGL Version 2.1 or higher is required for XYZware.
+ 
+Please update your Display Driver and restart XYZware.</t>
+<t id="M_OPGNGL_VERSION">OpenGL Version</t>
+<t id="L_FILE_FORMAT">File Format</t>
+<t id="L_FW_UPGRAD_HEAD">Firmware Update</t>
+<t id="L_FW_UPGRAD_STATE">Updating Firmware for printer. 
+ Do not power off your printer now</t>
+<t id="B_REFRESH">Scan</t>
+<t id="L_MY_PRINTER">My Printer</t>
+<t id="B_CONNECT">Connect</t>
+<t id="B_CONNECTED">Connected</t>
+<t id="B_CANCEL">Cancel</t>
+<t id="C_DONT_ASK_ME_AGAIN">Don't ask me again</t>
+<t id="B_OK">OK</t>
+<t id="B_NEW_WORKSPACE">New Workspace</t>
+<t id="T_AUTO_POSITION">With Auto Position ON, imported object (s) will be separated from each other initially, to avoid object collision.
+&#xA;
+&#xA;
+If you want to import object (s) in original configuration (especially when you want to load multiple parts from the same object set to create a combined object ), please uncheck this.</t>
+<t id="L_SUPPORTS_DENSITY">Density of Supports</t>
+<t id="M_FW_VERSION_ERROR">Firmware Version Error</t>
+<t id="M_SAVEWINDOW_TITLE1">Import an object in different format</t>
+<t id="M_SAVEWINDOW_TITLE2">Import another 3wn object</t>
+<t id="M_SAVEWINDOW_TITLE3">Create a new workspace</t>
+<t id="M_SAVEWINDOW_TITLE4">Adjust the  model with supports</t>
+<t id="M_SAVEWINDOW_TITLE5">Import another .3ws file</t>
+<t id="M_SAVEWINDOW_DESCRIPTION1">Workspace will be reset. Do you want to save current object(s) before importing?</t>
+<t id="M_SAVEWINDOW_DESCRIPTION2">Workspace will be reset. Do you want to save current object(s) now?</t>
+<t id="M_SAVEWINDOW_DESCRIPTION3">Workspace will be reset.</t>
+<t id="M_SAVEWINDOW_DESCRIPTION4">All supports of model will be removed after the adjustment. Do you want to save current object(s) now?</t>
+<t id="M_SAVEWINDOW__SIDE_NOTE1">Only the same type of file is allowed on the workspace.</t>
+<t id="M_SAVEWINDOW__SIDE_NOTE2">After creating a new workspace, you can no longer access to the object(s) on current workspace</t>
+<t id="M_SAVEWINDOW__SIDE_NOTE3">When adjusting the z position of model with support, all supports will be removed.</t>
+<t id="M_SAVEWINDOW__SIDE_NOTE5">Only one .3ws file is allowed on the workspace. We will remove the object(s) on current workspace before loading a new .3ws file. Are you sure to proceed?</t>
+<t id="L_PRINTER_NOT_SET">Not Set Up Yet</t>
+<t id="L_OUT_OF_BOUNDARY">Out of Boundary - Please resize or move the object(s)</t>
+<t id="L_SLICING_TO_PRINT">Slicing complete. Ready to print...</t>
+<t id="M_OBJ_SCALE_YES_NO">Selected object is small. Do you want to scale it up?</t>
+<t id="M_OBJ_ORI_SIZE">．Original size of the object is§</t>
+<t id="M_AUTO_SCALE_SIZE">．Auto scale it to§</t>
+<t id="M_INCH_SIZE">．Import in inches (Scale it to§)</t>
+<t id="B_IMPORT_INCH">Import in inches</t>
+<t id="B_AUTO_SCALE">Auto Scale</t>
+<t id="B_SCALE_UP">Scale Up</t>
+<t id="B_SCALE_DOWN">Scale Down</t>
+<t id="L_MM">mm</t>
+<t id="L_INCH">inch</t>
+<t id="L_DISPLAY_UNITS">Display Units</t>
+<t id="L_OBJECT_NOT_CHANGE">Size of the object(s) will not be affected.</t>
+<t id="M_HD_FULL">Exporting/printing has been cancelled due to low disk space, please free up more disk space and try again.</t>
+<t id="M_SIGNIN_TITLE">Authorization for File Access</t>
+<t id="M_SIGNIN_MAIN">Sign in required</t>
+<t id="M_SIGNIN_ACOUNT">Account</t>
+<t id="M_SIGNIN_PW">Password</t>
+<t id="B_SIGNIN">Sign In</t>
+<t id="M_ACCOUNT_ERROR">Email not found</t>
+<t id="M_PW_ERROR">Incorrect Password</t>
+<t id="M_ACCOUNT_DIF">Unmatched account. Please login the account which is used to purchase the item.</t>
+<t id="M_SERVER_ERROR">Server not found. Please try again later.</t>
+<t id="W_OBJ_TOO_LARGE">Object is too large</t>
+<t id="B_SAVE_AS">Save as...</t>
+<t id="L_AUTO_REPAIR">Reduce Facets</t>
+<t id="B_APPLY">Apply</t>
+<t id="L_UNIFORM">Uniform</t>
+<t id="M_FW_AUTO_UPGRADE_TEXT">To ensure optimum printing performance, your printer will be updated now.</t>
+<t id="L_NEED_SUPPORT">Need Support?</t>
+<t id="L_HELP_CENTER">Help Center</t>
+<t id="L_CONTACT_US">Contact Us</t>
+<t id="L_CALL_ON">or call us directly</t>
+<t id="L_NOT_US">Contact number for other countries</t>
+<t id="B_DOWNLOAD">Download</t>
+<t id="L_SEEMORE">See More...</t>
+<t id="L_SAVE_FILE_ERROR">Unable to save the file</t>
+<t id="M_SLICER_LAND_TITLE">Land Objects</t>
+<t id="M_SLICER_MODEL_LIFT">Uplifted objects are detected. They may not be printed correctly.</t>
+<t id="M_SLICER_ASK_TO_LAND">Do you want to land the objects before exporting the file?</t>
+<t id="M_RESIZE_SCALE_UP_TITLE">Enlarge the object.</t>
+<t id="M_RESIZE_MODEL_TOO_BIG">The object may exceed the print area after resizing.</t>
+<t id="M_RESIZE_ASK_TO_SCALE_UP">Are you sure to enlarge the object?</t>
+
+<t id="M_ALLOCATE_BUFFER_FAIL">Printer memory error</t>
+<t id="M_LOAD_FILE_FAIL">File loading failed</t>
+<t id="L_REMAIN_RESIN">Remaining resin</t>
+<t id="L_TOTAL_RESIN">Resin bottle capacity</t>
+<t id="L_WORK_TIME">Time pass</t>
+<t id="L_TOTAL_TIME">Total print time</t>
+<t id="L_WORK_LAYER">Printed layers</t>
+<t id="L_TOTAL_LAYER">Layers</t>
+<t id="L_FIRMWARE_NOT_FOUND">Firmware not found</t>
+<t id="L_FIRMWARE_SEND_COMPLETE">Firmware sent to the printer</t>
+<t id="L_FIRMWARE_SEND_FAIL">Firmware transmission failed</t>
+<t id="L_FIRMWARE_TRANSFER">Sending firmware...</t>
+<t id="L_FIRMWARE_UPGRADE_SUCCESS">Printer firmware updated</t>
+<t id="L_FIRMWARE_UPGRADE_FAIL">Printer firmware updating failed</t>
+<t id="L_SUPPORT_DENSITY">Density of supports</t>
+<t id="L_SUPPORT_DIAMETER">Support size</t>
+<t id="L_SUPPORT_AUTO">Auto Generating</t>
+<t id="L_SUPPORT_MANUALLY">Manual Editing</t>
+<t id="L_SUPPORT_MAYBE_OUT_OF_PRINTAREA">Generated support maybe exceed the printing area. Please move the object inward.</t>
+<t id="L_SOME_SUPPORT_GEN_FAIL">Unable to generate supports at where the area is smaller than 3mm. If there is no support under any dark-pink highlighted overhanging area, please adjust the support generated point and try again.</t>
+<t id="L_SUPPORT_LEAVE_MANUAL_MODE">Exit Manual Editing</t>
+<t id="M_SUPPORT_STILL_HAS_SUPPORT_POINT">You have added support mark(s) to the object. Do you want to generate supports? (Press "No" to remove all support marks)</t>
+<t id="M_SUPPORT_LAND_MODEL">Object:</t>
+<t id="M_SUPPORT_LAND_TITLE">Land the object</t>
+<t id="M_SUPPORT_NOT_ENOUGH_HEIGHT">The space under the object is too short for support structures.</t>
+<t id="M_SUPPORT_ASK_TO_LAND">Do you want to land the object?</t>
+
+<t id="L_BRIM">Brim</t>
+<t id="L_SUPPORT_SLOPE_SURFACE">Slope</t> --> no need 
+<t id="L_SOLID_OBJECT">Solid object</t>
+<t id="L_RESIN">Resin</t>
+<t id="L_COLOR">Color</t>
+<t id="L_RESIN_BOTTLE">Resin Bottle</t>
+<t id="L_USE_RESIN">Estimated Volume</t>
+<t id="L_INSUFFICIENT_RESIN">Insufficient resin for printing. Print job cancelled</t>
+<t id="L_CONFIRM_TO_PRINT">Insufficient resin for the print job. Do you want to print it anyway</t>
+
+<t id="M_RESIN_TANK_FAIL">Vibration generator movement abnormalities or tank sensor malfunctioned</t>
+<t id="M_Z_AXIS_UP_FAIL">Z axis motor upward movement abnormalities or Z axis top sensor malfunctioned</t>
+<t id="M_Z_AXIS_DOWN_FAIL">Z axis motor downward movement abnormalities or Z axis bottom sensor malfunctioned</t>
+<t id="M_NFC_MODULE_FAIL">NFC tag reader malfunctioned</t>
+<t id="M_ENGINE_BOARD_FAIL">Engine board malfunctioned</t>
+<t id="M_REFILL_TIMEOUT">Resin filling timeout</t>
+<t id="M_NO_RESIN_TAG">Resin bottle not found</t>
+<t id="M_SCANNER_NO_CAL">UV laser module not calibrated</t>
+<t id="M_OUT_OF_RESIN">Resin bottle empty</t>
+<t id="M_COVER_OPEN">Cover the lid during printing</t>
+
+<t id="M_SLICER_NOT_FOUND">XYZware slicer not found</t>
+<t id="M_UNKNOWN_SLICE_ERROR">Unknown slicing error</t>
+<t id="M_FILE_CONVERSION_ERROR">Failed to export the object(s).</t>
+<t id="M_UNABLE_TO_SLICE"></t>
+<t id="M_DATA_TRANSFER_FAIL">Transmission failed</t>
+<t id="M_PRINTER_IS_BUSY">Printer is busy</t>
+<t id="M_LOAD_FILE_CANCEL">File loading failed</t>
+
+<t id="M_NO_TAG">Make sure resin bottle is placed correctly and NFC tag is in place under the bottle. If the NFC label is missing, please contact customer service center.</t>
+<t id="M_COLOR_MISMATCH">The resin installed should match the resin type specified for slicing. Please change the resin installed or re-slice the file based on the resin type installed.</t>
+
+<t id="M_UNKNOWS">Unknown</t>
+<t id="M_RESIN_FILLING">Filling the tank</t>
+<t id="M_FILLING_TIMEOUT">Resin filling timeout</t>
+<t id="M_RESIN_REFILLING">Retrying to fill</t>
+<t id="M_CHECK_PRINTER">A printer error has occoured. Please check the message shown on the screen for instructions.</t>
+<t id="M_SW_RUNTIME_ERR">An error has occoured to XYZware for Nobel Series. Please restart the software.</t>
+<t id="M_3WN_NOT_FOR_NOBEL">File importing failed. The file was not sliced with the settings for %printer_model%. Please select other files.</t>
+
+<t id="M_AUTO">Auto</t>
+<t id="M_AUTO_GENERATE">Auto Generate</t>
+<t id="M_GENERATE">Generate</t>
+<t id="M_EDIT">Manual</t>
+<t id="M_ADD">Add</t>
+<t id="M_DELETE">Delete</t>
+<t id="M_SUPPORT_SIZE">Support size</t>
+<t id="M_RADIUS">Size</t>
+<t id="M_CONTACT_POINT">Contact</t>
+<t id="M_DENSITY">Density</t>
+<t id="M_RESIN_COLOR">Color/Material</t>
+<t id="L_SLOPE">Slope Support</t>
+<t id="L_RESIN_INFO">Resin Info.</t>
+<t id="L_GREY">Grey</t>
+<t id="L_GREY_PARTPRO">ProUtility</t>
+<t id="L_GREY_PARTPRO150">ProPlasSL</t>
+<t id="L_GREY_CASTPRO">ProUtility</t>
+<t id="L_CLEAR">Clear</t>
+<t id="L_CLEAR_PARTPRO">ProClear</t>
+<t id="L_CLEAR_PARTPRO150">ProBasic CLR</t>
+<t id="L_CLEAR_D5_PARTPRO150">ProPreciseSL</t>
+<t id="L_CLEAR_D6_PARTPRO150">ProPoly</t>
+<t id="L_CLEAR_D6_PARTPRO150">ProPoly</t>
+<t id="L_BLUE">Blue</t>
+<t id="L_RED">Red</t>
+<t id="L_MAGENTA">Magenta</t>
+<t id="L_WHITE">White</t>
+<t id="L_WHITE_PARTPRO150">ProBasic WHT</t>
+<t id="L_PURPLE">Purple</t>
+<t id="L_PROFESSIONAL">Professional</t>
+<t id="L_PROFESSIONAL_N10A">Open Smart Tag</t>
+<t id="L_PROFESSIONAL_CASTPRO">Open Smart Tag</t>
+<t id="L_PROFESSIONAL_PARTPRO">Open Smart Tag</t>
+<t id="L_PROFESSIONAL_PARTPRO120">Professional</t>
+<t id="L_TOUGH">Tough</t>
+<t id="L_RIGID">Rigid</t>
+<t id="L_RIGID_PARTPRO">ProAccure</t>
+<t id="L_RIGID_CASTPRO">ProAccure</t>
+<t id="L_BIOMEDICAL">Biomedical</t>
+<t id="L_HIGH_TEMP">Heat Resistant</t>
+<t id="L_HIGH_TEMP_CASTPRO">EeezMold</t>
+<t id="L_HIGH_TEMP_PARTPRO">ProHighTemp</t>
+<t id="L_DEFAULT">Default</t>
+<t id="M_LIFT">Lift</t>
+<t id="M_INTERNAL">Inner Support</t>
+<t id="L_SUP_CALCU">Calculating supports...</t>
+<t id="L_SUP_GEN_INFO">Analyzing the model...</t>
+<t id="M_LOW">Low</t>
+<t id="M_MID">Mid</t>
+<t id="M_HIGH">High</t>
+<t id="M_SMALL">Small</t>
+<t id="M_MIDDLE">Mid</t>
+<t id="M_LARGE">Large</t>
+<t id="M_EDIT_NOTE">Add support marks by clicking on the model. 
+Click on the mark to delete it. 
+Click "Generate" after setting up support marks.</t>
+<t id="L_SOFT_RESIN">Soft Resin</t>
+<t id="L_FLEX_RESIN">Flexible Resin</t>
+<t id="L_FLEX">Flexible</t>
+<t id="L_CASTABLE">Castable</t>
+<t id="L_CASTABLE_F2">Castable+</t>
+<t id="L_CASTABLE_CASTPRO">EeezCast</t>
+<t id="L_CASTABLE_F2_CASTPRO">EeezCast+</t>
+<t id="L_CASTABLE_PARTPRO">EeezCast</t>
+<t id="L_CASTABLE_F2_PARTPRO">EeezCast+</t>
+<t id="L_BLACK_PARTPRO120">ProBlackHX</t>
+<t id="L_BLACK_M2_PARTPRO120">ProBlackHS</t>
+<t id="L_BLACK_PARTPRO150">ProBasic BLK</t>
+<t id="L_RESIN_TYPE">Resin Type</t>
+<t id="L_MATERIAL">Material</t>
+<t id="L_BEST_PRACTICE">Best Practice</t>
+<t id="L_LAYER_HEIGHT_LIMITATION">0.025mm: maximum allowed height -   50mm
+  0.05mm: maximum allowed height - 100mm
+    0.1mm: maximum allowed height - 200mm</t>
+
+<t id="L_LIGHT_TUNING">Light Strength Tuning</t>
+<t id="L_LIGHT_DESCRIPT">The delicacy and solidness of prints is determined by the strength of laser beam. You may adjust the strength of laser power based on common features and purpose of your prints. The printer prints with moderate laser power by default. You may get more delicate objects when printing with lower laser power, but the printouts may slightly weak under force. If the objects deform easily, you may try to increase the laser power.</t>
+<t id="L_LIGHT_TEMPERATURE">For current room temperature</t>
+<t id="L_LIGHT_TEMPERATUREDESCRIPT">The printer prints in moderate laser power by default. You may adjust the settings by following the suggested value for different temperature segments. The setting will affect the delicacy and solidness of prints. Printing with lower laser power will result in finer details. However, if the objects deform easily, you may try to increasing the laser power.</t>
+<t id="L_REBOOT_MANUALLY">The printer firmware has been updated. Please restart the printer manually.</t>
+<t id="M_UPGRADE_SW_FIRST">To ensure smooth printing performance,
+please update the software before updating the printer firmware.</t>
+<t id="M_ALERT_TITLE">Alert! Printer Maintenance</t>
+<t id="M_ALERT_TITLE2">Time to clean up your printer</t>
+<t id="M_ALERT_DESCRIPTION">Regular maintenance on the tank level sensor is essential to maximum the service life of the resin tank and ensure the smoothness of the operation.
+
+Do you want to do it now?</t>
+<t id="M_ALERT_DESCRIPTION_NSF">Regular maintenance on the resin tank is essential to maximum the service life of the part and ensures the smoothness of the operation.</t>
+<t id="M_CLEAN_PROCESSURE_NSF">Clean up procedure: 
+On the printer, select "UTILITIES" > "TANK CLEANING" to start the cleanup procedure. (See user manual P. 6 for details.)</t>
+<t id="M_ALERT_FILE_INCOMPATIBLE">Incompatible slicing settings; please slice the stl file again.</t>
+<t id="M_STL_ERR_ALERT">Non-manifold geometry is detected on the model just imported.
+
+Repair the model or the printing may fail.</t>
+<t id="M_ALERT_3WS_INCOMPATIBLE">The .3ws file is generated with new support system. Please update the software to the latest version to use this file.</t>
+<t id="M_YES_CLEAN">Yes, show me how.</t>
+<t id="M_NOT_CLEAN">No. I've cleaned it.</t>
+<t id="M_NO_SUFFICIENT_MEMORY">No sufficient memory.</t>
+<t id="L_OUT_OF_MEMORY">Insufficient memory to proceed</t>
+<t id="M_OUT_OF_MEMORY_AT_SUPPORT_GEN">Insufficient memory to proceed. You may scale down the object with the "Scale" function and try again.</t>
+<t id="M_OUT_OF_MEMORY">Insufficient memory to proceed. You may scale down the object with the "Scale" function or enable "Reduce Facets" and try again.</t>
+<t id="M_PRINTOUT_SCALING">Printout Scaling</t>
+<t id="M_PRINTOUT_SCALING_DECP">If you find the dimension of the printout may not match the 3D model, you may adjust the scale of the X/Y axis with the slider and arrow keys by -5% to +5%.</t>
+<t id="L_SETUP_PRINTER_TITLE">Setup Printer Wireless</t>
+<t id="L_SETUP_PRINTER_NAME">Printer Name</t>
+<t id="L_SETUP_PRINTER_NAME_TEXT">Name your printer here</t>
+<t id="B_SETUP_PRINTER_UPDATE_NAME">Update</t>
+<t id="L_SETUP_PRINTER_WIFI">Wireless Connection</t>
+<t id="L_SETUP_PRINTER_WIFI_TEXT">Scan &amp; Select One</t>
+<t id="L_SETUP_PRINTER_SHOWPW">Show Password</t>
+<t id="L_SETUP_PRINTER_PRINTERIP">Printer IP</t>
+<t id="B_SETUP_PRINTER_STARTWIFI">Start wireless connection</t>
+<t id="B_SETUP_PRINTER_STOPWIFI">Stop Wireless Connection / Change Setting</t>
+<t id="B_WIFISETTING">Wireless Setting</t>
+<t id="B_CONNECTBYIP">Connect by IP</t>
+<t id="L_CONNECTBYIP_ERROR_TITLE">Cannot connect to printer</t>
+<t id="L_CONNECTBYIP_ERROR">Cannot find printer at (§)</t>
+<t id="L_CONNECTBYIP_OK_TITLE">Printer is Connected</t>
+<t id="L_CONNECTBYIP_OK">Printer (§) is Connected</t>
+<t id="B_BUSY">Busy</t>
+<t id="M_CHECK_USB_WIFI">Please check if the USB cable is connected or if the Wi-Fi connectivity is enabled.</t>
+<t id="M_CHECK_USB_WIFI_LAN">Please check if the USB cable or the Ethernet cable is connected, or if the Wi-Fi connectivity is enabled.</t>
+
+<t id="L_AUTO_POSITION_TIP">The setting can only be changed when the workspace is empty.</t>
+<t id="L_Email">Email address</t>
+<t id="L_LOG_IN_NOW">Log In Now</t>
+<t id="L_OR">or</t>
+<t id="L_WILL_OPEN_BROWSER">Open the registration page in the browser</t>
+<t id="L_SIGNOUT">Sign Out</t>
+<t id="L_GENERAL">General</t>
+<t id="L_EDITOR">Editor</t>
+
+<t id="L_THIRD_PARTY_MATERIAL_WARNING">Print quality may vary with 3rd party resin</t>
+<t id="L_BEST_PRACTICE">Best Practice</t>
+<t id="L_PARAMETERS">Parameters</t>
+<t id="L_FIRST_LAYER_SETUP">First layer setup</t>
+<t id="L_LASER_CONTROL">Laser Control</t>
+<t id="L_PEELING_CONTROL">Peeling Control</t>
+<t id="L_POWER_INTENSITY">Power intensity (mW)</t>
+<t id="L_CURING">Curing</t>
+<t id="L_PEELING">Peeling</t>
+<t id="L_PLATFORM_ASCENDING">Platform Ascending</t>
+<t id="L_PLATFORM_DESCENDING">Platform Descending</t>
+<t id="L_SPEED">Speed (mm/s)</t>
+<t id="L_DISTANCE">Distance (mm)</t>
+<t id="L_WAIT_TIME_A">Wait time A (ms)</t>
+<t id="L_WAIT_TIME_1">Wait time 1 (ms)</t>
+<t id="L_WAIT_TIME_2">Wait time 2 (ms)</t>
+<t id="L_WAIT_TIME_3">Wait time 3 (ms)</t>
+<t id="L_WAIT_TIME_4">Wait time 4 (ms)</t>
+<t id="L_NO_GREATER_THAN_TOTAL_LAYERS">No greater than the total layers of the sliced file</t>
+<t id="L_ONE_DECIMAL_PLACE_ALLOWED">One decimal place allowed</t>
+<t id="L_RANGE">Range</t>
+<t id="L_LASER_SCAN_PPS">Rate of travel of laser beam (PPS)</t>
+<t id="L_LASER_RATE_OF_SCAN">Magnification of rate of travel of laser beam</t>
+<t id="L_LIGHT_FLASH_NUMBER_OF_EACH_LAYER">Light flash number for each layer</t>
+<t id="L_ASCENDING_DISTANCE">Ascending Distance(mm)</t>
+<t id="L_BASE_SETUP">Base Setup</t>
+<t id="L_BASE_LAYERS">Base Layers</t>
+<t id="L_BASE_BRIM_WIDTH">Brim width (mm)</t>
+<t id="L_BASE_CURING_TIME">Curing Time (ms)</t>
+<t id="L_BASE_POWER_INTENSITY">Power Intensity (W/m^2)</t>
+<t id="L_BASE_POWER_LEVEL">Power Level</t>
+<t id="L_BASE_UP_SPD">Ascending Speed (mm/s)</t>
+<t id="L_BASE_UP_DIST">Ascending Distance (mm)</t>
+<t id="L_BASE_REFILL_TIME">Refill Time (ms)</t>
+<t id="L_BASE_DOWN_SPD">Descending Speed (mm/s)</t>
+<t id="L_BASE_COOLING_TIME">Cooling Time (ms)</t>
+<t id="L_BASE_LEDOFF_TIME">Peeling interval (ms)</t>
+<t id="L_INTER_SETUP">Intermediate Setup</t>
+<t id="L_INTER_LAYER">Intermediate Layers</t>
+<t id="L_MODEL_SETUP">Model Setup</t>
+<t id="L_MODEL_CURING_TIME">Curing Time (ms)</t>
+<t id="L_MODEL_POWER_INTENSITY">Power Intensity (W/m^2)</t>
+<t id="L_MODEL_POWER_LEVEL">Power Level</t>
+<t id="L_MODEL_UP_SPD">Ascending Speed (mm/s)</t>
+<t id="L_MODEL_UP_DIST">Ascending Distance (mm)</t>
+<t id="L_MODEL_REFILL_TIME">Refill Time (ms)</t>
+<t id="L_MODEL_DOWN_SPD">Descending Speed (mm/s)</t>
+<t id="L_MODEL_COOLING_TIME">Cooling Time (ms)</t>
+<t id="L_MODEL_LEDOFF_TIME">Peeling interval (ms)</t>
+<t id="L_MODEL_POWER_INTENSITY_OUTLINES">Power intensity for outlines (mW)</t>
+<t id="L_MODEL_POWER_INTENSITY_INFILLS">Power intensity for infills (mW)</t>
+
+<t id="L_CONE">Cone</t>
+<t id="L_TREE">Tree</t>
+<t id="L_CONTACT_AREA">Contact area</t>
+<t id="L_TOP_DIAMETER">Top Diameter</t>
+<t id="L_BASE_DIAMETER">Base Diameter</t>
+<t id="B_TRUNK">Trunk</t>
+<t id="B_BRANCH">Branch</t>
+<t id="L_HEIGHT">Height</t>
+<t id="L_STRUCTURE">Structure</t>
+<t id="L_SELECTED_STRUCTURE">Selected structure:</t>
+<t id="L_CONTACT_AREA_LOW">Low</t>
+<t id="L_CONTACT_AREA_HIGH">High</t>
+<t id="B_DONE">Done</t>
+<t id="M_SINGLE_BRANCH">Single branch</t>
+<t id="M_MULTI_BRANCH">Multi branch</t>
+<t id="L_HOW_TO_USE">How to use:</t>
+<t id="M_SUPPORT_CONE_USAGE">
+  Step 1: Set up cone mark (orange dot)
+  • Add cone mark: click on the overhangs on the model to add cone marks.
+  • Delete cone mark: click on the orange mark to remove.
+  
+  Step 2: Generate cone structure
+  • Generate cone: click "Generate" after setting up cone marks.
+
+  Note:
+  1. Cone support is only available when the overhang is at least 6mm above the
+     platform. %software_name% will lift the object when necessary.
+  2. The base diameter of the support should be at least 1mm larger then the top
+     diameter. Please set up the bottom diameter first then the top diameter.
+  3. The diameter of the support can't be changed once added. To adjust the
+     support, please delete the mark, change the diameters and add the cone mark
+     again.
+</t>
+<t id="M_SUPPORT_TREE_TRUNK_USAGE">
+  1. Setting up the trunk (thick yellow stick)
+  Add trunk: click on the desired location on the platform.
+  Move trunk: click on the trunk and hold to drop.
+  Delete trunk: click on the trunk to delete it.
+
+  Note: The trunk with no branch will be deleted when generating.
+</t>
+<t id="M_SUPPORT_TREE_BRANCH_USAGE">
+  Setting up the branch
+  Step 1: Select a trunk to add branches
+   •Select a trunk: click on the trunk to turn it into blue.
+   
+  Step 2: Set up branch mark (thin yellow stick)
+   •Add a branch: click on the model.
+   •Delete a branch: click on the thin stick to delete it.
+   
+  Step 3: Complete your tree
+   •Click "Generate" after setting up all marks.
+   
+  Note:
+  1. When no trunk is selected, the branch will be shown as a yellow dot. Simply
+     click on a trunk, the branch mark will be connected to the selected trunk.
+  2. Branch mark should be higher than the top of the selected trunk.
+  3. Branch mark is disabled when no trunk is available.
+
+  Generate tree supports
+  After setting up the trunk and branches, click "Generate" to apply the settings.
+  
+  Note:
+  1. Branches over 45 degree slope will be shown in red, as they may be displaced
+     in the printing process.
+  2. Trunk with no branch connected will be deleted while generating the supports.
+</t>
+<t id="M_SUPPORT_CONE_CONTACT_AREA_USAGE">
+  1. Click on the targeted cone (selected cone will change to blue).
+  2. Drag the slider to adjust the contact area.
+  3. Click "Done" once you have adjusted the contact area of all cones.
+</t>
+<t id="M_SUPPORT_BRANCH_CONTACT_AREA_USAGE">
+  Step 1: Select the branch
+  Select a single branch: click on the branch.
+  Select all branched of the same trunk: click on the trunk.
+
+  Step 2: Adjust the contact area
+  •Drag the slider to adjust the contact area.
+</t>
+<t id="M_ZGAP_ENABLE">Z-Axis Compensation</t>
+<t id="M_UPDATE_DETECT_MODELS_SUPPORT">The software currently in used, %software_name%, is only compatible with below printers: %Printer_model%</t>
+<t id="M_UPDATE_DETECT_AUTO_UPDATE_INITIATE">%Printer_model% is detected. %software_name% will be required for preparing the printing files. The download will start automatically. Please switch to %software_name% when the installation is finished. </t>
+
+<t id="L_3WN_VIEWER">3WN Viewer</t>
+<t id="B_PREVIEW">Preview</t>
+<t id="L_3WN_INFORMATION">3WN Information</t>
+<t id="L_LAYER_VIEW">Layer View</t>
+<t id="L_ZOOM_VIEW">Zoom View</t>
+<t id="M_PROCESSING_LAYER">Processing Layer</t>
+<t id="L_TOTAL_LAYERS">Total Layers</t>
+<t id="L_LAYERS">layers</t>
+<t id="M_ALLOW">ALLOW</t><t id="M_DISABLE">DISABLE</t>
+<t id="M_MM_TO_INCH_NOT_25_POINT_4">The object may exceed the build volume after unit conversion. The object will be rescaled to the size of the platform instead.</t>
+<t id="M_INVALID_MODULE_DETECTED">Unrecoverable error detected. Please download and reinstall the latest version.</t>
+<t id="M_PROCEED_DOWNLOAD">Proceed to Download</t>
+<t id="L_FACE">Base</t>
+<t id="L_VAT_FIRST">Release the tank before descending the platform</t>
+<t id="M_3WS_NOT_FOR_NOBEL">Unable to load the file, as it was not exported for %printer_model%. Please select other files.</t>
+<t id="M_INVALID_FILENAME">The following characters are not allowed in the file name:</t>
+<t id="L_PARTBUILD1">Analyzing the model…</t>
+<t id="L_PARTBUILD2">Calculating…</t>
+<t id="L_PARTBUILD3">Rotating the model…</t>
+<t id="L_PARTBUILD4">Aborting…</t>
+<t id="L_PARTBUILD_ERROR_TITLE">Orientation not applied</t>
+<t id="M_ALL_ROTATATION_OUT_OF_BOUNDARY">Some part of the model will be out of the printing area after applying the suggested orientation. 
+Orientation will not be applied. The model will return to the previous orientation. </t>
+<t id="M_AUTO_Z0">
+Parts may not print properly and may be difficult to remove when placed directly on the platform.
+
+To add the raft under the supports, check [Lift].
+</t>
+<t id="M_EDIT_Z3">
+Raft is not available for the part too close to the platform (z-gap &lt;3mm). In such setting the supports will be built on the platform directly. The supports may come off the platform during printing. 
+
+To add the raft under the supports, please adjust Z-gap to &gt;3mm with the [Move] function and come back to manual support creation.
+</t>
+<t id="M_EDIT_Z6">
+Raft is not available for the part too close to the platform (z-gap &lt;6mm). In such setting the supports will be built on the platform directly. The supports may come off the platform during printing. 
+
+To add the raft under the supports, please adjust Z-gap to &gt;6mm with the [Move] function and come back to manual support creation.
+</t>
+<t id="M_EDIT_Z03">
+Parts may not print properly and may be difficult to remove when placed directly on the platform.
+
+To lift the object, please adjust Z-gap to &gt;3mm with the [Move] function and come back to manual support creation.
+</t>
+<t id="M_EDIT_Z06">
+Parts may not print properly and may be difficult to remove when placed directly on the platform.
+
+To lift the object, please adjust Z-gap to &gt;6mm with the [Move] function and come back to manual support creation.
+</t>
+<t id="L_RAFT">Raft Type</t>
+<t id="L_MINIMUM">Minimum</t>
+<t id="L_HONEYCOMB">Honey Comb</t>
+<t id="L_SUP_GEN_RAFT">Generating raft…</t>
+<t id="B_CLONE_OBJECT">Clone Object</t>
+<t id="L_PP150_LSU_POSITION_RESET">LSU move to start position and platform go up Simultaneously</t>
+<t id="L_PP150_WAIT_TIME4">Wait to LSU move to start position</t>
+<t id="L_PP150_WAIT_TIME1">Delay time before platform go top(s):</t>
+<t id="L_PP150_WAIT_TIME2">Delay time before wiper moving (0~99sec)</t>
+<t id="L_PP150_WAIT_TIME3">Delay time before platform go down (0~99sec)</t>
+<t id="L_PP150_WAIT_TIME5">Delay time before lighting up(s):</t>
+<t id="L_DCF_GB_TITLE">DCF System</t>
+<t id="L_DCF_LIST">DCF list</t>
+<t id="L_CURRENT_DCF">Avaliable DCF</t>
+<t id="M_DCF_EXISTS">This DCF already exists!
+The same DCF is% file_name% "</t>
+<t id="M_DCF_DELETE">Whether need to delete % file name%?</t>
+<t id="M_NO_DCF_APPLIED">Please go to the settings page to import at least one DCF for% Printer% conversion.</t>
+<t id="M_IMPORT_SUCCESS">Import success!</t>
+<t id="M_IMPORT_FAILED">The DCF file is damaged, please operate the printer again to perform export steps.</t>
+<t id="L_SMOOTH_EDGE">Smooth mode</t>
+<t id="L_PERFORMANCE_MODE">Performance mode</t>
+</translation>
+</resources>

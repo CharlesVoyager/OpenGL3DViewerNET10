@@ -1,0 +1,94 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ApplicationDefinition Remove="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\bad16.png" />
+    <None Remove="Resources\bar1.png" />
+    <None Remove="Resources\bar2.png" />
+    <None Remove="Resources\button_about.png" />
+    <None Remove="Resources\button_import1.png" />
+    <None Remove="Resources\button_info1.png" />
+    <None Remove="Resources\button_move1.png" />
+    <None Remove="Resources\button_remove1.png" />
+    <None Remove="Resources\button_save1.png" />
+    <None Remove="Resources\button_scale1.png" />
+    <None Remove="Resources\button_setting1.png" />
+    <None Remove="Resources\button_turn1.png" />
+    <None Remove="Resources\button_view1.png" />
+    <None Remove="Resources\button_zoomIn1.png" />
+    <None Remove="Resources\button_zoomOut1.png" />
+    <None Remove="Resources\lock16.png" />
+    <None Remove="Resources\ok16.png" />
+    <None Remove="Resources\submenu_center1.png" />
+    <None Remove="Resources\submenu_center2.png" />
+    <None Remove="Resources\submenu_center3.png" />
+    <None Remove="Resources\submenu_land1.png" />
+    <None Remove="Resources\submenu_reset1.png" />
+    <None Remove="Resources\submenu_reset31.png" />
+    <None Remove="Resources\submenu_viewBack1.png" />
+    <None Remove="Resources\submenu_viewBottom1.png" />
+    <None Remove="Resources\submenu_viewFront1.png" />
+    <None Remove="Resources\submenu_viewLside1.png" />
+    <None Remove="Resources\submenu_viewRside1.png" />
+    <None Remove="Resources\submenu_viewTop1.png" />
+    <None Remove="Resources\trash16.png" />
+    <None Remove="Resources\unlock16.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenTK" Version="4.9.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\bad16.png" />
+    <Resource Include="Resources\bar1.png" />
+    <Resource Include="Resources\bar2.png" />
+    <Resource Include="Resources\button_about.png" />
+    <Resource Include="Resources\button_import1.png" />
+    <Resource Include="Resources\button_info1.png" />
+    <Resource Include="Resources\button_move1.png" />
+    <Resource Include="Resources\button_remove1.png" />
+    <Resource Include="Resources\button_save1.png" />
+    <Resource Include="Resources\button_scale1.png" />
+    <Resource Include="Resources\button_setting1.png" />
+    <Resource Include="Resources\button_turn1.png" />
+    <Resource Include="Resources\button_view1.png" />
+    <Resource Include="Resources\button_zoomIn1.png" />
+    <Resource Include="Resources\button_zoomOut1.png" />
+    <Resource Include="Resources\lock16.png" />
+    <Resource Include="Resources\ok16.png" />
+    <Resource Include="Resources\submenu_center1.png" />
+    <Resource Include="Resources\submenu_center2.png" />
+    <Resource Include="Resources\submenu_center3.png" />
+    <Resource Include="Resources\submenu_land1.png" />
+    <Resource Include="Resources\submenu_reset1.png" />
+    <Resource Include="Resources\submenu_reset31.png" />
+    <Resource Include="Resources\submenu_viewBack1.png" />
+    <Resource Include="Resources\submenu_viewBottom1.png" />
+    <Resource Include="Resources\submenu_viewFront1.png" />
+    <Resource Include="Resources\submenu_viewLside1.png" />
+    <Resource Include="Resources\submenu_viewRside1.png" />
+    <Resource Include="Resources\submenu_viewTop1.png" />
+    <Resource Include="Resources\trash16.png" />
+    <Resource Include="Resources\unlock16.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\en.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

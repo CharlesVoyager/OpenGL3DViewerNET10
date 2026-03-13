@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="View3D.view.OutofBound"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="742" d:DesignWidth="780" Background="Transparent" Visibility="Hidden">
+    <Grid Name="grid1" MinWidth="289" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="10*" />
+            <ColumnDefinition Width="10"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Rectangle Name="rectangle1"  Fill="Red" RadiusX="10" RadiusY="10" Grid.RowSpan="3" Grid.Column="0" />
+        <Rectangle Name="rectangle2"  Fill="Red" RadiusX="10" RadiusY="10" Grid.RowSpan="3" Grid.Column="2" />
+        <Rectangle Name="rectangle3"  Fill="Red" RadiusX="10" RadiusY="10" Grid.Row="0" Grid.ColumnSpan="3" />
+        <Rectangle Name="rectangle4" Fill="Red" RadiusX="10" RadiusY="10" Grid.Row="3" Grid.ColumnSpan="3" />
+        <TextBlock x:Name="txt_WarningMsg" Text="Out of Boundary - Please resize or move your object (S)." Grid.ColumnSpan="3" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" TextWrapping="Wrap"  Foreground="White" FontWeight="Bold" FontFamily="Microsoft JhengHei"/>
+    </Grid>
+</UserControl>
