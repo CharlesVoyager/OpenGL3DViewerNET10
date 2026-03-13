@@ -79,23 +79,7 @@ namespace View3D
             if (languageChanged != null)
                 languageChanged();
 
-            // TEST
-            //LoadGCodeOrSTL(@"..\..\..\Stl\10_10_10.stl");
-
             _mainWindowReady.Set();
-        }
-
-        private void ProcessCommandLine()
-        {
-            string[] args = Environment.GetCommandLineArgs();
-            if (args.Length < 1) return;
-
-            for (int i = 1; i < args.Length; i++)
-            {
-                string file = args[i];
-                if (File.Exists(file))
-                    LoadGCodeOrSTL(file);
-            }
         }
 
         private void MainWindow_DragEnter(object sender, System.Windows.DragEventArgs e)

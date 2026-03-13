@@ -45,6 +45,7 @@ namespace OpenGL3DViewerNET10
             Console.WriteLine("Exit the program.");
         }
 
+        // Command line argument example: @"..\..\..\Stl\10_10_10.stl"
         private static void ProcessCommandLine(MainWindow main)
         {
             string[] args = Environment.GetCommandLineArgs();
