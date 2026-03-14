@@ -547,7 +547,7 @@ namespace View3D.view
         {
             foreach (var stl in ListObjects(true).ToList())
                 RemoveModel(stl);
-            if (MainWindow.main.threeDControl.threeDview.models.Count == 0)
+            if (MainWindow.main.threeDControl.threeDView.models.Count == 0)
                 MainWindow.main.OutofBound.Visibility = Visibility.Collapsed;
             MainWindow.main.threeDControl.UpdateChanges();
         }
