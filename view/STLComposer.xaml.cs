@@ -270,7 +270,7 @@ namespace View3D.view
 
             try
             {
-        ////        MainWindow.main.BusyWindow.EnableBusyWindow();
+                MainWindow.main.BusyWindow.EnableBusyWindow();
                 // Offload heavy work to background thread — UI thread is free immediately
                 await Task.Run(() =>
                 {
@@ -279,7 +279,7 @@ namespace View3D.view
                     Console.WriteLine("LoadWOCatch Done.");
                 });
 
-        ///        MainWindow.main.BusyWindow.DisableBusyWindow();
+                MainWindow.main.BusyWindow.DisableBusyWindow();
                 models[models.Count - 1].name = modelDatas[modelDatas.Count - 1].name;
             }
             catch (OutOfMemoryException)
@@ -288,12 +288,12 @@ namespace View3D.view
                 models.RemoveAt(models.Count - 1);
                 MainWindow.main.BusyWindow.Visibility = Visibility.Hidden;
                 GC.Collect();
-                System.Windows.MessageBox.Show("Error(" + (short)Protocol.ErrorCode.LOAD_FILE_FAIL + "): " + Trans.T("M_LOAD_FILE_FAIL"));
+                MessageBox.Show("Error(" + (short)Protocol.ErrorCode.LOAD_FILE_FAIL + "): " + Trans.T("M_LOAD_FILE_FAIL"));
                 return;
             }
             catch
             {
-                System.Windows.MessageBox.Show(Trans.T("M_LOAD_STL_FILE_ERROR"), Trans.T("W_LOAD_STL_FILE_ERROR"),
+                MessageBox.Show(Trans.T("M_LOAD_STL_FILE_ERROR"), Trans.T("W_LOAD_STL_FILE_ERROR"),
                                 MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
