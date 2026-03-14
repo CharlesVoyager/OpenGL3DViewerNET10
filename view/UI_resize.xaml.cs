@@ -48,7 +48,7 @@ namespace View3D.view
                     gTextChange = false;
                     return;
                 }
-                PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+                PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
                 stl.modifiedS = true;
                 //double centerValue = (stl.maxScaleVector + stl.minScaleVector) / 2.0;
@@ -80,13 +80,13 @@ namespace View3D.view
 
         private void slider_resize_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if(stl == null) return;
         }
 
         private void slider_resize_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             stl.modifiedS = true;
             if (e.Delta > 0)
@@ -99,13 +99,13 @@ namespace View3D.view
         public void button_resize_reset_Click(object sender, RoutedEventArgs e)
         {
             float oriZmin;
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             
             oriZmin = stl.zMin;
 
             resize_textbox.Text = "100";
-            MainWindow.main.objectPlacement.textScaleX.Text = "1";
-            MainWindow.main.objectPlacement.check_stl_size_too_small();
+            MainWindow.main.stlComposer.textScaleX.Text = "1";
+            MainWindow.main.stlComposer.check_stl_size_too_small();
             stl.modifiedS = false;
         }
 
@@ -113,7 +113,7 @@ namespace View3D.view
         {
             try
             {
-                PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+                PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
                 stl.modifiedS = true;
 
@@ -144,10 +144,10 @@ namespace View3D.view
                 double scaleValue = 0.000;
                 float oriZmin;
                 oriZmin = stl.zMin;
-                MainWindow.main.objectPlacement.textScaleX.Text = Convert.ToString(int.Parse(resize_textbox.Text) / 100.00); 
+                MainWindow.main.stlComposer.textScaleX.Text = Convert.ToString(int.Parse(resize_textbox.Text) / 100.00); 
                 stl.LandToZ(oriZmin);
                 MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBoxWOSupport.zMin;
-                MainWindow.main.objectPlacement.updateSTLState(stl);
+                MainWindow.main.stlComposer.updateSTLState(stl);
 
 
                 scaleValue = int.Parse(resize_textbox.Text) / 100.00;
@@ -169,16 +169,16 @@ namespace View3D.view
 
         private void button_mmtoinch_Click(object sender, RoutedEventArgs e)
         {
-            PrintModel model = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel model = MainWindow.main.stlComposer.SingleSelectedModel;
             if (model == null) return;
-            MainWindow.main.objectPlacement.DoInchOrScale(model, true);
+            MainWindow.main.stlComposer.DoInchOrScale(model, true);
         }
 
         private void button_inchtomm_Click(object sender, RoutedEventArgs e)
         {
-            PrintModel model = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel model = MainWindow.main.stlComposer.SingleSelectedModel;
             if (model == null) return;
-            MainWindow.main.objectPlacement.DoInchtomm(model);
+            MainWindow.main.stlComposer.DoInchtomm(model);
         }
     }
 }

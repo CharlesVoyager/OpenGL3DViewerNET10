@@ -19,7 +19,7 @@ namespace View3D
 
         public ThreeDSettings? threeDSettings = null;
         public ThreeDControl? threeDControl = null;
-        public STLComposer? objectPlacement = null;
+        public STLComposer? stlComposer = null;
 
         public Trans? trans = null;
 
@@ -70,8 +70,8 @@ namespace View3D
             threeDSettings.Hide();
 
             // STLComposer
-            objectPlacement = new STLComposer();
-            objectPlacement.Hide();
+            stlComposer = new STLComposer();
+            stlComposer.Hide();
 
             InitializeComponent();
             UI();
@@ -119,7 +119,7 @@ namespace View3D
 
             string fileLow = file.ToLower();
             if (fileLow.EndsWith(".stl"))
-                objectPlacement.openAndAddObject(file);
+                stlComposer.openAndAddObject(file);
         }
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -187,7 +187,7 @@ namespace View3D
             // index 6 is Separator
             ((System.Windows.Controls.MenuItem)_contextMenu.Items[7]).Click += (s, e) => OnClone();
             // index 8 is Separator
-            ((System.Windows.Controls.MenuItem)_contextMenu.Items[9]).Click += (s, e) => objectPlacement.Show();
+            ((System.Windows.Controls.MenuItem)_contextMenu.Items[9]).Click += (s, e) => stlComposer.Show();
             ((System.Windows.Controls.MenuItem)_contextMenu.Items[10]).Click += (s, e) => threeDSettings.Show();
 
             // About
@@ -301,7 +301,7 @@ namespace View3D
             resize_toggleButton.IsChecked = false;
             info_toggleButton.IsChecked = false;
 
-            PrintModel stl = objectPlacement.SingleSelectedModel;
+            PrintModel stl = stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
             UI_move.slider_moveX.Maximum = 1000;
@@ -415,7 +415,7 @@ namespace View3D
                 string fileLow = filePath.ToLower();
                 if (fileLow.EndsWith(".stl"))
                 {
-                    objectPlacement.openAndAddObject(filePath);
+                    stlComposer.openAndAddObject(filePath);
                     threeDControl.InvokeGL(() =>
                     {
                         STLComposer._stlModelDataReady.Wait();
@@ -451,9 +451,9 @@ namespace View3D
 
         private void rotate_toggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            UI_rotate.sliderX.Value = Convert.ToDouble(objectPlacement.textRotX.Text);
-            UI_rotate.sliderY.Value = Convert.ToDouble(objectPlacement.textRotY.Text);
-            UI_rotate.sliderZ.Value = Convert.ToDouble(objectPlacement.textRotZ.Text);
+            UI_rotate.sliderX.Value = Convert.ToDouble(stlComposer.textRotX.Text);
+            UI_rotate.sliderY.Value = Convert.ToDouble(stlComposer.textRotY.Text);
+            UI_rotate.sliderZ.Value = Convert.ToDouble(stlComposer.textRotZ.Text);
             VisualStateManager.GoToState(UI_rotate, "State1", true);
             view_toggleButton.IsChecked = false;
             move_toggleButton.IsChecked = false;
@@ -470,14 +470,14 @@ namespace View3D
             rotate_toggleButton.IsChecked = false;
             info_toggleButton.IsChecked = false;
 
-            PrintModel stl = objectPlacement.SingleSelectedModel;
+            PrintModel stl = stlComposer.SingleSelectedModel;
             if (stl == null) return;
             UI_move.slider_moveZ.Maximum = 1000;
 
             model.geom.RHBoundingBox bbox = stl.BoundingBoxWOSupport;
-            UI_resize_advance.bboxnow = bbox.Size.x / Convert.ToDouble(objectPlacement.textScaleX.Text);
-            UI_resize_advance.bboynow = bbox.Size.y / Convert.ToDouble(objectPlacement.textScaleY.Text);
-            UI_resize_advance.bboznow = bbox.Size.z / Convert.ToDouble(objectPlacement.textScaleZ.Text);
+            UI_resize_advance.bboxnow = bbox.Size.x / Convert.ToDouble(stlComposer.textScaleX.Text);
+            UI_resize_advance.bboynow = bbox.Size.y / Convert.ToDouble(stlComposer.textScaleY.Text);
+            UI_resize_advance.bboznow = bbox.Size.z / Convert.ToDouble(stlComposer.textScaleZ.Text);
 
             UI_resize_advance.gIsShow = true;
             UI_resize_advance.dimX = bbox.Size.x;
@@ -487,9 +487,9 @@ namespace View3D
             UI_resize_advance.dimZ = bbox.Size.z;
             UI_resize_advance.updateTxt(Enums.Axis.Z);
 
-            if (Convert.ToDouble(objectPlacement.textRotX.Text) != 0 ||
-                Convert.ToDouble(objectPlacement.textRotY.Text) != 0 ||
-                Convert.ToDouble(objectPlacement.textRotZ.Text) != 0)
+            if (Convert.ToDouble(stlComposer.textRotX.Text) != 0 ||
+                Convert.ToDouble(stlComposer.textRotY.Text) != 0 ||
+                Convert.ToDouble(stlComposer.textRotZ.Text) != 0)
             {
                 UI_resize_advance.chk_Uniform.IsChecked = true;
                 UI_resize_advance.chk_Uniform.IsEnabled = false;
@@ -563,8 +563,8 @@ namespace View3D
 
             OutofBound.Visibility = System.Windows.Visibility.Hidden;
             threeDControl.button_remove_Click(null, null);
-            if (objectPlacement.listObjects.Items.Count > 0)
-                objectPlacement.updateSTLState(objectPlacement.SingleSelectedModel);
+            if (stlComposer.listObjects.Items.Count > 0)
+                stlComposer.updateSTLState(stlComposer.SingleSelectedModel);
             Focus();
         }
 

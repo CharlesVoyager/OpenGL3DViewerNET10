@@ -76,7 +76,7 @@ namespace View3D.view
 
         public void button_move_reset_Click(object sender, RoutedEventArgs e)
         {
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
             slider_moveX.Value = stl.Position.inix;
@@ -94,8 +94,8 @@ namespace View3D.view
             moveY_textbox.Text = slider_moveY.Value.ToString();
             moveZ_textbox.Text = (Math.Round(slider_moveZ.Value - slider_moveZ.Minimum, 3)).ToString();
 
-            MainWindow.main.objectPlacement.landModel(stl);
-            MainWindow.main.objectPlacement.updateSTLState(stl);
+            MainWindow.main.stlComposer.landModel(stl);
+            MainWindow.main.stlComposer.updateSTLState(stl);
             MainWindow.main.threeDControl.UpdateChanges();
 
             stl.modifiedM = false;
@@ -103,11 +103,11 @@ namespace View3D.view
 
         public void button_land_Click(object sender, RoutedEventArgs e)
         {
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
 
-            MainWindow.main.objectPlacement.landModel(stl);
+            MainWindow.main.stlComposer.landModel(stl);
 
             slider_moveX.Value = Math.Round(stl.Position.x);
             slider_moveY.Value = Math.Round(stl.Position.y);
@@ -117,7 +117,7 @@ namespace View3D.view
 
             moveZ_textbox.Text = (Math.Round(slider_moveZ.Value - slider_moveZ.Minimum, 1)).ToString();
 
-            MainWindow.main.objectPlacement.updateSTLState(stl);
+            MainWindow.main.stlComposer.updateSTLState(stl);
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -154,10 +154,10 @@ namespace View3D.view
             {
                 if (Math.Abs(e.OldValue - e.NewValue) > 0.01)
                 {
-                    PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+                    PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     stl.modifiedM = true;
-                    MainWindow.main.objectPlacement.textTransX.Text = Convert.ToString(slider_moveX.Value);
+                    MainWindow.main.stlComposer.textTransX.Text = Convert.ToString(slider_moveX.Value);
                     MainWindow.main.threeDControl.UpdateChanges();
                 }
             }
@@ -170,10 +170,10 @@ namespace View3D.view
             {
                 if (Math.Abs(e.OldValue - e.NewValue) > 0.01)
                 {
-                    PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+                    PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     stl.modifiedM = true;
-                    MainWindow.main.objectPlacement.textTransY.Text = Convert.ToString(slider_moveY.Value);
+                    MainWindow.main.stlComposer.textTransY.Text = Convert.ToString(slider_moveY.Value);
                 MainWindow.main.threeDControl.UpdateChanges();
 
                 }
@@ -187,11 +187,11 @@ namespace View3D.view
             {
                 if (Math.Abs(e.OldValue - e.NewValue) > 0.0001)
                 {
-                    PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+                    PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     stl.modifiedM = true;
 
-                    MainWindow.main.objectPlacement.textTransZ.Text = Convert.ToString(slider_moveZ.Value);
+                    MainWindow.main.stlComposer.textTransZ.Text = Convert.ToString(slider_moveZ.Value);
                     moveZ_textbox.Text = (Math.Round(slider_moveZ.Value, 3) - Math.Round(slider_moveZ.Minimum, 3)).ToString();
                     MainWindow.main.threeDControl.UpdateChanges();
                 }
@@ -205,7 +205,7 @@ namespace View3D.view
             {
                 try
                 {
-                    PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+                    PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     slider_moveX.Value = Convert.ToDouble(moveX_textbox.Text);
                     if (slider_moveX.Value != Convert.ToDouble(moveX_textbox.Text))
@@ -227,7 +227,7 @@ namespace View3D.view
             {
                 try
                 {
-                    PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+                    PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     slider_moveY.Value = Convert.ToDouble(moveY_textbox.Text);
                     if (slider_moveY.Value != Convert.ToDouble(moveY_textbox.Text))
@@ -249,7 +249,7 @@ namespace View3D.view
             {
                 try
                 {
-                    PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+                    PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     Double temp=slider_moveZ.Value;
                         slider_moveZ.Value = Convert.ToDouble(moveZ_textbox.Text) + slider_moveZ.Minimum;
@@ -268,19 +268,19 @@ namespace View3D.view
 
         private void slider_moveX_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
         }
 
         private void slider_moveY_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
         }
 
         private void slider_moveZ_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
         }
 
@@ -288,7 +288,7 @@ namespace View3D.view
         {
             if (e.Key == Key.Right || e.Key == Key.Up || e.Key == Key.Left || e.Key == Key.Down)
             {
-                PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+                PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
             }
         }
@@ -297,7 +297,7 @@ namespace View3D.view
         {
             if (e.Key == Key.Right || e.Key == Key.Up || e.Key == Key.Left || e.Key == Key.Down)
             {
-                PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+                PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
             }
         }
@@ -306,7 +306,7 @@ namespace View3D.view
         {
             if (e.Key == Key.Right || e.Key == Key.Up || e.Key == Key.Left || e.Key == Key.Down)
             {
-                PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+                PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
             }
         }

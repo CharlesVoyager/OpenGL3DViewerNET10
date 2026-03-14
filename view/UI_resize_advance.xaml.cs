@@ -42,7 +42,7 @@ namespace View3D.view
             if (gIsShow == true)
                 return;
 
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             try
             {
@@ -61,24 +61,24 @@ namespace View3D.view
                     }
                 }
 
-                Double tbefore = Convert.ToDouble(MainWindow.main.objectPlacement.textScaleX.Text);
+                Double tbefore = Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text);
                 Double tTempx = dimX / bboxnow;
                 Double tMultScale = 0.0;
 
                 tMultScale = tTempx / tbefore;
-                MainWindow.main.objectPlacement.textScaleX.Text = tTempx.ToString();
+                MainWindow.main.stlComposer.textScaleX.Text = tTempx.ToString();
                 if (chk_Uniform.IsChecked == true)// && gFlag == true)
                 {
-                    Double temp = Convert.ToDouble(MainWindow.main.objectPlacement.textScaleY.Text) * tMultScale;
+                    Double temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleY.Text) * tMultScale;
                     if (temp > 0)
                     {
-                        MainWindow.main.objectPlacement.textScaleY.Text = temp.ToString();
+                        MainWindow.main.stlComposer.textScaleY.Text = temp.ToString();
                     }
 
-                    temp = Convert.ToDouble(MainWindow.main.objectPlacement.textScaleZ.Text) * tMultScale;
+                    temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleZ.Text) * tMultScale;
                     if (temp > 0)
                     {
-                        MainWindow.main.objectPlacement.textScaleZ.Text = temp.ToString();
+                        MainWindow.main.stlComposer.textScaleZ.Text = temp.ToString();
                     }
 
                     gIsShow = true;
@@ -124,7 +124,7 @@ namespace View3D.view
             if (gIsShow == true)
                 return;
 
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             try
             {
@@ -143,25 +143,25 @@ namespace View3D.view
                     }
                 }
 
-                Double tbefore = Convert.ToDouble(MainWindow.main.objectPlacement.textScaleY.Text);
+                Double tbefore = Convert.ToDouble(MainWindow.main.stlComposer.textScaleY.Text);
                 Double tTempy = dimY / bboynow;
                 Double tMultScale = 0.0;
 
                 tMultScale = tTempy / tbefore;
 
-                MainWindow.main.objectPlacement.textScaleY.Text = tTempy.ToString();
+                MainWindow.main.stlComposer.textScaleY.Text = tTempy.ToString();
                 if (chk_Uniform.IsChecked == true)//&& gFlag==true)
                 {
-                    Double temp = Convert.ToDouble(MainWindow.main.objectPlacement.textScaleX.Text) * tMultScale;
+                    Double temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text) * tMultScale;
                     if (temp > 0)
                     {
-                        MainWindow.main.objectPlacement.textScaleX.Text = temp.ToString();
+                        MainWindow.main.stlComposer.textScaleX.Text = temp.ToString();
                     }
 
-                    temp = Convert.ToDouble(MainWindow.main.objectPlacement.textScaleZ.Text) * tMultScale;
+                    temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleZ.Text) * tMultScale;
                     if (temp > 0)
                     {
-                        MainWindow.main.objectPlacement.textScaleZ.Text = temp.ToString();
+                        MainWindow.main.stlComposer.textScaleZ.Text = temp.ToString();
                     }
 
                     gIsShow = true;
@@ -205,7 +205,7 @@ namespace View3D.view
         {
             if (MainWindow.main == null) return; // At design time MainWindow.main is null. Add null guards to prevent NullReferenceException.
 
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
          
             if (stl == null) return;
 
@@ -214,7 +214,7 @@ namespace View3D.view
                 stl.LandToZ(stl.zMin);
                 MainWindow.main.UI_move.slider_moveZ.Value = stl.Position.z;
                 MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBoxWOSupport.zMin;
-                MainWindow.main.objectPlacement.updateSTLState(stl);
+                MainWindow.main.stlComposer.updateSTLState(stl);
                 stl.modifiedM = false;
                 return;
             }
@@ -235,25 +235,25 @@ namespace View3D.view
                     }
                 }
 
-                Double tbefore = Convert.ToDouble(MainWindow.main.objectPlacement.textScaleZ.Text);
+                Double tbefore = Convert.ToDouble(MainWindow.main.stlComposer.textScaleZ.Text);
                 Double tTempz = dimZ / bboznow;
                 Double tMultScale = 0.0;
 
                 tMultScale = tTempz / tbefore;
 
-                MainWindow.main.objectPlacement.textScaleZ.Text = tTempz.ToString();
+                MainWindow.main.stlComposer.textScaleZ.Text = tTempz.ToString();
                 if (chk_Uniform.IsChecked == true)//&& gFlag==true)
                 {
-                    Double temp = Convert.ToDouble(MainWindow.main.objectPlacement.textScaleX.Text) * tMultScale;
+                    Double temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text) * tMultScale;
                     if (temp > 0)
                     {
-                        MainWindow.main.objectPlacement.textScaleX.Text = temp.ToString();
+                        MainWindow.main.stlComposer.textScaleX.Text = temp.ToString();
                     }
 
-                    temp = Convert.ToDouble(MainWindow.main.objectPlacement.textScaleY.Text) * tMultScale;
+                    temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleY.Text) * tMultScale;
                     if (temp > 0)
                     {
-                        MainWindow.main.objectPlacement.textScaleY.Text = temp.ToString();
+                        MainWindow.main.stlComposer.textScaleY.Text = temp.ToString();
                     }
 
                     gIsShow = true;
@@ -292,7 +292,7 @@ namespace View3D.view
                 }
                     stl.LandToZ(stl.zMin);
                 MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBoxWOSupport.zMin;
-                MainWindow.main.objectPlacement.updateSTLState(stl);
+                MainWindow.main.stlComposer.updateSTLState(stl);
             }
             catch { }
         }
@@ -300,7 +300,7 @@ namespace View3D.view
         public void chk_Uniform_Checked(object sender, RoutedEventArgs e)
         {
             if (MainWindow.main == null) return; // At design time MainWindow.main is null. Add null guards to prevent NullReferenceException.
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             try
             {
@@ -349,7 +349,7 @@ namespace View3D.view
         private void slider_resize_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (MainWindow.main == null) return;
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             stl.modifiedS = true;
             if (e.Delta > 0)
@@ -362,7 +362,7 @@ namespace View3D.view
         private void slider_resize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (MainWindow.main == null) return;
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
             gIsShow = true;
@@ -393,7 +393,7 @@ namespace View3D.view
                     break;
             }
 
-            txt_Scale.Text = (Convert.ToDouble(MainWindow.main.objectPlacement.textScaleX.Text) * 100).ToString("0");
+            txt_Scale.Text = (Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text) * 100).ToString("0");
         }
 
         public void checkMin()
@@ -447,12 +447,12 @@ namespace View3D.view
         public void button_Reset_Click(object sender, RoutedEventArgs e)
         {
             if (MainWindow.main == null) return;
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             model.geom.RHBoundingBox bbox = stl.BoundingBoxWOSupport;
-            MainWindow.main.objectPlacement.textScaleX.Text = "1";
-            MainWindow.main.objectPlacement.textScaleY.Text = "1";
-            MainWindow.main.objectPlacement.textScaleZ.Text = "1";
+            MainWindow.main.stlComposer.textScaleX.Text = "1";
+            MainWindow.main.stlComposer.textScaleY.Text = "1";
+            MainWindow.main.stlComposer.textScaleZ.Text = "1";
             bboxnow = bbox.Size.x;
             bboynow = bbox.Size.y;
             bboznow = bbox.Size.z;
@@ -481,47 +481,47 @@ namespace View3D.view
             IsScale = true;
             gIsShow = false;
             checkMin();
-            MainWindow.main.objectPlacement.check_stl_size_too_small();
+            MainWindow.main.stlComposer.check_stl_size_too_small();
         }
 
         private void button_mmtoinch_Click(object sender, RoutedEventArgs e)
         {
             button_mmtoinch.IsEnabled = false;
             button_inchtomm.IsEnabled = true;
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
-            MainWindow.main.objectPlacement.DoInchOrScale(stl, true);
+            MainWindow.main.stlComposer.DoInchOrScale(stl, true);
         }
 
         private void button_inchtomm_Click(object sender, RoutedEventArgs e)
         {
             button_mmtoinch.IsEnabled = true;
             button_inchtomm.IsEnabled = false;
-            PrintModel model = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel model = MainWindow.main.stlComposer.SingleSelectedModel;
             if (model == null) return;
-            MainWindow.main.objectPlacement.DoInchtomm(model);
+            MainWindow.main.stlComposer.DoInchtomm(model);
         }
 
         private void btn_Scale_Click(object sender, RoutedEventArgs e)
         {
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
             model.geom.RHBoundingBox bbox = stl.BoundingBoxWOSupport;
 
             try
             {
-                Double tbeforeX = Convert.ToDouble(MainWindow.main.objectPlacement.textScaleX.Text);
-                Double tbeforeY = Convert.ToDouble(MainWindow.main.objectPlacement.textScaleY.Text);
-                Double tbeforeZ = Convert.ToDouble(MainWindow.main.objectPlacement.textScaleZ.Text);
+                Double tbeforeX = Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text);
+                Double tbeforeY = Convert.ToDouble(MainWindow.main.stlComposer.textScaleY.Text);
+                Double tbeforeZ = Convert.ToDouble(MainWindow.main.stlComposer.textScaleZ.Text);
                 Double temp = Convert.ToDouble(txt_Scale.Text) / 100;
                 Double tAddScaleX = tbeforeX * temp;
                 Double tAddScaleY = tbeforeY * temp;
                 Double tAddScaleZ = tbeforeZ * temp;
 
-                MainWindow.main.objectPlacement.textScaleX.Text = tAddScaleX.ToString("0.0000000000000");
-                MainWindow.main.objectPlacement.textScaleY.Text = tAddScaleY.ToString("0.0000000000000");
-                MainWindow.main.objectPlacement.textScaleZ.Text = tAddScaleZ.ToString("0.0000000000000");
+                MainWindow.main.stlComposer.textScaleX.Text = tAddScaleX.ToString("0.0000000000000");
+                MainWindow.main.stlComposer.textScaleY.Text = tAddScaleY.ToString("0.0000000000000");
+                MainWindow.main.stlComposer.textScaleZ.Text = tAddScaleZ.ToString("0.0000000000000");
                 gIsShow = true;
                 dimX = stl.BoundingBoxWOSupport.Size.x;
                 updateTxt(Enums.Axis.X);
@@ -551,7 +551,7 @@ namespace View3D.view
 
         private void scaleLostFocus(object sender, RoutedEventArgs e)
         {
-            PrintModel stl = MainWindow.main.objectPlacement.SingleSelectedModel;
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
             try
