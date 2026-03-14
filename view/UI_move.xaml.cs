@@ -96,7 +96,7 @@ namespace View3D.view
 
             MainWindow.main.objectPlacement.landModel(stl);
             MainWindow.main.objectPlacement.updateSTLState(stl);
-            MainWindow.main.threedview.UpdateChanges();
+            MainWindow.main.threeDControl.UpdateChanges();
 
             stl.modifiedM = false;
         }
@@ -118,7 +118,7 @@ namespace View3D.view
             moveZ_textbox.Text = (Math.Round(slider_moveZ.Value - slider_moveZ.Minimum, 1)).ToString();
 
             MainWindow.main.objectPlacement.updateSTLState(stl);
-            MainWindow.main.threedview.UpdateChanges();
+            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         private void slider_moveX_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -158,7 +158,7 @@ namespace View3D.view
                     if (stl == null) return;
                     stl.modifiedM = true;
                     MainWindow.main.objectPlacement.textTransX.Text = Convert.ToString(slider_moveX.Value);
-                    MainWindow.main.threedview.UpdateChanges();
+                    MainWindow.main.threeDControl.UpdateChanges();
                 }
             }
             catch { }
@@ -174,7 +174,7 @@ namespace View3D.view
                     if (stl == null) return;
                     stl.modifiedM = true;
                     MainWindow.main.objectPlacement.textTransY.Text = Convert.ToString(slider_moveY.Value);
-                MainWindow.main.threedview.UpdateChanges();
+                MainWindow.main.threeDControl.UpdateChanges();
 
                 }
             }
@@ -193,7 +193,7 @@ namespace View3D.view
 
                     MainWindow.main.objectPlacement.textTransZ.Text = Convert.ToString(slider_moveZ.Value);
                     moveZ_textbox.Text = (Math.Round(slider_moveZ.Value, 3) - Math.Round(slider_moveZ.Minimum, 3)).ToString();
-                    MainWindow.main.threedview.UpdateChanges();
+                    MainWindow.main.threeDControl.UpdateChanges();
                 }
             }
             catch { }

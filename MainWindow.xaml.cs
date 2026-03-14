@@ -18,7 +18,7 @@ namespace View3D
         public static MainWindow? main = null;
 
         public ThreeDSettings? threeDSettings = null;
-        public ThreeDControl? threedview = null;
+        public ThreeDControl? threeDControl = null;
         public STLComposer? objectPlacement = null;
 
         public Trans? trans = null;
@@ -128,8 +128,8 @@ namespace View3D
 
         public void Update3D()
         {
-            if (threedview != null)
-                threedview.UpdateChanges();
+            if (threeDControl != null)
+                threeDControl.UpdateChanges();
         }
 
         private void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -137,7 +137,7 @@ namespace View3D
             try
             {
                 if (e.Key == Key.Delete)
-                    threedview.button_remove_Click(null, null);
+                    threeDControl.button_remove_Click(null, null);
             }
             catch { }
         }
@@ -216,12 +216,12 @@ namespace View3D
         public System.Windows.Controls.ContextMenu ContextMenuItems => _contextMenu;
 
         // Actions — forward to ThreeDControl
-        private void OnLandObject() => threedview.ContextMenu_LandObject();
-        private void OnResetObject() => threedview.ContextMenu_ResetObject();
-        private void OnRemoveObject() => threedview.ContextMenu_RemoveObject();
-        private void OnMmToInch() => threedview.ContextMenu_MmToInch();
-        private void OnInchToMm() => threedview.ContextMenu_InchToMm();
-        private void OnClone() => threedview.ContextMenu_Clone();
+        private void OnLandObject() => threeDControl.ContextMenu_LandObject();
+        private void OnResetObject() => threeDControl.ContextMenu_ResetObject();
+        private void OnRemoveObject() => threeDControl.ContextMenu_RemoveObject();
+        private void OnMmToInch() => threeDControl.ContextMenu_MmToInch();
+        private void OnInchToMm() => threeDControl.ContextMenu_InchToMm();
+        private void OnClone() => threeDControl.ContextMenu_Clone();
 
         private void translate()
         {
@@ -416,10 +416,10 @@ namespace View3D
                 if (fileLow.EndsWith(".stl"))
                 {
                     objectPlacement.openAndAddObject(filePath);
-                    threedview.InvokeGL(() =>
+                    threeDControl.InvokeGL(() =>
                     {
                         STLComposer._stlModelDataReady.Wait();
-                        threedview.UploadMeshToGPU();
+                        threeDControl.UploadMeshToGPU();
                     });
                 }
             }
@@ -562,7 +562,7 @@ namespace View3D
             UI_move.slider_moveY.Maximum = 1000;
 
             OutofBound.Visibility = System.Windows.Visibility.Hidden;
-            threedview.button_remove_Click(null, null);
+            threeDControl.button_remove_Click(null, null);
             if (objectPlacement.listObjects.Items.Count > 0)
                 objectPlacement.updateSTLState(objectPlacement.SingleSelectedModel);
             Focus();
@@ -576,7 +576,7 @@ namespace View3D
             resize_toggleButton.IsChecked = false;
             info_toggleButton.IsChecked = false;
 
-            threedview.button_zoomIn_Click(null, null);
+            threeDControl.button_zoomIn_Click(null, null);
             Focus();
         }
 
@@ -588,7 +588,7 @@ namespace View3D
             resize_toggleButton.IsChecked = false;
             info_toggleButton.IsChecked = false;
 
-            threedview.button_zoomOut_Click(null, null);
+            threeDControl.button_zoomOut_Click(null, null);
             Focus();
         }
 

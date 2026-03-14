@@ -154,7 +154,7 @@ namespace View3D.view
             stl.LandToZ(oriZmin);
             stl.modifiedR = false;
             MainWindow.main.objectPlacement.updateSTLState(stl);
-            MainWindow.main.threedview.UpdateChanges();
+            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         private void stackpanelX_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)

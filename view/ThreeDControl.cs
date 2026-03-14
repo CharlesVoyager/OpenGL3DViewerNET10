@@ -62,7 +62,7 @@ namespace View3D.view
         int keyX = -1;
         int keyY = -1;
 
-        public ThreeDView view = null;
+        public ThreeDView threeDview = null;
         public STLComposer stlComp = null;
 
         // Geometry helpers (pick ray)
@@ -116,7 +116,7 @@ namespace View3D.view
 
         // ── Public wiring ─────────────────────────────────────────────────────
         public void SetComp(STLComposer comp) => stlComp = comp;
-        public void SetView(ThreeDView v) { view = v; UpdateChanges(); }
+        public void SetView(ThreeDView v) { threeDview = v; UpdateChanges(); }
 
         private volatile bool _isDirty = true;
         private void Invalidate() => _isDirty = true;
@@ -126,7 +126,7 @@ namespace View3D.view
         public void SetObjectSelected(bool sel)
         {
             MainWindow.main.setbuttonVisable(stlComp.listObjects.SelectedItems.Count == 1 && sel);
-            view.objectsSelected = sel;
+            threeDview.objectsSelected = sel;
         }
 
         // ── Translations ──────────────────────────────────────────────────────
@@ -534,11 +534,11 @@ namespace View3D.view
                     movePlane = new Geom3DPlane(pickPoint, new Geom3DVector(0, 0, 1));
                     moveStart = moveLast = new Geom3DVector(pickPoint);
                 }
-                if (sel != null && view.eventObjectMoved != null)
+                if (sel != null && threeDview.eventObjectMoved != null)
                 {
                     MainWindow.main.Dispatcher.InvokeAsync(() =>
                     {
-                        view.eventObjectSelected(sel);
+                        threeDview.eventObjectSelected(sel);
                     });
                 }
                 else if (keyX == (int)pos.X && keyY == (int)pos.Y)
@@ -558,11 +558,11 @@ namespace View3D.view
                     movePlane = new Geom3DPlane(pickPoint, new Geom3DVector(0, 0, 1));
                     moveStart = moveLast = new Geom3DVector(pickPoint);
                 }
-                if (sel != null && view.eventObjectMoved != null)
+                if (sel != null && threeDview.eventObjectMoved != null)
                 {
                     MainWindow.main.Dispatcher.InvokeAsync(() =>
                     {
-                        view.eventObjectSelected(sel);
+                        threeDview.eventObjectSelected(sel);
                         ShowContextMenu();
                     });
                 }
@@ -657,7 +657,7 @@ namespace View3D.view
         // ── Rendering ─────────────────────────────────────────────────────────
         private void gl_Paint()
         {
-            if (view == null || !loaded) return;
+            if (threeDview == null || !loaded) return;
             try
             {
                 fpsTimer.Reset();
@@ -884,7 +884,7 @@ namespace View3D.view
         // ── Pick / ray-cast ───────────────────────────────────────────────────
         public void UpdatePickLine(int x, int y)
         {
-            if (view == null) return;
+            if (threeDview == null) return;
 
             float bedRadius = (float)(1.5 * Math.Sqrt(
                  (MainWindow.main.PrintAreaDepth * MainWindow.main.PrintAreaDepth +
@@ -1002,7 +1002,7 @@ namespace View3D.view
                         speedX = (xPos - lastX) * 200 * zoom / ClientSize.X;
                         speedY = (yPos - lastY) * 200 * zoom / ClientSize.Y;
 
-                        if (view.eventObjectMoved != null)
+                        if (threeDview.eventObjectMoved != null)
                         {
                             var selModels = new List<PrintModel>();
                             var prevX = new List<float>();
@@ -1014,7 +1014,7 @@ namespace View3D.view
                                 prevX.Add(stl.Position.x);
                                 prevY.Add(stl.Position.y);
                             }
-                            view.eventObjectMoved(diff.x, diff.y);
+                            threeDview.eventObjectMoved(diff.x, diff.y);
                         }
                         lastX = xPos; lastY = yPos;
                         Invalidate();
@@ -1057,7 +1057,7 @@ namespace View3D.view
                 stlComp.updateSTLState(null);
             });
 
-            foreach (ThreeDModel m in view.models) m.Clear();
+            foreach (ThreeDModel m in threeDview.models) m.Clear();
             Invalidate();
         }
 

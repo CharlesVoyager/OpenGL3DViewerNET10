@@ -196,7 +196,7 @@ namespace View3D.model.geom
             {
                 int[] buffersToDelete = (int[])glBuffer.Clone();
                 glBuffer = null;
-                MainWindow.main.threedview.InvokeGL(() =>
+                MainWindow.main.threeDControl.InvokeGL(() =>
                 {
                     GL.DeleteBuffers(buffersToDelete.Length, buffersToDelete);
                 });

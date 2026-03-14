@@ -179,7 +179,7 @@ namespace View3D.model
 
         public Vector3 GetTranslateVector()
         {
-            return MainWindow.main.threedview.cam.EdgeTranslation();
+            return MainWindow.main.threeDControl.cam.EdgeTranslation();
         }
 #endregion
 

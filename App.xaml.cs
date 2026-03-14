@@ -30,9 +30,9 @@ namespace OpenGL3DViewerNET10
             View3D.MainWindow._mainWindowReady.Wait();
 
             // OpenTK GameWindow runs on the main thread (required by GLFW)
-            mainWindow.threedview = new ThreeDControl();
-            mainWindow.threedview.SetComp(mainWindow.objectPlacement);
-            mainWindow.threedview.SetView(mainWindow.objectPlacement.cont);
+            mainWindow.threeDControl = new ThreeDControl();
+            mainWindow.threeDControl.SetComp(mainWindow.objectPlacement);
+            mainWindow.threeDControl.SetView(mainWindow.objectPlacement.cont);
 
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
@@ -40,7 +40,7 @@ namespace OpenGL3DViewerNET10
             });
 
             // Blocks main thread for lifetime of GL window — correct!
-            mainWindow.threedview.Run();
+            mainWindow.threeDControl.Run();
 
             Console.WriteLine("Exit the program.");
         }

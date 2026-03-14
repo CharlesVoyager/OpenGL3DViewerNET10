@@ -69,7 +69,7 @@ namespace View3D.view
         private void EnableBusyWindowNoCancleButton()
         {
             if (MainWindow.main == null) return;
-            if (MainWindow.main.threedview == null) return;
+            if (MainWindow.main.threeDControl == null) return;
 
             // BusyWindow start
             MainWindow.main.BusyWindow.labelBusyMessage.Text = Trans.T("L_MODELING");

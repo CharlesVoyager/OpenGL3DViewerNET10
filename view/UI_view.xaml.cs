@@ -43,37 +43,37 @@ namespace View3D.view
 
         private void top_button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.main.threedview.topView();
+            MainWindow.main.threeDControl.topView();
         }
 
         private void bottom_button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.main.threedview.bottomView();
+            MainWindow.main.threeDControl.bottomView();
         }
 
         private void front_button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.main.threedview.frontView();
+            MainWindow.main.threeDControl.frontView();
         }
 
         private void back_button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.main.threedview.backView();
+            MainWindow.main.threeDControl.backView();
         }
 
         private void left_button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.main.threedview.leftView();
+            MainWindow.main.threeDControl.leftView();
         }
 
         private void right_button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.main.threedview.rightView();
+            MainWindow.main.threeDControl.rightView();
         }
 
         private void view_resetButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.main.threedview.isometricView();
+            MainWindow.main.threeDControl.isometricView();
         }
     }
 }

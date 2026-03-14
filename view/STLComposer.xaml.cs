@@ -547,9 +547,9 @@ namespace View3D.view
         {
             foreach (var stl in ListObjects(true).ToList())
                 RemoveModel(stl);
-            if (MainWindow.main.threedview.view.models.Count == 0)
+            if (MainWindow.main.threeDControl.threeDview.models.Count == 0)
                 MainWindow.main.OutofBound.Visibility = Visibility.Collapsed;
-            MainWindow.main.threedview.UpdateChanges();
+            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         public void buttonRemoveSTL_Click(object sender, EventArgs e)
@@ -578,8 +578,8 @@ namespace View3D.view
                 textTransX.IsEnabled        = false;
                 textTransY.IsEnabled        = false;
                 textTransZ.IsEnabled        = false;
-                if (MainWindow.main.threedview != null)
-                    MainWindow.main.threedview.SetObjectSelected(n > 0);
+                if (MainWindow.main.threeDControl != null)
+                    MainWindow.main.threeDControl.SetObjectSelected(n > 0);
                 panelAnalysis.Visibility = Visibility.Collapsed;
             }
             else
@@ -594,8 +594,8 @@ namespace View3D.view
                 textTransX.IsEnabled       = true;
                 textTransY.IsEnabled       = true;
                 textTransZ.IsEnabled       = true;
-                if (MainWindow.main.threedview != null)
-                    MainWindow.main.threedview.SetObjectSelected(true);
+                if (MainWindow.main.threeDControl != null)
+                    MainWindow.main.threeDControl.SetObjectSelected(true);
                 panelAnalysis.Visibility = Visibility.Visible;
                 UpdateAnalyserData();
             }
@@ -611,8 +611,8 @@ namespace View3D.view
                 var row = (ListViewItemModel)listObjects.Items[0];
                 row.Model.CenterWOLand(MainWindow.main.PrintAreaWidth / 2, MainWindow.main.PrintAreaDepth / 2);
 
-                if (MainWindow.main.threedview != null)
-                    MainWindow.main.threedview.UpdateChanges();
+                if (MainWindow.main.threeDControl != null)
+                    MainWindow.main.threeDControl.UpdateChanges();
                 return true;
             }
 
@@ -665,7 +665,7 @@ namespace View3D.view
                 s.Position.y += yOff + yAdd + rect.y + border - s.yMin;
                 s.UpdateBoundingBox();
             }
-            MainWindow.main.threedview.UpdateChanges();
+            MainWindow.main.threeDControl.UpdateChanges();
             return true;
         }
 
@@ -721,8 +721,8 @@ namespace View3D.view
                 MainWindow.main.UI_object_information.Analyse(stl);
             }
 
-            if (MainWindow.main.threedview != null)
-                MainWindow.main.threedview.UpdateChanges();
+            if (MainWindow.main.threeDControl != null)
+                MainWindow.main.threeDControl.UpdateChanges();
         }
 
         private void listObjects_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -831,7 +831,7 @@ namespace View3D.view
             float.TryParse(textTransX.Text, NumberStyles.Float, GCode.format, out stl.Position.x);
             if (Math.Abs(old - stl.Position.x) < 0.001f) return;
             if (typeof(PrintModel) == stl.GetType()) updateSTLState(stl);
-            MainWindow.main.threedview.UpdateChanges();
+            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         private void textTransY_TextChanged(object sender, TextChangedEventArgs e)
@@ -843,7 +843,7 @@ namespace View3D.view
             float.TryParse(textTransY.Text, NumberStyles.Float, GCode.format, out stl.Position.y);
             if (Math.Abs(old - stl.Position.y) < 0.001f) return;
             if (typeof(PrintModel) == stl.GetType()) updateSTLState(stl);
-            MainWindow.main.threedview.UpdateChanges();
+            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         private void textTransZ_TextChanged(object sender, TextChangedEventArgs e)
@@ -855,7 +855,7 @@ namespace View3D.view
             float.TryParse(textTransZ.Text, NumberStyles.Float, GCode.format, out stl.Position.z);
             if (Math.Abs(old - stl.Position.z) < 0.001f) return;
             updateSTLState(stl);
-            MainWindow.main.threedview.UpdateChanges();
+            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         private void textScaleX_TextChanged(object sender, TextChangedEventArgs e)
@@ -866,7 +866,7 @@ namespace View3D.view
             float.TryParse(textScaleX.Text, NumberStyles.Float, GCode.format, out stl.Scale.x);
             if (LockAspectRatio) { stl.Scale.y = stl.Scale.z = stl.Scale.x; SyncScaleFields(stl); }
             updateSTLState(stl);
-            MainWindow.main.threedview.UpdateChanges();
+            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         private void textScaleY_TextChanged(object sender, TextChangedEventArgs e)
@@ -876,7 +876,7 @@ namespace View3D.view
             if (stl == null) return;
             float.TryParse(textScaleY.Text, NumberStyles.Float, GCode.format, out stl.Scale.y);
             updateSTLState(stl);
-            MainWindow.main.threedview.UpdateChanges();
+            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         private void textScaleZ_TextChanged(object sender, TextChangedEventArgs e)
@@ -890,7 +890,7 @@ namespace View3D.view
             if (old != stl.Scale.z) stl.LandUpdateBBNoPreUpdate();
             updateSTLState(stl);
 
-            MainWindow.main.threedview.UpdateChanges();
+            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         public void textRotX_TextChanged(object sender, TextChangedEventArgs e)
@@ -903,7 +903,7 @@ namespace View3D.view
             stl.ForceViewRegeneration();
             if (Math.Abs(old - stl.Rotation.x) < 0.001f) return;
             updateSTLState(stl);
-            MainWindow.main.threedview.UpdateChanges();
+            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         private void textRotY_TextChanged(object sender, TextChangedEventArgs e)
@@ -916,7 +916,7 @@ namespace View3D.view
             stl.ForceViewRegeneration();
             if (Math.Abs(old - stl.Rotation.y) < 0.001f) return;
             updateSTLState(stl);
-            MainWindow.main.threedview.UpdateChanges();
+            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         private void textRotZ_TextChanged(object sender, TextChangedEventArgs e)
@@ -929,7 +929,7 @@ namespace View3D.view
             stl.ForceViewRegeneration();
             if (Math.Abs(old - stl.Rotation.z) < 0.001f) return;
             if (typeof(PrintModel) == stl.GetType()) updateSTLState(stl);
-            MainWindow.main.threedview.UpdateChanges();
+            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         /// <summary>
@@ -958,7 +958,7 @@ namespace View3D.view
             var model = (PrintModel)btn.Tag;
             cont.models.Remove(model);
             RemoveModel(model);
-            MainWindow.main.threedview.UpdateChanges();
+            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         // =====================================================================
@@ -979,7 +979,7 @@ namespace View3D.view
                 }
                 updateSTLState(stl);
             }
-            MainWindow.main.threedview.UpdateChanges();
+            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         private void objectSelected(ThreeDModel sel)
@@ -1029,7 +1029,7 @@ namespace View3D.view
                 ui.gIsShow = false;
                 updateSTLState(stl);
                 stl.LandToZ(0);
-                MainWindow.main.threedview.UpdateChanges();
+                MainWindow.main.threeDControl.UpdateChanges();
             }
             catch { }
         }
@@ -1114,7 +1114,7 @@ namespace View3D.view
                     textScaleZ.Text = (tempZ / ui.bboznow).ToString("0.000");
                     updateSTLState(stl);
                     stl.LandUpdateBBNoPreUpdate();
-                    MainWindow.main.threedview.UpdateChanges();
+                    MainWindow.main.threeDControl.UpdateChanges();
                 }
             }
             catch { }
@@ -1139,7 +1139,7 @@ namespace View3D.view
                 textScaleZ.Text = (tempZ / ui.bboznow).ToString("0.000");
                 updateSTLState(stl);
                 stl.LandUpdateBBNoPreUpdate();
-                MainWindow.main.threedview.UpdateChanges();
+                MainWindow.main.threeDControl.UpdateChanges();
             }
             catch { }
         }
