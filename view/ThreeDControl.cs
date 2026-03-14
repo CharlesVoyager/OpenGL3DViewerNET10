@@ -62,8 +62,8 @@ namespace View3D.view
         int keyX = -1;
         int keyY = -1;
 
-        public ThreeDView threeDView = null;
-        public STLComposer stlComp = null;
+        ThreeDView threeDView = null;
+        STLComposer stlComp = null;
 
         // Geometry helpers (pick ray)
         public Geom3DLine pickLine = null;
