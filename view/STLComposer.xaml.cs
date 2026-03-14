@@ -46,10 +46,9 @@ namespace View3D.view
 
     public partial class STLComposer : Window
     {
-        // ── Public fields kept identical to the WinForms version ──────────────
         public ThreeDView cont;
-        public List<PrintModel>  models     = new List<PrintModel>();
-        public List<ModelData>   modelDatas = new List<ModelData>();
+        public List<PrintModel> models     = new List<PrintModel>();
+        private List<ModelData> modelDatas = new List<ModelData>();
 
         // ── Private fields ────────────────────────────────────────────────────
         private IDraw   modelDrawer   = new ModelGLDraw();
