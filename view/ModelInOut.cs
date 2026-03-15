@@ -10,39 +10,16 @@ namespace View3D.view
     {
         public bool TwoStageUpdateProcess { get; set; }
         public event EventHandler AbortTask;
-        private bool saveTaskAbort;
         private int mergedCount, mergeCountTotal;
 
         public ModelInOut()
         {
             TwoStageUpdateProcess = false;
         }
-        public void Load(string file, ModelData model)
+
+        public void LoadWOCatch(string file, TopoModel model)
         {
-            string lname = model.FileName.ToLower();
-            if (lname.EndsWith(".stl"))
-            {
-                MeshIOStl fileMesh = new MeshIOStl();
-                AbortTask += fileMesh.TaskAbort;
-
-                try
-                {
-                    fileMesh.Load(model.FileName, model.originalModel, OnProcessUpdate);
-                }
-                catch
-                {
-                    ///MessageBox.Show(Trans.T("M_LOAD_STL_FILE_ERROR"), Trans.T("W_LOAD_STL_FILE_ERROR"), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-
-                AbortTask -= fileMesh.TaskAbort;
-            }
-            FileInfo info = new FileInfo(file);
-            model.name = info.Name;
-        }
-
-        public void LoadWOCatch(string file, ModelData model)
-        {
-            string lname = model.FileName.ToLower();
+            string lname = file.ToLower();
 
             IMeshInOut fileMesh;
             Action<int> updateRateFunc;
@@ -57,11 +34,8 @@ namespace View3D.view
                 updateRateFunc = OnProcessUpdate;
             }
             AbortTask += fileMesh.TaskAbort;
-            fileMesh.LoadWOCatch(model.FileName, model.originalModel, updateRateFunc);
+            fileMesh.LoadWOCatch(file, model, updateRateFunc);
             AbortTask -= fileMesh.TaskAbort;
-
-            FileInfo info = new FileInfo(file);
-            model.name = info.Name;
         }
         public void Save(string filename, TopoModel model, Setting outSetting) { }
 
@@ -123,8 +97,6 @@ namespace View3D.view
 
         public void OnUIAbort(object sender, EventArgs e)
         {
-            saveTaskAbort = true;
-
             if (AbortTask != null)
                 AbortTask(sender, e);
         }

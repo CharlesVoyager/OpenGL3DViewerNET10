@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using View3D.model;
+using View3D.model.geom;
 
 // ──────────────────────────────────────────────────────────────────────────────
 //  NOTE: The WinForms Designer file (STLComposer_Designer.cs) is entirely
@@ -48,7 +49,6 @@ namespace View3D.view
     {
         public ThreeDView cont;
         public List<PrintModel> models     = new List<PrintModel>();
-        private List<ModelData> modelDatas = new List<ModelData>();
 
         // ── Private fields ────────────────────────────────────────────────────
         private IDraw   modelDrawer   = new ModelGLDraw();
@@ -262,8 +262,7 @@ namespace View3D.view
             if (MainWindow.main == null) return;
 
             listObjects.SelectedItems.Clear();
-            modelDatas.Add(new ModelData(file));
-            models.Add(new PrintModel(modelDrawer, modelDatas[modelDatas.Count - 1].originalModel));
+            models.Add(new PrintModel(modelDrawer, new TopoModel()));
             bool modelToLand = true;
             var  modelIO     = new ModelInOut();
 
@@ -273,13 +272,13 @@ namespace View3D.view
                 // Offload heavy work to background thread — UI thread is free immediately
                 await Task.Run(() =>
                 {
-                    modelIO.LoadWOCatch(file, modelDatas[modelDatas.Count - 1]);
+                    modelIO.LoadWOCatch(file, models[models.Count - 1].originalModel);
                     _stlModelDataReady.Set();
                     Console.WriteLine("LoadWOCatch Done.");
                 });
 
                 MainWindow.main.BusyWindow.DisableBusyWindow();
-                models[models.Count - 1].name = modelDatas[modelDatas.Count - 1].name;
+                models[models.Count - 1].name = Path.GetFileName(file);
             }
             catch (OutOfMemoryException)
             {
@@ -410,9 +409,6 @@ namespace View3D.view
         private bool CloneObject(PrintModel model)
         {
             PrintModel newModel = (PrintModel)model.cloneWithModel();
-            for (int i = 0; i < modelDatas.Count; i++)
-                if (modelDatas[i].originalModel == model.originalModel)
-                    newModel.originalModel = modelDatas[i].CloneModel();
 
             newModel.UpdateBoundingBox();
             newModel.mid    = models.Count;
@@ -518,22 +514,15 @@ namespace View3D.view
         // =====================================================================
         private void RemoveModel(PrintModel model)
         {
+            // ThreeDView
             cont.models.Remove(model);
 
             var row = RowForModel(model);
             if (row != null) listObjects.Items.Remove(row);
 
+            // PrintModel
             for (int i = 0; i < models.Count; i++)
                 if (models[i] == model) { models.RemoveAt(i); break; }
-
-            for (int j = 0; j < modelDatas.Count; j++)
-            {
-                if (modelDatas[j].originalModel == model.originalModel)
-                {
-                    modelDatas[j].RemoveOne();
-                    if (modelDatas[j].Used == 0) { modelDatas.RemoveAt(j); break; }
-                }
-            }
 
             if (model.ListviewGetModels != null)
                 model.ListviewGetModels -= ListObjects;
