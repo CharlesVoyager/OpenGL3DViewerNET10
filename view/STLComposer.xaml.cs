@@ -263,6 +263,7 @@ namespace View3D.view
             try
             {
                 MainWindow.main.BusyWindow.EnableBusyWindow();
+                _stlModelDataReady.Reset();
                 // Offload heavy work to background thread — UI thread is free immediately
                 await Task.Run(() =>
                 {
