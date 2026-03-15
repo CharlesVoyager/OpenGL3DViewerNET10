@@ -705,12 +705,12 @@ namespace View3D.view
 
         public void UploadMeshToGPU()
         {
-            if (MainWindow.main.stlComposer.models.Count == 0)
+            if (stlComp.models.Count == 0)
                 return;
 
             vertices.Clear();
 
-            foreach (var m in MainWindow.main.stlComposer.models)
+            foreach (var m in stlComp.models)
             {
                 foreach (var t in m.originalModel.triangles.triangles)
                 {
