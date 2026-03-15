@@ -1056,8 +1056,6 @@ namespace View3D.view
                 stlComp.buttonRemoveSTL_Click(null, null);
                 stlComp.updateSTLState(null);
             });
-
-            foreach (ThreeDModel m in threeDView.models) m.Clear();
             Invalidate();
         }
 
