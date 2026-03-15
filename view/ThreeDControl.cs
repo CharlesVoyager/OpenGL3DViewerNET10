@@ -890,11 +890,11 @@ namespace View3D.view
                 cam.viewCenter.X, cam.viewCenter.Y, cam.viewCenter.Z, 0, 0, 1.0f);
             ntrans = Matrix4.Invert(ntrans);
             Vector4 frontPoint = ntrans.Row3;
-            ////Vector4 dirVec = Vector4.Transform(dirN, ntrans);
-            //////pickLine = new Geom3DLine(
-            //////    new Geom3DVector(frontPoint.X / frontPoint.W, frontPoint.Y / frontPoint.W, frontPoint.Z / frontPoint.W),
-            //////    new Geom3DVector(dirVec.X, dirVec.Y, dirVec.Z), true);
-            ////pickLine.dir.normalize();
+            Vector4 dirVec = dirN * ntrans;
+            pickLine = new Geom3DLine(
+                new Geom3DVector(frontPoint.X / frontPoint.W, frontPoint.Y / frontPoint.W, frontPoint.Z / frontPoint.W),
+                new Geom3DVector(dirVec.X, dirVec.Y, dirVec.Z), true);
+            pickLine.dir.normalize();
         }
 
         private ThreeDModel Picktest(int x, int y)
