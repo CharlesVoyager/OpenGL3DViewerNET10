@@ -27,11 +27,6 @@ namespace View3D.model.geom
         public bool normalsOriented = false;
         public bool intersectionsUpToDate = false;
 
-        private static double OVERHANG_THRESHOLD = -0.3;         // 72 degree, Horizontal Level 0
-        private static double OVERHANG_THRESHOLD_H_LV_1 = -0.7;  // 45 degree
-        private static double OVERHANG_THRESHOLD_H_LV_2 = -0.85; // 32 degree
-        public bool isShowOverhangArea = false;
-
         public void Clear()
         {
             vertices.Clear();
@@ -257,7 +252,6 @@ namespace View3D.model.geom
             }
         }
 
-
         public void CutMesh(Submesh mesh, RHVector3 normal, RHVector3 point,int defaultFaceColor)
         {
             TopoPlane plane = new TopoPlane(normal, point);
@@ -271,7 +265,6 @@ namespace View3D.model.geom
                 mesh.AddTriangle(t.vertices[0].pos, t.vertices[1].pos, t.vertices[2].pos, defaultFaceColor);
             }
         }
-
 
         public void getTriInWorld(Matrix4 trans, TopoTriangle tInObj, out TopoTriangle tInWorld)
         {
@@ -314,26 +307,8 @@ namespace View3D.model.geom
                 getTriInWorld(modelMx, t, out triWor);
                 triWorNormalValue = triWor.normal.z / triWor.normal.Length;
 
-                if (isShowOverhangArea)
-                {
-                    if (triWorNormalValue < OVERHANG_THRESHOLD_H_LV_2)
-                    {
-                        if (triWor.vertices[0].pos.z > 0.01)
-                            mesh.AddTriangle(t.vertices[0].pos, t.vertices[1].pos, t.vertices[2].pos, Submesh.MESHCOLOR_PINK);
-                        else
-                            mesh.AddTriangle(t.vertices[0].pos, t.vertices[1].pos, t.vertices[2].pos, defaultColor);
-                    }
-                    else if (triWorNormalValue < OVERHANG_THRESHOLD_H_LV_1)
-                        mesh.AddTriangle(t.vertices[0].pos, t.vertices[1].pos, t.vertices[2].pos, Submesh.MESHCOLOR_LIGHTPINK);
-                    else if (triWorNormalValue < OVERHANG_THRESHOLD)
-                        mesh.AddTriangle(t.vertices[0].pos, t.vertices[1].pos, t.vertices[2].pos, Submesh.MESHCOLOR_LIGHTPINK_WHITE);
-                    else
-                        mesh.AddTriangle(t.vertices[0].pos, t.vertices[1].pos, t.vertices[2].pos, defaultColor);
-                }
-                else
-                {
-                    mesh.AddTriangle(t.vertices[0].pos, t.vertices[1].pos, t.vertices[2].pos, defaultColor);
-                }
+                mesh.AddTriangle(t.vertices[0].pos, t.vertices[1].pos, t.vertices[2].pos, defaultColor);
+       
                 cnt++;
             }
         }
