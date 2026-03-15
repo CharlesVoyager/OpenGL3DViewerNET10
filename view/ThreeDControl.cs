@@ -62,7 +62,6 @@ namespace View3D.view
         int keyX = -1;
         int keyY = -1;
 
-        ThreeDView threeDView = null;
         STLComposer stlComp = null;
 
         // Geometry helpers (pick ray)
@@ -116,7 +115,6 @@ namespace View3D.view
 
         // ── Public wiring ─────────────────────────────────────────────────────
         public void SetComp(STLComposer comp) => stlComp = comp;
-        public void SetView(ThreeDView v) { threeDView = v; UpdateChanges(); }
 
         private volatile bool _isDirty = true;
         private void Invalidate() => _isDirty = true;
@@ -126,7 +124,6 @@ namespace View3D.view
         public void SetObjectSelected(bool sel)
         {
             MainWindow.main.setbuttonVisable(stlComp.listObjects.SelectedItems.Count == 1 && sel);
-            threeDView.objectsSelected = sel;
         }
 
         // ── Translations ──────────────────────────────────────────────────────
@@ -533,12 +530,10 @@ namespace View3D.view
                 {
                     movePlane = new Geom3DPlane(pickPoint, new Geom3DVector(0, 0, 1));
                     moveStart = moveLast = new Geom3DVector(pickPoint);
-                }
-                if (sel != null && threeDView.eventObjectMoved != null)
-                {
+         
                     MainWindow.main.Dispatcher.InvokeAsync(() =>
                     {
-                        threeDView.eventObjectSelected(sel);
+                        stlComp.ObjectSelected(sel);
                     });
                 }
                 else if (keyX == (int)pos.X && keyY == (int)pos.Y)
@@ -557,17 +552,20 @@ namespace View3D.view
                 {
                     movePlane = new Geom3DPlane(pickPoint, new Geom3DVector(0, 0, 1));
                     moveStart = moveLast = new Geom3DVector(pickPoint);
-                }
-                if (sel != null && threeDView.eventObjectMoved != null)
-                {
+           
                     MainWindow.main.Dispatcher.InvokeAsync(() =>
                     {
-                        threeDView.eventObjectSelected(sel);
-                        ShowContextMenu();
+                        stlComp.ObjectSelected(sel);
+                        MainWindow.main.ShowContextMenu(stlComp.listObjects.SelectedItems.Count > 0);
                     });
                 }
                 else if (keyX == (int)pos.X && keyY == (int)pos.Y)
-                    ShowContextMenu();
+                {
+                    MainWindow.main.Dispatcher.InvokeAsync(() =>
+                    {
+                        MainWindow.main.ShowContextMenu(stlComp.listObjects.SelectedItems.Count > 0);
+                    });
+                }
             }
             speedX = speedY = 0;
             Invalidate();
@@ -615,19 +613,6 @@ namespace View3D.view
                 button_zoomIn_Click(null, null);
         }
 
-        // ── Context menu (WPF) ────────────────────────────────────────────────
-        private void ShowContextMenu()
-        {
-            MainWindow.main.Dispatcher.InvokeAsync(() =>
-            {
-                if (MainWindow.main?.ContextMenuItems == null) return;
-
-                bool isModelSelected = (stlComp.SingleSelectedModel != null);
-
-                MainWindow.main.ShowContextMenu(isModelSelected);
-            });
-        }
-
         // Context-menu action handlers
         public void ContextMenu_LandObject() => MainWindow.main.UI_move.button_land_Click(null, null);
 
@@ -657,7 +642,7 @@ namespace View3D.view
         // ── Rendering ─────────────────────────────────────────────────────────
         private void gl_Paint()
         {
-            if (threeDView == null || !loaded) return;
+            if (!loaded) return;
             try
             {
                 fpsTimer.Reset();
@@ -884,8 +869,6 @@ namespace View3D.view
         // ── Pick / ray-cast ───────────────────────────────────────────────────
         public void UpdatePickLine(int x, int y)
         {
-            if (threeDView == null) return;
-
             float bedRadius = (float)(1.5 * Math.Sqrt(
                  (MainWindow.main.PrintAreaDepth * MainWindow.main.PrintAreaDepth +
                   MainWindow.main.PrintAreaHeight * MainWindow.main.PrintAreaHeight +
@@ -1002,20 +985,18 @@ namespace View3D.view
                         speedX = (xPos - lastX) * 200 * zoom / ClientSize.X;
                         speedY = (yPos - lastY) * 200 * zoom / ClientSize.Y;
 
-                        if (threeDView.eventObjectMoved != null)
-                        {
-                            var selModels = new List<PrintModel>();
-                            var prevX = new List<float>();
-                            var prevY = new List<float>();
+                        var selModels = new List<PrintModel>();
+                        var prevX = new List<float>();
+                        var prevY = new List<float>();
 
-                            foreach (PrintModel stl in stlComp.ListObjects(true))
-                            {
-                                selModels.Add(stl);
-                                prevX.Add(stl.Position.x);
-                                prevY.Add(stl.Position.y);
-                            }
-                            threeDView.eventObjectMoved(diff.x, diff.y);
+                        foreach (PrintModel stl in stlComp.ListObjects(true))
+                        {
+                            selModels.Add(stl);
+                            prevX.Add(stl.Position.x);
+                            prevY.Add(stl.Position.y);
                         }
+                        stlComp.ObjectMoved(diff.x, diff.y);
+               
                         lastX = xPos; lastY = yPos;
                         Invalidate();
                         break;

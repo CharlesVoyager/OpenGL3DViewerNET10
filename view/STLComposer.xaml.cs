@@ -47,7 +47,6 @@ namespace View3D.view
 
     public partial class STLComposer : Window
     {
-        public ThreeDView cont;
         public List<PrintModel> models     = new List<PrintModel>();
 
         // ── Private fields ────────────────────────────────────────────────────
@@ -65,11 +64,6 @@ namespace View3D.view
             _icons = LoadIcons();
             try
             {
-                cont = new ThreeDView();
-                cont.objectsSelected       = false;
-                cont.eventObjectMoved     += objectMoved;
-                cont.eventObjectSelected  += objectSelected;
-                cont.autoupdateable        = true;
                 updateEnabled();
 
                 modelDrawer.GetColorSetting = MainWindow.main.threeDSettings.GetColorSetting;
@@ -330,7 +324,6 @@ namespace View3D.view
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     AddObject(models[last]);
-                    cont.models.AddLast(models[last]);
                     if (modelToLand) Autoposition();
                     updateSTLState(models[last]);
                 });
@@ -418,7 +411,6 @@ namespace View3D.view
             listObjects.Items.Add(BuildRow(newModel));
             listObjects.SelectedItems.Clear();
             SetObjectSelected(newModel, true);
-            cont.models.AddLast(newModel);
             updateSTLState(newModel);
             Autoposition();
             updateSTLState(newModel);
@@ -514,9 +506,6 @@ namespace View3D.view
         // =====================================================================
         private void RemoveModel(PrintModel model)
         {
-            // ThreeDView
-            cont.models.Remove(model);
-
             var row = RowForModel(model);
             if (row != null) listObjects.Items.Remove(row);
 
@@ -535,7 +524,7 @@ namespace View3D.view
         {
             foreach (var stl in ListObjects(true).ToList())
                 RemoveModel(stl);
-            if (cont.models.Count == 0)
+            if (models.Count == 0)
                 MainWindow.main.OutofBound.Visibility = Visibility.Collapsed;
 
             MainWindow.main.threeDControl.UpdateChanges();
@@ -945,20 +934,19 @@ namespace View3D.view
         {
             var btn   = (System.Windows.Controls.Button)sender;
             var model = (PrintModel)btn.Tag;
-            cont.models.Remove(model);
             RemoveModel(model);
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
         // =====================================================================
-        //  objectMoved / objectSelected  (called from ThreeDView events)
+        //  objectMoved / objectSelected  (called from ThreeDControl)
         // =====================================================================
-        private void objectMoved(float dx, float dy)
+        public void ObjectMoved(float dx, float dy)
         {
             foreach (var stl in ListObjects(true))
             {
-                if (stl.Position.x + dx < MainWindow.main.PrintAreaWidth  * 1.2f && stl.Position.x + dx > -MainWindow.main.PrintAreaWidth  * 0.2f) stl.Position.x += dx;
-                if (stl.Position.y + dy < MainWindow.main.PrintAreaDepth  * 1.2f && stl.Position.y + dy > -MainWindow.main.PrintAreaDepth  * 0.2f) stl.Position.y += dy;
+                if (stl.Position.x + dx < MainWindow.main.PrintAreaWidth * 1.2f && stl.Position.x + dx > -MainWindow.main.PrintAreaWidth * 0.2f) stl.Position.x += dx;
+                if (stl.Position.y + dy < MainWindow.main.PrintAreaDepth * 1.2f && stl.Position.y + dy > -MainWindow.main.PrintAreaDepth * 0.2f) stl.Position.y += dy;
                 if (listObjects.SelectedItems.Count == 1)
                 {
                     _suppressTextEvents = true;
@@ -971,7 +959,7 @@ namespace View3D.view
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
-        private void objectSelected(ThreeDModel sel)
+        public void ObjectSelected(ThreeDModel sel)
         {
             if (Keyboard.Modifiers == ModifierKeys.Shift)
             {
