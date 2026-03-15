@@ -492,7 +492,6 @@ namespace View3D.model
             }
         }
 
-
         public void UpdateBoundingBox()
         {
             UpdateMatrix();
@@ -500,41 +499,12 @@ namespace View3D.model
 
             CalcBoundingBox();
 
-            RHBoundingBox bboxTotal = new RHBoundingBox();
-            RHBoundingBox bboxSup = new RHBoundingBox();
-
-            bboxTotal.Add(bbox);
-            bboxTotal.Add(bboxSup);
-
-            //TODO: fix square object with rotate with z-axis
-            if (Math.Abs(xMin - bboxTotal.xMin) > 0.001 || Math.Abs(yMin - bboxTotal.yMin) > 0.001 || Math.Abs(zMin - bboxTotal.zMin) > 0.001 ||
-                Math.Abs(xMax - bboxTotal.xMax) > 0.001 || Math.Abs(yMax - bboxTotal.yMax) > 0.001 || Math.Abs(zMax - bboxTotal.zMax) > 0.001)
-                dirtySpaceInfo = true;
-
-            //Ben---20190822---Either use this block of code will cause "incorrect Z position in the object information" 
-            //or "rotate to 180 degrees severial times will casue model out of boundary."
-            //Code block 1
-            xMin = (float)bboxTotal.xMin;
-            xMax = (float)bboxTotal.xMax;
-            yMin = (float)bboxTotal.yMin;
-            yMax = (float)bboxTotal.yMax;
-            zMin = (float)bboxTotal.zMin;
-            zMax = (float)bboxTotal.zMax;
-        }
-
-        private void includePoint(RHVector3 v)
-        {
-            float x, y, z;
-            Vector4 v4 = v.asVector4();
-            x = Vector4.Dot(trans.Column0, v4);
-            y = Vector4.Dot(trans.Column1, v4);
-            z = Vector4.Dot(trans.Column2, v4);
-            //Tim---20190123---Add rounding rule for Z axis
-            //Tim---20190731---Fix 20190123 wrong commit
-            bbox.Add(new RHVector3(
-                x,
-                y,
-                z));
+            xMin = (float)bbox.xMin;
+            xMax = (float)bbox.xMax;
+            yMin = (float)bbox.yMin;
+            yMax = (float)bbox.yMax;
+            zMin = (float)bbox.zMin;
+            zMax = (float)bbox.zMax;
         }
 
         public void TransformPoint(ref Vector3 v, out float x, out float y, out float z)
