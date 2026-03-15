@@ -709,7 +709,7 @@ namespace View3D.view
                 return;
 
             vertices.Clear();
-
+  
             foreach (var m in stlComp.models)
             {
                 foreach (var t in m.originalModel.triangles.triangles)
@@ -763,12 +763,23 @@ namespace View3D.view
 
             GL.UseProgram(stlShader);
 
+#if true
+            GL.UniformMatrix4(stlViewLoc, false, ref view);
+            GL.UniformMatrix4(stlProjLoc, false, ref proj);
+
+            if (stlComp.models.Count > 0)
+            {
+                GL.UniformMatrix4(stlModelLoc, false, ref stlComp.models[0].curPos);
+                GL.BindVertexArray(stlVao);
+                GL.DrawArrays(PrimitiveType.Triangles, 0, vertices.Count / 6);
+            }
+#else
             GL.UniformMatrix4(stlModelLoc, false, ref model);
             GL.UniformMatrix4(stlViewLoc, false, ref view);
             GL.UniformMatrix4(stlProjLoc, false, ref proj);
-           
             GL.BindVertexArray(stlVao);
             GL.DrawArrays(PrimitiveType.Triangles, 0, vertices.Count / 6);
+#endif
         }
  
         private static void DrawBBoxLines(ThreeDModel m)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK.Mathematics;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -158,6 +159,8 @@ namespace View3D.view
                     if (stl == null) return;
                     stl.modifiedM = true;
                     MainWindow.main.stlComposer.textTransX.Text = Convert.ToString(slider_moveX.Value);
+
+                    stl.curPos.Row3 = new Vector4((float)slider_moveX.Value, (float)slider_moveY.Value, (float)slider_moveZ.Value, 1f);
                     MainWindow.main.threeDControl.UpdateChanges();
                 }
             }
@@ -174,8 +177,9 @@ namespace View3D.view
                     if (stl == null) return;
                     stl.modifiedM = true;
                     MainWindow.main.stlComposer.textTransY.Text = Convert.ToString(slider_moveY.Value);
-                MainWindow.main.threeDControl.UpdateChanges();
 
+                    stl.curPos.Row3 = new Vector4((float)slider_moveX.Value, (float)slider_moveY.Value, (float)slider_moveZ.Value, 1f);
+                    MainWindow.main.threeDControl.UpdateChanges();
                 }
             }
             catch { }
@@ -190,9 +194,9 @@ namespace View3D.view
                     PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     stl.modifiedM = true;
-
                     MainWindow.main.stlComposer.textTransZ.Text = Convert.ToString(slider_moveZ.Value);
-                    moveZ_textbox.Text = (Math.Round(slider_moveZ.Value, 3) - Math.Round(slider_moveZ.Minimum, 3)).ToString();
+
+                    stl.curPos.Row3 = new Vector4((float)slider_moveX.Value, (float)slider_moveY.Value, (float)slider_moveZ.Value, 1f);
                     MainWindow.main.threeDControl.UpdateChanges();
                 }
             }
@@ -324,6 +328,14 @@ namespace View3D.view
             if (moveY_textbox.Text.Trim() == "")
             {
                 moveY_textbox.Text = slider_moveY.Value.ToString();
+            }
+        }
+
+        private void moveZ_textbox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (moveZ_textbox.Text.Trim() == "")
+            {
+                moveZ_textbox.Text = slider_moveZ.Value.ToString();
             }
         }
     }
