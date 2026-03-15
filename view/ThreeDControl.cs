@@ -864,8 +864,6 @@ namespace View3D.view
 #endif
         }
 
-      
-
         // ── Pick / ray-cast ───────────────────────────────────────────────────
         public void UpdatePickLine(int x, int y)
         {
