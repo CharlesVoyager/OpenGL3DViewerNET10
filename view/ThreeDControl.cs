@@ -879,7 +879,8 @@ namespace View3D.view
                  (MainWindow.main.PrintAreaDepth * MainWindow.main.PrintAreaDepth +
                   MainWindow.main.PrintAreaHeight * MainWindow.main.PrintAreaHeight +
                   MainWindow.main.PrintAreaWidth * MainWindow.main.PrintAreaWidth) * 0.25));
-                float dist = (float)cam.distance;
+            
+            float dist = (float)cam.distance;
             float nearDist = Math.Max(1, dist - bedRadius);
             float midHeight = 2.0f * (float)Math.Tan(cam.angle) * dist;
             float nearHeight = 2.0f * (float)Math.Tan(cam.angle) * nearDist;
