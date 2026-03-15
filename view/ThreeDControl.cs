@@ -316,13 +316,11 @@ namespace View3D.view
             plateVbo = GL.GenBuffer();
 
             GL.BindVertexArray(plateVao);
-
             GL.BindBuffer(BufferTarget.ArrayBuffer, plateVbo);
             GL.BufferData(BufferTarget.ArrayBuffer,
                           vertices.Length * sizeof(float),
                           vertices,
                           BufferUsageHint.StaticDraw);
-
             GL.VertexAttribPointer(
                 0,
                 3,
@@ -330,7 +328,6 @@ namespace View3D.view
                 false,
                 3 * sizeof(float),
                 0);
-
             GL.EnableVertexAttribArray(0);
             GL.Enable(EnableCap.DepthTest);
         }
