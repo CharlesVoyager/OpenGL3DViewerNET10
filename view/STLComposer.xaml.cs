@@ -627,7 +627,7 @@ namespace View3D.view
                     s.Position.y += yOff + yCenter + outPacker.vRects[i].y + border - 1000 - yOrigPos - s.yMin;
                     s.UpdateBoundingBox();
                 }
-                System.Windows.MessageBox.Show(Trans.T("M_PRINTER_BED_FULL_TEXT"),
+                MessageBox.Show(Trans.T("M_PRINTER_BED_FULL_TEXT"),
                                 Trans.T("W_PRINTER_BED_FULL"),
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Error);
