@@ -436,9 +436,7 @@ namespace View3D.model
 
             Matrix4 identity = new Matrix4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
             Matrix4 transl = Matrix4.CreateTranslation(Position.x, Position.y, Position.z);
-            //20170321 Nathan modify opengl function
             Matrix4 scale = Matrix4.CreateScale(Scale.x != 0 ? Scale.x : 1, Scale.y != 0 ? Scale.y : 1, Scale.z != 0 ? Scale.z : 1);
-            //Matrix4 scale = Matrix4.Scale(Scale.x != 0 ? Scale.x : 1, Scale.y != 0 ? Scale.y : 1, Scale.z != 0 ? Scale.z : 1);
 
             Matrix4 rotx = Matrix4.CreateRotationX(x * (float)Math.PI / 180.0f);
             trans = Matrix4.Mult(identity, rotx);
@@ -455,7 +453,7 @@ namespace View3D.model
                 curPos2 = Matrix4.Mult(trans, curPos2);
             else
             {
-                curPos2 = new Matrix4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+                curPos2 = Matrix4.Identity;
             }
             Matrix4 cT = curPos2;
             cT.Transpose();
