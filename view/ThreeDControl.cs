@@ -241,6 +241,9 @@ namespace View3D.view
             stlViewLoc = GL.GetUniformLocation(stlShader, "view");
             stlProjLoc = GL.GetUniformLocation(stlShader, "projection");
 
+            // Bounding Box
+            SetupBBox();
+
             loaded = true;
         }
 
@@ -651,6 +654,8 @@ namespace View3D.view
 
                 DrawModels();
 
+                DrawBBoxLines();
+
                 // swap the buffers
                 SwapBuffers();
 
@@ -776,21 +781,60 @@ namespace View3D.view
             GL.DrawArrays(PrimitiveType.Triangles, 0, vertices.Count / 6);
 #endif
         }
- 
-        private static void DrawBBoxLines(ThreeDModel m)
+        int bboxVao;
+        int bboxVbo;
+        void SetupBBox()
         {
-            ////GL.Vertex3(m.xMin, m.yMin, m.zMin); GL.Vertex3(m.xMax, m.yMin, m.zMin);
-            ////GL.Vertex3(m.xMin, m.yMin, m.zMin); GL.Vertex3(m.xMin, m.yMax, m.zMin);
-            ////GL.Vertex3(m.xMin, m.yMin, m.zMin); GL.Vertex3(m.xMin, m.yMin, m.zMax);
-            ////GL.Vertex3(m.xMax, m.yMax, m.zMax); GL.Vertex3(m.xMin, m.yMax, m.zMax);
-            ////GL.Vertex3(m.xMax, m.yMax, m.zMax); GL.Vertex3(m.xMax, m.yMin, m.zMax);
-            ////GL.Vertex3(m.xMax, m.yMax, m.zMax); GL.Vertex3(m.xMax, m.yMax, m.zMin);
-            ////GL.Vertex3(m.xMin, m.yMax, m.zMax); GL.Vertex3(m.xMin, m.yMax, m.zMin);
-            ////GL.Vertex3(m.xMin, m.yMax, m.zMax); GL.Vertex3(m.xMin, m.yMin, m.zMax);
-            ////GL.Vertex3(m.xMax, m.yMax, m.zMin); GL.Vertex3(m.xMax, m.yMin, m.zMin);
-            ////GL.Vertex3(m.xMax, m.yMax, m.zMin); GL.Vertex3(m.xMin, m.yMax, m.zMin);
-            ////GL.Vertex3(m.xMax, m.yMin, m.zMax); GL.Vertex3(m.xMin, m.yMin, m.zMax);
-            ////GL.Vertex3(m.xMax, m.yMin, m.zMax); GL.Vertex3(m.xMax, m.yMin, m.zMin);
+            bboxVao = GL.GenVertexArray();
+            bboxVbo = GL.GenBuffer();
+
+            GL.BindVertexArray(bboxVao);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, bboxVbo);
+
+            // Pre-allocate space for 24 vertices (X, Y, Z)
+            // We pass IntPtr.Zero to just reserve the space on the GPU
+            GL.BufferData(BufferTarget.ArrayBuffer, 24 * 3 * sizeof(float), IntPtr.Zero, BufferUsageHint.DynamicDraw);
+
+            // Define the layout (assuming your shader uses location 0 for position)
+            GL.EnableVertexAttribArray(0);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+        }
+
+
+        private void DrawBBoxLines()
+        {
+            if (stlComp.models.Count == 0) return;
+
+            PrintModel m = stlComp.models[0];
+            float[] verticesBbox = {
+                m.xMin, m.yMin, m.zMin, m.xMax, m.yMin, m.zMin,
+                m.xMin, m.yMin, m.zMin, m.xMin, m.yMax, m.zMin,
+                m.xMin, m.yMin, m.zMin, m.xMin, m.yMin, m.zMax,
+                m.xMax, m.yMax, m.zMax, m.xMin, m.yMax, m.zMax,
+                m.xMax, m.yMax, m.zMax, m.xMax, m.yMin, m.zMax,
+                m.xMax, m.yMax, m.zMax, m.xMax, m.yMax, m.zMin,
+                m.xMin, m.yMax, m.zMax, m.xMin, m.yMax, m.zMin,
+                m.xMin, m.yMax, m.zMax, m.xMin, m.yMin, m.zMax,
+                m.xMax, m.yMax, m.zMin, m.xMax, m.yMin, m.zMin,
+                m.xMax, m.yMax, m.zMin, m.xMin, m.yMax, m.zMin,
+                m.xMax, m.yMin, m.zMax, m.xMin, m.yMin, m.zMax,
+                m.xMax, m.yMin, m.zMax, m.xMax, m.yMin, m.zMin
+            };
+       
+            // 1. Bind the Bounding Box VBO
+            GL.BindBuffer(BufferTarget.ArrayBuffer, bboxVbo);
+
+            // 2. Upload the new data to the START of the buffer (offset 0)
+            GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)0, verticesBbox.Length * sizeof(float), verticesBbox);
+
+            // 3. Bind the BBox VAO and Draw
+            GL.BindVertexArray(bboxVao);
+
+            // 4. Set your BBox color (as discussed previously)
+            int colorLoc = GL.GetUniformLocation(stlShader, "ourColor");
+            GL.Uniform4(colorLoc, Color4.LimeGreen);
+
+            GL.DrawArrays(PrimitiveType.Lines, 0, 24);
         }
 
         private void DrawPrintbedFrame()
@@ -923,8 +967,13 @@ namespace View3D.view
 
             foreach (PrintModel model in stlComp.models)
             {
-                if (!RayCasting.RaycastAABB(ray, model)) continue;
+                bool rayCastingResult = RayCasting.RaycastAABB(ray, model);
+                Debug.WriteLine($"RayCasting.RaycastAABB result = {rayCastingResult}");
+                if (!rayCastingResult) continue;
 
+
+#if false
+                if (!RayCasting.RaycastAABB(ray, model)) continue;
                 float[] rayPos = { ray.Position.X, ray.Position.Y, ray.Position.Z };
                 float[] rayNor = { ray.Normal.X, ray.Normal.Y, ray.Normal.Z };
                 ModelMatrix mtx = ModelObjectToolHelper.ToModelMatrix(model.trans);
@@ -942,6 +991,7 @@ namespace View3D.view
                     }
                 }
                 GC.Collect();
+#endif
             }
 
             // TEST
