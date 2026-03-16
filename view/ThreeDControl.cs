@@ -98,18 +98,16 @@ namespace View3D.view
                     StencilBits = 8,
                     NumberOfSamples = 4,
                     Flags = ContextFlags.Default
-
                 })
         {
-            // CHANGED: VSync is now a property on the window, not an enum field
-            VSync = VSyncMode.Off;
+            VSync = VSyncMode.Off;  // CHANGED: VSync is now a property on the window, not an enum field
 
             // Camera
             cam = new ThreeDCamera();
             cam.SetCameraDefaults();
             cam.OrientIsometric();
 
-            //Language hook
+            // Language hook
             MainWindow.main.languageChanged += translate;
         }
 
