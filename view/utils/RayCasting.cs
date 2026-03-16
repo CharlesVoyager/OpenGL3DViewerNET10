@@ -114,6 +114,7 @@ namespace View3D.view.utils
 
     public class RayCasting
     {
+        // OpenTK 3.3.3.0
         public static Ray GenerateRay(int X, int Y, out Vector3 near, out Vector3 far)
         {
             float[] viewport = new float[4];
@@ -126,6 +127,31 @@ namespace View3D.view.utils
             far = Vector3Extension.Unproject(new Vector3(X, Y, 1.0f), modelViewProjectionMatrix, Matrix4.Identity, viewport);
 
             return new Ray(near, Vector3.Normalize(far - near));
+        }
+
+        // OpenTK 4.9.4
+        public static Ray GenerateRay(int mouseX, int mouseY, Matrix4 view, Matrix4 projection, Vector2i windowSize, out Vector3 nearPos, out Vector3 farPos)
+        {
+            // 1. Flip Y coordinate (Window top-left to OpenGL bottom-left)
+            float x = (2.0f * mouseX) / windowSize.X - 1.0f;
+            float y = 1.0f - (2.0f * mouseY) / windowSize.Y;
+
+            // 2. Create the View-Projection matrix and invert it
+            Matrix4 viewProjectionInv = Matrix4.Invert(view * projection);
+
+            // 3. Unproject the Near and Far points
+            // Near plane is Z = -1 in NDC, Far plane is Z = 1
+            Vector4 nearNDC = new Vector4(x, y, -1.0f, 1.0f);
+            Vector4 farNDC = new Vector4(x, y, 1.0f, 1.0f);
+
+            Vector4 nearWorld = nearNDC * viewProjectionInv;
+            Vector4 farWorld = farNDC * viewProjectionInv;
+
+            // 4. Perspective divide (W-divide)
+            nearPos = nearWorld.Xyz / nearWorld.W;
+            farPos = farWorld.Xyz / farWorld.W;
+
+            return new Ray(nearPos, Vector3.Normalize(farPos - nearPos));
         }
 
         public static bool RaycastTriangle(Ray ray, Vector3[] triangle, out Vector3 p)

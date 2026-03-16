@@ -907,9 +907,19 @@ namespace View3D.view
         private ThreeDModel Picktest(int x, int y)
         {
             Vector3 near, far;
-            Ray ray = RayCasting.GenerateRay(x, y, out near, out far);
+
+            Matrix4 modelMatrix = Matrix4.Identity;
+            Matrix4 view = Matrix4.Identity;
+            Matrix4 proj = Matrix4.Identity;
+            Vector2i windowSize = ClientSize;
+            computeModelViewProj(ref modelMatrix, ref view, ref proj);
+            Ray ray = RayCasting.GenerateRay(x, y, view, proj, windowSize, out near, out far);
+
             float length = float.MaxValue;
             ThreeDModel nearestModel = null;
+
+            // TEST
+            Debug.WriteLine($"X: {x}, Y: {y}, " + ray.ToString());
 
             foreach (PrintModel model in stlComp.models)
             {
@@ -933,6 +943,10 @@ namespace View3D.view
                 }
                 GC.Collect();
             }
+
+            // TEST
+            Debug.WriteLine($"Picktest: nearest model is {(nearestModel != null ? "Hit" : "null")}, length = {length}");    
+          
             return nearestModel;
         }
 
