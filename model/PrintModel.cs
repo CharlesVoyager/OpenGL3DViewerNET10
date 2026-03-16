@@ -1,10 +1,9 @@
 ﻿using OpenTK.Mathematics;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Diagnostics;
 using View3D.model.geom;
-using System.Collections.Generic;
 using View3D.ModelObjectTool;
 
 namespace View3D.model
@@ -451,14 +450,12 @@ namespace View3D.model
             if (!reset)
                 curPos = Matrix4.Mult(trans, curPos);
             else
-            {
                 curPos = Matrix4.Identity;
-            }
+
             Matrix4 cT = curPos;
             cT.Transpose();
             trans = Matrix4.Mult(scale, cT);
             trans = Matrix4.Mult(trans, transl);
-
             invTrans = trans;
             invTrans.Invert();
         }

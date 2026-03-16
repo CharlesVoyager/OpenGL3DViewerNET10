@@ -16,6 +16,11 @@ namespace View3D.model
             y = _y;
             z = _z;
         }
+
+        public override string ToString()
+        {
+            return x.ToString("0") + " " + y.ToString("0") + " " + z.ToString("0");
+        }
     }
     public abstract class ThreeDModel
     {

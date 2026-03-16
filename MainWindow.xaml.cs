@@ -434,6 +434,8 @@ namespace View3D
             info_toggleButton.IsChecked = false;
 
             gridAbout.Visibility = Visibility.Visible;
+
+            DebugLog();
         }
 
         private void rotate_toggleButton_Checked(object sender, RoutedEventArgs e)
@@ -587,6 +589,19 @@ namespace View3D
         private void button_closeAbout_Click(object sender, RoutedEventArgs e)
         {
             gridAbout.Visibility = Visibility.Hidden;
+        }
+
+        void DebugLog()
+        {
+            foreach(var m in stlComposer.models)
+            {
+                System.Diagnostics.Debug.WriteLine($"Model: {m.name}, Position: {m.Position.ToString()}, Rotation: {m.Rotation.ToString()}, Scale: {m.Scale.ToString()}");
+                System.Diagnostics.Debug.WriteLine("curPos: " + m.curPos.Row0.ToString());
+                System.Diagnostics.Debug.WriteLine("        " + m.curPos.Row1.ToString());
+                System.Diagnostics.Debug.WriteLine("        " + m.curPos.Row2.ToString());
+                System.Diagnostics.Debug.WriteLine("        " + m.curPos.Row3.ToString());
+                // System.Diagnostics.Debug.WriteLine($"  BoundingBox: Min({m.BoundingBox.xMin}, {m.BoundingBox.yMin}, {m.BoundingBox.zMin}), Max({m.BoundingBox.xMax}, {m.BoundingBox.yMax}, {m.BoundingBox.zMax})");
+            }
         }
     }
 }
