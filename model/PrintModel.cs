@@ -422,7 +422,7 @@ namespace View3D.model
                     Vector4.Subtract(mx1.Row3, mx2.Row3).LengthSquared;
         }
 
-        public void UpdateMatrix()
+        private void UpdateMatrix()
         {
             Matrix4 oldTrans = trans;
 
