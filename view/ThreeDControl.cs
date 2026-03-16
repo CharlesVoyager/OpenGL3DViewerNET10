@@ -41,8 +41,15 @@ namespace View3D.view
         int stlShader;
         int stlVao;
         int stlVbo;
-
         int stlModelLoc, stlViewLoc, stlProjLoc;
+
+        // Bounding Box
+        int bboxShader;
+        int bboxVao;
+        int bboxVbo;
+        int bboxModelLoc, bboxViewLoc, bboxProjLoc;
+
+
         List<float> vertices = new List<float>();
 
         // ── Public static / shared ────────────────────────────────────────────
@@ -242,7 +249,11 @@ namespace View3D.view
             stlProjLoc = GL.GetUniformLocation(stlShader, "projection");
 
             // Bounding Box
+            bboxShader = CreateShaderProgram("BoundingBox");   
             SetupBBox();
+            bboxModelLoc = GL.GetUniformLocation(bboxShader, "model");
+            bboxViewLoc = GL.GetUniformLocation(bboxShader, "view");
+            bboxProjLoc = GL.GetUniformLocation(bboxShader, "projection");
 
             loaded = true;
         }
@@ -781,8 +792,7 @@ namespace View3D.view
             GL.DrawArrays(PrimitiveType.Triangles, 0, vertices.Count / 6);
 #endif
         }
-        int bboxVao;
-        int bboxVbo;
+
         void SetupBBox()
         {
             bboxVao = GL.GenVertexArray();
@@ -820,18 +830,30 @@ namespace View3D.view
                 m.xMax, m.yMin, m.zMax, m.xMin, m.yMin, m.zMax,
                 m.xMax, m.yMin, m.zMax, m.xMax, m.yMin, m.zMin
             };
-       
+
             // 1. Bind the Bounding Box VBO
             GL.BindBuffer(BufferTarget.ArrayBuffer, bboxVbo);
 
             // 2. Upload the new data to the START of the buffer (offset 0)
             GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)0, verticesBbox.Length * sizeof(float), verticesBbox);
 
+            Matrix4 model = Matrix4.Identity;
+            Matrix4 view = Matrix4.Identity;
+            Matrix4 proj = Matrix4.Identity;
+
+            computeModelViewProj(ref model, ref view, ref proj);
+
+            GL.UseProgram(bboxShader);
+
+            GL.UniformMatrix4(bboxModelLoc, false, ref model);
+            GL.UniformMatrix4(bboxViewLoc, false, ref view);
+            GL.UniformMatrix4(bboxProjLoc, false, ref proj);
+
             // 3. Bind the BBox VAO and Draw
             GL.BindVertexArray(bboxVao);
 
             // 4. Set your BBox color (as discussed previously)
-            int colorLoc = GL.GetUniformLocation(stlShader, "ourColor");
+            int colorLoc = GL.GetUniformLocation(bboxShader, "ourColor");
             GL.Uniform4(colorLoc, Color4.LimeGreen);
 
             GL.DrawArrays(PrimitiveType.Lines, 0, 24);
