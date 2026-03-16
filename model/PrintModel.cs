@@ -272,7 +272,6 @@ namespace View3D.model
             stl.Rotation.x = Rotation.x;
             stl.Rotation.y = Rotation.y;
             stl.Rotation.z = Rotation.z;
-            stl.curPos2 = curPos2;
             stl.curPos = curPos;
             stl.preRX = preRX;
             stl.preRX2 = preRX2;
@@ -434,7 +433,7 @@ namespace View3D.model
             y -= preRY2;
             z -= preRZ2;
 
-            Matrix4 identity = new Matrix4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            Matrix4 identity = Matrix4.Identity;
             Matrix4 transl = Matrix4.CreateTranslation(Position.x, Position.y, Position.z);
             Matrix4 scale = Matrix4.CreateScale(Scale.x != 0 ? Scale.x : 1, Scale.y != 0 ? Scale.y : 1, Scale.z != 0 ? Scale.z : 1);
 
@@ -450,12 +449,12 @@ namespace View3D.model
             preRZ2 = Rotation.z;
 
             if (!reset)
-                curPos2 = Matrix4.Mult(trans, curPos2);
+                curPos = Matrix4.Mult(trans, curPos);
             else
             {
-                curPos2 = Matrix4.Identity;
+                curPos = Matrix4.Identity;
             }
-            Matrix4 cT = curPos2;
+            Matrix4 cT = curPos;
             cT.Transpose();
             trans = Matrix4.Mult(scale, cT);
             trans = Matrix4.Mult(trans, transl);

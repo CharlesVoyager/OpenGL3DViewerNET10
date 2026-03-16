@@ -388,13 +388,15 @@ namespace View3D.view
                 }
             }
 
-            // Remember initial positions
+            // Remember initial positions for all models after Autoposition.
             for (int i = 0; i < models.Count; i++)
             {
                 models[i].Position.inix = models[i].Position.x;
                 models[i].Position.iniy = models[i].Position.y;
                 models[i].Position.iniz = models[i].Position.z;
             }
+
+            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         // =====================================================================

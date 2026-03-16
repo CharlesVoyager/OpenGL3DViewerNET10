@@ -27,7 +27,7 @@ namespace View3D.model
         public LinkedList<ModelAnimation> animations = new LinkedList<ModelAnimation>();
         public float xMin = 0, yMin = 0, zMin = 0, xMax = 0, yMax = 0, zMax = 0;              // min and max print region
         public Matrix4 curPos = Matrix4.Identity;  // position/rotation/scale
-        public Matrix4 curPos2 = Matrix4.Identity;  // position/rotation/scale
+
         // pre-rotate, diff-rotate?, pre-s?, pre-move?
         public float preRX = 0, preRY = 0, preRZ = 0, dRX = 0, dRY = 0, dRZ = 0, preSX = 0, preSY = 0, preSZ = 0, preMX = 0, preMY = 0, preMZ = 0, preRX2 = 0, preRY2 = 0, preRZ2 = 0;
 
