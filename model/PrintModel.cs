@@ -538,68 +538,21 @@ namespace View3D.model
         {
             TopoModel model = ActiveModel;
 
-            RHVector3 cutPos;
-            RHVector3 cutDir;
-            bool cutFaceEnabled;
-            bool showEdges;
-            bool cutFaceUpdated;
-            if (drawer != null)
-            {
-                cutPos = drawer.GetCutPosition();
-                cutDir = drawer.GetCutDirection();
-                cutFaceEnabled = drawer.IsCutFaceEnabled();
-                showEdges = drawer.IsEdgeShowEnabled();
-                cutFaceUpdated = drawer.IsCutFaceUpdated();
-            }
-            else
-            {
-                cutPos = new RHVector3(0, 0, 0);
-                cutDir = new RHVector3(0, 0, 0);
-                cutFaceEnabled = false;
-                showEdges = false;
-                cutFaceUpdated = false;
-            }
-            if (cutFaceEnabled)
-            {
-                if (ForceRefresh || cutFaceUpdated || lastRendered != 1 || activeModel != activeSubmesh || lastShowEdges != showEdges || lastSelected != Selected)
-                {
-                    RHVector3 normpoint = cutPos.Add(cutDir);
-                    RHVector3 point = new RHVector3(0, 0, 0);
-                    ReverseTransformPoint(cutPos, point);
-                    ReverseTransformPoint(normpoint, normpoint);
-                    RHVector3 normal = normpoint.Subtract(point);
+            submesh.Clear();
 
-                    submesh.Clear();
-                    model.CutMesh(submesh, normal, point, outside ? Submesh.MESHCOLOR_OUTSIDE : Submesh.MESHCOLOR_FRONTBACK);
-                    submesh.selected = Selected;
-                    submesh.extruder = extruder;
-                    submesh.Compress();
-                    lastShowEdges = showEdges;
-                    lastSelected = Selected;
-                    activeSubmesh = activeModel;
-                    lastRendered = 1;
-                }
-            }
-            else
-            {
-                if (ForceRefresh || ForceRefreshOneTime || cutFaceUpdated || lastRendered != 0 || activeModel != activeSubmesh || lastShowEdges != showEdges)
-                {
-                    submesh.Clear();
+            model.FillMeshCheckRAM(this.trans, submesh, outside ? Submesh.MESHCOLOR_OUTSIDE : Submesh.MESHCOLOR_FRONTBACK);
 
-                    model.FillMeshCheckRAM(this.trans, submesh, outside ? Submesh.MESHCOLOR_OUTSIDE : Submesh.MESHCOLOR_FRONTBACK);
+            submesh.selected = Selected;
+            submesh.extruder = extruder;
+            submesh.Compress();
+  
+            lastSelected = Selected;
+            activeSubmesh = activeModel;
+            lastRendered = 0;
 
-                    submesh.selected = Selected;
-                    submesh.extruder = extruder;
-                    submesh.Compress();
-                    lastShowEdges = showEdges;
-                    lastSelected = Selected;
-                    activeSubmesh = activeModel;
-                    lastRendered = 0;
-
-                    if (ForceRefreshOneTime)
-                        ForceRefreshOneTime = false;
-                }
-            }
+            if (ForceRefreshOneTime)
+                ForceRefreshOneTime = false;
+      
 
             Vector3 translateVec;
             if (drawer != null)

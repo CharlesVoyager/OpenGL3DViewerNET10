@@ -723,19 +723,16 @@ namespace View3D.view
   
             foreach (var m in stlComp.models)
             {
-                foreach (var t in m.originalModel.triangles.triangles)
-                {
-                    // [x y z nx ny nz]
-                    for (int i = 0; i < 3; i++)
-                    {
-                        vertices.Add((float)t.vertices[i].pos.x);
-                        vertices.Add((float)t.vertices[i].pos.y);
-                        vertices.Add((float)t.vertices[i].pos.z);
+                m.Paint();
 
-                        vertices.Add((float)t.normal.x);
-                        vertices.Add((float)t.normal.y);
-                        vertices.Add((float)t.normal.z);
-                    }
+                for (int i = 0; i < m.submesh.glVertices.Length; i+=3)
+                {   // [x y z nx ny nz]
+                    vertices.Add(m.submesh.glVertices[i]);
+                    vertices.Add(m.submesh.glVertices[i+1]);
+                    vertices.Add(m.submesh.glVertices[i+2]);
+                    vertices.Add(m.submesh.glNormals[i]);
+                    vertices.Add(m.submesh.glNormals[i]+1);
+                    vertices.Add(m.submesh.glNormals[i]+2);
                 }
             }
 

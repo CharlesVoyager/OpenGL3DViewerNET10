@@ -17,12 +17,5 @@ namespace View3D.model
         // mesh color setting
         GetColorSettingHandler GetColorSetting { get; set; }
         int GetColorRGBA(Submesh.MeshColor color, Color frontBackColor);
-
-        // mesh cut face setting
-        bool IsCutFaceEnabled();
-        bool IsEdgeShowEnabled();
-        RHVector3 GetCutPosition();
-        RHVector3 GetCutDirection();
-        bool IsCutFaceUpdated();
     }
 }
