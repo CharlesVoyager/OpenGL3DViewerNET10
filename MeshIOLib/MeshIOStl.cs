@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -278,51 +279,95 @@ namespace View3D.MeshInOut
         ///     endfacet
         ///     endsolid name
         /// </remarks>
-        //TODO: check public or private
         protected void importSTLAscii(string filename, TopoModel model, Action<int> updateRate)
         {
-            string text = System.IO.File.ReadAllText(filename);
-            int lastP = 0, p, pend, normal, outer, vertex, vertex2;
-            int count = 0,max = text.Length;
+            long fileSize = new System.IO.FileInfo(filename).Length;
+            long bytesRead = 0;
+            int count = 0;
 
-            while ((p = text.IndexOf("facet", lastP)) > 0)
+            using (var reader = new System.IO.StreamReader(filename))
             {
-                count++;
+                string line;
+                RHVector3 normalVect = null;
+                RHVector3 p1 = null, p2 = null;
+                int vertexIndex = 0;
 
-                if (count % 4000 == 0)
+                while ((line = reader.ReadLine()) != null)
                 {
-                    ////MainWindow.main.threedview.ui.BusyWindow.busyProgressbar.Value = ((double)lastP / max) * 100.0;
-                    ////Application.DoEvents();
-                    if (updateRate != null)
-                        updateRate((int)(((double)lastP / max) * 100.0));
-                    ////if (IsActionStopped()) return;
-                    ////if (MainWindow.main.threedview.ui.BusyWindow.killed) return;
-                    if (Command == COMMAND.Abort)
+                    bytesRead += line.Length + 1; // approximate
+                    line = line.TrimStart(); // remove leading whitespace only
+
+                    if (line.StartsWith("facet normal", StringComparison.OrdinalIgnoreCase))
                     {
-                        Command = COMMAND.None;
-                        Status = STATUS.UserAbort;
-                        return;
+                        // Parse: "facet normal x y z"
+                        normalVect = ParseVector(line, 12); // skip "facet normal"
+                        normalVect?.NormalizeSafe();
+                        vertexIndex = 0;
+
+                        count++;
+                        if (count % 4000 == 0)
+                        {
+                            updateRate?.Invoke((int)((bytesRead / (double)fileSize) * 100.0));
+
+                            if (Command == COMMAND.Abort)
+                            {
+                                Command = COMMAND.None;
+                                Status = STATUS.UserAbort;
+                                return;
+                            }
+                        }
+                    }
+                    else if (line.StartsWith("vertex", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Parse: "vertex x y z"
+                        var v = ParseVector(line, 6); // skip "vertex"
+                        if (vertexIndex == 0) p1 = v;
+                        else if (vertexIndex == 1) p2 = v;
+                        else if (vertexIndex == 2)
+                        {
+                            model.addTriangle(p1, p2, v, normalVect);
+                        }
+                        vertexIndex++;
                     }
                 }
-
-                pend = text.IndexOf("endfacet", p + 5);
-                normal = text.IndexOf("normal", p) + 6;
-                outer = text.IndexOf("outer loop", normal);
-                RHVector3 normalVect = extractVector(text.Substring(normal, outer - normal));
-                normalVect.NormalizeSafe();
-                outer += 10;
-                vertex = text.IndexOf("vertex", outer) + 6;
-                vertex2 = text.IndexOf("vertex", vertex);
-                RHVector3 p1 = extractVector(text.Substring(vertex, vertex2 - vertex));
-                vertex2 += 7;
-                vertex = text.IndexOf("vertex", vertex2);
-                RHVector3 p2 = extractVector(text.Substring(vertex2, vertex - vertex2));
-                vertex += 7;
-                vertex2 = text.IndexOf("endloop", vertex);
-                RHVector3 p3 = extractVector(text.Substring(vertex, vertex2 - vertex));
-                lastP = pend + 8;
-                model.addTriangle(p1, p2, p3, normalVect);
             }
+
+            Console.WriteLine("Finished reading ASCII STL. Total triangles: " + count);
+        }
+
+        // Replaces extractVector() — parses "x y z" starting at offset, no Substring allocation
+        private RHVector3 ParseVector(string line, int startIndex)
+        {
+            ReadOnlySpan<char> span = line.AsSpan(startIndex);
+
+            // Skip leading spaces
+            int i = 0;
+            while (i < span.Length && span[i] == ' ') i++;
+            span = span.Slice(i);
+
+            // Parse three space-separated floats
+            double x = 0, y = 0, z = 0;
+            span = ParseDouble(span, out x);
+            span = ParseDouble(span.TrimStart(), out y);
+            ParseDouble(span.TrimStart(), out z);
+
+            return new RHVector3(x, y, z);
+        }
+
+        private ReadOnlySpan<char> ParseDouble(ReadOnlySpan<char> span, out double value)
+        {
+            int end = span.IndexOf(' ');
+            if (end < 0) end = span.Length;
+
+#if NET5_0_OR_GREATER
+            double.TryParse(span.Slice(0, end), System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out value);
+#else
+            double.TryParse(span.Slice(0, end).ToString(), System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out value);
+#endif
+
+            return end < span.Length ? span.Slice(end) : ReadOnlySpan<char>.Empty;
         }
 
         /// <summary>

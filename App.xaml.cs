@@ -38,6 +38,9 @@ namespace OpenGL3DViewerNET10
                 ProcessCommandLine(mainWindow);
             });
 
+            // Wait until STL model data is ready if import STL file through command line before starting rendering loop
+            STLComposer._stlModelDataReady.Wait();
+
             // Blocks main thread for lifetime of GL window — correct!
             mainWindow.threeDControl.Run();
 
@@ -48,7 +51,7 @@ namespace OpenGL3DViewerNET10
         private static void ProcessCommandLine(MainWindow main)
         {
             string[] args = Environment.GetCommandLineArgs();
-            for (int i = 1; i < args.Length; i++)
+            for (int i = 1; i < Math.Min(2, args.Length); i++)
             {
                 string file = args[i];
                 if (File.Exists(file))
