@@ -87,10 +87,12 @@ namespace View3D.view
         /// Pass width/height matching your panel or leave as defaults; the window
         /// is later embedded via WindowsFormsHost in MainWindow.xaml.
         /// </summary>
-        public ThreeDControl(int width = 830, int height = 624)
+        /// 
+        private const int MinWidth = 830;
+        private const int MinHeight = 700;
+        public ThreeDControl(int width = MinWidth, int height = MinHeight)
             : base(
-                GameWindowSettings.Default
-                ,
+                GameWindowSettings.Default,
                 new NativeWindowSettings
                 {
                     ClientSize = new Vector2i(width, height),
@@ -138,8 +140,7 @@ namespace View3D.view
             // Apply them to the WPF ContextMenu items exposed by ui if needed.
         }
 
-        private const int MinWidth = 800;
-        private const int MinHeight = 600;
+
         private const int WM_GETMINMAXINFO = 0x0024;
         private const int GWLP_WNDPROC = -4;
 
@@ -755,7 +756,7 @@ namespace View3D.view
             GL.EnableVertexAttribArray(1);
         }
 
-        private void DrawModels(bool showBbox = true)
+        private void DrawModels()
         {
             if (vertices.Count == 0) return;
 

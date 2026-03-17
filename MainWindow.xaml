@@ -10,7 +10,6 @@
         AllowsTransparency="True"
         BorderThickness="0" 
         AllowDrop="True"
-        Closing="MainWindow_Closing"
         KeyDown="MainWindow_KeyDown"
         DragEnter="MainWindow_DragEnter"
         Drop="MainWindow_Drop">

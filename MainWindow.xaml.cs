@@ -122,10 +122,6 @@ namespace View3D
                 stlComposer.openAndAddObject(file);
         }
 
-        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-        }
-
         public void Update3D()
         {
             if (threeDControl != null)
@@ -211,9 +207,6 @@ namespace View3D
 
             _contextMenu.IsOpen = true;
         }
-
-        // Expose a property so ThreeDControl can check items exist
-        public System.Windows.Controls.ContextMenu ContextMenuItems => _contextMenu;
 
         // Actions — forward to ThreeDControl
         private void OnLandObject() => threeDControl.ContextMenu_LandObject();
