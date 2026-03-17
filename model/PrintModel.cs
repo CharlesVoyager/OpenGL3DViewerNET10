@@ -24,7 +24,6 @@ namespace View3D.model
 
         public Matrix4 trans, invTrans;
         public Submesh submesh;
-        public int activeSubmesh = -1;
         protected RHBoundingBox bbox = new RHBoundingBox();
         public event PrintModelChangedEvent printModelChangedEvent = null;
         public ListviewGetModelsDelegate ListviewGetModels = null;
@@ -177,17 +176,6 @@ namespace View3D.model
             }
         }
 
-        public void ResetVertexPosToBBoxZmin()
-        {
-            foreach (TopoVertex v in repairedModel.vertices.v)
-            {
-                v.pos.x -= originalModel.boundingBox.Center.x;
-                v.pos.y -= originalModel.boundingBox.Center.y;
-                //v.pos.z -= originalModel.boundingBox.Center.z;
-                v.pos.z -= originalModel.boundingBox.zMin;
-            }
-        }
-
         public bool FixNormals()
         {
             if (repairedModel == null)
@@ -214,37 +202,7 @@ namespace View3D.model
             if (printModelChangedEvent != null)
                 printModelChangedEvent(this);
         }
-
-        public void RunTest()
-        {
-        }
-
-        public PrintModel copyPrintModel()
-        {
-            PrintModel stl = new PrintModel(this.drawer);
-            //stl.filename = filename;
-            stl.name = name;
-            stl.Position.x = Position.x;
-            stl.Position.y = Position.y + 5 + yMax - yMin;
-            stl.Position.z = Position.z;
-            stl.Scale.x = Scale.x;
-            stl.Scale.y = Scale.y;
-            stl.Scale.z = Scale.z;
-            stl.Rotation.x = Rotation.x;
-            stl.Rotation.y = Rotation.y;
-            stl.Rotation.z = Rotation.z;
-            stl.Selected = false;
-            stl.activeModel = activeModel;
-            stl.originalModel = originalModel.Copy();
-            if (repairedModel != null)
-                stl.repairedModel = repairedModel.Copy();
-            else
-                stl.repairedModel = null;
-            stl.UpdateBoundingBox();
-            stl.ListviewGetModels += ListviewGetModels;
-            return stl;
-        }
-
+ 
         public virtual object cloneWithModel()//(int idx)
         {
             PrintModel stl = new PrintModel(this.drawer, this.originalModel);
@@ -283,7 +241,6 @@ namespace View3D.model
             if (null != submesh)
                 submesh.Clear();
             submesh = null;
-            activeSubmesh = -1;
             bbox = null;
             printModelChangedEvent = null;
             extruder = 0;
@@ -525,14 +482,8 @@ namespace View3D.model
 
         public void ForceViewRegeneration()
         {
-            ForceRefresh = true;
         }
 
-        bool lastShowEdges = false;
-        int lastRendered = -1; // 0 = all , 1 = mesh
-        bool lastSelected = false;
-        public bool ForceRefresh = false;
-        public bool ForceRefreshOneTime = false;
 
         public override void Paint()
         {
@@ -546,14 +497,6 @@ namespace View3D.model
             submesh.extruder = extruder;
             submesh.Compress();
   
-            lastSelected = Selected;
-            activeSubmesh = activeModel;
-            lastRendered = 0;
-
-            if (ForceRefreshOneTime)
-                ForceRefreshOneTime = false;
-      
-
             Vector3 translateVec;
             if (drawer != null)
                 translateVec = drawer.GetTranslateVector();
@@ -561,8 +504,6 @@ namespace View3D.model
                 translateVec = new Vector3(0, 0, 0);
 
             submesh.Draw(submesh, 2, translateVec);
-
-            ForceRefresh = false;
         }
 
         /// <summary>

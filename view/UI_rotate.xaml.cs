@@ -139,7 +139,6 @@ namespace View3D.view
                 MainWindow.main.stlComposer.updateSTLState(stl);
                 stl.LandToZ(0);
                 stl.Rotation.x = stl.Rotation.y = stl.Rotation.z = 0;
-                stl.ForceRefresh = true;
             }
             else
             {
