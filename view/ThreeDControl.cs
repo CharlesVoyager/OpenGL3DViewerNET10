@@ -763,6 +763,7 @@ namespace View3D.view
             GL.Enable(EnableCap.PolygonSmooth);
             GL.Enable(EnableCap.LineSmooth);
             GL.Enable(EnableCap.CullFace);
+            GL.Enable(EnableCap.DepthTest);
 
             Matrix4 model = Matrix4.Identity;
             Matrix4 view = Matrix4.Identity;
@@ -828,6 +829,8 @@ namespace View3D.view
                 m.xMax, m.yMin, m.zMax, m.xMin, m.yMin, m.zMax,
                 m.xMax, m.yMin, m.zMax, m.xMax, m.yMin, m.zMin
             };
+
+            GL.Enable(EnableCap.DepthTest);
 
             // 1. Bind the Bounding Box VBO
             GL.BindBuffer(BufferTarget.ArrayBuffer, bboxVbo);

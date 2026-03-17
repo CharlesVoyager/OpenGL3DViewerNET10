@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Runtime.InteropServices;
-using View3D.model;
+﻿using System.IO;
 using View3D.model.geom;
 
 namespace View3D.MeshInOut
@@ -213,34 +208,6 @@ namespace View3D.MeshInOut
             w.Flush(); //below .Net 4.5, not close stream for write support point
         }
 
-        private RHVector3 extractVector(string s)
-        {
-            RHVector3 v = new RHVector3(0,0,0);
-            s = s.Trim().Replace("\t", " ");
-            int p = s.IndexOf(' ');
-            if (p < 0) throw new Exception("Format error");
-#if PRECISION_SINGLE
-            float.TryParse(s.Substring(0, p), NumberStyles.Float, NumFormat, out v.x);
-#else
-            double.TryParse(s.Substring(0, p), NumberStyles.Float, NumFormat, out v.x);
-#endif
-            s = s.Substring(p).Trim();
-            p = s.IndexOf(' ');
-            if (p < 0) throw new Exception("Format error");
-#if PRECISION_SINGLE
-            float.TryParse(s.Substring(0, p), NumberStyles.Float, NumFormat, out v.y);
-#else
-            double.TryParse(s.Substring(0, p), NumberStyles.Float, NumFormat, out v.y);
-#endif
-            s = s.Substring(p).Trim();
-#if PRECISION_SINGLE
-            float.TryParse(s, NumberStyles.Float, NumFormat, out v.z);
-#else
-            double.TryParse(s, NumberStyles.Float, NumFormat, out v.z);
-#endif
-            return v;
-        }
-
         private void ReadArray(Stream stream, byte[] data)
         {
             int offset = 0;
@@ -332,7 +299,7 @@ namespace View3D.MeshInOut
                 }
             }
 
-            Console.WriteLine("Finished reading ASCII STL. Total triangles: " + count);
+            //Console.WriteLine("Finished reading ASCII STL. Total triangles: " + count);
         }
 
         // Replaces extractVector() — parses "x y z" starting at offset, no Substring allocation
