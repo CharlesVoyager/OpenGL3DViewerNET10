@@ -447,7 +447,7 @@ namespace View3D.model
             preRY2 = Rotation.y;
             preRZ2 = Rotation.z;
 
-            if (!reset)
+            if (reset == false)
                 curPos = Matrix4.Mult(trans, curPos);
             else
                 curPos = Matrix4.Identity;

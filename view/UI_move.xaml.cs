@@ -159,8 +159,6 @@ namespace View3D.view
                     if (stl == null) return;
                     stl.modifiedM = true;
                     MainWindow.main.stlComposer.textTransX.Text = Convert.ToString(slider_moveX.Value);
-
-                    stl.curPos.Row3 = new Vector4((float)slider_moveX.Value, (float)slider_moveY.Value, (float)slider_moveZ.Value, 1f);
                     MainWindow.main.threeDControl.UpdateChanges();
                 }
             }
@@ -177,8 +175,6 @@ namespace View3D.view
                     if (stl == null) return;
                     stl.modifiedM = true;
                     MainWindow.main.stlComposer.textTransY.Text = Convert.ToString(slider_moveY.Value);
-
-                    stl.curPos.Row3 = new Vector4((float)slider_moveX.Value, (float)slider_moveY.Value, (float)slider_moveZ.Value, 1f);
                     MainWindow.main.threeDControl.UpdateChanges();
                 }
             }
@@ -195,8 +191,6 @@ namespace View3D.view
                     if (stl == null) return;
                     stl.modifiedM = true;
                     MainWindow.main.stlComposer.textTransZ.Text = Convert.ToString(slider_moveZ.Value);
-
-                    stl.curPos.Row3 = new Vector4((float)slider_moveX.Value, (float)slider_moveY.Value, (float)slider_moveZ.Value, 1f);
                     MainWindow.main.threeDControl.UpdateChanges();
                 }
             }

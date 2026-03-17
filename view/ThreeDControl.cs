@@ -780,7 +780,7 @@ namespace View3D.view
 
             if (stlComp.models.Count > 0)
             {
-                GL.UniformMatrix4(stlModelLoc, false, ref stlComp.models[0].curPos);
+                GL.UniformMatrix4(stlModelLoc, false, ref stlComp.models[0].trans);
                 GL.BindVertexArray(stlVao);
                 GL.DrawArrays(PrimitiveType.Triangles, 0, vertices.Count / 6);
             }
