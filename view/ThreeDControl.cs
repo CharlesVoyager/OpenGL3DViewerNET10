@@ -981,17 +981,8 @@ namespace View3D.view
             float length = float.MaxValue;
             ThreeDModel nearestModel = null;
 
-            // TEST
-            Debug.WriteLine($"X: {x}, Y: {y}, " + ray.ToString());
-
             foreach (PrintModel model in stlComp.models)
             {
-                bool rayCastingResult = RayCasting.RaycastAABB(ray, model);
-                Debug.WriteLine($"RayCasting.RaycastAABB result = {rayCastingResult}");
-                if (!rayCastingResult) continue;
-
-
-#if false
                 if (!RayCasting.RaycastAABB(ray, model)) continue;
                 float[] rayPos = { ray.Position.X, ray.Position.Y, ray.Position.Z };
                 float[] rayNor = { ray.Normal.X, ray.Normal.Y, ray.Normal.Z };
@@ -1010,7 +1001,6 @@ namespace View3D.view
                     }
                 }
                 GC.Collect();
-#endif
             }
 
             // TEST
