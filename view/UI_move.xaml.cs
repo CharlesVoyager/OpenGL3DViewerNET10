@@ -75,6 +75,92 @@ namespace View3D.view
             base.OnPreviewTextInput(e);
         }
 
+        public void Initial()
+        {
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            if (stl == null) return;
+
+            slider_moveX.Maximum = 1000;
+            slider_moveX.Minimum = -1000;
+            slider_moveY.Maximum = 1000;
+            slider_moveY.Minimum = -1000;
+            slider_moveZ.Maximum = 1000;
+            slider_moveZ.Minimum = -1000;
+            slider_moveX.Value = stl.Position.x;
+            slider_moveY.Value = stl.Position.y;
+            slider_moveZ.Value = stl.Position.z;
+
+            double moveMax, moveMin;
+
+            moveMax = (int)Math.Floor((MainWindow.main.PrintAreaWidth - (stl.BoundingBox.xMax - stl.Position.x)) * 100) * 0.01;
+            moveMin = (int)Math.Ceiling((stl.Position.x - stl.BoundingBox.xMin) * 100) * 0.01;
+
+            double a = MainWindow.main.PrintAreaWidth - (stl.BoundingBox.xMax - stl.Position.x);
+            double b = stl.Position.x - stl.BoundingBox.xMin;
+
+            a += 0;
+            b += 0;
+
+            //module is out of bound,it cannot move. 
+            if (moveMin > moveMax)
+                slider_moveX.Value = (float)(moveMin + moveMax) / 2;
+            else if (moveMin <= stl.Position.x && stl.Position.x <= moveMax)//module is in of bound.
+                slider_moveX.Value = stl.Position.x;
+            else if (stl.Position.x > moveMax)//model is out of bound(too big), but it can move.
+                slider_moveX.Value = moveMax;
+            else // (moveMin > stl.Position.x)//model is out of bound(too small), but it can move.
+                slider_moveX.Value = moveMin;
+
+            if (moveMin > moveMax)
+            {
+                slider_moveX.Maximum = (float)(moveMin + moveMax) / 2;
+                slider_moveX.Minimum = (float)(moveMin + moveMax) / 2;
+            }
+            else
+            {
+                slider_moveX.Maximum = moveMax;
+                slider_moveX.Minimum = moveMin;
+            }
+
+
+            moveMax = (int)Math.Floor((MainWindow.main.PrintAreaDepth - (stl.BoundingBox.yMax - stl.Position.y)) * 100) * 0.01;
+            moveMin = (int)Math.Ceiling((stl.Position.y - stl.BoundingBox.yMin) * 100) * 0.01;
+
+            //module is out of bound,it can not move. 
+            if (moveMin > moveMax)
+                slider_moveY.Value = (float)(moveMin + moveMax) / 2;
+            else if (moveMin <= stl.Position.y && stl.Position.y <= moveMax)//module is in of bound.
+                slider_moveY.Value = stl.Position.y;
+            else if (stl.Position.y > moveMax)//model is out of bound(too big), but it can move.
+                slider_moveY.Value = moveMax;
+            else // (moveMin > stl.Position.y)//model is out of bound(too small), but it can move.
+                slider_moveY.Value = moveMin;
+
+            if (moveMin > moveMax)
+            {
+                slider_moveY.Maximum = (float)(moveMin + moveMax) / 2;
+                slider_moveY.Minimum = (float)(moveMin + moveMax) / 2;
+            }
+            else
+            {
+                slider_moveY.Maximum = moveMax;
+                slider_moveY.Minimum = moveMin;
+            }
+
+            moveMax = MainWindow.main.PrintAreaHeight - (stl.BoundingBoxWOSupport.zMax - stl.Position.z);
+            moveMin = stl.Position.z - stl.BoundingBoxWOSupport.zMin;
+            if (moveMin > moveMax)
+                moveMin = moveMax;
+            if (moveMin <= stl.Position.z && moveMax >= stl.Position.z)
+                slider_moveZ.Value = stl.Position.z;
+            else if (moveMax < stl.Position.z)
+                slider_moveZ.Value = moveMax;
+            else // (moveMin > stl.Position.z)
+                slider_moveZ.Value = moveMin;
+            slider_moveZ.Maximum = moveMax;
+            slider_moveZ.Minimum = moveMin;
+        }
+
         public void button_move_reset_Click(object sender, RoutedEventArgs e)
         {
             PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
@@ -107,16 +193,14 @@ namespace View3D.view
             PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
-
             MainWindow.main.stlComposer.landModel(stl);
 
             slider_moveX.Value = Math.Round(stl.Position.x);
             slider_moveY.Value = Math.Round(stl.Position.y);
-            slider_moveZ.Value = stl.Position.z;
+            slider_moveZ.Value = Math.Round(stl.Position.z);
             moveX_textbox.Text = slider_moveX.Value.ToString();
             moveY_textbox.Text = slider_moveY.Value.ToString();
-
-            moveZ_textbox.Text = (Math.Round(slider_moveZ.Value - slider_moveZ.Minimum, 1)).ToString();
+            moveZ_textbox.Text = slider_moveZ.Value.ToString();
 
             MainWindow.main.stlComposer.updateSTLState(stl);
             MainWindow.main.threeDControl.UpdateChanges();
