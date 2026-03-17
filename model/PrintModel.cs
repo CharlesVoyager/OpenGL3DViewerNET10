@@ -167,18 +167,6 @@ namespace View3D.model
             }
         }
 
-        public void Reset()
-        {
-            repairedModel = originalModel.Copy();
-            //repairedModel.Analyse();
-            //ShowRepaired(true);
-        }
-
-        public void ResetWoCopy()
-        {
-            repairedModel = originalModel;
-        }
-
         public void ResetVertexPosToBBox()
         {
             foreach (TopoVertex v in originalModel.vertices.v)
