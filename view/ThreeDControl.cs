@@ -54,10 +54,6 @@ namespace View3D.view
         // ── Public static / shared ────────────────────────────────────────────
         public static double GLversion;
 
-        // ── Camera & scene state ──────────────────────────────────────────────
-        ThreeDCamera cam;
-
-
         bool loaded = false;
         float xDown, yDown;
         float xPos, yPos;
@@ -71,6 +67,7 @@ namespace View3D.view
         int keyY = -1;
 
         STLComposer stlComp = null;
+        ThreeDCamera threeDCam = null;
 
         // Geometry helpers (pick ray)
         public Geom3DLine pickLine = null;
@@ -112,10 +109,7 @@ namespace View3D.view
         {
             VSync = VSyncMode.Off;  // CHANGED: VSync is now a property on the window, not an enum field
 
-            // Camera
-            cam = new ThreeDCamera();
-            cam.SetCameraDefaults();
-            cam.OrientIsometric();
+
 
             // Language hook
             MainWindow.main.languageChanged += translate;
@@ -123,6 +117,7 @@ namespace View3D.view
 
         // ── Public wiring ─────────────────────────────────────────────────────
         public void SetComp(STLComposer comp) => stlComp = comp;
+        public void SetCamera(ThreeDCamera cam) => threeDCam = cam;
 
         private volatile bool _isDirty = true;
         private void Invalidate() => _isDirty = true;
@@ -354,7 +349,7 @@ namespace View3D.view
             model = Matrix4.Identity;
 
 #if true
-            view = Matrix4.LookAt(cam.CameraPosition, cam.viewCenter, Vector3.UnitZ);
+            view = Matrix4.LookAt(threeDCam.CameraPosition, threeDCam.viewCenter, Vector3.UnitZ);
 #else       // Fixed camera position for testing
             view = Matrix4.LookAt(
                 new Vector3(300, 300, 300),
@@ -366,11 +361,11 @@ namespace View3D.view
                   MainWindow.main.PrintAreaHeight * MainWindow.main.PrintAreaHeight +
                   MainWindow.main.PrintAreaWidth * MainWindow.main.PrintAreaWidth) * 0.25));
 
-            float dist = (float)cam.distance;
+            float dist = (float)threeDCam.distance;
             float nearDist = Math.Max(1, dist - bedRadius);
             float farDist = Math.Max(bedRadius * 2, dist + bedRadius);
             proj = Matrix4.CreatePerspectiveFieldOfView(
-                            (float)cam.angle * 2.0f,
+                            (float)threeDCam.angle * 2.0f,
                             Size.X / (float)Size.Y,
                             nearDist,
                             farDist);
@@ -490,7 +485,7 @@ namespace View3D.view
 
             var pos = MouseState.Position;          // CHANGED: e.X / e.Y are gone; use MouseState.Position
             keyX = (int)pos.X; keyY = (int)pos.Y;
-            cam.PreparePanZoomRot();
+            threeDCam.PreparePanZoomRot();
             lastX = xDown = (int)pos.X;
             lastY = yDown = (int)pos.Y;
             movePlane = new Geom3DPlane(new Geom3DVector(0, 0, 0), new Geom3DVector(0, 0, 1));
@@ -590,8 +585,8 @@ namespace View3D.view
             base.OnMouseWheel(e);
             if (e.OffsetY != 0)            // CHANGED: e.Delta → e.OffsetY
             {
-                cam.PreparePanZoomRot();
-                cam.Zoom(1f - e.OffsetY / 60f);
+                threeDCam.PreparePanZoomRot();
+                threeDCam.Zoom(1f - e.OffsetY / 60f);
                 zoom *= 1f - e.OffsetY / 20f;
                 if (zoom < 0.002f) zoom = 0.002f;
                 if (zoom > 5.9f) zoom = 5.9f;
@@ -872,10 +867,10 @@ namespace View3D.view
                   MainWindow.main.PrintAreaHeight * MainWindow.main.PrintAreaHeight +
                   MainWindow.main.PrintAreaWidth * MainWindow.main.PrintAreaWidth) * 0.25));
             
-            float dist = (float)cam.distance;
+            float dist = (float)threeDCam.distance;
             float nearDist = Math.Max(1, dist - bedRadius);
-            float midHeight = 2.0f * (float)Math.Tan(cam.angle) * dist;
-            float nearHeight = 2.0f * (float)Math.Tan(cam.angle) * nearDist;
+            float midHeight = 2.0f * (float)Math.Tan(threeDCam.angle) * dist;
+            float nearHeight = 2.0f * (float)Math.Tan(threeDCam.angle) * nearDist;
             float aspectRatio = (float)ClientSize.X / (float)ClientSize.Y;
 
             int window_y = (ClientSize.Y - y) - ClientSize.Y / 2;            // CHANGED: Width/Height → ClientSize.X / ClientSize.Y
@@ -886,9 +881,9 @@ namespace View3D.view
             float fpx = (float)(nearHeight * 0.5 * aspectRatio * norm_x);
 
             Vector4 dirN = new Vector4(fpx, fpy, -nearDist, 0);
-            Vector3 camPos = cam.CameraPosition;
+            Vector3 camPos = threeDCam.CameraPosition;
             Matrix4 ntrans = Matrix4.LookAt(camPos.X, camPos.Y, camPos.Z,
-                cam.viewCenter.X, cam.viewCenter.Y, cam.viewCenter.Z, 0, 0, 1.0f);
+                threeDCam.viewCenter.X, threeDCam.viewCenter.Y, threeDCam.viewCenter.Z, 0, 0, 1.0f);
             ntrans = Matrix4.Invert(ntrans);
             Vector4 frontPoint = ntrans.Row3;
             Vector4 dirVec = dirN * ntrans;
@@ -962,7 +957,7 @@ namespace View3D.view
                 case 0: // Rotate
                     speedX = (xPos - xDown) / d;
                     speedY = (yPos - yDown) / d;
-                    cam.Rotate(-speedX * 0.9, speedY * 0.9);
+                    threeDCam.Rotate(-speedX * 0.9, speedY * 0.9);
                     Invalidate();
                     break;
 
@@ -972,18 +967,18 @@ namespace View3D.view
                         speedX = (xPos - xDown) / ClientSize.X;
                         speedY = (yPos - yDown) / ClientSize.Y;
                         Vector3 planeVec = Vector3.Subtract(
-                            new Vector3(moveStart.x, moveStart.y, moveStart.z), cam.CameraPosition);
-                        float dot = Vector3.Dot(planeVec, cam.ViewDirection());
+                            new Vector3(moveStart.x, moveStart.y, moveStart.z), threeDCam.CameraPosition);
+                        float dot = Vector3.Dot(planeVec, threeDCam.ViewDirection());
                         double len = dot > 0 ? planeVec.Length : -1;
                         float scale = emode == 1 ? 200f : 1f;
-                        cam.Pan(speedX * scale * (emode == 2 ? -1 : 1),
+                        threeDCam.Pan(speedX * scale * (emode == 2 ? -1 : 1),
                                 speedY * scale * (emode == 2 ? -1 : 1), len);
                         Invalidate();
                         break;
                     }
 
                 case 3: // Zoom
-                    cam.Zoom(1 - speedY / 3f);
+                    threeDCam.Zoom(1 - speedY / 3f);
                     Invalidate();
                     break;
 
@@ -1014,27 +1009,27 @@ namespace View3D.view
         }
 
         // ── Camera helpers ────────────────────────────────────────────────────
-        public void frontView() { cam.SetCameraDefaults(); cam.OrientFront(); Invalidate(); }
-        public void backView() { cam.SetCameraDefaults(); cam.OrientBack(); Invalidate(); }
-        public void leftView() { cam.SetCameraDefaults(); cam.OrientLeft(); Invalidate(); }
-        public void rightView() { cam.SetCameraDefaults(); cam.OrientRight(); Invalidate(); }
-        public void topView() { cam.SetCameraDefaults(); cam.OrientTop(); Invalidate(); }
-        public void bottomView() { cam.SetCameraDefaults(); cam.OrientBottom(); Invalidate(); }
-        public void isometricView() { cam.SetCameraDefaults(); cam.OrientIsometric(); Invalidate(); }
+        public void frontView() { threeDCam.SetCameraDefaults(); threeDCam.OrientFront(); Invalidate(); }
+        public void backView() { threeDCam.SetCameraDefaults(); threeDCam.OrientBack(); Invalidate(); }
+        public void leftView() { threeDCam.SetCameraDefaults(); threeDCam.OrientLeft(); Invalidate(); }
+        public void rightView() { threeDCam.SetCameraDefaults(); threeDCam.OrientRight(); Invalidate(); }
+        public void topView() { threeDCam.SetCameraDefaults(); threeDCam.OrientTop(); Invalidate(); }
+        public void bottomView() { threeDCam.SetCameraDefaults(); threeDCam.OrientBottom(); Invalidate(); }
+        public void isometricView() { threeDCam.SetCameraDefaults(); threeDCam.OrientIsometric(); Invalidate(); }
 
-        public Vector3 EdgeTranslation() { return cam.EdgeTranslation(); }
+        public Vector3 EdgeTranslation() { return threeDCam.EdgeTranslation(); }
 
         // ── Zoom button handlers ──────────────────────────────────────────────
         public void button_zoomIn_Click(object sender, EventArgs e)
         {
-            cam.PreparePanZoomRot(); cam.Zoom(0.9);
+            threeDCam.PreparePanZoomRot(); threeDCam.Zoom(0.9);
             zoom = Math.Max(0.002f, Math.Min(5.9f, zoom));
             Invalidate();
         }
 
         public void button_zoomOut_Click(object sender, EventArgs e)
         {
-            cam.PreparePanZoomRot(); cam.Zoom(1.1);
+            threeDCam.PreparePanZoomRot(); threeDCam.Zoom(1.1);
             zoom = Math.Max(0.002f, Math.Min(5.9f, zoom));
             Invalidate();
         }

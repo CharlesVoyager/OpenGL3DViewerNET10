@@ -20,6 +20,7 @@ namespace View3D
         public ThreeDSettings? threeDSettings = null;
         public ThreeDControl? threeDControl = null;
         public STLComposer? stlComposer = null;
+        public ThreeDCamera? threeDCamera = null;
 
         public Trans? trans = null;
 
@@ -72,6 +73,11 @@ namespace View3D
             // STLComposer
             stlComposer = new STLComposer();
             stlComposer.Hide();
+
+            // Camera
+            threeDCamera = new ThreeDCamera();
+            threeDCamera.SetCameraDefaults();
+            threeDCamera.OrientIsometric();
 
             InitializeComponent();
             UI();
