@@ -369,8 +369,7 @@ namespace View3D.MeshInOut
         protected void importSTLWOCatch(string filename, TopoModel model, Action<int> updateRate)
         {
             Status = STATUS.Busy;
-
-            ////model.StartAction("L_LOADING...");
+           
             model.Clear();
             FileStream f = null;
             BinaryReader r = null;
@@ -447,7 +446,6 @@ namespace View3D.MeshInOut
         {
             Status = STATUS.Busy;
 
-            ////model.StartAction("L_LOADING...");
             model.Clear();
 
             try
@@ -567,7 +565,5 @@ namespace View3D.MeshInOut
                 ////MessageBox.Show(Trans.T("M_LOAD_STL_FILE_ERROR"), Trans.T("W_LOAD_STL_FILE_ERROR"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
     }
-
 }
