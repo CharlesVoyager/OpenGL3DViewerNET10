@@ -139,7 +139,11 @@ namespace View3D
             try
             {
                 if (e.Key == Key.Delete)
-                    threeDControl.button_remove_Click(null, null);
+                {
+                    stlComposer.buttonRemoveSTL_Click(null, null);
+                    stlComposer.updateSTLState(null);
+                    threeDControl.UpdateChanges();
+                }
             }
             catch { }
         }
@@ -466,8 +470,12 @@ namespace View3D
             UI_move.slider_moveY.Minimum = -1000;
             UI_move.slider_moveY.Maximum = 1000;
 
-            OutofBound.Visibility = System.Windows.Visibility.Hidden;
-            threeDControl.button_remove_Click(null, null);
+            OutofBound.Visibility = Visibility.Hidden;
+
+            stlComposer.buttonRemoveSTL_Click(null, null);
+            stlComposer.updateSTLState(null);
+            threeDControl.UpdateChanges();
+
             if (stlComposer.listObjects.Items.Count > 0)
                 stlComposer.updateSTLState(stlComposer.SingleSelectedModel);
             Focus();

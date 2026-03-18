@@ -610,7 +610,14 @@ namespace View3D.view
         private void ThreeDControl_KeyDown(KeyboardKeyEventArgs e)
         {
             if (e.Key == Keys.Delete)
-                button_remove_Click(null, null);
+            {
+                MainWindow.main.Dispatcher.Invoke(() =>
+                {
+                    stlComp.buttonRemoveSTL_Click(null, null);
+                    stlComp.updateSTLState(null);
+                });
+                Invalidate();
+            }
         }
 
         private void ThreeDControl_KeyPress(TextInputEventArgs e)
@@ -1022,16 +1029,6 @@ namespace View3D.view
         {
             threeDCam.PreparePanZoomRot(); threeDCam.Zoom(1.1);
             zoom = Math.Max(0.002f, Math.Min(5.9f, zoom));
-            Invalidate();
-        }
-
-        public void button_remove_Click(object sender, EventArgs e)
-        {
-            MainWindow.main.Dispatcher.Invoke(() =>
-            {
-                stlComp.buttonRemoveSTL_Click(null, null);
-                stlComp.updateSTLState(null);
-            });
             Invalidate();
         }
 
