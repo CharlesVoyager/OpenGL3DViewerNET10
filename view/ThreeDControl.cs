@@ -293,8 +293,11 @@ namespace View3D.view
             GL.Disable(EnableCap.DepthTest);
             GL.UseProgram(backgroundShader);
 
-            Vector4 topColor = new Vector4(0.2f, 0.4f, 0.8f, 1.0f);
-            Vector4 bottomColor = new Vector4(0.0f, 0.0f, 0.2f, 1.0f);
+            Color color;
+            color = MainWindow.main.threeDSettings.BackgroundTopBackgroundColor();
+            Vector4 topColor = new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
+            color = MainWindow.main.threeDSettings.BackgroundBottomBackgroundColor();
+            Vector4 bottomColor = new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
 
             GL.Uniform4(GL.GetUniformLocation(backgroundShader, "topColor"), topColor);
             GL.Uniform4(GL.GetUniformLocation(backgroundShader, "bottomColor"), bottomColor);
@@ -1044,13 +1047,6 @@ namespace View3D.view
             });
             Invalidate();
         }
-
-        // ── Utility ───────────────────────────────────────────────────────────
-        // CHANGED: convertColor helper is no longer needed since we pass float components
-        // directly everywhere. Kept as a convenience if still referenced elsewhere.
-        private Color4 convertColor(Color col) =>
-            new Color4(col.R, col.G, col.B, col.A);
-
 
         // Function to load a text file and return its contents as a string
         public string LoadShaderSource(string filePath)
