@@ -215,7 +215,6 @@ namespace View3D.view
                 MainWindow.main.UI_move.slider_moveZ.Value = stl.Position.z;
                 MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBoxWOSupport.zMin;
                 MainWindow.main.stlComposer.updateSTLState(stl);
-                stl.modifiedM = false;
                 return;
             }
             try
@@ -351,7 +350,7 @@ namespace View3D.view
             if (MainWindow.main == null) return;
             PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
-            stl.modifiedS = true;
+
             if (e.Delta > 0)
                 slider_resize.Value += 0.01;
             else

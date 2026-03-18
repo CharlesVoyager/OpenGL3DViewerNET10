@@ -18,9 +18,6 @@ namespace View3D.model
         public int activeModel = 0;
         public string name = "Unknown";
         public bool outside = false, oldOutside = false;
-        public bool modifiedM = false;
-        public bool modifiedR = false;
-        public bool modifiedS = false;
 
         public Matrix4 trans, invTrans;
         public Submesh submesh;

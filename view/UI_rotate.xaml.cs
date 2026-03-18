@@ -55,7 +55,6 @@ namespace View3D.view
                 float oriZmin;
                 PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                stl.modifiedR = true;
                 oriZmin = stl.zMin;
                 sliderX.Value = ConvertPositionAngel(new System.Windows.Point(stackpanelX.Width / 2, stackpanelX.Height / 2), e.GetPosition(stackpanelX));
                 //stl.LandToZ(oriZmin);
@@ -84,7 +83,7 @@ namespace View3D.view
                 float oriZmin;
                 PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                stl.modifiedR = true;
+     
                 oriZmin = stl.zMin;
                 sliderY.Value = ConvertPositionAngel(new System.Windows.Point(stackpanelY.Width / 2, stackpanelY.Height / 2), e.GetPosition(stackpanelY));
                 //stl.LandToZ(oriZmin);
@@ -113,7 +112,6 @@ namespace View3D.view
                 float oriZmin;
                 PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                stl.modifiedR = true;
                 oriZmin = stl.zMin;
                 sliderZ.Value = ConvertPositionAngel(new System.Windows.Point(stackpanelZ.Width / 2, stackpanelZ.Height / 2), e.GetPosition(stackpanelZ));
             }
@@ -144,14 +142,12 @@ namespace View3D.view
             {
                 oriZmin = stl.zMin;
                 stl.LandToZ(oriZmin);
-                stl.modifiedR = false;
             }
 
             sliderX.Value = 0;
             sliderY.Value = 0;
             sliderZ.Value = 0;
             stl.LandToZ(oriZmin);
-            stl.modifiedR = false;
             MainWindow.main.stlComposer.updateSTLState(stl);
             MainWindow.main.threeDControl.UpdateChanges();
         }
@@ -354,7 +350,6 @@ namespace View3D.view
                 PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
                 float oriZmin;
-                stl.modifiedR = true;
                 oriZmin = stl.zMin;
                 sliderX.Value = Convert.ToDouble(textboxX.Text);
                 MainWindow.main.stlComposer.textRotX.Text = textboxX.Text;
@@ -372,7 +367,7 @@ namespace View3D.view
                 PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
                 float oriZmin;
-                stl.modifiedR = true;
+
                 oriZmin = stl.zMin;
                 sliderY.Value = Convert.ToDouble(textboxY.Text);
                 MainWindow.main.stlComposer.textRotY.Text = textboxY.Text;
@@ -390,7 +385,7 @@ namespace View3D.view
                 PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
                 float oriZmin;
-                stl.modifiedR = true;
+
                 oriZmin = stl.zMin;
                 sliderZ.Value = Convert.ToDouble(textboxZ.Text);
                 MainWindow.main.stlComposer.textRotZ.Text = textboxZ.Text;

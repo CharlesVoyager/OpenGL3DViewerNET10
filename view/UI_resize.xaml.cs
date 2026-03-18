@@ -50,7 +50,7 @@ namespace View3D.view
                 }
                 PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                stl.modifiedS = true;
+
                 //double centerValue = (stl.maxScaleVector + stl.minScaleVector) / 2.0;
                 //double scaleValue = stl.Scale.x;
 
@@ -88,7 +88,7 @@ namespace View3D.view
         {
             PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
-            stl.modifiedS = true;
+
             if (e.Delta > 0)
                 slider_resize.Value += 0.01;
             else
@@ -106,7 +106,6 @@ namespace View3D.view
             resize_textbox.Text = "100";
             MainWindow.main.stlComposer.textScaleX.Text = "1";
             MainWindow.main.stlComposer.check_stl_size_too_small();
-            stl.modifiedS = false;
         }
 
         private void resize_textbox_TextChanged(object sender, TextChangedEventArgs e)
@@ -115,8 +114,7 @@ namespace View3D.view
             {
                 PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                stl.modifiedS = true;
-
+              
                 double m = stl.m;
                 double b = stl.b;
                 double marginHardLimit = 1.0;

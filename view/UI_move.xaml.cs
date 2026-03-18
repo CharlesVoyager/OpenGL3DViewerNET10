@@ -184,8 +184,6 @@ namespace View3D.view
             MainWindow.main.stlComposer.landModel(stl);
             MainWindow.main.stlComposer.updateSTLState(stl);
             MainWindow.main.threeDControl.UpdateChanges();
-
-            stl.modifiedM = false;
         }
 
         public void button_land_Click(object sender, RoutedEventArgs e)
@@ -241,7 +239,7 @@ namespace View3D.view
                 {
                     PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
-                    stl.modifiedM = true;
+  
                     MainWindow.main.stlComposer.textTransX.Text = Convert.ToString(slider_moveX.Value);
                     MainWindow.main.threeDControl.UpdateChanges();
                 }
@@ -257,7 +255,7 @@ namespace View3D.view
                 {
                     PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
-                    stl.modifiedM = true;
+
                     MainWindow.main.stlComposer.textTransY.Text = Convert.ToString(slider_moveY.Value);
                     MainWindow.main.threeDControl.UpdateChanges();
                 }
@@ -273,7 +271,7 @@ namespace View3D.view
                 {
                     PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
-                    stl.modifiedM = true;
+
                     MainWindow.main.stlComposer.textTransZ.Text = Convert.ToString(slider_moveZ.Value);
                     MainWindow.main.threeDControl.UpdateChanges();
                 }
