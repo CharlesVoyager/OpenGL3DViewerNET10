@@ -674,7 +674,6 @@ namespace View3D.view
 
                 DrawBBoxLines();
 
-                // swap the buffers
                 SwapBuffers();
 
                 fpsTimer.Stop();
@@ -814,7 +813,6 @@ namespace View3D.view
             GL.EnableVertexAttribArray(0);
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
         }
-
 
         private void DrawBBoxLines()
         {
@@ -1014,7 +1012,6 @@ namespace View3D.view
                     }
             }
         }
-
 
 
         // ── Zoom button handlers ──────────────────────────────────────────────
