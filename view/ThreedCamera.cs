@@ -13,7 +13,7 @@ namespace View3D.view
         public double phi = 0;
         public double angle = 15.0 * Math.PI / 180;
         public Vector3 viewCenterStart = new Vector3();
-        public double startTheta, startPhi,startDistance;
+        public double startTheta, startPhi, startDistance;
 
         public ThreeDCamera() { }
 
@@ -340,7 +340,37 @@ namespace View3D.view
         public void OnTopView() { SetCameraDefaults(); OrientTop(); MainWindow.main.threeDControl.UpdateChanges(); }
         public void OnBottomView() { SetCameraDefaults(); OrientBottom(); MainWindow.main.threeDControl.UpdateChanges(); }
         public void OnIsometricView() { SetCameraDefaults(); OrientIsometric(); MainWindow.main.threeDControl.UpdateChanges(); }
+        // <>
 
         public Vector3 GetEdgeTranslation() { return EdgeTranslation(); }
+
+
+        public void GetModelViewProj(ref Matrix4 model, ref Matrix4 view, ref Matrix4 proj)
+        {
+            model = Matrix4.Identity;
+
+#if true
+            view = Matrix4.LookAt(CameraPosition, viewCenter, Vector3.UnitZ);
+#else       // Fixed camera position for testing
+            view = Matrix4.LookAt(
+                new Vector3(300, 300, 300),
+                new Vector3(128, 128, 0),
+                Vector3.UnitZ);
+#endif
+            float bedRadius = (float)(1.5 * Math.Sqrt(
+                 (MainWindow.main.PrintAreaDepth * MainWindow.main.PrintAreaDepth +
+                  MainWindow.main.PrintAreaHeight * MainWindow.main.PrintAreaHeight +
+                  MainWindow.main.PrintAreaWidth * MainWindow.main.PrintAreaWidth) * 0.25));
+
+            float dist = (float)distance;
+            float nearDist = Math.Max(1, dist - bedRadius);
+            float farDist = Math.Max(bedRadius * 2, dist + bedRadius);
+            Vector2i size = MainWindow.main.threeDControl.Size;
+            proj = Matrix4.CreatePerspectiveFieldOfView(
+                            (float)angle * 2.0f,
+                            size.X / (float)size.Y,
+                            nearDist,
+                            farDist);
+        }
     }
 }

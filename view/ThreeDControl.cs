@@ -1,3 +1,4 @@
+using OpenGL3DViewerNET10.Draw;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -22,21 +23,6 @@ namespace View3D.view
     /// </summary>
     public class ThreeDControl : GameWindow
     {
-        // background shader & geometry
-        int backgroundShader;
-
-        // Printer bed shader & geometry
-        int plateShader;
-
-        int plateModelLoc, plateViewLoc, plateProjLoc;
-
-        int plateColorLoc;
-        int gridColorLoc;
-        int gridSpacingLoc;
-
-        int plateVao;
-        int plateVbo;
-
         // STL model
         int stlShader;
         int stlVao;
@@ -44,17 +30,11 @@ namespace View3D.view
         int stlModelLoc, stlViewLoc, stlProjLoc;
         List<float> stlVertices = new List<float>();
 
-        // Bounding Box
-        int bboxShader;
-        int bboxVao;
-        int bboxVbo;
-        int bboxModelLoc, bboxViewLoc, bboxProjLoc;
+        Background backgroundDraw = null;
+        PrinterbedDraw printerbedDraw = null;
+        BoundingBoxDraw boundingBoxDraw = null;
+        RedBorder redBorderDraw = null;
 
-        // Red border around print area
-        int redBorderVao;
-        int redBorderVbo;
-        int redBorderShader;
-        int redBorderVertexCount;
 
         // ── Public static / shared ────────────────────────────────────────────
         public static double GLversion;
@@ -131,7 +111,7 @@ namespace View3D.view
         {
             MainWindow.main.setbuttonVisable(stlComp.listObjects.SelectedItems.Count == 1 && sel);
         }
-
+          
         // ── Translations ──────────────────────────────────────────────────────
         private void translate()
         {
@@ -229,16 +209,12 @@ namespace View3D.view
             catch { }
 
             // Background
-            backgroundShader = CreateShaderProgram("Background");
-
-#if false   // Mono background clear color was too dark; using shader gradient instead
-            GL.ClearColor(0.2f, 0.3f, 0.4f, 1f);
-#endif
+            backgroundDraw = new Background();
+            backgroundDraw.Init(); 
 
             // Printer bed
-            plateShader = CreateShaderProgram("Printerbed");
-            GetUniformLocationsPrinterbed();
-            CreateBuildPlatePrinterbed();
+            printerbedDraw = new PrinterbedDraw();
+            printerbedDraw.Init();
 
             // STL model
             stlShader = CreateShaderProgram("StlModel");
@@ -248,14 +224,12 @@ namespace View3D.view
             stlProjLoc = GL.GetUniformLocation(stlShader, "projection");
 
             // Bounding Box
-            bboxShader = CreateShaderProgram("BoundingBox");   
-            SetupBBox();
-            bboxModelLoc = GL.GetUniformLocation(bboxShader, "model");
-            bboxViewLoc = GL.GetUniformLocation(bboxShader, "view");
-            bboxProjLoc = GL.GetUniformLocation(bboxShader, "projection");
+            boundingBoxDraw = new BoundingBoxDraw();
+            boundingBoxDraw.Init();
 
             // Red Border
-            InitRedBorderMesh();
+            redBorderDraw = new RedBorder();
+            redBorderDraw.InitRedBorderMesh();
 
             loaded = true;
         }
@@ -289,65 +263,6 @@ namespace View3D.view
             return shaderProgram;
         }
 
-        void DrawBackground()
-        {
-            GL.Disable(EnableCap.DepthTest);
-            GL.UseProgram(backgroundShader);
-
-            Color color;
-            color = MainWindow.main.threeDSettings.BackgroundTopBackgroundColor();
-            Vector4 topColor = new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
-            color = MainWindow.main.threeDSettings.BackgroundBottomBackgroundColor();
-            Vector4 bottomColor = new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
-
-            GL.Uniform4(GL.GetUniformLocation(backgroundShader, "topColor"), topColor);
-            GL.Uniform4(GL.GetUniformLocation(backgroundShader, "bottomColor"), bottomColor);
-
-            GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
-        }
-
-        void GetUniformLocationsPrinterbed()
-        {
-            GL.UseProgram(plateShader);
-
-            plateModelLoc = GL.GetUniformLocation(plateShader, "model");
-            plateViewLoc = GL.GetUniformLocation(plateShader, "view");
-            plateProjLoc = GL.GetUniformLocation(plateShader, "projection");
-
-            plateColorLoc = GL.GetUniformLocation(plateShader, "plateColor");
-            gridColorLoc = GL.GetUniformLocation(plateShader, "gridColor");
-            gridSpacingLoc = GL.GetUniformLocation(plateShader, "gridSpacing");
-        }
-
-        void CreateBuildPlatePrinterbed()
-        {
-            float[] vertices =
-            {
-                0f,   0f,   0f,
-                256f, 0f,   0f,
-                256f, 256f, 0f,
-                0f,   256f, 0f
-            };
-
-            plateVao = GL.GenVertexArray();
-            plateVbo = GL.GenBuffer();
-
-            GL.BindVertexArray(plateVao);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, plateVbo);
-            GL.BufferData(BufferTarget.ArrayBuffer,
-                          vertices.Length * sizeof(float),
-                          vertices,
-                          BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(
-                0,
-                3,
-                VertexAttribPointerType.Float,
-                false,
-                3 * sizeof(float),
-                0);
-            GL.EnableVertexAttribArray(0);
-            GL.Enable(EnableCap.DepthTest);
-        }
 
         private void computeModelViewProj(ref Matrix4 model, ref Matrix4 view, ref Matrix4 proj)
         {
@@ -374,31 +289,6 @@ namespace View3D.view
                             Size.X / (float)Size.Y,
                             nearDist,
                             farDist);
-        }
-
-        private void DrawPrintbedBase()
-        {
-            if (MainWindow.main.threeDSettings.IsPrintbed() != true) return;
-
-            Matrix4 model = Matrix4.Identity;
-            Matrix4 view = Matrix4.Identity;
-            Matrix4 proj = Matrix4.Identity;
-
-            computeModelViewProj(ref model, ref view, ref proj);
-
-            GL.UseProgram(plateShader);
-
-            GL.UniformMatrix4(plateModelLoc, false, ref model);
-            GL.UniformMatrix4(plateViewLoc, false, ref view);
-            GL.UniformMatrix4(plateProjLoc, false, ref proj);
-
-            GL.Uniform4(plateColorLoc, new Vector4(0.8f, 0.8f, 0.8f, 1f));
-            GL.Uniform4(gridColorLoc, new Vector4(0f, 0f, 0f, 0.5f));
-            GL.Uniform1(gridSpacingLoc, 10f);   // 10 mm grid
-
-            GL.BindVertexArray(plateVao);
-
-            GL.DrawArrays(PrimitiveType.TriangleFan, 0, 4);
         }
 
         [DllImport("user32.dll")] private static extern bool SetForegroundWindow(IntPtr hWnd);
@@ -449,7 +339,10 @@ namespace View3D.view
         {
             base.OnUnload();
 
-            DisposeRedBorderMesh();
+            redBorderDraw.Dispose();
+            boundingBoxDraw.Dispose();
+            printerbedDraw.Dispose();
+            backgroundDraw.Dispose();
 
             MainWindow.main.Dispatcher.InvokeAsync(() =>
             {
@@ -673,15 +566,15 @@ namespace View3D.view
 
                 GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-                DrawBackground();
+                backgroundDraw.Draw();
 
-                DrawPrintbedBase();
+                printerbedDraw.Draw();
 
                 DrawModels();
 
-                DrawBBoxLines();
+                boundingBoxDraw.Draw();
 
-                DrawRedBorder();
+                redBorderDraw.Draw();
 
                 SwapBuffers();
 
@@ -806,72 +699,6 @@ namespace View3D.view
 #endif
         }
 
-        void SetupBBox()
-        {
-            bboxVao = GL.GenVertexArray();
-            bboxVbo = GL.GenBuffer();
-
-            GL.BindVertexArray(bboxVao);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, bboxVbo);
-
-            // Pre-allocate space for 24 vertices (X, Y, Z)
-            // We pass IntPtr.Zero to just reserve the space on the GPU
-            GL.BufferData(BufferTarget.ArrayBuffer, 24 * 3 * sizeof(float), IntPtr.Zero, BufferUsageHint.DynamicDraw);
-
-            // Define the layout (assuming your shader uses location 0 for position)
-            GL.EnableVertexAttribArray(0);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
-        }
-
-        private void DrawBBoxLines()
-        {
-            if (stlComp.models.Count == 0) return;
-
-            PrintModel m = stlComp.models[0];
-            float[] verticesBbox = {
-                m.xMin, m.yMin, m.zMin, m.xMax, m.yMin, m.zMin,
-                m.xMin, m.yMin, m.zMin, m.xMin, m.yMax, m.zMin,
-                m.xMin, m.yMin, m.zMin, m.xMin, m.yMin, m.zMax,
-                m.xMax, m.yMax, m.zMax, m.xMin, m.yMax, m.zMax,
-                m.xMax, m.yMax, m.zMax, m.xMax, m.yMin, m.zMax,
-                m.xMax, m.yMax, m.zMax, m.xMax, m.yMax, m.zMin,
-                m.xMin, m.yMax, m.zMax, m.xMin, m.yMax, m.zMin,
-                m.xMin, m.yMax, m.zMax, m.xMin, m.yMin, m.zMax,
-                m.xMax, m.yMax, m.zMin, m.xMax, m.yMin, m.zMin,
-                m.xMax, m.yMax, m.zMin, m.xMin, m.yMax, m.zMin,
-                m.xMax, m.yMin, m.zMax, m.xMin, m.yMin, m.zMax,
-                m.xMax, m.yMin, m.zMax, m.xMax, m.yMin, m.zMin
-            };
-
-            GL.Enable(EnableCap.DepthTest);
-
-            // 1. Bind the Bounding Box VBO
-            GL.BindBuffer(BufferTarget.ArrayBuffer, bboxVbo);
-
-            // 2. Upload the new data to the START of the buffer (offset 0)
-            GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)0, verticesBbox.Length * sizeof(float), verticesBbox);
-
-            Matrix4 model = Matrix4.Identity;
-            Matrix4 view = Matrix4.Identity;
-            Matrix4 proj = Matrix4.Identity;
-
-            computeModelViewProj(ref model, ref view, ref proj);
-
-            GL.UseProgram(bboxShader);
-
-            GL.UniformMatrix4(bboxModelLoc, false, ref model);
-            GL.UniformMatrix4(bboxViewLoc, false, ref view);
-            GL.UniformMatrix4(bboxProjLoc, false, ref proj);
-
-            // 3. Bind the BBox VAO and Draw
-            GL.BindVertexArray(bboxVao);
-
-            // 4. Set your BBox color (as discussed previously)
-            int colorLoc = GL.GetUniformLocation(bboxShader, "ourColor");
-            GL.Uniform4(colorLoc, Color4.LimeGreen);
-
-            GL.DrawArrays(PrimitiveType.Lines, 0, 24);
-        }
 
         // ── Pick / ray-cast ───────────────────────────────────────────────────
         public void UpdatePickLine(int x, int y)
@@ -1056,77 +883,6 @@ namespace View3D.view
             }
 
             return shaderSource;
-        }
-
-
-        // Call once during load / whenever PrintAreaWidth or PrintAreaDepth changes
-        private void InitRedBorderMesh()
-        {
-            int pad = 2, tri = 10;
-            float w = MainWindow.main.PrintAreaWidth, d = MainWindow.main.PrintAreaDepth;
-
-            // Same vertex order as the original LineStrip
-            var verts = new float[]
-            {
-                -pad,         d + pad,       -pad,
-                -pad,        -pad,           -pad,
-                 w + pad,    -pad,           -pad,
-                 w + pad,     d + pad,       -pad,
-                 w / 2f + tri, d + pad,     -pad,
-                 w / 2f,       d + pad + tri,-pad,
-                 w / 2f - tri, d + pad,     -pad,
-                -pad,          d + pad,     -pad,   // close the strip
-            };
-            redBorderVertexCount = verts.Length / 3;
-
-            // VAO
-            redBorderVao = GL.GenVertexArray();
-            GL.BindVertexArray(redBorderVao);
-
-            // VBO
-            redBorderVbo = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, redBorderVbo);
-            GL.BufferData(BufferTarget.ArrayBuffer,
-                          verts.Length * sizeof(float),
-                          verts,
-                          BufferUsageHint.StaticDraw);
-
-            // position attribute  (location = 0, 3 floats, no offset)
-            GL.EnableVertexAttribArray(0);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
-
-            // Build shader program
-            redBorderShader = CreateShaderProgram("RedBorder");
-        }
-
-        // Call each frame in place of the original GL.Begin/End block
-        private void DrawRedBorder()
-        {
-            Matrix4 model = Matrix4.Identity;
-            Matrix4 view = Matrix4.Identity;
-            Matrix4 proj = Matrix4.Identity;
-
-            computeModelViewProj(ref model, ref view, ref proj);
-            Matrix4 mvp = model * view * proj;
-
-            GL.UseProgram(redBorderShader);
-
-            // Pass the combined MVP matrix
-            int mvpLoc = GL.GetUniformLocation(redBorderShader, "uMVP");
-            int colorLoc = GL.GetUniformLocation(redBorderShader, "uColor");
-            GL.UniformMatrix4(mvpLoc, false, ref mvp);
-            GL.Uniform4(colorLoc, 1f, 0f, 0f, 0f); // white — adjust as needed
-
-            GL.BindVertexArray(redBorderVao);
-            GL.DrawArrays(PrimitiveType.LineStrip, 0, redBorderVertexCount);
-        }
-
-        // Clean up when done
-        private void DisposeRedBorderMesh()
-        {
-            GL.DeleteVertexArray(redBorderVao);
-            GL.DeleteBuffer(redBorderVbo);
-            GL.DeleteProgram(redBorderShader);
         }
     }
 }
