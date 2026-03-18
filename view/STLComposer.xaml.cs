@@ -250,7 +250,7 @@ namespace View3D.view
         // =====================================================================
         //  openAndAddObject  (identical logic, WinForms dialogs replaced)
         // =====================================================================
-        public static readonly ManualResetEventSlim _stlModelDataReady = new ManualResetEventSlim(false);
+        public static readonly ManualResetEventSlim _stlModelDataReady = new ManualResetEventSlim(true);
         public async void openAndAddObject(string file)
         {
             if (MainWindow.main == null) return;

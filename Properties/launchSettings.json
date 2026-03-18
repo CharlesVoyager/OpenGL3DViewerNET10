@@ -2,7 +2,7 @@
   "profiles": {
     "OpenGL3DViewerNET10": {
       "commandName": "Project",
-      "commandLineArgs": "D:\\Work\\GitHub\\Stl\\DamagedHelmet.stl\r\n..\\..\\..\\Stl\\DamagedHelmet.st"
+      "commandLineArgs": "..\\..\\..\\Stl\\10_10_10.stl\r\nD:\\Work\\GitHub\\Stl\\DamagedHelmet.stl"
     }
   }
 }
