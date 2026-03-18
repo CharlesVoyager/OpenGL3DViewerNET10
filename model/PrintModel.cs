@@ -13,16 +13,13 @@ namespace View3D.model
     public partial class PrintModel : ThreeDModel
     {
         public int modelDataId = 0; // model data id
-        public TopoModel originalModel = new TopoModel();
-        public TopoModel repairedModel = null;
-        public int activeModel = 0;
+        public TopoModel Model = new TopoModel();
         public string name = "Unknown";
         public bool outside = false, oldOutside = false;
 
         public Matrix4 trans, invTrans;
         public Submesh submesh;
         protected RHBoundingBox bbox = new RHBoundingBox();
-        public event PrintModelChangedEvent printModelChangedEvent = null;
         public ListviewGetModelsDelegate ListviewGetModels = null;
         public int extruder = 0;
         public double maxScaleVector = 0;
@@ -61,8 +58,7 @@ namespace View3D.model
 
         public PrintModel(IDraw newDrawer, TopoModel model)
         {
-            this.originalModel = null;
-            this.originalModel = model;
+            this.Model = model;
             this.drawer = newDrawer;
             this.submesh = new Submesh();
             this.submesh.SetDrawer(newDrawer);
@@ -91,7 +87,7 @@ namespace View3D.model
             if (null != triNormalWorldCor)
                 Array.Clear(triNormalWorldCor, 0, triNormalWorldCor.Length);
 
-            vtxPosWorldCor = new RHVector3[originalModel.vertices.Count];
+            vtxPosWorldCor = new RHVector3[Model.vertices.Count];
             triNormalWorldCor = new RHVector3[submesh.triangles.Count];
             totalTriangle = submesh.triangles.Count;
             processing_step = (totalTriangle >= 32) ? (totalTriangle / 32) : 1;
@@ -103,7 +99,7 @@ namespace View3D.model
                 for (int i = 0; i < triWor.vertices.Count(); i++)
                 {
                     // store vertex position by vertex id
-                    vId = originalModel.triangles.triangles[triIdx].vertices[i].id;
+                    vId = Model.triangles.triangles[triIdx].vertices[i].id;
                     vtxPosWorldCor[vId] = triWor.vertices[i].pos;
                 }
 
@@ -146,63 +142,19 @@ namespace View3D.model
             return new TopoTriangle(verWorArr[0], verWorArr[1], verWorArr[2]);
         }
 
-        public TopoModel Model
-        {
-            get
-            {
-                return (activeModel == 0 ? originalModel : repairedModel);
-            }
-        }
-
-        public TopoModel ActiveModel
-        {
-            get
-            {
-                if (activeModel == 0 || repairedModel == null) return originalModel;
-                return repairedModel;
-            }
-        }
-
         public void ResetVertexPosToBBox()
         {
-            foreach (TopoVertex v in originalModel.vertices.v)
+            foreach (TopoVertex v in Model.vertices.v)
             {
-                v.pos.x -= originalModel.boundingBox.Center.x;
-                v.pos.y -= originalModel.boundingBox.Center.y;
-                v.pos.z -= originalModel.boundingBox.Center.z;
+                v.pos.x -= Model.boundingBox.Center.x;
+                v.pos.y -= Model.boundingBox.Center.y;
+                v.pos.z -= Model.boundingBox.Center.z;
             }
         }
 
-        public bool FixNormals()
-        {
-            if (repairedModel == null)
-                repairedModel = originalModel.Copy();
-            repairedModel.UpdateNormals();
-            bool isValid = repairedModel.Analyse();
-            //repairedModel.updateBad();
-            ShowRepaired(true);
-            return isValid;
-        }
-
-        public void ShowRepaired(bool showRepaired)
-        {
-            if (showRepaired)
-            {
-                activeModel = 1;
-            }
-            else
-            {
-                activeModel = 0;
-            }
-            ForceViewRegeneration();
-            //MainWindow.main.threedview.Refresh();
-            if (printModelChangedEvent != null)
-                printModelChangedEvent(this);
-        }
- 
         public virtual object cloneWithModel()//(int idx)
         {
-            PrintModel stl = new PrintModel(this.drawer, this.originalModel);
+            PrintModel stl = new PrintModel(this.drawer, this.Model);
             //stl.filename = filename;
             stl.name = name;// + " (" + idx + ")";
             stl.Position.x = Position.x;
@@ -224,14 +176,12 @@ namespace View3D.model
             stl.invTrans = invTrans;
             stl.trans = trans;
             stl.Selected = false;
-            stl.activeModel = activeModel;
             stl.ListviewGetModels += ListviewGetModels;
             return stl;
         }
 
         public virtual void Clear()
         {
-            activeModel = 0;
             name = null;
             outside = false;
             oldOutside = false;
@@ -239,7 +189,6 @@ namespace View3D.model
                 submesh.Clear();
             submesh = null;
             bbox = null;
-            printModelChangedEvent = null;
             extruder = 0;
             GC.Collect();
         }
@@ -306,8 +255,8 @@ namespace View3D.model
             foreach (PrintModel stl in models)
             {
                 objectCount++;
-                centerX += stl.originalModel.boundingBox.Center.x;
-                centerY += stl.originalModel.boundingBox.Center.y;
+                centerX += stl.Model.boundingBox.Center.x;
+                centerY += stl.Model.boundingBox.Center.y;
             }
 
             centerX = centerX / objectCount;
@@ -336,8 +285,8 @@ namespace View3D.model
             foreach (PrintModel stl1 in models)
             {
                 objectCount++;
-                centerX += stl1.originalModel.boundingBox.Center.x;
-                centerY += stl1.originalModel.boundingBox.Center.y;
+                centerX += stl1.Model.boundingBox.Center.x;
+                centerY += stl1.Model.boundingBox.Center.y;
             }
 
             centerX = centerX / objectCount;
@@ -421,11 +370,11 @@ namespace View3D.model
         private void ConvexVector()
         {
             convexVectorList.Clear();
-            for (int i = 0; i < ActiveModel.vertices.Count; i++)
+            for (int i = 0; i < Model.vertices.Count; i++)
             {
-                Vector3 vector3 = new Vector3((float)ActiveModel.vertices.v[i].pos.x,
-                                            (float)ActiveModel.vertices.v[i].pos.y,
-                                            (float)ActiveModel.vertices.v[i].pos.z);
+                Vector3 vector3 = new Vector3((float)Model.vertices.v[i].pos.x,
+                                            (float)Model.vertices.v[i].pos.y,
+                                            (float)Model.vertices.v[i].pos.z);
                 convexVectorList.Add(vector3);
             }
         }
@@ -484,7 +433,7 @@ namespace View3D.model
 
         public override void Paint()
         {
-            TopoModel model = ActiveModel;
+            TopoModel model = Model;
 
             submesh.Clear();
 

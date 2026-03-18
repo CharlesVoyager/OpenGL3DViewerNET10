@@ -118,9 +118,9 @@ namespace View3D.view
                 double m = stl.m;
                 double b = stl.b;
                 double marginHardLimit = 1.0;
-                double dx = (MainWindow.main.PrintAreaWidth - marginHardLimit * 2) / stl.originalModel.boundingBox.Size.x;
-                double dy = (MainWindow.main.PrintAreaDepth - marginHardLimit * 2) / stl.originalModel.boundingBox.Size.y;
-                double dz = (MainWindow.main.PrintAreaHeight - marginHardLimit * 2) / stl.originalModel.boundingBox.Size.z;
+                double dx = (MainWindow.main.PrintAreaWidth - marginHardLimit * 2) / stl.Model.boundingBox.Size.x;
+                double dy = (MainWindow.main.PrintAreaDepth - marginHardLimit * 2) / stl.Model.boundingBox.Size.y;
+                double dz = (MainWindow.main.PrintAreaHeight - marginHardLimit * 2) / stl.Model.boundingBox.Size.z;
 
                 double maxScaleVector = Math.Min(dx, Math.Min(dy, dz));
 

@@ -180,10 +180,6 @@ namespace View3D.model.geom
             triangles.Remove(triangle);
         }
 
-        public void UpdateNormals()
-        {
-        }
-
         public bool CheckNormals()
         {
             return true;

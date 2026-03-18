@@ -154,20 +154,20 @@ namespace View3D.view
             PrintModel model = SingleSelectedModel;
             if (model == null) return;
 
-            labelVertices.Text             = model.ActiveModel.vertices.Count.ToString();
-            labelEdges.Text                = model.ActiveModel.edges.Count.ToString();
-            labelFaces.Text                = model.ActiveModel.triangles.Count.ToString();
-            labelShells.Text               = model.ActiveModel.shells.ToString();
-            labelIntersectingTriangles.Text = model.ActiveModel.intersectingTriangles.Count.ToString();
-            labelLoopEdges.Text            = model.ActiveModel.loopEdges.ToString();
-            labelHighConnected.Text        = model.ActiveModel.manyShardEdges.ToString();
+            labelVertices.Text             = model.Model.vertices.Count.ToString();
+            labelEdges.Text                = model.Model.edges.Count.ToString();
+            labelFaces.Text                = model.Model.triangles.Count.ToString();
+            labelShells.Text               = model.Model.shells.ToString();
+            labelIntersectingTriangles.Text = model.Model.intersectingTriangles.Count.ToString();
+            labelLoopEdges.Text            = model.Model.loopEdges.ToString();
+            labelHighConnected.Text        = model.Model.manyShardEdges.ToString();
 
             // Colour: black when zero, red when non-zero
             var red   = new SolidColorBrush(Colors.Red);
             var black = new SolidColorBrush(Colors.Black);
-            labelIntersectingTriangles.Foreground = model.ActiveModel.intersectingTriangles.Count == 0 ? black : red;
-            labelLoopEdges.Foreground             = model.ActiveModel.loopEdges            == 0 ? black : red;
-            labelHighConnected.Foreground         = model.ActiveModel.manyShardEdges       == 0 ? black : red;
+            labelIntersectingTriangles.Foreground = model.Model.intersectingTriangles.Count == 0 ? black : red;
+            labelLoopEdges.Foreground             = model.Model.loopEdges            == 0 ? black : red;
+            labelHighConnected.Foreground         = model.Model.manyShardEdges       == 0 ? black : red;
         }
 
         public void SetObjectSelected(PrintModel model, bool select)
@@ -188,7 +188,7 @@ namespace View3D.view
         public void landModel(PrintModel model)
         {
             if (typeof(PrintModel) != model.GetType()) return;
-            if (null == model.originalModel) return;
+            if (null == model.Model) return;
             model.LandUpdateBB();
         }
 
@@ -206,7 +206,7 @@ namespace View3D.view
             int idx = models.Count - 1;
             while (idx >= 0)
             {
-                if (typeof(PrintModel) == models[idx].GetType() && null != models[idx].originalModel)
+                if (typeof(PrintModel) == models[idx].GetType() && null != models[idx].Model)
                 {
                     RemoveModel(models[idx]);
                     return;
@@ -267,7 +267,7 @@ namespace View3D.view
                 // Offload heavy work to background thread — UI thread is free immediately
                 await Task.Run(() =>
                 {
-                    modelIO.LoadWOCatch(file, models[models.Count - 1].originalModel);
+                    modelIO.LoadWOCatch(file, models[models.Count - 1].Model);
                     _stlModelDataReady.Set();
                     Console.WriteLine("LoadWOCatch Done.");
                 });
@@ -314,13 +314,13 @@ namespace View3D.view
             else
             {
                 models[last].ResetVertexPosToBBox();
-                models[last].Position.x = (float)models[last].originalModel.boundingBox.Center.x;
-                models[last].Position.y = (float)models[last].originalModel.boundingBox.Center.y;
-                models[last].Position.z = (float)models[last].originalModel.boundingBox.Center.z;
+                models[last].Position.x = (float)models[last].Model.boundingBox.Center.x;
+                models[last].Position.y = (float)models[last].Model.boundingBox.Center.y;
+                models[last].Position.z = (float)models[last].Model.boundingBox.Center.z;
                 models[last].UpdateBoundingBox();
             }
 
-            if (models[last].ActiveModel.triangles.Count > 0)
+            if (models[last].Model.triangles.Count > 0)
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -539,7 +539,7 @@ namespace View3D.view
         private bool IsValidPrintModel(PrintModel model)
             => model.name != "Unknown" &&
                typeof(PrintModel) == model.GetType() &&
-               model.originalModel != null;
+               model.Model != null;
 
         // =====================================================================
         //  updateEnabled
