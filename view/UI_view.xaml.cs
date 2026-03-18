@@ -43,37 +43,37 @@ namespace View3D.view
 
         private void top_button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.main.threeDControl.topView();
+            MainWindow.main.threeDCamera.OnTopView();
         }
 
         private void bottom_button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.main.threeDControl.bottomView();
+            MainWindow.main.threeDCamera.OnBottomView();
         }
 
         private void front_button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.main.threeDControl.frontView();
+            MainWindow.main.threeDCamera.OnFrontView();
         }
 
         private void back_button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.main.threeDControl.backView();
+            MainWindow.main.threeDCamera.OnBackView();
         }
 
         private void left_button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.main.threeDControl.leftView();
+            MainWindow.main.threeDCamera.OnLeftView();
         }
 
         private void right_button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.main.threeDControl.rightView();
+            MainWindow.main.threeDCamera.OnRightView();
         }
 
         private void view_resetButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.main.threeDControl.isometricView();
+            MainWindow.main.threeDCamera.OnIsometricView();
         }
     }
 }

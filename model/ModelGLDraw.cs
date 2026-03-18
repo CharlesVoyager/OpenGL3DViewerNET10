@@ -18,9 +18,9 @@ namespace View3D.model
 
         public Vector3 GetTranslateVector()
         {
-            return MainWindow.main.threeDControl.EdgeTranslation();
+            return MainWindow.main.threeDCamera.GetEdgeTranslation();
         }
-#endregion
+        #endregion
 
         #region Color Setting
         public GetColorSettingHandler GetColorSetting { get; set; }

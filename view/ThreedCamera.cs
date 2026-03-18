@@ -330,5 +330,17 @@ namespace View3D.view
                 MainWindow.main.PrintAreaHeight * MainWindow.main.PrintAreaHeight);
             minDistance = 0.001 * defaultDistance;
         }
+
+
+        // ── UI button event handlers ────────────────────────────────────────────────────
+        public void OnFrontView() { SetCameraDefaults(); OrientFront(); MainWindow.main.threeDControl.UpdateChanges(); }
+        public void OnBackView() { SetCameraDefaults(); OrientBack(); MainWindow.main.threeDControl.UpdateChanges(); }
+        public void OnLeftView() { SetCameraDefaults(); OrientLeft(); MainWindow.main.threeDControl.UpdateChanges(); }
+        public void OnRightView() { SetCameraDefaults(); OrientRight(); MainWindow.main.threeDControl.UpdateChanges(); }
+        public void OnTopView() { SetCameraDefaults(); OrientTop(); MainWindow.main.threeDControl.UpdateChanges(); }
+        public void OnBottomView() { SetCameraDefaults(); OrientBottom(); MainWindow.main.threeDControl.UpdateChanges(); }
+        public void OnIsometricView() { SetCameraDefaults(); OrientIsometric(); MainWindow.main.threeDControl.UpdateChanges(); }
+
+        public Vector3 GetEdgeTranslation() { return EdgeTranslation(); }
     }
 }

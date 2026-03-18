@@ -1008,16 +1008,7 @@ namespace View3D.view
             }
         }
 
-        // ── Camera helpers ────────────────────────────────────────────────────
-        public void frontView() { threeDCam.SetCameraDefaults(); threeDCam.OrientFront(); Invalidate(); }
-        public void backView() { threeDCam.SetCameraDefaults(); threeDCam.OrientBack(); Invalidate(); }
-        public void leftView() { threeDCam.SetCameraDefaults(); threeDCam.OrientLeft(); Invalidate(); }
-        public void rightView() { threeDCam.SetCameraDefaults(); threeDCam.OrientRight(); Invalidate(); }
-        public void topView() { threeDCam.SetCameraDefaults(); threeDCam.OrientTop(); Invalidate(); }
-        public void bottomView() { threeDCam.SetCameraDefaults(); threeDCam.OrientBottom(); Invalidate(); }
-        public void isometricView() { threeDCam.SetCameraDefaults(); threeDCam.OrientIsometric(); Invalidate(); }
 
-        public Vector3 EdgeTranslation() { return threeDCam.EdgeTranslation(); }
 
         // ── Zoom button handlers ──────────────────────────────────────────────
         public void button_zoomIn_Click(object sender, EventArgs e)
