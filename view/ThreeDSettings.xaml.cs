@@ -230,42 +230,207 @@ namespace View3D.view
 
         private void PickColor(Border border)
         {
-
-#if false
             // Get current color from the border's background
-            System.Drawing.Color initialColor = Colors.White;
+            System.Windows.Media.Color initialColor = System.Windows.Media.Colors.White;
             if (border.Background is SolidColorBrush scb)
             {
                 initialColor = scb.Color;
             }
 
-            // Create and configure the color dialog window
-            var colorDialog = new System.Windows.Forms.ColorDialog();
-            colorDialog.Color = System.Drawing.Color.FromArgb(
-                initialColor.A,
-                initialColor.R,
-                initialColor.G,
-                initialColor.B
-            );
-            colorDialog.FullOpen = true; // Show the full dialog with custom colors
-
-            // Get the parent window handle for proper modal behavior
-            var parentWindow = Window.GetWindow(border);
-            var helper = new System.Windows.Interop.WindowInteropHelper(parentWindow);
-
-            // Show the dialog with WPF window as owner
-            var owner = new System.Windows.Forms.NativeWindow();
-            owner.AssignHandle(helper.Handle);
-
-            if (colorDialog.ShowDialog(owner) == System.Windows.Forms.DialogResult.OK)
+            // Create WPF Color Picker Window
+            var colorPickerWindow = new Window
             {
-                var dc = colorDialog.Color;
-                border.Background = new SolidColorBrush(
-                    Color.FromArgb(dc.A, dc.R, dc.G, dc.B)
-                );
+                Title = "Pick a Color",
+                Width = 400,
+                Height = 500,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Owner = Window.GetWindow(border),
+                ResizeMode = ResizeMode.NoResize
+            };
+
+            // Selected color (will be updated on confirm)
+            System.Windows.Media.Color selectedColor = initialColor;
+
+            // --- Layout ---
+            var mainStack = new StackPanel { Margin = new Thickness(15) };
+
+            // Preview Box
+            var previewBorder = new Border
+            {
+                Height = 40,
+                Margin = new Thickness(0, 0, 0, 10),
+                BorderBrush = System.Windows.Media.Brushes.Gray,
+                BorderThickness = new Thickness(1),
+                Background = new SolidColorBrush(initialColor)
+            };
+            mainStack.Children.Add(previewBorder);
+
+            // --- RGB + Hex Inputs ---
+            byte r = initialColor.R, g = initialColor.G, b = initialColor.B, a = initialColor.A;
+
+            // Helper: rebuild color and update preview
+            Action updatePreview = null;
+
+            // Hex Input
+            var hexBox = new TextBox
+            {
+                Text = $"#{a:X2}{r:X2}{g:X2}{b:X2}",
+                Margin = new Thickness(0, 0, 0, 10),
+                Padding = new Thickness(4)
+            };
+
+            // Sliders for A, R, G, B
+            Slider MakeSlider(byte value) => new Slider
+            {
+                Minimum = 0,
+                Maximum = 255,
+                Value = value,
+                TickFrequency = 1,
+                IsSnapToTickEnabled = true
+            };
+
+            TextBox MakeValueBox(byte value) => new TextBox
+            {
+                Text = value.ToString(),
+                Width = 40,
+                Padding = new Thickness(2),
+                VerticalContentAlignment = VerticalAlignment.Center
+            };
+
+            var sliderA = MakeSlider(a); var boxA = MakeValueBox(a);
+            var sliderR = MakeSlider(r); var boxR = MakeValueBox(r);
+            var sliderG = MakeSlider(g); var boxG = MakeValueBox(g);
+            var sliderB = MakeSlider(b); var boxB = MakeValueBox(b);
+
+            // Sync slider <-> textbox <-> preview
+            bool updating = false;
+            updatePreview = () =>
+            {
+                if (updating) return;
+                updating = true;
+                selectedColor = System.Windows.Media.Color.FromArgb(
+                    (byte)sliderA.Value, (byte)sliderR.Value,
+                    (byte)sliderG.Value, (byte)sliderB.Value);
+                previewBorder.Background = new SolidColorBrush(selectedColor);
+                boxA.Text = ((byte)sliderA.Value).ToString();
+                boxR.Text = ((byte)sliderR.Value).ToString();
+                boxG.Text = ((byte)sliderG.Value).ToString();
+                boxB.Text = ((byte)sliderB.Value).ToString();
+                hexBox.Text = $"#{(byte)sliderA.Value:X2}{(byte)sliderR.Value:X2}" +
+                              $"{(byte)sliderG.Value:X2}{(byte)sliderB.Value:X2}";
+                updating = false;
+            };
+
+            void BindSliderBox(Slider slider, TextBox box)
+            {
+                slider.ValueChanged += (_, __) => updatePreview();
+                box.TextChanged += (_, __) =>
+                {
+                    if (updating) return;
+                    if (byte.TryParse(box.Text, out byte val))
+                    {
+                        updating = true;
+                        slider.Value = val;
+                        updating = false;
+                        updatePreview();
+                    }
+                };
+            }
+
+            BindSliderBox(sliderA, boxA);
+            BindSliderBox(sliderR, boxR);
+            BindSliderBox(sliderG, boxG);
+            BindSliderBox(sliderB, boxB);
+
+            hexBox.TextChanged += (_, __) =>
+            {
+                if (updating) return;
+                var hex = hexBox.Text.TrimStart('#');
+                if (hex.Length == 8 &&
+                    byte.TryParse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber, null, out byte ha) &&
+                    byte.TryParse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber, null, out byte hr) &&
+                    byte.TryParse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber, null, out byte hg) &&
+                    byte.TryParse(hex.Substring(6, 2), System.Globalization.NumberStyles.HexNumber, null, out byte hb))
+                {
+                    updating = true;
+                    sliderA.Value = ha; sliderR.Value = hr;
+                    sliderG.Value = hg; sliderB.Value = hb;
+                    updating = false;
+                    updatePreview();
+                }
+            };
+
+            // Row builder helper
+            Grid MakeRow(string label, Slider slider, TextBox box)
+            {
+                var grid = new Grid { Margin = new Thickness(0, 2, 0, 2) };
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(20) });
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+                var lbl = new TextBlock
+                {
+                    Text = label,
+                    FontWeight = FontWeights.Bold,
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+                Grid.SetColumn(lbl, 0);
+                Grid.SetColumn(slider, 1);
+                Grid.SetColumn(box, 2);
+
+                grid.Children.Add(lbl);
+                grid.Children.Add(slider);
+                grid.Children.Add(box);
+                return grid;
+            }
+
+            mainStack.Children.Add(new TextBlock { Text = "Hex (AARRGGBB):", FontWeight = FontWeights.Bold });
+            mainStack.Children.Add(hexBox);
+            mainStack.Children.Add(MakeRow("A", sliderA, boxA));
+            mainStack.Children.Add(MakeRow("R", sliderR, boxR));
+            mainStack.Children.Add(MakeRow("G", sliderG, boxG));
+            mainStack.Children.Add(MakeRow("B", sliderB, boxB));
+
+            // OK / Cancel buttons
+            var btnPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Margin = new Thickness(0, 15, 0, 0)
+            };
+
+            bool confirmed = false;
+            var okBtn = new Button
+            {
+                Content = "OK",
+                Width = 75,
+                Margin = new Thickness(0, 0, 8, 0),
+                Padding = new Thickness(4),
+                IsDefault = true
+            };
+            var cancelBtn = new Button
+            {
+                Content = "Cancel",
+                Width = 75,
+                Padding = new Thickness(4),
+                IsCancel = true
+            };
+
+            okBtn.Click += (_, __) => { confirmed = true; colorPickerWindow.Close(); };
+            cancelBtn.Click += (_, __) => { colorPickerWindow.Close(); };
+
+            btnPanel.Children.Add(okBtn);
+            btnPanel.Children.Add(cancelBtn);
+            mainStack.Children.Add(btnPanel);
+
+            colorPickerWindow.Content = mainStack;
+            colorPickerWindow.ShowDialog();
+
+            if (confirmed)
+            {
+                border.Background = new SolidColorBrush(selectedColor);
                 MainWindow.main.Update3D();
             }
-#endif
         }
 
         // ── Event handlers ───────────────────────────────────────────────────────
@@ -305,11 +470,6 @@ namespace View3D.view
                 //    : Brushes.Red;
                 //tb.ToolTip = valid ? null : Trans.T("L_NOT_A_NUMBER");
             }
-        }
-
-        private void comboDrawMethod_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Intentionally empty — mirrors the commented-out body in the original.
         }
 
         private void ThreeDSettings_Closing(object sender, CancelEventArgs e)

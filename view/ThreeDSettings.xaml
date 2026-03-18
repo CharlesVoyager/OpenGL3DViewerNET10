@@ -75,8 +75,7 @@
 
                     <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="4,0,0,0">
                         <TextBlock Text="Draw method:" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                        <ComboBox x:Name="comboDrawMethod" Width="180"
-                                  SelectionChanged="comboDrawMethod_SelectionChanged" IsEnabled="False">
+                        <ComboBox x:Name="comboDrawMethod" Width="180" IsEnabled="False">
                             <ComboBoxItem>VBOs (fastest)</ComboBoxItem>
                             <ComboBoxItem>Arrays (medium)</ComboBoxItem>
                             <ComboBoxItem>Immediate (slow)</ComboBoxItem>
