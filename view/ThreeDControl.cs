@@ -50,6 +50,11 @@ namespace View3D.view
         int bboxVbo;
         int bboxModelLoc, bboxViewLoc, bboxProjLoc;
 
+        // Red border around print area
+        int redBorderVao;
+        int redBorderVbo;
+        int redBorderShader;
+        int redBorderVertexCount;
 
         // ── Public static / shared ────────────────────────────────────────────
         public static double GLversion;
@@ -109,8 +114,6 @@ namespace View3D.view
         {
             VSync = VSyncMode.Off;  // CHANGED: VSync is now a property on the window, not an enum field
 
-
-
             // Language hook
             MainWindow.main.languageChanged += translate;
         }
@@ -135,7 +138,6 @@ namespace View3D.view
             // These string keys mirror the original WinForms menu items.
             // Apply them to the WPF ContextMenu items exposed by ui if needed.
         }
-
 
         private const int WM_GETMINMAXINFO = 0x0024;
         private const int GWLP_WNDPROC = -4;
@@ -251,6 +253,9 @@ namespace View3D.view
             bboxModelLoc = GL.GetUniformLocation(bboxShader, "model");
             bboxViewLoc = GL.GetUniformLocation(bboxShader, "view");
             bboxProjLoc = GL.GetUniformLocation(bboxShader, "projection");
+
+            // Red Border
+            InitRedBorderMesh();
 
             loaded = true;
         }
@@ -443,6 +448,8 @@ namespace View3D.view
         protected override void OnUnload()
         {
             base.OnUnload();
+
+            DisposeRedBorderMesh();
 
             MainWindow.main.Dispatcher.InvokeAsync(() =>
             {
@@ -673,6 +680,8 @@ namespace View3D.view
                 DrawModels();
 
                 DrawBBoxLines();
+
+                DrawRedBorder();
 
                 SwapBuffers();
 
@@ -1047,6 +1056,77 @@ namespace View3D.view
             }
 
             return shaderSource;
+        }
+
+
+        // Call once during load / whenever PrintAreaWidth or PrintAreaDepth changes
+        private void InitRedBorderMesh()
+        {
+            int pad = 2, tri = 10;
+            float w = MainWindow.main.PrintAreaWidth, d = MainWindow.main.PrintAreaDepth;
+
+            // Same vertex order as the original LineStrip
+            var verts = new float[]
+            {
+                -pad,         d + pad,       -pad,
+                -pad,        -pad,           -pad,
+                 w + pad,    -pad,           -pad,
+                 w + pad,     d + pad,       -pad,
+                 w / 2f + tri, d + pad,     -pad,
+                 w / 2f,       d + pad + tri,-pad,
+                 w / 2f - tri, d + pad,     -pad,
+                -pad,          d + pad,     -pad,   // close the strip
+            };
+            redBorderVertexCount = verts.Length / 3;
+
+            // VAO
+            redBorderVao = GL.GenVertexArray();
+            GL.BindVertexArray(redBorderVao);
+
+            // VBO
+            redBorderVbo = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, redBorderVbo);
+            GL.BufferData(BufferTarget.ArrayBuffer,
+                          verts.Length * sizeof(float),
+                          verts,
+                          BufferUsageHint.StaticDraw);
+
+            // position attribute  (location = 0, 3 floats, no offset)
+            GL.EnableVertexAttribArray(0);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+
+            // Build shader program
+            redBorderShader = CreateShaderProgram("RedBorder");
+        }
+
+        // Call each frame in place of the original GL.Begin/End block
+        private void DrawRedBorder()
+        {
+            Matrix4 model = Matrix4.Identity;
+            Matrix4 view = Matrix4.Identity;
+            Matrix4 proj = Matrix4.Identity;
+
+            computeModelViewProj(ref model, ref view, ref proj);
+            Matrix4 mvp = model * view * proj;
+
+            GL.UseProgram(redBorderShader);
+
+            // Pass the combined MVP matrix
+            int mvpLoc = GL.GetUniformLocation(redBorderShader, "uMVP");
+            int colorLoc = GL.GetUniformLocation(redBorderShader, "uColor");
+            GL.UniformMatrix4(mvpLoc, false, ref mvp);
+            GL.Uniform4(colorLoc, 1f, 0f, 0f, 0f); // white — adjust as needed
+
+            GL.BindVertexArray(redBorderVao);
+            GL.DrawArrays(PrimitiveType.LineStrip, 0, redBorderVertexCount);
+        }
+
+        // Clean up when done
+        private void DisposeRedBorderMesh()
+        {
+            GL.DeleteVertexArray(redBorderVao);
+            GL.DeleteBuffer(redBorderVbo);
+            GL.DeleteProgram(redBorderShader);
         }
     }
 }
