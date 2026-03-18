@@ -42,6 +42,7 @@ namespace View3D.view
         int stlVao;
         int stlVbo;
         int stlModelLoc, stlViewLoc, stlProjLoc;
+        List<float> stlVertices = new List<float>();
 
         // Bounding Box
         int bboxShader;
@@ -50,13 +51,13 @@ namespace View3D.view
         int bboxModelLoc, bboxViewLoc, bboxProjLoc;
 
 
-        List<float> vertices = new List<float>();
-
         // ── Public static / shared ────────────────────────────────────────────
         public static double GLversion;
 
         // ── Camera & scene state ──────────────────────────────────────────────
-        public ThreeDCamera cam;
+        ThreeDCamera cam;
+
+
         bool loaded = false;
         float xDown, yDown;
         float xPos, yPos;
@@ -723,7 +724,7 @@ namespace View3D.view
             if (stlComp.models.Count == 0)
                 return;
 
-            vertices.Clear();
+            stlVertices.Clear();
   
             foreach (var m in stlComp.models)
             {
@@ -731,12 +732,12 @@ namespace View3D.view
 
                 for (int i = 0; i < m.submesh.glVertices.Length; i+=3)
                 {   // [x y z nx ny nz]
-                    vertices.Add(m.submesh.glVertices[i]);
-                    vertices.Add(m.submesh.glVertices[i+1]);
-                    vertices.Add(m.submesh.glVertices[i+2]);
-                    vertices.Add(m.submesh.glNormals[i]);
-                    vertices.Add(m.submesh.glNormals[i]+1);
-                    vertices.Add(m.submesh.glNormals[i]+2);
+                    stlVertices.Add(m.submesh.glVertices[i]);
+                    stlVertices.Add(m.submesh.glVertices[i+1]);
+                    stlVertices.Add(m.submesh.glVertices[i+2]);
+                    stlVertices.Add(m.submesh.glNormals[i]);
+                    stlVertices.Add(m.submesh.glNormals[i]+1);
+                    stlVertices.Add(m.submesh.glNormals[i]+2);
                 }
             }
 
@@ -748,8 +749,8 @@ namespace View3D.view
 
             GL.BufferData(
                 BufferTarget.ArrayBuffer,
-                vertices.Count * sizeof(float),
-                vertices.ToArray(),
+                stlVertices.Count * sizeof(float),
+                stlVertices.ToArray(),
                 BufferUsageHint.StaticDraw);
 
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
@@ -761,7 +762,7 @@ namespace View3D.view
 
         private void DrawModels()
         {
-            if (vertices.Count == 0) return;
+            if (stlVertices.Count == 0) return;
 
             GL.Enable(EnableCap.PolygonSmooth);
             GL.Enable(EnableCap.LineSmooth);
@@ -784,14 +785,14 @@ namespace View3D.view
             {
                 GL.UniformMatrix4(stlModelLoc, false, ref stlComp.models[0].trans);
                 GL.BindVertexArray(stlVao);
-                GL.DrawArrays(PrimitiveType.Triangles, 0, vertices.Count / 6);
+                GL.DrawArrays(PrimitiveType.Triangles, 0, stlVertices.Count / 6);
             }
 #else
             GL.UniformMatrix4(stlModelLoc, false, ref model);
             GL.UniformMatrix4(stlViewLoc, false, ref view);
             GL.UniformMatrix4(stlProjLoc, false, ref proj);
             GL.BindVertexArray(stlVao);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, vertices.Count / 6);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, stlVertices.Count / 6);
 #endif
         }
 
@@ -1013,8 +1014,6 @@ namespace View3D.view
         }
 
         // ── Camera helpers ────────────────────────────────────────────────────
-        public void SetMode(int m) => mode = m;
-
         public void frontView() { cam.SetCameraDefaults(); cam.OrientFront(); Invalidate(); }
         public void backView() { cam.SetCameraDefaults(); cam.OrientBack(); Invalidate(); }
         public void leftView() { cam.SetCameraDefaults(); cam.OrientLeft(); Invalidate(); }
@@ -1022,6 +1021,8 @@ namespace View3D.view
         public void topView() { cam.SetCameraDefaults(); cam.OrientTop(); Invalidate(); }
         public void bottomView() { cam.SetCameraDefaults(); cam.OrientBottom(); Invalidate(); }
         public void isometricView() { cam.SetCameraDefaults(); cam.OrientIsometric(); Invalidate(); }
+
+        public Vector3 EdgeTranslation() { return cam.EdgeTranslation(); }
 
         // ── Zoom button handlers ──────────────────────────────────────────────
         public void button_zoomIn_Click(object sender, EventArgs e)
