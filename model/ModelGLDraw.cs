@@ -16,7 +16,6 @@ namespace View3D.model
         int stlModelLoc, stlViewLoc, stlProjLoc;
         List<float> stlVertices = new List<float>();
 
-
         // Vertex shader
         private const string VertSrc = @"
                                 #version 330 core
@@ -105,7 +104,6 @@ namespace View3D.model
             GL.EnableVertexAttribArray(1);
         }
 
-
         int createShaderProgram()
         {
             // create the shader program
@@ -155,11 +153,9 @@ namespace View3D.model
             GL.UniformMatrix4(stlViewLoc, false, ref view);
             GL.UniformMatrix4(stlProjLoc, false, ref proj);
 
-  
             GL.UniformMatrix4(stlModelLoc, false, ref printModel.trans);
             GL.BindVertexArray(stlVao);
             GL.DrawArrays(PrimitiveType.Triangles, 0, stlVertices.Count / 6);
-        
 #else
             GL.UniformMatrix4(stlModelLoc, false, ref model);
             GL.UniformMatrix4(stlViewLoc, false, ref view);
