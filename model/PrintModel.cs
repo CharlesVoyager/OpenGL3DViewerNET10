@@ -383,12 +383,6 @@ namespace View3D.model
             submesh.selected = Selected;
             submesh.extruder = extruder;
             submesh.Compress();
-  
-            Vector3 translateVec;
-            if (Drawer != null)
-                translateVec = Drawer.GetTranslateVector();
-            else
-                translateVec = new Vector3(0, 0, 0);
         }
 
         /// <summary>

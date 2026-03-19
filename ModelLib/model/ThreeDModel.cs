@@ -151,7 +151,11 @@ namespace View3D.model
             get { return false; }
         }
 
-        public virtual void Clear() { }
+        public virtual void Clear() 
+        {
+            // Console.Write("ThreeDModel:Clear()");
+        }
+
         abstract public void Paint();
         public virtual Vector3 getCenter()
         {
