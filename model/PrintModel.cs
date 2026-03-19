@@ -13,12 +13,17 @@ namespace View3D.model
     public partial class PrintModel : ThreeDModel
     {
         public int modelDataId = 0; // model data id
-        public TopoModel Model = new TopoModel();
+
+        public TopoModel Model;
+        public Submesh submesh;
+        public ModelGLDraw Drawer;
+        public List<Vector3> convexVectorList;
+
         public string name = "Unknown";
         public bool outside = false, oldOutside = false;
 
         public Matrix4 trans, invTrans;
-        public Submesh submesh;
+
         protected RHBoundingBox bbox = new RHBoundingBox();
         public ListviewGetModelsDelegate ListviewGetModels = null;
         public int extruder = 0;
@@ -28,9 +33,6 @@ namespace View3D.model
         public double b = 0;
         public int mid = 0; // model id
         public int serNum = 0;
-
-        public IDraw Drawer { get { return drawer; } }
-        protected IDraw drawer;
 
         public RHVector3[] vtxPosWorldCor;
         public RHVector3[] triNormalWorldCor;
@@ -42,12 +44,13 @@ namespace View3D.model
         public RHVector3 OriginalBboxMax;
         public RHVector3 OriginalBboxMin;
 
-        public List<Vector3> convexVectorList;
+
 
         public PrintModel()
         {
             this.submesh = new Submesh();
             this.Model = new TopoModel();
+            this.Drawer = new ModelGLDraw();
             this.convexVectorList = new List<Vector3>();
         }
 
@@ -131,7 +134,7 @@ namespace View3D.model
             }
         }
 
-        public virtual object cloneWithModel()//(int idx)
+        public virtual object cloneWithModel()
         {
             PrintModel stl = new PrintModel();
             stl.name = name;
@@ -155,7 +158,7 @@ namespace View3D.model
             stl.trans = trans;
             stl.Selected = false;
             stl.ListviewGetModels += ListviewGetModels;
-            stl.drawer = drawer;
+            stl.Drawer = Drawer;
             stl.Model = Model;
             return stl;
         }
@@ -424,8 +427,8 @@ namespace View3D.model
             submesh.Compress();
   
             Vector3 translateVec;
-            if (drawer != null)
-                translateVec = drawer.GetTranslateVector();
+            if (Drawer != null)
+                translateVec = Drawer.GetTranslateVector();
             else
                 translateVec = new Vector3(0, 0, 0);
 
