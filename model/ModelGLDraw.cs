@@ -180,28 +180,5 @@ namespace View3D.model
         {
             return MainWindow.main.threeDCamera.GetEdgeTranslation();
         }
-
-        public GetColorSettingHandler GetColorSetting { get; set; }
-
-        public virtual int GetColorRGBA(Submesh.MeshColor colorCode, Color frontBackColor)
-        {
-            int idx = (int)colorCode;
-
-            if (idx >= 0)
-                return 255 << 24 | idx;
-
-            Color color;
-            if (GetColorSetting != null)
-                color = GetColorSetting(colorCode, frontBackColor);
-            else
-                color = Color.Wheat;
-
-            return ColorToRgba32(color);
-        }
-
-        private int ColorToRgba32(Color c)
-        {
-            return (int)((c.A << 24) | (c.B << 16) | (c.G << 8) | c.R);
-        }
     }
 }

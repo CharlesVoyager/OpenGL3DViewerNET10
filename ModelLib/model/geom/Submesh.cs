@@ -113,7 +113,6 @@ namespace View3D.model.geom
             edges.Clear();
             triangles.Clear();
             trianglesError.Clear();
-            ClearGL();
         }
 
         //int ConvertColorIndex(int idx, Color frontBackColor)
@@ -136,7 +135,7 @@ namespace View3D.model.geom
             Compress(false, 0);
         }
 
-        public void Compress(bool override_color, int color)
+        private void Compress(bool override_color, int color)
         {
             glVertices = new float[3 * vertices.Count];
             glNormals = new float[3 * vertices.Count];
@@ -145,7 +144,6 @@ namespace View3D.model.geom
             glTriangles = new int[triangles.Count * 3];
             glTrianglesError = new int[trianglesError.Count * 3];
             UpdateDrawLists();
-            UpdateColors(override_color, color);
             vertices.Clear();
         }
 
@@ -174,73 +172,6 @@ namespace View3D.model.geom
                 trianglesError.Add(new SubmeshTriangle(VertexId(v1), VertexId(v2), VertexId(v3), color));
             else
                 triangles.Add(new SubmeshTriangle(VertexId(v1), VertexId(v2), VertexId(v3), color));
-        }
-
-        private void ClearGL()
-        {
-#if false   
-            // If RemoveModel is triggered from the WPF UI thread (e.g. a button click), 
-            // it reaches GL.DeleteBuffers on the wrong thread, corrupting the GL context.
-            if (glBuffer != null)
-            {
-                GL.DeleteBuffers(glBuffer.Length, glBuffer);
-                glBuffer = null;
-            }
-#else
-            // Capture local copies for the closure — never capture 'this'
-            // if the object may be GC'd before the action runs
-            if (glBuffer != null)
-            {
-                int[] buffersToDelete = (int[])glBuffer.Clone();
-                glBuffer = null;
-                MainWindow.main.threeDControl.InvokeGL(() =>
-                {
-                    GL.DeleteBuffers(buffersToDelete.Length, buffersToDelete);
-                });
-            }
-#endif
-        }
-
-        public void UpdateColors(bool override_color, int color)
-        {
-            Color frontBackColor;
-
-            frontBackColor = Color.LightSkyBlue; 
-            foreach (SubmeshTriangle t in triangles)
-            {
-                //if (!override_color)
-                //    glColors[t.vertex1] = glColors[t.vertex2] = glColors[t.vertex3] = ConvertColorIndex(t.color, frontBackColor);
-                //else
-                    glColors[t.vertex1] = glColors[t.vertex2] = glColors[t.vertex3] = color;
-            }
-            foreach (SubmeshTriangle t in trianglesError)
-            {
-                //if (!override_color)
-                //    glColors[t.vertex1] = glColors[t.vertex2] = glColors[t.vertex3] = ConvertColorIndex(t.color, frontBackColor);
-                //else
-                    glColors[t.vertex1] = glColors[t.vertex2] = glColors[t.vertex3] = color;
-            }
-            foreach (SubmeshEdge e in edges)
-            {
-                //if (!override_color)
-                //    glColors[e.vertex1] = glColors[e.vertex2] = ConvertColorIndex(e.color, frontBackColor);
-                //else
-                    glColors[e.vertex1] = glColors[e.vertex2] = color;
-            }
-            if (glBuffer != null)
-            {
-                // Bind current context to Array Buffer ID
-                GL.BindBuffer(BufferTarget.ArrayBuffer, glBuffer[2]);
-                // Send data to buffer
-                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(glColors.Length * sizeof(int)), glColors, BufferUsageHint.StaticDraw);
-                // Validate that the buffer is the correct size
-                int bufferSize;
-                GL.GetBufferParameter(BufferTarget.ArrayBuffer, BufferParameterName.BufferSize, out bufferSize);
-                if (glColors.Length * sizeof(int) != bufferSize)
-                    throw new ApplicationException("Vertex array not uploaded correctly");
-                // Clear the buffer Binding
-                GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            }
         }
 
         public void UpdateDrawLists()
