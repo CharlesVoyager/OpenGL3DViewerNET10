@@ -306,6 +306,9 @@ namespace View3D.view
             printerbedDraw.Dispose();
             backgroundDraw.Dispose();
 
+            foreach (var m in stlComp.models)
+                m.Drawer.Dispose();
+
             MainWindow.main.Dispatcher.InvokeAsync(() =>
             {
                 MainWindow.main.Visibility = Visibility.Hidden;
@@ -532,12 +535,12 @@ namespace View3D.view
 
                 printerbedDraw.Draw();
 
-                foreach(var m in stlComp.models)
-                    m.Drawer.Draw();
-
                 boundingBoxDraw.Draw();
 
                 redBorderDraw.Draw();
+            
+                foreach(var m in stlComp.models)
+                    m.Drawer.Draw();
 
                 SwapBuffers();
 

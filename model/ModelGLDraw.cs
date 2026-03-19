@@ -169,6 +169,13 @@ namespace View3D.model
 #endif
         }
 
+        public void Dispose()
+        {
+            GL.DeleteVertexArray(stlVao);
+            GL.DeleteBuffer(stlVbo);
+            GL.DeleteProgram(shader);
+        }
+
         public Vector3 GetTranslateVector()
         {
             return MainWindow.main.threeDCamera.GetEdgeTranslation();
