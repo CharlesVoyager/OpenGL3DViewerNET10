@@ -309,7 +309,7 @@ namespace View3D.view
             foreach (var m in stlComp.models)
                 m.Drawer.Dispose();
 
-            MainWindow.main.Dispatcher.InvokeAsync(() =>
+            MainWindow.main.Dispatcher.Invoke(() =>
             {
                 MainWindow.main.Visibility = Visibility.Hidden;
                 System.Windows.Application.Current.Shutdown();
