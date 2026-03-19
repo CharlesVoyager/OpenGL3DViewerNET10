@@ -46,50 +46,10 @@ namespace View3D.model
 
         public PrintModel()
         {
-            this.submesh = new Submesh();
-            this.Model = new TopoModel();
-            this.Drawer = new ModelGLDraw(this);
-            this.convexVectorList = new List<Vector3>();
-        }
-
-        /// <summary>
-        /// Calculate world coordinate of all vertexes
-        /// </summary>
-        public void calVtxWorldCoordinate()
-        {
-            int vId;
-            TopoTriangle triWor;
-            int totalTriangle;
-            int processing_step;
-
-            if (null != vtxPosWorldCor)
-                Array.Clear(vtxPosWorldCor, 0, vtxPosWorldCor.Length);
-            if (null != triNormalWorldCor)
-                Array.Clear(triNormalWorldCor, 0, triNormalWorldCor.Length);
-
-            vtxPosWorldCor = new RHVector3[Model.vertices.Count];
-            triNormalWorldCor = new RHVector3[submesh.triangles.Count];
-            totalTriangle = submesh.triangles.Count;
-            processing_step = (totalTriangle >= 32) ? (totalTriangle / 32) : 1;
-            for (int triIdx = 0; triIdx < totalTriangle; triIdx++)    // 模型總三角網格數
-            {
-                triWor = getTriWorByMesh(triIdx);
-                triNormalWorldCor[triIdx] = triWor.normal;
-
-                for (int i = 0; i < triWor.vertices.Count(); i++)
-                {
-                    // store vertex position by vertex id
-                    vId = Model.triangles.triangles[triIdx].vertices[i].id;
-                    vtxPosWorldCor[vId] = triWor.vertices[i].pos;
-                }
-
-                if (triIdx % processing_step == 0)
-                {
-                    //MainWindow.main.threedview.ui.BusyWindow.busyProgressbar.Value = ((double)triIdx / totalTriangle) * 15.0;
-                    //Application.DoEvents();
-                    int percentage = (int)(((double)triIdx / totalTriangle) * 15.0);
-                }
-            }
+            submesh = new Submesh();
+            Model = new TopoModel();
+            Drawer = new ModelGLDraw(this);
+            convexVectorList = new List<Vector3>();
         }
 
         /// <summary>

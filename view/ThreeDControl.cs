@@ -223,9 +223,6 @@ namespace View3D.view
             loaded = true;
         }
 
-
-
-
         private void computeModelViewProj(ref Matrix4 model, ref Matrix4 view, ref Matrix4 proj)
         {
             model = Matrix4.Identity;
@@ -749,26 +746,6 @@ namespace View3D.view
             threeDCam.PreparePanZoomRot(); threeDCam.Zoom(1.1);
             zoom = Math.Max(0.002f, Math.Min(5.9f, zoom));
             Invalidate();
-        }
-
-        // Function to load a text file and return its contents as a string
-        public string LoadShaderSource(string filePath)
-        {
-            string shaderSource = "";
-
-            try
-            {
-                using (StreamReader reader = new StreamReader("../../../Shaders/" + filePath))
-                {
-                    shaderSource = reader.ReadToEnd();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error: Failed to load shader source file: " + e.Message);
-            }
-
-            return shaderSource;
         }
     }
 }

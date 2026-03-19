@@ -527,8 +527,7 @@ namespace View3D.view
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
-        public void buttonRemoveSTL_Click(object sender, EventArgs e)
-            => RemoveAllSelectedModels();
+        public void buttonRemoveSTL_Click(object sender, EventArgs e) => RemoveAllSelectedModels();
 
         private bool IsValidPrintModel(PrintModel model)
             => model.name != "Unknown" &&
