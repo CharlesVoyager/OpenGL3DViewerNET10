@@ -175,10 +175,5 @@ namespace View3D.model
             GL.DeleteBuffer(stlVbo);
             GL.DeleteProgram(shader);
         }
-
-        public Vector3 GetTranslateVector()
-        {
-            return MainWindow.main.threeDCamera.GetEdgeTranslation();
-        }
     }
 }

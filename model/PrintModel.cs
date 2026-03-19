@@ -121,6 +121,11 @@ namespace View3D.model
             return stl;
         }
 
+        /*
+     
+        To Do: To add "Drawer.Clear()" in this function, but the GL function needs to be called in main thread.
+
+         */
         public virtual void Clear()
         {
             name = null;
