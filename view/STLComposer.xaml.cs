@@ -66,14 +66,11 @@ namespace View3D.view
                 updateEnabled();
 
                 if (MainWindow.main != null)
-                {
                     MainWindow.main.languageChanged += translate;
-                }
             }
             catch { }
         }
 
-        // ── Translate (stub kept for API compatibility) ───────────────────────
         public void translate() { }
 
         // =====================================================================

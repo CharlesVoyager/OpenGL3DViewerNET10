@@ -100,9 +100,15 @@ namespace OpenGL3DViewerNET10.Draw
         // Call each frame in place of the original GL.Begin/End block
         public void Draw()
         {
-            if (MainWindow.main.stlComposer.models.Count == 0) return;
+            PrintModel m = null;
 
-            PrintModel m = MainWindow.main.stlComposer.models[0];
+            MainWindow.main.Dispatcher.Invoke(() =>
+            {
+                m = MainWindow.main.stlComposer.SingleSelectedModel;
+            });
+
+            if (m == null) return;
+
             float[] verticesBbox = {
                 m.xMin, m.yMin, m.zMin, m.xMax, m.yMin, m.zMin,
                 m.xMin, m.yMin, m.zMin, m.xMin, m.yMax, m.zMin,
