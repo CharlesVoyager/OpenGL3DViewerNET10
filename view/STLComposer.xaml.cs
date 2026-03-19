@@ -50,7 +50,6 @@ namespace View3D.view
         public List<PrintModel> models     = new List<PrintModel>();
 
         // ── Private fields ────────────────────────────────────────────────────
-        private IDraw   modelDrawer   = new ModelGLDraw();
         private List<PrintModel> cloneModels = new List<PrintModel>();
 
         // Image sources replacing WinForms ImageList (index → meaning):
@@ -65,8 +64,6 @@ namespace View3D.view
             try
             {
                 updateEnabled();
-
-                modelDrawer.GetColorSetting = MainWindow.main.threeDSettings.GetColorSetting;
 
                 if (MainWindow.main != null)
                 {

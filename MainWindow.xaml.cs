@@ -339,7 +339,7 @@ namespace View3D
                     threeDControl.InvokeGL(() =>
                     {
                         STLComposer._stlModelDataReady.Wait();
-                        threeDControl.UploadMeshToGPU();
+                        stlComposer.models[stlComposer.models.Count-1].Drawer.Init();
                     });
                 }
             }

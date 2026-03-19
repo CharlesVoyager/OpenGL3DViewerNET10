@@ -48,7 +48,7 @@ namespace View3D.model
         {
             this.submesh = new Submesh();
             this.Model = new TopoModel();
-            this.Drawer = new ModelGLDraw();
+            this.Drawer = new ModelGLDraw(this);
             this.convexVectorList = new List<Vector3>();
         }
 
@@ -429,8 +429,6 @@ namespace View3D.model
                 translateVec = Drawer.GetTranslateVector();
             else
                 translateVec = new Vector3(0, 0, 0);
-
-            submesh.Draw(submesh, 2, translateVec);
         }
 
         /// <summary>

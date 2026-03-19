@@ -107,8 +107,6 @@ namespace View3D.model.geom
         public int[] glBuffer = null;
         public float[] glNormals = null;
 
-        IDraw drawer;
-
         public void Clear()
         {
             vertices.Clear();
@@ -118,14 +116,13 @@ namespace View3D.model.geom
             ClearGL();
         }
 
-        int ConvertColorIndex(int idx, Color frontBackColor)
-        {
-            if (drawer != null)
-                //return drawer.GetColorRGBA((MeshColor)idx);
-                return drawer.GetColorRGBA((MeshColor)idx, frontBackColor);
-            else
-                return ColorToRgba32(Color.White);
-        }
+        //int ConvertColorIndex(int idx, Color frontBackColor)
+        //{
+        //    if (drawer != null)
+        //        return drawer.GetColorRGBA((MeshColor)idx, frontBackColor);
+        //    else
+        //        return ColorToRgba32(Color.White);
+        //}
         private int ColorToRgba32(Color c)
         {
             return (int)((c.A << 24) | (c.B << 16) | (c.G << 8) | c.R);
@@ -211,25 +208,23 @@ namespace View3D.model.geom
             frontBackColor = Color.LightSkyBlue; 
             foreach (SubmeshTriangle t in triangles)
             {
-                if (!override_color)
-                {
-                    glColors[t.vertex1] = glColors[t.vertex2] = glColors[t.vertex3] = ConvertColorIndex(t.color, frontBackColor);
-                }
-                else
+                //if (!override_color)
+                //    glColors[t.vertex1] = glColors[t.vertex2] = glColors[t.vertex3] = ConvertColorIndex(t.color, frontBackColor);
+                //else
                     glColors[t.vertex1] = glColors[t.vertex2] = glColors[t.vertex3] = color;
             }
             foreach (SubmeshTriangle t in trianglesError)
             {
-                if (!override_color)
-                    glColors[t.vertex1] = glColors[t.vertex2] = glColors[t.vertex3] = ConvertColorIndex(t.color, frontBackColor);
-                else
+                //if (!override_color)
+                //    glColors[t.vertex1] = glColors[t.vertex2] = glColors[t.vertex3] = ConvertColorIndex(t.color, frontBackColor);
+                //else
                     glColors[t.vertex1] = glColors[t.vertex2] = glColors[t.vertex3] = color;
             }
             foreach (SubmeshEdge e in edges)
             {
-                if (!override_color)
-                    glColors[e.vertex1] = glColors[e.vertex2] = ConvertColorIndex(e.color, frontBackColor);
-                else
+                //if (!override_color)
+                //    glColors[e.vertex1] = glColors[e.vertex2] = ConvertColorIndex(e.color, frontBackColor);
+                //else
                     glColors[e.vertex1] = glColors[e.vertex2] = color;
             }
             if (glBuffer != null)
@@ -321,22 +316,6 @@ namespace View3D.model.geom
                 glEdges[idx++] = e.vertex1;
                 glEdges[idx++] = e.vertex2;
             }
-        }
-
-        //public OpenTK.Graphics.Color4 convertColor(Color col)
-        //{
-        //    return new OpenTK.Graphics.Color4(col.R, col.G, col.B, col.A);
-        //}
-
-        public void Draw(Submesh mesh, int method, Vector3 edgetrans, bool forceFaces = false)
-        {
-            if (drawer != null)
-                this.drawer.Draw(this, method, edgetrans, forceFaces);
-        }
-
-        public virtual void SetDrawer(IDraw newDrawer)
-        {
-            this.drawer = newDrawer;
         }
     }
 }

@@ -23,18 +23,10 @@ namespace View3D.view
     /// </summary>
     public class ThreeDControl : GameWindow
     {
-        // STL model
-        int stlShader;
-        int stlVao;
-        int stlVbo;
-        int stlModelLoc, stlViewLoc, stlProjLoc;
-        List<float> stlVertices = new List<float>();
-
         Background backgroundDraw = null;
         PrinterbedDraw printerbedDraw = null;
         BoundingBoxDraw boundingBoxDraw = null;
         RedBorder redBorderDraw = null;
-
 
         // ── Public static / shared ────────────────────────────────────────────
         public static double GLversion;
@@ -215,14 +207,7 @@ namespace View3D.view
             // Printer bed
             printerbedDraw = new PrinterbedDraw();
             printerbedDraw.Init();
-
-            // STL model
-            stlShader = CreateShaderProgram("StlModel");
-            UploadMeshToGPU();
-            stlModelLoc = GL.GetUniformLocation(stlShader, "model");
-            stlViewLoc = GL.GetUniformLocation(stlShader, "view");
-            stlProjLoc = GL.GetUniformLocation(stlShader, "projection");
-
+         
             // Bounding Box
             boundingBoxDraw = new BoundingBoxDraw();
             boundingBoxDraw.Init();
@@ -231,37 +216,14 @@ namespace View3D.view
             redBorderDraw = new RedBorder();
             redBorderDraw.InitRedBorderMesh();
 
+            // STL Model
+            foreach(var m in stlComp.models)
+                m.Drawer.Init();
+
             loaded = true;
         }
 
-        int CreateShaderProgram(string shaderFilename) 
-        {
-            // create the shader program
-            int shaderProgram = GL.CreateProgram();
 
-            // create the vertex shader
-            int vertexShader = GL.CreateShader(ShaderType.VertexShader);
-            GL.ShaderSource(vertexShader, LoadShaderSource(shaderFilename + ".vert"));
-            GL.CompileShader(vertexShader);
-
-            // Same as vertex shader
-            int fragmentShader = GL.CreateShader(ShaderType.FragmentShader);
-            GL.ShaderSource(fragmentShader, LoadShaderSource(shaderFilename + ".frag"));
-            GL.CompileShader(fragmentShader);
-
-            // Attach the shaders to the shader program
-            GL.AttachShader(shaderProgram, vertexShader);
-            GL.AttachShader(shaderProgram, fragmentShader);
-
-            // Link the program to OpenGL
-            GL.LinkProgram(shaderProgram);
-
-            // delete the shaders
-            GL.DeleteShader(vertexShader);
-            GL.DeleteShader(fragmentShader);
-
-            return shaderProgram;
-        }
 
 
         private void computeModelViewProj(ref Matrix4 model, ref Matrix4 view, ref Matrix4 proj)
@@ -570,7 +532,8 @@ namespace View3D.view
 
                 printerbedDraw.Draw();
 
-                DrawModels();
+                foreach(var m in stlComp.models)
+                    m.Drawer.Draw();
 
                 boundingBoxDraw.Draw();
 
@@ -619,86 +582,6 @@ namespace View3D.view
             }
             else GL.Disable((EnableCap)name);
         }
-
-        // ── Draw helpers ──────────────────────────────────────────────────────
-
-        public void UploadMeshToGPU()
-        {
-            if (stlComp.models.Count == 0)
-                return;
-
-            stlVertices.Clear();
-  
-            foreach (var m in stlComp.models)
-            {
-                m.Paint();
-
-                for (int i = 0; i < m.submesh.glVertices.Length; i+=3)
-                {   // [x y z nx ny nz]
-                    stlVertices.Add(m.submesh.glVertices[i]);
-                    stlVertices.Add(m.submesh.glVertices[i+1]);
-                    stlVertices.Add(m.submesh.glVertices[i+2]);
-                    stlVertices.Add(m.submesh.glNormals[i]);
-                    stlVertices.Add(m.submesh.glNormals[i]+1);
-                    stlVertices.Add(m.submesh.glNormals[i]+2);
-                }
-            }
-
-            stlVao = GL.GenVertexArray();
-            stlVbo = GL.GenBuffer();
-
-            GL.BindVertexArray(stlVao);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, stlVbo);
-
-            GL.BufferData(
-                BufferTarget.ArrayBuffer,
-                stlVertices.Count * sizeof(float),
-                stlVertices.ToArray(),
-                BufferUsageHint.StaticDraw);
-
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
-            GL.EnableVertexAttribArray(0);
-
-            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
-            GL.EnableVertexAttribArray(1);
-        }
-
-        private void DrawModels()
-        {
-            if (stlVertices.Count == 0) return;
-
-            GL.Enable(EnableCap.PolygonSmooth);
-            GL.Enable(EnableCap.LineSmooth);
-            GL.Enable(EnableCap.CullFace);
-            GL.Enable(EnableCap.DepthTest);
-
-            Matrix4 model = Matrix4.Identity;
-            Matrix4 view = Matrix4.Identity;
-            Matrix4 proj = Matrix4.Identity;
-
-            computeModelViewProj(ref model, ref view, ref proj);
-
-            GL.UseProgram(stlShader);
-
-#if true
-            GL.UniformMatrix4(stlViewLoc, false, ref view);
-            GL.UniformMatrix4(stlProjLoc, false, ref proj);
-
-            if (stlComp.models.Count > 0)
-            {
-                GL.UniformMatrix4(stlModelLoc, false, ref stlComp.models[0].trans);
-                GL.BindVertexArray(stlVao);
-                GL.DrawArrays(PrimitiveType.Triangles, 0, stlVertices.Count / 6);
-            }
-#else
-            GL.UniformMatrix4(stlModelLoc, false, ref model);
-            GL.UniformMatrix4(stlViewLoc, false, ref view);
-            GL.UniformMatrix4(stlProjLoc, false, ref proj);
-            GL.BindVertexArray(stlVao);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, stlVertices.Count / 6);
-#endif
-        }
-
 
         // ── Pick / ray-cast ───────────────────────────────────────────────────
         public void UpdatePickLine(int x, int y)
