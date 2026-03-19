@@ -44,8 +44,6 @@ namespace View3D.model
         public RHVector3 OriginalBboxMax;
         public RHVector3 OriginalBboxMin;
 
-
-
         public PrintModel()
         {
             this.submesh = new Submesh();
