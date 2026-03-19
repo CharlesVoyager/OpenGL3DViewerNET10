@@ -5,7 +5,7 @@ using View3D;
 
 namespace OpenGL3DViewerNET10.Draw
 {
-    internal class Background
+    internal class BackgroundDraw
     { 
         int shader;
 

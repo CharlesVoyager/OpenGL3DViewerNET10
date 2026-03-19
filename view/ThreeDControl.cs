@@ -23,10 +23,10 @@ namespace View3D.view
     /// </summary>
     public class ThreeDControl : GameWindow
     {
-        Background backgroundDraw = null;
+        BackgroundDraw backgroundDraw = null;
         PrinterbedDraw printerbedDraw = null;
         BoundingBoxDraw boundingBoxDraw = null;
-        RedBorder redBorderDraw = null;
+        RedBorderDraw redBorderDraw = null;
 
         // ── Public static / shared ────────────────────────────────────────────
         public static double GLversion;
@@ -201,7 +201,7 @@ namespace View3D.view
             catch { }
 
             // Background
-            backgroundDraw = new Background();
+            backgroundDraw = new BackgroundDraw();
             backgroundDraw.Init(); 
 
             // Printer bed
@@ -213,7 +213,7 @@ namespace View3D.view
             boundingBoxDraw.Init();
 
             // Red Border
-            redBorderDraw = new RedBorder();
+            redBorderDraw = new RedBorderDraw();
             redBorderDraw.InitRedBorderMesh();
 
             // STL Model

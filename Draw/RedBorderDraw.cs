@@ -4,7 +4,7 @@ using View3D;
 
 namespace OpenGL3DViewerNET10.Draw
 {
-    internal class RedBorder
+    internal class RedBorderDraw
     {
         // Red border around print area
         int redBorderVao;
