@@ -118,7 +118,6 @@ namespace View3D.model
             return stl;
         }
 
-
         public virtual void Clear()
         {
             name = null;
