@@ -1,8 +1,5 @@
 ﻿using OpenTK.Mathematics;
-using System;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using View3D.model.geom;
 using View3D.ModelObjectTool;
 
@@ -121,11 +118,7 @@ namespace View3D.model
             return stl;
         }
 
-        /*
-     
-        To Do: To add "Drawer.Clear()" in this function, but the GL function needs to be called in main thread.
 
-         */
         public virtual void Clear()
         {
             name = null;
@@ -136,6 +129,14 @@ namespace View3D.model
             submesh = null;
             bbox = null;
             extruder = 0;
+
+            // It should dispose drawer in main thread. But, it causes black flash when deleting model. So, we just let GC to dispose it.
+#if false
+            MainWindow.main.threeDControl.InvokeGL(() =>
+            {
+                Drawer.Dispose();
+            });
+#endif
             GC.Collect();
         }
 
