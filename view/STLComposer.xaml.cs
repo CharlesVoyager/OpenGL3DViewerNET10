@@ -256,7 +256,7 @@ namespace View3D.view
             if (MainWindow.main == null) return;
 
             listObjects.SelectedItems.Clear();
-            models.Add(new PrintModel(modelDrawer, new TopoModel()));
+            models.Add(new PrintModel());
             bool modelToLand = true;
             var  modelIO     = new ModelInOut();
 

@@ -47,29 +47,8 @@ namespace View3D.model
         public PrintModel()
         {
             this.submesh = new Submesh();
-        }
-
-        public PrintModel(IDraw newDrawer)
-        {
-            this.drawer = newDrawer;
-            this.submesh = new Submesh();
-            this.submesh.SetDrawer(newDrawer);
-        }
-
-        public PrintModel(IDraw newDrawer, TopoModel model)
-        {
-            this.Model = model;
-            this.drawer = newDrawer;
-            this.submesh = new Submesh();
-            this.submesh.SetDrawer(newDrawer);
-
+            this.Model = new TopoModel();
             this.convexVectorList = new List<Vector3>();
-        }
-
-        public virtual void SetDrawer(IDraw newDrawer)
-        {
-            this.drawer = newDrawer;
-            this.submesh.SetDrawer(newDrawer);
         }
 
         /// <summary>
@@ -154,9 +133,8 @@ namespace View3D.model
 
         public virtual object cloneWithModel()//(int idx)
         {
-            PrintModel stl = new PrintModel(this.drawer, this.Model);
-            //stl.filename = filename;
-            stl.name = name;// + " (" + idx + ")";
+            PrintModel stl = new PrintModel();
+            stl.name = name;
             stl.Position.x = Position.x;
             stl.Position.y = Position.y;
             stl.Position.z = Position.z;
@@ -177,6 +155,8 @@ namespace View3D.model
             stl.trans = trans;
             stl.Selected = false;
             stl.ListviewGetModels += ListviewGetModels;
+            stl.drawer = drawer;
+            stl.Model = Model;
             return stl;
         }
 
