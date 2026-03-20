@@ -463,18 +463,6 @@ namespace View3D.view
 
         public void ContextMenu_RemoveObject() => MainWindow.main.remove_toggleButton_Click(null, null);
 
-        public void ContextMenu_MmToInch()
-        {
-            PrintModel m = stlComp.SingleSelectedModel;
-            if (m != null) stlComp.DoInchOrScale(m, true);
-        }
-
-        public void ContextMenu_InchToMm()
-        {
-            PrintModel m = stlComp.SingleSelectedModel;
-            if (m != null) stlComp.DoInchtomm(m);
-        }
-
         public void ContextMenu_Clone() => stlComp.CloneObject();
 
         // ── Rendering ─────────────────────────────────────────────────────────

@@ -204,8 +204,18 @@ namespace View3D
         private void OnLandObject() => threeDControl.ContextMenu_LandObject();
         private void OnResetObject() => threeDControl.ContextMenu_ResetObject();
         private void OnRemoveObject() => threeDControl.ContextMenu_RemoveObject();
-        private void OnMmToInch() => threeDControl.ContextMenu_MmToInch();
-        private void OnInchToMm() => threeDControl.ContextMenu_InchToMm();
+        private void OnMmToInch() 
+        {
+            PrintModel m = stlComposer.SingleSelectedModel;
+            if (m != null) stlComposer.DoInchOrScale(m, true);
+        }
+
+        private void OnInchToMm()
+        {
+            PrintModel m = stlComposer.SingleSelectedModel;
+            if (m != null) stlComposer.DoInchtomm(m);
+        }
+
         private void OnClone() => threeDControl.ContextMenu_Clone();
 
         private void translate()
