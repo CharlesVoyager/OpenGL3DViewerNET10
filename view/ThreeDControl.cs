@@ -71,7 +71,7 @@ namespace View3D.view
                 new NativeWindowSettings
                 {
                     ClientSize = new Vector2i(width, height),
-                    Title = "OpenGL 3D Viewer (OpenGL 4.9.4 + .NET 10.0)",
+                    Title = "OpenGL 3D Viewer (OpenTK 4.9.4 + .NET 10.0)",
                     API = ContextAPI.OpenGL,
                     APIVersion = new Version(4, 0),
                     RedBits = 8,
