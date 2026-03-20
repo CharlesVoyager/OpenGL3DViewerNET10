@@ -2,35 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using View3D.model;
-using View3D.model.geom;
-
-// ──────────────────────────────────────────────────────────────────────────────
-//  NOTE: The WinForms Designer file (STLComposer_Designer.cs) is entirely
-//  replaced by STLComposer.xaml.  Delete that file from your project.
-//
-//  Key WinForms → WPF mapping notes
-//  ─────────────────────────────────
-//  • ListView (WF)        → ListView + GridView (WPF)
-//  • ListViewItem.Tag     → ListViewItemModel.Model  (wrapper class below)
-//  • ListViewItem.Selected→ ListView.SelectedItems / IsSelected
-//  • Button (WF inline)   → DataTemplate Button in the Delete GridViewColumn
-//  • Panel.Visible        → UIElement.Visibility
-//  • ForeColor            → Foreground (Brush)
-//  • ImageList            → ImageSource / BitmapImage loaded from resources
-//  • ErrorProvider        → Validation + Border highlighting (Style in XAML)
-//  • Control.ModifierKeys → Keyboard.Modifiers
-//  • Keys.Shift/Control   → ModifierKeys.Shift / ModifierKeys.Control
-//  • KeyEventArgs.KeyCode → KeyEventArgs.Key
-//  • MessageBox (WF)      → System.Windows.MessageBox
-// ──────────────────────────────────────────────────────────────────────────────
 
 namespace View3D.view
 {
