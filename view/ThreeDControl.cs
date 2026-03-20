@@ -219,33 +219,6 @@ namespace View3D.view
             loaded = true;
         }
 
-        private void computeModelViewProj(ref Matrix4 model, ref Matrix4 view, ref Matrix4 proj)
-        {
-            model = Matrix4.Identity;
-
-#if true
-            view = Matrix4.LookAt(threeDCam.CameraPosition, threeDCam.viewCenter, Vector3.UnitZ);
-#else       // Fixed camera position for testing
-            view = Matrix4.LookAt(
-                new Vector3(300, 300, 300),
-                new Vector3(128, 128, 0),
-                Vector3.UnitZ);
-#endif
-            float bedRadius = (float)(1.5 * Math.Sqrt(
-                 (MainWindow.main.threeDSettings.PrintAreaDepth * MainWindow.main.threeDSettings.PrintAreaDepth +
-                  MainWindow.main.threeDSettings.PrintAreaHeight * MainWindow.main.threeDSettings.PrintAreaHeight +
-                  MainWindow.main.threeDSettings.PrintAreaWidth * MainWindow.main.threeDSettings.PrintAreaWidth) * 0.25));
-
-            float dist = (float)threeDCam.distance;
-            float nearDist = Math.Max(1, dist - bedRadius);
-            float farDist = Math.Max(bedRadius * 2, dist + bedRadius);
-            proj = Matrix4.CreatePerspectiveFieldOfView(
-                            (float)threeDCam.angle * 2.0f,
-                            Size.X / (float)Size.Y,
-                            nearDist,
-                            farDist);
-        }
-
         [DllImport("user32.dll")] private static extern bool SetForegroundWindow(IntPtr hWnd);
         [DllImport("user32.dll")] private static extern IntPtr SetFocus(IntPtr hWnd);
 
@@ -621,7 +594,7 @@ namespace View3D.view
             Matrix4 view = Matrix4.Identity;
             Matrix4 proj = Matrix4.Identity;
             Vector2i windowSize = ClientSize;
-            computeModelViewProj(ref modelMatrix, ref view, ref proj);
+            threeDCam.GetModelViewProj(ref modelMatrix, ref view, ref proj);
             Ray ray = RayCasting.GenerateRay(x, y, view, proj, windowSize, out near, out far);
 
             float length = float.MaxValue;
