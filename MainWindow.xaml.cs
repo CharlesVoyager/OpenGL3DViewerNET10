@@ -30,11 +30,11 @@ namespace View3D
 
         public MainWindow()
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US", false);
-
             main = this;
 
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US", false);
             // Translator
+
             trans = new Trans(AppDomain.CurrentDomain.BaseDirectory + "Resources");
 
             // Retrieve DPI from WPF presentation source after initialization
@@ -62,7 +62,7 @@ namespace View3D
             threeDCamera.OrientIsometric();
 
             InitializeComponent();
-            UI();
+            initialUI();
 
             if (languageChanged != null)
                 languageChanged();
@@ -144,7 +144,7 @@ namespace View3D
 
         //── UI (WPF) ────────────────────────────────────────────────
         private ContextMenu? _contextMenu;
-        public void UI()
+        private void initialUI()
         {
             VisualStateManager.GoToState(UI_view, "State2", true);
             VisualStateManager.GoToState(UI_move, "State2", true);

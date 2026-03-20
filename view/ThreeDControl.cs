@@ -98,12 +98,7 @@ namespace View3D.view
         private void Invalidate() => _isDirty = true;
 
         public void UpdateChanges() => Invalidate();
-
-        public void SetObjectSelected(bool sel)
-        {
-            MainWindow.main.setbuttonVisable(stlComp.listObjects.SelectedItems.Count == 1 && sel);
-        }
-          
+ 
         // ── Translations ──────────────────────────────────────────────────────
         private void translate()
         {

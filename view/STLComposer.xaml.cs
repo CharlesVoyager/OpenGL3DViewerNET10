@@ -63,8 +63,6 @@ namespace View3D.view
             _icons = LoadIcons();
             try
             {
-                updateEnabled();
-
                 if (MainWindow.main != null)
                     MainWindow.main.languageChanged += translate;
             }
@@ -564,8 +562,9 @@ namespace View3D.view
                 textTransX.IsEnabled        = false;
                 textTransY.IsEnabled        = false;
                 textTransZ.IsEnabled        = false;
-                if (MainWindow.main.threeDControl != null)
-                    MainWindow.main.threeDControl.SetObjectSelected(n > 0);
+
+                MainWindow.main.setbuttonVisable(listObjects.SelectedItems.Count == 1 && (n>0));
+
                 panelAnalysis.Visibility = Visibility.Collapsed;
             }
             else
@@ -580,8 +579,9 @@ namespace View3D.view
                 textTransX.IsEnabled       = true;
                 textTransY.IsEnabled       = true;
                 textTransZ.IsEnabled       = true;
-                if (MainWindow.main.threeDControl != null)
-                    MainWindow.main.threeDControl.SetObjectSelected(true);
+
+                MainWindow.main.setbuttonVisable(listObjects.SelectedItems.Count == 1);
+
                 panelAnalysis.Visibility = Visibility.Visible;
                 UpdateAnalyserData();
             }
