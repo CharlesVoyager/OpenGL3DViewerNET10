@@ -82,23 +82,6 @@ namespace View3D.view
             };
         }
 
-        private void RefreshRow(ListViewItemModel row)
-        {
-            row.MeshStatusImage      = _icons[row.Model.Model.manifold ? 2 : 3];
-            row.CollisionStatusImage = _icons[row.Model.outside        ? 3 : 2];
-            // Force ListView to re-render the row
-            int idx = listObjects.Items.IndexOf(row);
-            if (idx >= 0)
-            {
-                listObjects.Items.RemoveAt(idx);
-                listObjects.Items.Insert(idx, row);
-            }
-        }
-
-        // =====================================================================
-        //  Public API (unchanged signatures from WinForms version)
-        // =====================================================================
-
         public LinkedList<PrintModel> ListObjects(bool selected)
         {
             var list = new LinkedList<PrintModel>();

@@ -25,7 +25,6 @@ namespace View3D.model.geom
         public int manyShardEdges = 0;
         public bool manifold = false;
         public bool normalsOriented = false;
-        public bool intersectionsUpToDate = false;
 
         public void Clear()
         {
@@ -33,7 +32,7 @@ namespace View3D.model.geom
             triangles.Clear();
             edges.Clear();
             boundingBox.Clear();
-            intersectionsUpToDate = false;
+
             GC.Collect();
         }
         
@@ -103,9 +102,6 @@ namespace View3D.model.geom
                     updateRate((double)cnt / model.triangles.Count *50.0 + 50);
                 }
             }
-
-            //RemoveUnusedDatastructures();
-            intersectionsUpToDate = false;
         }
 
         public void addVertex(TopoVertex v)
@@ -137,11 +133,6 @@ namespace View3D.model.geom
             {
                 v.id = i++;
             }
-        }
-
-        public void UpdateIntersectingTriangles()
-        {
-            intersectionsUpToDate = true;
         }
 
         public TopoTriangle addTriangle(double p1x, double p1y, double p1z, double p2x, double p2y, double p2z,
@@ -210,8 +201,6 @@ namespace View3D.model.geom
 
         public bool Analyse()
         {
-            //RepairUnobtrusive();
-            UpdateIntersectingTriangles();
             CheckNormals();
             manyShardEdges = 0;
             loopEdges = 0;

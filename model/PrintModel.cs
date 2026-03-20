@@ -113,7 +113,9 @@ namespace View3D.model
             stl.trans = trans;
             stl.Selected = false;
             stl.ListviewGetModels += ListviewGetModels;
-            stl.Drawer = Drawer;
+
+            // NOTE: Don't need to clone Drawer.
+
             stl.Model = Model;
             return stl;
         }
