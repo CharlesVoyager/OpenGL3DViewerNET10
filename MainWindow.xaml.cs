@@ -201,9 +201,17 @@ namespace View3D
         }
 
         // Actions — forward to ThreeDControl
-        private void OnLandObject() => threeDControl.ContextMenu_LandObject();
-        private void OnResetObject() => threeDControl.ContextMenu_ResetObject();
-        private void OnRemoveObject() => threeDControl.ContextMenu_RemoveObject();
+        private void OnLandObject() => UI_move.button_land_Click(null, null);
+
+        private void OnResetObject()
+        {
+            UI_resize_advance.button_Reset_Click(null, null);
+            UI_rotate.button_rotate_reset_Click(null, null);
+            UI_move.button_move_reset_Click(null, null);
+        }
+    
+        private void OnRemoveObject() => remove_toggleButton_Click(null, null);
+
         private void OnMmToInch() 
         {
             PrintModel m = stlComposer.SingleSelectedModel;
@@ -216,7 +224,7 @@ namespace View3D
             if (m != null) stlComposer.DoInchtomm(m);
         }
 
-        private void OnClone() => threeDControl.ContextMenu_Clone();
+        private void OnClone() => stlComposer.CloneObject();
 
         private void translate()
         {

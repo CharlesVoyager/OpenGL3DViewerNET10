@@ -451,20 +451,6 @@ namespace View3D.view
                 button_zoomIn_Click(null, null);
         }
 
-        // Context-menu action handlers
-        public void ContextMenu_LandObject() => MainWindow.main.UI_move.button_land_Click(null, null);
-
-        public void ContextMenu_ResetObject()
-        {
-            MainWindow.main.UI_resize_advance.button_Reset_Click(null, null);
-            MainWindow.main.UI_rotate.button_rotate_reset_Click(null, null);
-            MainWindow.main.UI_move.button_move_reset_Click(null, null);
-        }
-
-        public void ContextMenu_RemoveObject() => MainWindow.main.remove_toggleButton_Click(null, null);
-
-        public void ContextMenu_Clone() => stlComp.CloneObject();
-
         // ── Rendering ─────────────────────────────────────────────────────────
         private void gl_Paint()
         {
