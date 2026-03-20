@@ -28,9 +28,6 @@ namespace View3D.view
         BoundingBoxDraw boundingBoxDraw = null;
         RedBorderDraw redBorderDraw = null;
 
-        // ── Public static / shared ────────────────────────────────────────────
-        public static double GLversion;
-
         bool loaded = false;
         float xDown, yDown;
         float xPos, yPos;
@@ -170,31 +167,36 @@ namespace View3D.view
                 MainWindow.main.UpdateSize(ClientSize.X, ClientSize.Y);
             });
 
-            // Detect OpenGL version & capabilities (runs once)
+            #region // Detect OpenGL version & capabilities (runs once)
             try
             {
-                string sv = GL.GetString(StringName.Version).Trim();
+                string sv = GL.GetString(StringName.Version).Trim();    // EX: 4.0.0 NVIDIA 591.74
                 int p = sv.IndexOf(' ');
-                if (p > 0) sv = sv.Substring(0, p);
+                if (p > 0) sv = sv.Substring(0, p);                     // 4.0.0
                 p = sv.IndexOf('.');
                 if (p > 0)
                 {
                     p = sv.IndexOf('.', p + 1);
                     if (p > 0) sv = sv.Substring(0, p);
-                    GLversion = Convert.ToDouble(sv, CultureInfo.InvariantCulture);
+                    MainWindow.main.threeDSettings.OpenGLVersion = Convert.ToSingle(sv, CultureInfo.InvariantCulture);
                 }
-                try
+                else
                 {
-                    float val;
-                    float.TryParse(sv, NumberStyles.Float, GCode.format, out val);
-                    MainWindow.main.threeDSettings.openGLVersion = val;
+                    try
+                    {
+                        float val;
+                        float.TryParse(sv, NumberStyles.Float, GCode.format, out val);
+                        MainWindow.main.threeDSettings.OpenGLVersion = val;
+                    }
+                    catch 
+                    { 
+                        MainWindow.main.threeDSettings.OpenGLVersion = 1.1f; 
+                    }
                 }
-                catch { MainWindow.main.threeDSettings.openGLVersion = 1.1f; }
-
-                MainWindow.main.threeDSettings.useVBOs =
-                    GL.GetString(StringName.Extensions).Contains("GL_ARB_vertex_buffer_object");
+                MainWindow.main.threeDSettings.UseVBOs = GL.GetString(StringName.Extensions).Contains("GL_ARB_vertex_buffer_object");
             }
             catch { }
+            #endregion
 
             // Background
             backgroundDraw = new BackgroundDraw();
@@ -278,7 +280,7 @@ namespace View3D.view
             MainWindow.main.Dispatcher.Invoke(() =>
             {
                 MainWindow.main.Visibility = Visibility.Hidden;
-                System.Windows.Application.Current.Shutdown();
+                Application.Current.Shutdown();
             });
         }
 

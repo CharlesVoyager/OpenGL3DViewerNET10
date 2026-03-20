@@ -62,7 +62,7 @@ namespace View3D
             threeDCamera.OrientIsometric();
 
             InitializeComponent();
-            initialUI();
+            initializeUi();
 
             if (languageChanged != null)
                 languageChanged();
@@ -144,7 +144,7 @@ namespace View3D
 
         //── UI (WPF) ────────────────────────────────────────────────
         private ContextMenu? _contextMenu;
-        private void initialUI()
+        private void initializeUi()
         {
             VisualStateManager.GoToState(UI_view, "State2", true);
             VisualStateManager.GoToState(UI_move, "State2", true);

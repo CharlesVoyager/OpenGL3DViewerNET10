@@ -17,14 +17,15 @@ namespace View3D.view
         public float PrintAreaDepth = 256;  // y-axis direction
         public float PrintAreaHeight = 200; // z-axis direction
 
+        // UseVBOs and OpenGLVersion will be updated in OnLoad of ThreeDControl.
+        public bool UseVBOs = false;
+        public float OpenGLVersion = 1.0f; // Version for feature detection
+
         // ── Fields ───────────────────────────────────────────────────────────────
         private RegistryKey threedKey = null;
-        public bool useVBOs = false;
         public int drawMethod = 0;         // 0 = elements, 1 = drawElements, 2 = VBO
-        public float openGLVersion = 1.0f; // Version for feature detection
         private bool _showEdges = false;
         private bool _showFaces = true;
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
