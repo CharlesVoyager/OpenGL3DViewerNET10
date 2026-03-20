@@ -221,17 +221,6 @@ namespace View3D.view
             loaded = true;
         }
 
-        [DllImport("user32.dll")] private static extern bool SetForegroundWindow(IntPtr hWnd);
-        [DllImport("user32.dll")] private static extern IntPtr SetFocus(IntPtr hWnd);
-
-        public void FocusGameWindow()
-        {
-            IntPtr hwnd;
-            unsafe { hwnd = GLFW.GetWin32Window(WindowPtr); }
-            SetForegroundWindow(hwnd);
-            SetFocus(hwnd);
-        }
-
         protected override void OnMove(WindowPositionEventArgs e)
         {
             base.OnMove(e);
