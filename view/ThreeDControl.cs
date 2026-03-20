@@ -106,6 +106,7 @@ namespace View3D.view
             // Apply them to the WPF ContextMenu items exposed by ui if needed.
         }
 
+        #region Set minimum window size via Win32 subclassing (WM_GETMINMAXINFO)
         private const int WM_GETMINMAXINFO = 0x0024;
         private const int GWLP_WNDPROC = -4;
 
@@ -144,7 +145,7 @@ namespace View3D.view
 
             return CallWindowProc(_originalWndProc, hWnd, msg, wParam, lParam);
         }
-
+        #endregion
 
         // ── GameWindow overrides ──────────────────────────────────────────────
         protected override void OnLoad()
