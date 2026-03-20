@@ -26,10 +26,6 @@ namespace View3D
 
         public double dpiX, dpiY;
 
-
-
-
-
         public static readonly ManualResetEventSlim _mainWindowReady = new ManualResetEventSlim(false);
 
         public MainWindow()
