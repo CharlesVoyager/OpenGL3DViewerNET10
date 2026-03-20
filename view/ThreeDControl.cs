@@ -723,7 +723,11 @@ namespace View3D.view
                             prevX.Add(stl.Position.x);
                             prevY.Add(stl.Position.y);
                         }
-                        stlComp.ObjectMoved(diff.x, diff.y);
+
+                        MainWindow.main.Dispatcher.Invoke(() =>
+                        {
+                            stlComp.ObjectMoved(diff.x, diff.y);
+                        });
                
                         lastX = xPos; lastY = yPos;
                         Invalidate();
