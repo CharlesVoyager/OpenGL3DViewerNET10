@@ -13,6 +13,10 @@ namespace View3D.view
 {
     public partial class ThreeDSettings : Window, INotifyPropertyChanged
     {
+        public float PrintAreaWidth = 256;  // x-axis direction
+        public float PrintAreaDepth = 256;  // y-axis direction
+        public float PrintAreaHeight = 200; // z-axis direction
+
         // ── Fields ───────────────────────────────────────────────────────────────
         private RegistryKey threedKey = null;
         public bool useVBOs = false;

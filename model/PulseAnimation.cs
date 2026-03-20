@@ -52,7 +52,7 @@ namespace View3D.model
             //c = Vector3.Add(c,new Vector3(model.Position.x, model.Position.y, model.Position.z));
             if (mode == 0)
             {
-                height = MainWindow.main.PrintAreaHeight * 1.2;
+                height = MainWindow.main.threeDSettings.PrintAreaHeight * 1.2;
                 mode = 1;
             }
             if (t < 1)

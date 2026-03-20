@@ -36,7 +36,7 @@ namespace OpenGL3DViewerNET10.Draw
         public void InitRedBorderMesh()
         {
             int pad = 2, tri = 10;
-            float w = MainWindow.main.PrintAreaWidth, d = MainWindow.main.PrintAreaDepth;
+            float w = MainWindow.main.threeDSettings.PrintAreaWidth, d = MainWindow.main.threeDSettings.PrintAreaDepth;
 
             // Same vertex order as the original LineStrip
             var verts = new float[]

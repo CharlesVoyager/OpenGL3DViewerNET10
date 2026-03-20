@@ -26,23 +26,9 @@ namespace View3D
 
         public double dpiX, dpiY;
 
-        #region Print Area settings
-        public float PrintAreaWidth = 256;  // x-axis direction
-        public float PrintAreaDepth = 256;  // y-axis direction
-        public float PrintAreaHeight = 200; // z-axis direction
-        double epsilon = 1e-4; // 0.0001
 
-        public bool PointInside(float x, float y, float z)
-        {
-            if (z < -0.1 || z > PrintAreaHeight)
-                return false;
 
-            if (x < -epsilon || x > PrintAreaWidth + epsilon) return false;
-            if (y < -epsilon || y > PrintAreaDepth + epsilon) return false;
 
-            return true;
-        }
-        #endregion
 
         public static readonly ManualResetEventSlim _mainWindowReady = new ManualResetEventSlim(false);
 
@@ -141,7 +127,7 @@ namespace View3D
                 if (e.Key == Key.Delete)
                 {
                     stlComposer.buttonRemoveSTL_Click(null, null);
-                    stlComposer.updateSTLState(null);
+                    stlComposer.UpdateSTLState(null);
                     threeDControl.UpdateChanges();
                 }
             }
@@ -473,11 +459,11 @@ namespace View3D
             OutofBound.Visibility = Visibility.Hidden;
 
             stlComposer.buttonRemoveSTL_Click(null, null);
-            stlComposer.updateSTLState(null);
+            stlComposer.UpdateSTLState(null);
             threeDControl.UpdateChanges();
 
             if (stlComposer.listObjects.Items.Count > 0)
-                stlComposer.updateSTLState(stlComposer.SingleSelectedModel);
+                stlComposer.UpdateSTLState(stlComposer.SingleSelectedModel);
             Focus();
         }
 

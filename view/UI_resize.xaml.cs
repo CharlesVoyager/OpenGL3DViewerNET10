@@ -118,9 +118,9 @@ namespace View3D.view
                 double m = stl.m;
                 double b = stl.b;
                 double marginHardLimit = 1.0;
-                double dx = (MainWindow.main.PrintAreaWidth - marginHardLimit * 2) / stl.Model.boundingBox.Size.x;
-                double dy = (MainWindow.main.PrintAreaDepth - marginHardLimit * 2) / stl.Model.boundingBox.Size.y;
-                double dz = (MainWindow.main.PrintAreaHeight - marginHardLimit * 2) / stl.Model.boundingBox.Size.z;
+                double dx = (MainWindow.main.threeDSettings.PrintAreaWidth - marginHardLimit * 2) / stl.Model.boundingBox.Size.x;
+                double dy = (MainWindow.main.threeDSettings.PrintAreaDepth - marginHardLimit * 2) / stl.Model.boundingBox.Size.y;
+                double dz = (MainWindow.main.threeDSettings.PrintAreaHeight - marginHardLimit * 2) / stl.Model.boundingBox.Size.z;
 
                 double maxScaleVector = Math.Min(dx, Math.Min(dy, dz));
 
@@ -145,7 +145,7 @@ namespace View3D.view
                 MainWindow.main.stlComposer.textScaleX.Text = Convert.ToString(int.Parse(resize_textbox.Text) / 100.00); 
                 stl.LandToZ(oriZmin);
                 MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBoxWOSupport.zMin;
-                MainWindow.main.stlComposer.updateSTLState(stl);
+                MainWindow.main.stlComposer.UpdateSTLState(stl);
 
 
                 scaleValue = int.Parse(resize_textbox.Text) / 100.00;

@@ -298,7 +298,7 @@ namespace View3D.view
 
             if (modelToLand)
             {
-                models[last].Center(MainWindow.main.PrintAreaWidth / 2, MainWindow.main.PrintAreaDepth / 2);
+                models[last].Center(MainWindow.main.threeDSettings.PrintAreaWidth / 2, MainWindow.main.threeDSettings.PrintAreaDepth / 2);
                 if (models[last].BoundingBox.Center.x != 0 ||
                     models[last].BoundingBox.Center.y != 0 ||
                     models[last].BoundingBox.Center.z != 0)
@@ -320,7 +320,7 @@ namespace View3D.view
                 {
                     AddObject(models[last]);
                     if (modelToLand) Autoposition();
-                    updateSTLState(models[last]);
+                    UpdateSTLState(models[last]);
                 });
             }
 
@@ -339,19 +339,19 @@ namespace View3D.view
                 if      (dlg.gIsScale) DoInchOrScale(models[last], false);
                 else if (dlg.gIsInch)  DoInchScale(models[last]);
             }
-            else if (models[last].BoundingBox.Size.x - 1e-4 > Convert.ToDouble(MainWindow.main.PrintAreaWidth)  ||
-                     models[last].BoundingBox.Size.y - 1e-4 > Convert.ToDouble(MainWindow.main.PrintAreaDepth)  ||
-                     Math.Floor(models[last].BoundingBox.Size.z * 1000) / 1000 > Convert.ToDouble(MainWindow.main.PrintAreaHeight))
+            else if (models[last].BoundingBox.Size.x - 1e-4 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth)  ||
+                     models[last].BoundingBox.Size.y - 1e-4 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth)  ||
+                     Math.Floor(models[last].BoundingBox.Size.z * 1000) / 1000 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight))
             {
-                double tXBound = models[last].BoundingBox.Size.x / Convert.ToDouble(MainWindow.main.PrintAreaWidth);
-                double tYBound = models[last].BoundingBox.Size.y / Convert.ToDouble(MainWindow.main.PrintAreaDepth);
-                double tZBound = models[last].BoundingBox.Size.z / Convert.ToDouble(MainWindow.main.PrintAreaHeight);
+                double tXBound = models[last].BoundingBox.Size.x / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth);
+                double tYBound = models[last].BoundingBox.Size.y / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth);
+                double tZBound = models[last].BoundingBox.Size.z / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight);
                 double tMax    = Math.Max(Math.Max(tXBound, tYBound), Math.Max(tYBound, tZBound));
                 float  scaleValue = 0;
 
-                if      (tMax == tXBound) scaleValue = (float)(Convert.ToDouble(MainWindow.main.PrintAreaWidth)  / models[last].BoundingBox.Size.x) * 100;
-                else if (tMax == tYBound) scaleValue = (float)(Convert.ToDouble(MainWindow.main.PrintAreaDepth)  / models[last].BoundingBox.Size.y) * 100;
-                else if (tMax == tZBound) scaleValue = (float)(Convert.ToDouble(MainWindow.main.PrintAreaHeight) / models[last].BoundingBox.Size.z) * 100;
+                if      (tMax == tXBound) scaleValue = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth)  / models[last].BoundingBox.Size.x) * 100;
+                else if (tMax == tYBound) scaleValue = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth)  / models[last].BoundingBox.Size.y) * 100;
+                else if (tMax == tZBound) scaleValue = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight) / models[last].BoundingBox.Size.z) * 100;
 
                 var result = System.Windows.MessageBox.Show(
                     Trans.T("M_OBJ_SCALE_DOWN") + " " + (int)scaleValue + "%",
@@ -363,17 +363,17 @@ namespace View3D.view
                 {
                     try
                     {
-                        tXBound = models[last].BoundingBox.Size.x / Convert.ToDouble(MainWindow.main.PrintAreaWidth);
-                        tYBound = models[last].BoundingBox.Size.y / Convert.ToDouble(MainWindow.main.PrintAreaDepth);
-                        tZBound = models[last].BoundingBox.Size.z / Convert.ToDouble(MainWindow.main.PrintAreaHeight);
+                        tXBound = models[last].BoundingBox.Size.x / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth);
+                        tYBound = models[last].BoundingBox.Size.y / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth);
+                        tZBound = models[last].BoundingBox.Size.z / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight);
                         tMax    = Math.Max(Math.Max(tXBound, tYBound), Math.Max(tYBound, tZBound));
 
                         if      (tMax == tXBound)
-                        { models[last].Scale.x = models[last].Scale.y = models[last].Scale.z = (float)(Convert.ToDouble(MainWindow.main.PrintAreaWidth)  / models[last].BoundingBox.Size.x); }
+                        { models[last].Scale.x = models[last].Scale.y = models[last].Scale.z = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth)  / models[last].BoundingBox.Size.x); }
                         else if (tMax == tYBound)
-                        { models[last].Scale.y = models[last].Scale.x = models[last].Scale.z = (float)(Convert.ToDouble(MainWindow.main.PrintAreaDepth)  / models[last].BoundingBox.Size.y); }
+                        { models[last].Scale.y = models[last].Scale.x = models[last].Scale.z = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth)  / models[last].BoundingBox.Size.y); }
                         else if (tMax == tZBound)
-                        { models[last].Scale.z = models[last].Scale.x = models[last].Scale.y = (float)(Convert.ToDouble(MainWindow.main.PrintAreaHeight) / models[last].BoundingBox.Size.z); }
+                        { models[last].Scale.z = models[last].Scale.x = models[last].Scale.y = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight) / models[last].BoundingBox.Size.z); }
 
                         MainWindow.main.UI_move.button_land_Click(null, null);
                         Autoposition();
@@ -408,9 +408,9 @@ namespace View3D.view
             listObjects.Items.Add(BuildRow(newModel));
             listObjects.SelectedItems.Clear();
             SetObjectSelected(newModel, true);
-            updateSTLState(newModel);
+            UpdateSTLState(newModel);
             Autoposition();
-            updateSTLState(newModel);
+            UpdateSTLState(newModel);
             return true;
         }
 
@@ -424,7 +424,19 @@ namespace View3D.view
         // =====================================================================
         //  STL state / out-of-bounds
         // =====================================================================
-        public void updateSTLState(PrintModel stl2)
+        public bool pointInPrintArea(float x, float y, float z)
+        {
+            double epsilon = 1e-4; // 0.0001
+
+            if (z < -0.1 || z > MainWindow.main.threeDSettings.PrintAreaHeight)
+                return false;
+
+            if (x < -epsilon || x > MainWindow.main.threeDSettings.PrintAreaWidth + epsilon) return false;
+            if (y < -epsilon || y > MainWindow.main.threeDSettings.PrintAreaDepth + epsilon) return false;
+
+            return true;
+        }
+        public void UpdateSTLState(PrintModel stl2)
         {
             if (stl2 != null)
                 stl2.UpdateBoundingBox();
@@ -436,14 +448,14 @@ namespace View3D.view
             bool allPointsInside = true;
             foreach (var stl in testList)
             {
-                if (    !MainWindow.main.PointInside(stl.xMin, stl.yMin, stl.zMin) ||
-                        !MainWindow.main.PointInside(stl.xMax, stl.yMin, stl.zMin) ||
-                        !MainWindow.main.PointInside(stl.xMin, stl.yMax, stl.zMin) ||
-                        !MainWindow.main.PointInside(stl.xMax, stl.yMax, stl.zMin) ||
-                        !MainWindow.main.PointInside(stl.xMin, stl.yMin, stl.zMax) ||
-                        !MainWindow.main.PointInside(stl.xMax, stl.yMin, stl.zMax) ||
-                        !MainWindow.main.PointInside(stl.xMin, stl.yMax, stl.zMax) ||
-                        !MainWindow.main.PointInside(stl.xMax, stl.yMax, stl.zMax))
+                if (    !pointInPrintArea(stl.xMin, stl.yMin, stl.zMin) ||
+                        !pointInPrintArea(stl.xMax, stl.yMin, stl.zMin) ||
+                        !pointInPrintArea(stl.xMin, stl.yMax, stl.zMin) ||
+                        !pointInPrintArea(stl.xMax, stl.yMax, stl.zMin) ||
+                        !pointInPrintArea(stl.xMin, stl.yMin, stl.zMax) ||
+                        !pointInPrintArea(stl.xMax, stl.yMin, stl.zMax) ||
+                        !pointInPrintArea(stl.xMin, stl.yMax, stl.zMax) ||
+                        !pointInPrintArea(stl.xMax, stl.yMax, stl.zMax))
                 {
                     stl.outside = true;
                     allPointsInside = false;
@@ -583,7 +595,7 @@ namespace View3D.view
             if (listObjects.Items.Count == 1)
             {
                 var row = (ListViewItemModel)listObjects.Items[0];
-                row.Model.CenterWOLand(MainWindow.main.PrintAreaWidth / 2, MainWindow.main.PrintAreaDepth / 2);
+                row.Model.CenterWOLand(MainWindow.main.threeDSettings.PrintAreaWidth / 2, MainWindow.main.threeDSettings.PrintAreaDepth / 2);
 
                 if (MainWindow.main.threeDControl != null)
                     MainWindow.main.threeDControl.UpdateChanges();
@@ -593,7 +605,7 @@ namespace View3D.view
             var packer    = new RectPacker(1, 1);
             var outPacker = new OutRectPacker(1000);
             int border    = 1;
-            float maxW = MainWindow.main.PrintAreaWidth, maxH = MainWindow.main.PrintAreaDepth;
+            float maxW = MainWindow.main.threeDSettings.PrintAreaWidth, maxH = MainWindow.main.threeDSettings.PrintAreaDepth;
             float xOff = 0, yOff = 0;
             outPacker.SetPlatformSize(maxW, maxH);
             bool autosizeFailed = false;
@@ -804,7 +816,7 @@ namespace View3D.view
             float old = stl.Position.x;
             float.TryParse(textTransX.Text, NumberStyles.Float, GCode.format, out stl.Position.x);
             if (Math.Abs(old - stl.Position.x) < 0.001f) return;
-            if (typeof(PrintModel) == stl.GetType()) updateSTLState(stl);
+            if (typeof(PrintModel) == stl.GetType()) UpdateSTLState(stl);
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -816,7 +828,7 @@ namespace View3D.view
             float old = stl.Position.y;
             float.TryParse(textTransY.Text, NumberStyles.Float, GCode.format, out stl.Position.y);
             if (Math.Abs(old - stl.Position.y) < 0.001f) return;
-            if (typeof(PrintModel) == stl.GetType()) updateSTLState(stl);
+            if (typeof(PrintModel) == stl.GetType()) UpdateSTLState(stl);
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -828,7 +840,7 @@ namespace View3D.view
             float old = stl.Position.z;
             float.TryParse(textTransZ.Text, NumberStyles.Float, GCode.format, out stl.Position.z);
             if (Math.Abs(old - stl.Position.z) < 0.001f) return;
-            updateSTLState(stl);
+            UpdateSTLState(stl);
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -839,7 +851,7 @@ namespace View3D.view
             if (stl == null) return;
             float.TryParse(textScaleX.Text, NumberStyles.Float, GCode.format, out stl.Scale.x);
             if (LockAspectRatio) { stl.Scale.y = stl.Scale.z = stl.Scale.x; SyncScaleFields(stl); }
-            updateSTLState(stl);
+            UpdateSTLState(stl);
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -849,7 +861,7 @@ namespace View3D.view
             var stl = SingleSelectedModel;
             if (stl == null) return;
             float.TryParse(textScaleY.Text, NumberStyles.Float, GCode.format, out stl.Scale.y);
-            updateSTLState(stl);
+            UpdateSTLState(stl);
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -862,7 +874,7 @@ namespace View3D.view
             float.TryParse(textScaleZ.Text, NumberStyles.Float, GCode.format, out stl.Scale.z);
             stl.UpdateBoundingBox();
             if (old != stl.Scale.z) stl.LandUpdateBBNoPreUpdate();
-            updateSTLState(stl);
+            UpdateSTLState(stl);
 
             MainWindow.main.threeDControl.UpdateChanges();
         }
@@ -876,7 +888,7 @@ namespace View3D.view
             float.TryParse(textRotX.Text, NumberStyles.Float, GCode.format, out stl.Rotation.x);
             stl.ForceViewRegeneration();
             if (Math.Abs(old - stl.Rotation.x) < 0.001f) return;
-            updateSTLState(stl);
+            UpdateSTLState(stl);
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -889,7 +901,7 @@ namespace View3D.view
             float.TryParse(textRotY.Text, NumberStyles.Float, GCode.format, out stl.Rotation.y);
             stl.ForceViewRegeneration();
             if (Math.Abs(old - stl.Rotation.y) < 0.001f) return;
-            updateSTLState(stl);
+            UpdateSTLState(stl);
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -902,7 +914,7 @@ namespace View3D.view
             float.TryParse(textRotZ.Text, NumberStyles.Float, GCode.format, out stl.Rotation.z);
             stl.ForceViewRegeneration();
             if (Math.Abs(old - stl.Rotation.z) < 0.001f) return;
-            if (typeof(PrintModel) == stl.GetType()) updateSTLState(stl);
+            if (typeof(PrintModel) == stl.GetType()) UpdateSTLState(stl);
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -941,8 +953,8 @@ namespace View3D.view
         {
             foreach (var stl in ListObjects(true))
             {
-                if (stl.Position.x + dx < MainWindow.main.PrintAreaWidth * 1.2f && stl.Position.x + dx > -MainWindow.main.PrintAreaWidth * 0.2f) stl.Position.x += dx;
-                if (stl.Position.y + dy < MainWindow.main.PrintAreaDepth * 1.2f && stl.Position.y + dy > -MainWindow.main.PrintAreaDepth * 0.2f) stl.Position.y += dy;
+                if (stl.Position.x + dx < MainWindow.main.threeDSettings.PrintAreaWidth * 1.2f && stl.Position.x + dx > -MainWindow.main.threeDSettings.PrintAreaWidth * 0.2f) stl.Position.x += dx;
+                if (stl.Position.y + dy < MainWindow.main.threeDSettings.PrintAreaDepth * 1.2f && stl.Position.y + dy > -MainWindow.main.threeDSettings.PrintAreaDepth * 0.2f) stl.Position.y += dy;
                 if (listObjects.SelectedItems.Count == 1)
                 {
                     _suppressTextEvents = true;
@@ -950,7 +962,7 @@ namespace View3D.view
                     textTransY.Text = stl.Position.y.ToString(GCode.format);
                     _suppressTextEvents = false;
                 }
-                updateSTLState(stl);
+                UpdateSTLState(stl);
             }
             MainWindow.main.threeDControl.UpdateChanges();
         }
@@ -1000,7 +1012,7 @@ namespace View3D.view
                 ui.dimZ    = bbox.Size.z; ui.updateTxt(Enums.Axis.Z);
                 ui.chk_Uniform_Checked(null, null);
                 ui.gIsShow = false;
-                updateSTLState(stl);
+                UpdateSTLState(stl);
                 stl.LandToZ(0);
                 MainWindow.main.threeDControl.UpdateChanges();
             }
@@ -1067,7 +1079,7 @@ namespace View3D.view
                 {
                     ui.chk_Uniform.IsChecked = true;
                     double tempX = bbox.Size.x * 25.4, tempY = bbox.Size.y * 25.4, tempZ = bbox.Size.z * 25.4;
-                    if (tempX > MainWindow.main.PrintAreaWidth || tempY > MainWindow.main.PrintAreaDepth || tempZ > MainWindow.main.PrintAreaHeight)
+                    if (tempX > MainWindow.main.threeDSettings.PrintAreaWidth || tempY > MainWindow.main.threeDSettings.PrintAreaDepth || tempZ > MainWindow.main.threeDSettings.PrintAreaHeight)
                     {
                         if (!AskUserToChangeUnit())
                         {
@@ -1085,7 +1097,7 @@ namespace View3D.view
                     textScaleX.Text = (tempX / ui.bboxnow).ToString("0.000");
                     textScaleY.Text = (tempY / ui.bboynow).ToString("0.000");
                     textScaleZ.Text = (tempZ / ui.bboznow).ToString("0.000");
-                    updateSTLState(stl);
+                    UpdateSTLState(stl);
                     stl.LandUpdateBBNoPreUpdate();
                     MainWindow.main.threeDControl.UpdateChanges();
                 }
@@ -1110,7 +1122,7 @@ namespace View3D.view
                 textScaleX.Text = (tempX / ui.bboxnow).ToString("0.000");
                 textScaleY.Text = (tempY / ui.bboynow).ToString("0.000");
                 textScaleZ.Text = (tempZ / ui.bboznow).ToString("0.000");
-                updateSTLState(stl);
+                UpdateSTLState(stl);
                 stl.LandUpdateBBNoPreUpdate();
                 MainWindow.main.threeDControl.UpdateChanges();
             }

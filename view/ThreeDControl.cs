@@ -236,9 +236,9 @@ namespace View3D.view
                 Vector3.UnitZ);
 #endif
             float bedRadius = (float)(1.5 * Math.Sqrt(
-                 (MainWindow.main.PrintAreaDepth * MainWindow.main.PrintAreaDepth +
-                  MainWindow.main.PrintAreaHeight * MainWindow.main.PrintAreaHeight +
-                  MainWindow.main.PrintAreaWidth * MainWindow.main.PrintAreaWidth) * 0.25));
+                 (MainWindow.main.threeDSettings.PrintAreaDepth * MainWindow.main.threeDSettings.PrintAreaDepth +
+                  MainWindow.main.threeDSettings.PrintAreaHeight * MainWindow.main.threeDSettings.PrintAreaHeight +
+                  MainWindow.main.threeDSettings.PrintAreaWidth * MainWindow.main.threeDSettings.PrintAreaWidth) * 0.25));
 
             float dist = (float)threeDCam.distance;
             float nearDist = Math.Max(1, dist - bedRadius);
@@ -476,7 +476,7 @@ namespace View3D.view
                 MainWindow.main.Dispatcher.Invoke(() =>
                 {
                     stlComp.buttonRemoveSTL_Click(null, null);
-                    stlComp.updateSTLState(null);
+                    stlComp.UpdateSTLState(null);
                 });
                 Invalidate();
             }
@@ -587,9 +587,9 @@ namespace View3D.view
         public void UpdatePickLine(int x, int y)
         {
             float bedRadius = (float)(1.5 * Math.Sqrt(
-                 (MainWindow.main.PrintAreaDepth * MainWindow.main.PrintAreaDepth +
-                  MainWindow.main.PrintAreaHeight * MainWindow.main.PrintAreaHeight +
-                  MainWindow.main.PrintAreaWidth * MainWindow.main.PrintAreaWidth) * 0.25));
+                 (MainWindow.main.threeDSettings.PrintAreaDepth * MainWindow.main.threeDSettings.PrintAreaDepth +
+                  MainWindow.main.threeDSettings.PrintAreaHeight * MainWindow.main.threeDSettings.PrintAreaHeight +
+                  MainWindow.main.threeDSettings.PrintAreaWidth * MainWindow.main.threeDSettings.PrintAreaWidth) * 0.25));
             
             float dist = (float)threeDCam.distance;
             float nearDist = Math.Max(1, dist - bedRadius);

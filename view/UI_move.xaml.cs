@@ -92,10 +92,10 @@ namespace View3D.view
 
             double moveMax, moveMin;
 
-            moveMax = (int)Math.Floor((MainWindow.main.PrintAreaWidth - (stl.BoundingBox.xMax - stl.Position.x)) * 100) * 0.01;
+            moveMax = (int)Math.Floor((MainWindow.main.threeDSettings.PrintAreaWidth - (stl.BoundingBox.xMax - stl.Position.x)) * 100) * 0.01;
             moveMin = (int)Math.Ceiling((stl.Position.x - stl.BoundingBox.xMin) * 100) * 0.01;
 
-            double a = MainWindow.main.PrintAreaWidth - (stl.BoundingBox.xMax - stl.Position.x);
+            double a = MainWindow.main.threeDSettings.PrintAreaWidth - (stl.BoundingBox.xMax - stl.Position.x);
             double b = stl.Position.x - stl.BoundingBox.xMin;
 
             a += 0;
@@ -123,7 +123,7 @@ namespace View3D.view
             }
 
 
-            moveMax = (int)Math.Floor((MainWindow.main.PrintAreaDepth - (stl.BoundingBox.yMax - stl.Position.y)) * 100) * 0.01;
+            moveMax = (int)Math.Floor((MainWindow.main.threeDSettings.PrintAreaDepth - (stl.BoundingBox.yMax - stl.Position.y)) * 100) * 0.01;
             moveMin = (int)Math.Ceiling((stl.Position.y - stl.BoundingBox.yMin) * 100) * 0.01;
 
             //module is out of bound,it can not move. 
@@ -147,7 +147,7 @@ namespace View3D.view
                 slider_moveY.Minimum = moveMin;
             }
 
-            moveMax = MainWindow.main.PrintAreaHeight - (stl.BoundingBoxWOSupport.zMax - stl.Position.z);
+            moveMax = MainWindow.main.threeDSettings.PrintAreaHeight - (stl.BoundingBoxWOSupport.zMax - stl.Position.z);
             moveMin = stl.Position.z - stl.BoundingBoxWOSupport.zMin;
             if (moveMin > moveMax)
                 moveMin = moveMax;
@@ -182,7 +182,7 @@ namespace View3D.view
             moveZ_textbox.Text = (Math.Round(slider_moveZ.Value - slider_moveZ.Minimum, 3)).ToString();
 
             MainWindow.main.stlComposer.landModel(stl);
-            MainWindow.main.stlComposer.updateSTLState(stl);
+            MainWindow.main.stlComposer.UpdateSTLState(stl);
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -200,7 +200,7 @@ namespace View3D.view
             moveY_textbox.Text = slider_moveY.Value.ToString();
             moveZ_textbox.Text = slider_moveZ.Value.ToString();
 
-            MainWindow.main.stlComposer.updateSTLState(stl);
+            MainWindow.main.stlComposer.UpdateSTLState(stl);
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
