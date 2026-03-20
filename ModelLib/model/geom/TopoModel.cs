@@ -8,7 +8,7 @@ namespace View3D.model.geom
     public class TopoModel
     {
         static int MinVertexNumForProress = 2000; // large than all support part vertices number
-        public enum FileFormat { Unknown, Binary, UTF8 };
+
         public const bool debugRepair = false;
         public const float epsilon = 0.001f;
         public TopoVertexStorage vertices = new TopoVertexStorage();

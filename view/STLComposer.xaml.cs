@@ -368,7 +368,6 @@ namespace View3D.view
             SetObjectSelected(newModel, true);
             UpdateSTLState(newModel);
             Autoposition();
-            UpdateSTLState(newModel);
             return true;
         }
 
@@ -550,7 +549,7 @@ namespace View3D.view
         // =====================================================================
         //  Autoposition
         // =====================================================================
-        public bool Autoposition(bool inputByClone = false)
+        public bool Autoposition()
         {
             if (listObjects.Items.Count == 1)
             {

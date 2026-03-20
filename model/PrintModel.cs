@@ -115,8 +115,7 @@ namespace View3D.model
             stl.ListviewGetModels += ListviewGetModels;
 
             // NOTE: Don't need to clone Drawer.
-
-            stl.Model = Model;
+            stl.Model = Model.Copy();
             return stl;
         }
 
