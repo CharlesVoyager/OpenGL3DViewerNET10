@@ -481,41 +481,6 @@ namespace View3D.view
         }
 
 
-        // ── Lights ────────────────────────────────────────────────────────────
-        private void AddLights()
-        {
-            //GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { 0.2f, 0.2f, 0.2f, 1f });
-            //GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 0, 0, 0, 0 });
-            //GL.Light(LightName.Light0, LightParameter.Specular, new float[] { 0, 0, 0, 0 });
-            //GL.Enable(EnableCap.Light0);
-
-            var s = MainWindow.main.threeDSettings;
-
-            SetLight(LightName.Light1, s.EnableLight1(), s.Ambient1(), s.Diffuse1(), s.Specular1(), s.Dir1(), false);
-            SetLight(LightName.Light2, s.EnableLight2(), s.Ambient2(), s.Diffuse2(), s.Specular2(), s.Dir2(), true);
-            SetLight(LightName.Light3, s.EnableLight3(), s.Ambient3(), s.Diffuse3(), s.Specular3(), s.Dir3(), true);
-            SetLight(LightName.Light4, s.EnableLight4(), s.Ambient4(), s.Diffuse4(), s.Specular4(), s.Dir4(), true);
-            //GL.Enable(EnableCap.Lighting);
-        }
-
-        private void SetLight(LightName name,
-                              bool enable,
-                              float[] amb, float[] diff, float[] spec, float[] pos,
-                              bool setExponent)
-        {
-            if (enable)
-            {
-                ////GL.Light(name, LightParameter.Ambient, amb);
-                ////GL.Light(name, LightParameter.Diffuse, diff);
-                ////GL.Light(name, LightParameter.Specular, spec);
-                ////GL.Light(name, LightParameter.Position, pos);
-                //if (setExponent)
-                //    GL.Light(name, LightParameter.SpotExponent, new float[] { 1f, 1f, 1f, 1f });
-                //GL.Enable((EnableCap)name);
-            }
-            else GL.Disable((EnableCap)name);
-        }
-
         // ── Pick / ray-cast ───────────────────────────────────────────────────
         public void UpdatePickLine(int x, int y)
         {
