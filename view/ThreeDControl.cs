@@ -320,9 +320,6 @@ namespace View3D.view
             base.OnMouseMove(e);
 
             var kb = KeyboardState;
-            if (kb.IsKeyDown(Keys.LeftAlt) || kb.IsKeyDown(Keys.RightAlt))
-                return;
-
             var mouse = MouseState;
             bool anyButton = mouse.IsButtonDown(MouseButton.Left) ||
                              mouse.IsButtonDown(MouseButton.Right) ||
@@ -584,19 +581,19 @@ namespace View3D.view
 
                 case 1: // Pan (slow)
                 case 2: // Pan (fast)
-                    {
-                        speedX = (xPos - xDown) / ClientSize.X;
-                        speedY = (yPos - yDown) / ClientSize.Y;
-                        Vector3 planeVec = Vector3.Subtract(
-                            new Vector3(moveStart.x, moveStart.y, moveStart.z), threeDCam.CameraPosition);
-                        float dot = Vector3.Dot(planeVec, threeDCam.ViewDirection());
-                        double len = dot > 0 ? planeVec.Length : -1;
-                        float scale = emode == 1 ? 200f : 1f;
-                        threeDCam.Pan(  speedX * scale * (emode == 2 ? -1 : 1),
-                                        speedY * scale * (emode == 2 ? -1 : 1), len);
-                        Invalidate();
-                        break;
-                    }
+                {
+                    speedX = (xPos - xDown) / ClientSize.X;
+                    speedY = (yPos - yDown) / ClientSize.Y;
+                    Vector3 planeVec = Vector3.Subtract(
+                        new Vector3(moveStart.x, moveStart.y, moveStart.z), threeDCam.CameraPosition);
+                    float dot = Vector3.Dot(planeVec, threeDCam.ViewDirection());
+                    double len = dot > 0 ? planeVec.Length : -1;
+                    float scale = emode == 1 ? 200f : 1f;
+                    threeDCam.Pan(  speedX * scale * (emode == 2 ? -1 : 1),
+                                    speedY * scale * (emode == 2 ? -1 : 1), len);
+                    Invalidate();
+                    break;
+                }
 
                 case 3: // Zoom
                     threeDCam.Zoom(1 - speedY / 3f);
@@ -604,32 +601,31 @@ namespace View3D.view
                     break;
 
                 case 4: // Move objects
+                {
+                    Geom3DVector diff = movePos.sub(moveLast);
+                    moveLast = movePos;
+                    speedX = (xPos - lastX) * 200 * zoom / ClientSize.X;
+                    speedY = (yPos - lastY) * 200 * zoom / ClientSize.Y;
+
+                    var selModels = new List<PrintModel>();
+                    var prevX = new List<float>();
+                    var prevY = new List<float>();
+
+                    MainWindow.main.Dispatcher.InvokeAsync(() =>
                     {
-                        Geom3DVector diff = movePos.sub(moveLast);
-                        moveLast = movePos;
-                        speedX = (xPos - lastX) * 200 * zoom / ClientSize.X;
-                        speedY = (yPos - lastY) * 200 * zoom / ClientSize.Y;
-
-                        var selModels = new List<PrintModel>();
-                        var prevX = new List<float>();
-                        var prevY = new List<float>();
-
                         foreach (PrintModel stl in stlComp.ListObjects(true))
                         {
                             selModels.Add(stl);
                             prevX.Add(stl.Position.x);
                             prevY.Add(stl.Position.y);
                         }
-
-                        MainWindow.main.Dispatcher.Invoke(() =>
-                        {
-                            stlComp.ObjectMoved(diff.x, diff.y);
-                        });
+                        stlComp.ObjectMoved(diff.x, diff.y);
+                    });
                
-                        lastX = xPos; lastY = yPos;
-                        Invalidate();
-                        break;
-                    }
+                    lastX = xPos; lastY = yPos;
+                    Invalidate();
+                    break;
+                }
             }
         }
 
