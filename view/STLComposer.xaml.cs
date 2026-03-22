@@ -358,6 +358,11 @@ namespace View3D.view
         {
             PrintModel newModel = (PrintModel)model.cloneWithModel();
 
+            MainWindow.main.threeDControl.InvokeGL(() =>
+            {
+                newModel.Drawer.Init();
+            });
+
             newModel.UpdateBoundingBox();
             newModel.mid    = models.Count;
             newModel.serNum = models.Count;
