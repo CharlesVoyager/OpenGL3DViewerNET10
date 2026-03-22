@@ -914,8 +914,10 @@ namespace View3D.view
         {
             foreach (var stl in ListObjects(true))
             {
-                if (stl.Position.x + dx < MainWindow.main.threeDSettings.PrintAreaWidth * 1.2f && stl.Position.x + dx > -MainWindow.main.threeDSettings.PrintAreaWidth * 0.2f) stl.Position.x += dx;
-                if (stl.Position.y + dy < MainWindow.main.threeDSettings.PrintAreaDepth * 1.2f && stl.Position.y + dy > -MainWindow.main.threeDSettings.PrintAreaDepth * 0.2f) stl.Position.y += dy;
+                if (stl.Position.x + dx < MainWindow.main.threeDSettings.PrintAreaWidth * 1.2f && stl.Position.x + dx > -MainWindow.main.threeDSettings.PrintAreaWidth * 0.2f) 
+                    stl.Position.x += dx;
+                if (stl.Position.y + dy < MainWindow.main.threeDSettings.PrintAreaDepth * 1.2f && stl.Position.y + dy > -MainWindow.main.threeDSettings.PrintAreaDepth * 0.2f) 
+                    stl.Position.y += dy;
                 if (listObjects.SelectedItems.Count == 1)
                 {
                     _suppressTextEvents = true;
