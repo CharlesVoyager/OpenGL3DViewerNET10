@@ -33,7 +33,7 @@ namespace OpenGL3DViewerNET10.Draw
 ";
 
         // Call once during load / whenever PrintAreaWidth or PrintAreaDepth changes
-        public void InitRedBorderMesh()
+        public void Init()
         {
             int pad = 2, tri = 10;
             float w = MainWindow.main.threeDSettings.PrintAreaWidth, d = MainWindow.main.threeDSettings.PrintAreaDepth;

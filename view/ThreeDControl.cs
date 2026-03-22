@@ -206,13 +206,13 @@ namespace View3D.view
             printerbedDraw = new PrinterbedDraw();
             printerbedDraw.Init();
          
+            // Red Border
+            redBorderDraw = new RedBorderDraw();
+            redBorderDraw.Init();
+
             // Bounding Box
             boundingBoxDraw = new BoundingBoxDraw();
             boundingBoxDraw.Init();
-
-            // Red Border
-            redBorderDraw = new RedBorderDraw();
-            redBorderDraw.InitRedBorderMesh();
 
             // STL Model
             foreach(var m in stlComp.models)
@@ -225,7 +225,6 @@ namespace View3D.view
         {
             base.OnMove(e);
 
-            // CHANGED: Position is now Vector2i
             int newX = e.Position.X;
             int newY = e.Position.Y;
 
@@ -258,10 +257,10 @@ namespace View3D.view
         {
             base.OnUnload();
 
+            backgroundDraw.Dispose();
+            printerbedDraw.Dispose();
             redBorderDraw.Dispose();
             boundingBoxDraw.Dispose();
-            printerbedDraw.Dispose();
-            backgroundDraw.Dispose();
 
             foreach (var m in stlComp.models)
                 m.Drawer.Dispose();
