@@ -107,7 +107,7 @@ namespace View3D
 
             string fileLow = file.ToLower();
             if (fileLow.EndsWith(".stl"))
-                stlComposer.openAndAddObject(file);
+                stlComposer.OpenAndAddObject(file);
         }
 
         public void Update3D()
@@ -335,7 +335,7 @@ namespace View3D
                 string fileLow = filePath.ToLower();
                 if (fileLow.EndsWith(".stl"))
                 {
-                    stlComposer.openAndAddObject(filePath);
+                    stlComposer.OpenAndAddObject(filePath);
                     threeDControl.InvokeGL(() =>
                     {
                         STLComposer._stlModelDataReady.Wait();

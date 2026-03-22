@@ -1,9 +1,9 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using System.Drawing;
-using View3D.model.geom;
+using View3D;
+using View3D.model;
 
-namespace View3D.model
+namespace OpenGL3DViewerNET10.Draw
 {
     public class ModelGLDraw
     {
