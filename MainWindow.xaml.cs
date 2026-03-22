@@ -199,7 +199,7 @@ namespace View3D
             _contextMenu.IsOpen = true;
         }
 
-        // Actions — forward to ThreeDControl
+        // Actions of context menu.
         private void OnLandObject() => UI_move.button_land_Click(null, null);
 
         private void OnResetObject()
