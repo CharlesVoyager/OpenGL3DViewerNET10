@@ -34,7 +34,6 @@ namespace View3D.view
         float speedX, speedY;
         float lastX, lastY;
         readonly Stopwatch fpsTimer = new Stopwatch();
-        int mode = 0;
         public float zoom = 1.0f;
 
         int keyX = -1;
@@ -566,11 +565,13 @@ namespace View3D.view
             var kb = KeyboardState;
             var mouse = MouseState;
 
-            int emode = mode;
-            if (kb.IsKeyDown(Keys.LeftShift) || kb.IsKeyDown(Keys.RightShift) ||
-                mouse.IsButtonDown(MouseButton.Middle)) emode = 2;
-            if (kb.IsKeyDown(Keys.LeftControl) || kb.IsKeyDown(Keys.RightControl)) emode = 0;
-            if (kb.IsKeyDown(Keys.LeftAlt) || kb.IsKeyDown(Keys.RightAlt)) emode = 4;
+            int emode = 0;
+            if (kb.IsKeyDown(Keys.LeftShift) || kb.IsKeyDown(Keys.RightShift) || mouse.IsButtonDown(MouseButton.Middle)) 
+                emode = 2;
+            if (kb.IsKeyDown(Keys.LeftControl) || kb.IsKeyDown(Keys.RightControl)) 
+                emode = 0;
+            if (kb.IsKeyDown(Keys.LeftAlt) || kb.IsKeyDown(Keys.RightAlt)) 
+                emode = 4;
 
             float d = Math.Min(ClientSize.X, ClientSize.Y) / 3f;
 
