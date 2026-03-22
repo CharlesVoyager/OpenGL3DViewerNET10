@@ -295,7 +295,7 @@ namespace View3D.view
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             base.OnUpdateFrame(e);
-            Application_Idle();
+            inputHandling();
         }
 
         // ── Mouse input ───────────────────────────────────────────────────────
@@ -556,12 +556,10 @@ namespace View3D.view
             return nearestModel;
         }
 
-        // ── Idle / animation update ───────────────────────────────────────────
-        private void Application_Idle()
+        private void inputHandling()
         {
             if (!loaded || (speedX == 0 && speedY == 0)) return;
 
-            // CHANGED: OpenTK.Input.Keyboard/Mouse → KeyboardState / MouseState properties
             var kb = KeyboardState;
             var mouse = MouseState;
 
