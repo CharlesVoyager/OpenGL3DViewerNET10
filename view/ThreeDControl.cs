@@ -415,17 +415,6 @@ namespace View3D.view
         protected override void OnKeyDown(KeyboardKeyEventArgs e)
         {
             base.OnKeyDown(e);
-            ThreeDControl_KeyDown(e);
-        }
-
-        protected override void OnTextInput(TextInputEventArgs e)
-        {
-            base.OnTextInput(e);
-            ThreeDControl_KeyPress(e);
-        }
-
-        private void ThreeDControl_KeyDown(KeyboardKeyEventArgs e)
-        {
             if (e.Key == Keys.Delete)
             {
                 MainWindow.main.Dispatcher.Invoke(() =>
@@ -437,13 +426,28 @@ namespace View3D.view
             }
         }
 
-        private void ThreeDControl_KeyPress(TextInputEventArgs e)
+        protected override void OnTextInput(TextInputEventArgs e)
         {
+            base.OnTextInput(e);
             if (e.AsString == "-")
-                button_zoomOut_Click(null, null);
+                ZoomOutKeyHandling(null, null);
 
             if (e.AsString == "+")
-                button_zoomIn_Click(null, null);
+                ZoomInKeyHandling(null, null);
+        }
+
+        public void ZoomOutKeyHandling(object sender, EventArgs e)
+        {
+            threeDCam.PreparePanZoomRot(); threeDCam.Zoom(1.1);
+            zoom = Math.Max(0.002f, Math.Min(5.9f, zoom));
+            Invalidate();
+        }
+
+        public void ZoomInKeyHandling(object sender, EventArgs e)
+        {
+            threeDCam.PreparePanZoomRot(); threeDCam.Zoom(0.9);
+            zoom = Math.Max(0.002f, Math.Min(5.9f, zoom));
+            Invalidate();
         }
 
         // ── Rendering ─────────────────────────────────────────────────────────
@@ -627,22 +631,6 @@ namespace View3D.view
                     break;
                 }
             }
-        }
-
-
-        // ── Zoom button handlers ──────────────────────────────────────────────
-        public void button_zoomIn_Click(object sender, EventArgs e)
-        {
-            threeDCam.PreparePanZoomRot(); threeDCam.Zoom(0.9);
-            zoom = Math.Max(0.002f, Math.Min(5.9f, zoom));
-            Invalidate();
-        }
-
-        public void button_zoomOut_Click(object sender, EventArgs e)
-        {
-            threeDCam.PreparePanZoomRot(); threeDCam.Zoom(1.1);
-            zoom = Math.Max(0.002f, Math.Min(5.9f, zoom));
-            Invalidate();
         }
     }
 }

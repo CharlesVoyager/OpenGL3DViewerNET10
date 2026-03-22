@@ -488,7 +488,7 @@ namespace View3D
             resize_toggleButton.IsChecked = false;
             info_toggleButton.IsChecked = false;
 
-            threeDControl.button_zoomIn_Click(null, null);
+            threeDControl.ZoomInKeyHandling(null, null);
             Focus();
         }
 
@@ -500,7 +500,7 @@ namespace View3D
             resize_toggleButton.IsChecked = false;
             info_toggleButton.IsChecked = false;
 
-            threeDControl.button_zoomOut_Click(null, null);
+            threeDControl.ZoomOutKeyHandling(null, null);
             Focus();
         }
 
