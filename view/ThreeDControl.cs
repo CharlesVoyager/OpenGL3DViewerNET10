@@ -551,8 +551,8 @@ namespace View3D.view
                 GC.Collect();
             }
 
-            // TEST
-            Debug.WriteLine($"Picktest: nearest model is {(nearestModel != null ? "Hit" : "null")}, length = {length}");    
+            // Debug
+            //Debug.WriteLine($"Picktest: nearest model is {(nearestModel != null ? "Hit" : "null")}, length = {length}");    
           
             return nearestModel;
         }
@@ -593,8 +593,8 @@ namespace View3D.view
                         float dot = Vector3.Dot(planeVec, threeDCam.ViewDirection());
                         double len = dot > 0 ? planeVec.Length : -1;
                         float scale = emode == 1 ? 200f : 1f;
-                        threeDCam.Pan(speedX * scale * (emode == 2 ? -1 : 1),
-                                speedY * scale * (emode == 2 ? -1 : 1), len);
+                        threeDCam.Pan(  speedX * scale * (emode == 2 ? -1 : 1),
+                                        speedY * scale * (emode == 2 ? -1 : 1), len);
                         Invalidate();
                         break;
                     }
