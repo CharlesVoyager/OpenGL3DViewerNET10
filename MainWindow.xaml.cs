@@ -123,7 +123,6 @@ namespace View3D
                 if (e.Key == Key.Delete)
                 {
                     stlComposer.buttonRemoveSTL_Click(null, null);
-                    stlComposer.UpdateSTLState(null);
                     threeDControl.UpdateChanges();
                 }
             }
