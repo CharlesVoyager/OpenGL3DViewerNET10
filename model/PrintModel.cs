@@ -23,7 +23,6 @@ namespace View3D.model
         public Matrix4 trans, invTrans;
 
         protected RHBoundingBox bbox = new RHBoundingBox();
-        public ListviewGetModelsDelegate ListviewGetModels = null;
         public int extruder = 0;
         public double maxScaleVector = 0;
         public double minScaleVector = 0;
@@ -102,7 +101,6 @@ namespace View3D.model
             stl.invTrans = invTrans;
             stl.trans = trans;
             stl.Selected = false;
-            stl.ListviewGetModels += ListviewGetModels;
 
             // NOTE: Don't need to clone Drawer.
             stl.Model = Model.Copy();
@@ -165,63 +163,6 @@ namespace View3D.model
             RHVector3 center = bbox.Center;
             Position.x += x - (float)center.x;
             Position.y += y - (float)center.y;
-        }
-
-        public void Center2(float x, float y)
-        {
-            double centerX = 0.0, centerY = 0.0;
-            int objectCount = 0;
-            LinkedList<PrintModel> models = null;
-            if (ListviewGetModels != null)
-                models = ListviewGetModels(false);
-            Debug.Assert(models != null);
-
-            foreach (PrintModel stl in models)
-            {
-                objectCount++;
-                centerX += stl.Model.boundingBox.Center.x;
-                centerY += stl.Model.boundingBox.Center.y;
-            }
-
-            centerX = centerX / objectCount;
-            centerY = centerY / objectCount;
-            UpdateBoundingBoxAndMatrix();
-            if (ListviewGetModels != null)
-                models = ListviewGetModels(false);
-            Debug.Assert(models != null);
-
-            foreach (PrintModel stl in models)
-            {
-                stl.Position.x = x - (float)centerX;
-                stl.Position.y = y - (float)centerY;
-            }
-            UpdateBoundingBoxAndMatrix();
-        }
-
-        public void Center3(float x, float y, PrintModel stl)
-        {
-            double centerX = 0.0, centerY = 0.0;
-            int objectCount = 0;
-            LinkedList<PrintModel> models = null;
-            if (ListviewGetModels != null)
-                models = ListviewGetModels(false);
-            Debug.Assert(models != null);
-            foreach (PrintModel stl1 in models)
-            {
-                objectCount++;
-                centerX += stl1.Model.boundingBox.Center.x;
-                centerY += stl1.Model.boundingBox.Center.y;
-            }
-
-            centerX = centerX / objectCount;
-            centerY = centerY / objectCount;
-
-            UpdateBoundingBoxAndMatrix();
-
-            stl.Position.x = x - (float)centerX;
-            stl.Position.y = y - (float)centerY;
-
-            UpdateBoundingBoxAndMatrix();
         }
 
         public override Vector3 getCenter()

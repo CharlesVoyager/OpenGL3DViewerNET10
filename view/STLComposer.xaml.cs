@@ -249,7 +249,6 @@ namespace View3D.view
 
             models[last].mid              = last;
             models[last].serNum           = last;
-            models[last].ListviewGetModels += ListObjects;
 
             if (modelToLand)
             {
@@ -460,9 +459,6 @@ namespace View3D.view
             // PrintModel
             for (int i = 0; i < models.Count; i++)
                 if (models[i] == model) { models.RemoveAt(i); break; }
-
-            if (model.ListviewGetModels != null)
-                model.ListviewGetModels -= ListObjects;
 
             model.Clear();
             GC.Collect();
