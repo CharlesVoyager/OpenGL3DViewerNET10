@@ -514,6 +514,28 @@ namespace View3D.view
             return output;
         }
 
+        public float GetSpecularIntensity()
+        {
+            float output = 0;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                output = (float)sliderSpecular.Value;
+            });
+            return output;
+        }
+
+        public float GetShininess()
+        {
+            float output = 0;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                output = (float)sliderShininess.Value;
+            });
+            return output;
+        }
+
+        // --------------------------------------------------------------------------------------------
+
         public System.Drawing.Color InsideFacesBackgroundColor()
         {
             System.Drawing.Color color = System.Drawing.Color.Empty;
@@ -688,10 +710,14 @@ namespace View3D.view
             });
             return result;
         }
-
-        private void AmbientIntensity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void LightSetting_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             MainWindow.main.Update3D();
+        }
+
+        private void ResetLightSettingsToDefault_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

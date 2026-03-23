@@ -1,7 +1,8 @@
 {
   "profiles": {
     "OpenGL3DViewerNET10": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "..\\..\\..\\stl\\bowser.stl"
     }
   }
 }

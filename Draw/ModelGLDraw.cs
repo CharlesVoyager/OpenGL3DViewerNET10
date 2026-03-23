@@ -208,9 +208,9 @@ namespace OpenGL3DViewerNET10.Draw
             GL.Uniform3(viewPosLoc, MainWindow.main.threeDCamera.CameraPosition); // camera pos
 
             GL.Uniform3(objectColorLoc, ModelColor); // Model Color, Default: 0.6f, 0.7f, 0.8f
-            GL.Uniform1(ambientLoc, MainWindow.main.threeDSettings.GetAmbientIntensity());     // Ambient intensity, Default: 0.15f
-            GL.Uniform1(specularLoc, 0.5f);     // specular intensity
-            GL.Uniform1(shininessLoc, 32.0f);   // shininess exponent
+            GL.Uniform1(ambientLoc, MainWindow.main.threeDSettings.GetAmbientIntensity());      // Ambient intensity, Default: 0.15f
+            GL.Uniform1(specularLoc, MainWindow.main.threeDSettings.GetSpecularIntensity());    // Specular intensity, Default: 0.5f
+            GL.Uniform1(shininessLoc, MainWindow.main.threeDSettings.GetShininess());           // Shininess exponent, Default: 32.0f
 
             GL.UniformMatrix4(stlModelLoc, false, ref printModel.trans);
             GL.BindVertexArray(stlVao);
