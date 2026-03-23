@@ -66,11 +66,16 @@ namespace OpenGL3DViewerNET10.Draw
 
                                 void main()
                                 {
+                                    // Flip normal for back faces so lighting computes correctly
+                                    vec3 norm = gl_FrontFacing ? normalize(Normal) : -normalize(Normal);
+
+                                    // Use a different color tint for inner (back) faces
+                                    vec3 matColor = gl_FrontFacing ? objectColor : objectColor * vec3(1.3, 0.7, 0.6);
+
                                     // Ambient
                                     vec3 ambient = ambientStrength * lightColor;
 
                                     // Diffuse
-                                    vec3 norm     = normalize(Normal);
                                     vec3 lightDir = normalize(lightPos - FragPos);
                                     float diff    = max(dot(norm, lightDir), 0.0);
                                     vec3 diffuse  = diff * lightColor;
@@ -81,7 +86,7 @@ namespace OpenGL3DViewerNET10.Draw
                                     float spec      = pow(max(dot(norm, halfwayDir), 0.0), shininess);
                                     vec3 specular   = specularStrength * spec * lightColor;
 
-                                    vec3 result = (ambient + diffuse + specular) * objectColor;
+                                    vec3 result = (ambient + diffuse + specular) * matColor;
                                     FragColor   = vec4(result, 1.0);
                                 }
 ";
@@ -95,7 +100,7 @@ namespace OpenGL3DViewerNET10.Draw
         public void Init()
         {
             shader = createShaderProgram();
-        
+
             uploadMeshToGPU();
 
             stlModelLoc = GL.GetUniformLocation(shader, "model");
@@ -115,7 +120,7 @@ namespace OpenGL3DViewerNET10.Draw
         private void uploadMeshToGPU()
         {
             stlVertices.Clear();
-    
+
             printModel.Paint();
 
             for (int i = 0; i < printModel.submesh.glVertices.Length; i += 3)
@@ -180,7 +185,7 @@ namespace OpenGL3DViewerNET10.Draw
             if (stlVertices.Count == 0) return;
 
             GL.Enable(EnableCap.DepthTest);
-            GL.Enable(EnableCap.CullFace);
+            GL.Disable(EnableCap.CullFace); // Draw both front and back faces
 
             Matrix4 model = Matrix4.Identity;
             Matrix4 view = Matrix4.Identity;
