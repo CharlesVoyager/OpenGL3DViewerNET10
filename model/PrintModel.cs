@@ -10,8 +10,6 @@ namespace View3D.model
     public delegate LinkedList<PrintModel> ListviewGetModelsDelegate(bool selected);
     public partial class PrintModel : ThreeDModel
     {
-        public int modelDataId = 0; // model data id
-
         public TopoModel Model;
         public Submesh submesh;
         public ModelGLDraw Drawer;
@@ -19,6 +17,8 @@ namespace View3D.model
 
         public string name = "Unknown";
         public bool outside = false;
+        public int mid = 0;     // model id
+        public int serNum = 0;
 
         public Matrix4 trans, invTrans;
 
@@ -29,18 +29,9 @@ namespace View3D.model
         public double minScaleVector = 0;
         public double m = 0;
         public double b = 0;
-        public int mid = 0; // model id
-        public int serNum = 0;
 
         public RHVector3[] vtxPosWorldCor;
         public RHVector3[] triNormalWorldCor;
-        private bool dirtySpaceInfo = true; // flag for need to update space structure information
-        public float storedLayerValue = 999f;
-        public float storedMaxLayer = 0;
-        public float storedMinLayer = 0;
-        public bool storedLayerChanged = false;
-        public RHVector3 OriginalBboxMax;
-        public RHVector3 OriginalBboxMin;
 
         public PrintModel()
         {
