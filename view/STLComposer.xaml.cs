@@ -183,22 +183,6 @@ namespace View3D.view
             return list;
         }
 
-        // ── LockAspectRatio ───────────────────────────────────────────────────
-        /// <summary>
-        /// Mirrors the WinForms buttonLockAspect.ImageIndex == 1 pattern.
-        /// The WPF ToggleButton.IsChecked property drives the lock state.
-        /// </summary>
-        public bool LockAspectRatio
-        {
-            get => buttonLockAspect.IsChecked == true;
-            set
-            {
-                textScaleX.IsEnabled = value;
-                textScaleY.IsEnabled = value;
-                textScaleZ.IsEnabled = value;
-            }
-        }
-
         public static readonly ManualResetEventSlim _stlModelDataReady = new ManualResetEventSlim(true);
         public async void OpenAndAddObject(string file)
         {
@@ -494,7 +478,6 @@ namespace View3D.view
                 textScaleX.IsEnabled        = false;
                 textScaleY.IsEnabled        = false;
                 textScaleZ.IsEnabled        = false;
-                buttonLockAspect.IsEnabled  = false;
                 textTransX.IsEnabled        = false;
                 textTransY.IsEnabled        = false;
                 textTransZ.IsEnabled        = false;
@@ -508,10 +491,9 @@ namespace View3D.view
                 textRotX.IsEnabled         = true;
                 textRotY.IsEnabled         = true;
                 textRotZ.IsEnabled         = true;
-                textScaleX.IsEnabled       = !LockAspectRatio;
-                textScaleY.IsEnabled       = !LockAspectRatio;
-                textScaleZ.IsEnabled       = !LockAspectRatio;
-                buttonLockAspect.IsEnabled = true;
+                textScaleX.IsEnabled       = true;
+                textScaleY.IsEnabled       = true;
+                textScaleZ.IsEnabled       = true;
                 textTransX.IsEnabled       = true;
                 textTransY.IsEnabled       = true;
                 textTransZ.IsEnabled       = true;
@@ -621,7 +603,6 @@ namespace View3D.view
                 textTransY.Text = stl.Position.y.ToString("0.000");
                 textTransZ.Text = stl.Position.z.ToString("0.000");
 
-                LockAspectRatio = (stl.Scale.x == stl.Scale.y && stl.Scale.x == stl.Scale.z);
                 textScaleX.Text = stl.Scale.x.ToString("0.000");
                 textScaleY.Text = stl.Scale.y.ToString("0.000");
                 textScaleZ.Text = stl.Scale.z.ToString("0.000");
@@ -752,7 +733,7 @@ namespace View3D.view
             var stl = SingleSelectedModel;
             if (stl == null) return;
             float old = stl.Position.x;
-            float.TryParse(textTransX.Text, NumberStyles.Float, GCode.format, out stl.Position.x);
+            float.TryParse(textTransX.Text, out stl.Position.x);
             if (Math.Abs(old - stl.Position.x) < 0.001f) return;
             if (typeof(PrintModel) == stl.GetType()) UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
@@ -764,7 +745,7 @@ namespace View3D.view
             var stl = SingleSelectedModel;
             if (stl == null) return;
             float old = stl.Position.y;
-            float.TryParse(textTransY.Text, NumberStyles.Float, GCode.format, out stl.Position.y);
+            float.TryParse(textTransY.Text, out stl.Position.y);
             if (Math.Abs(old - stl.Position.y) < 0.001f) return;
             if (typeof(PrintModel) == stl.GetType()) UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
@@ -776,7 +757,7 @@ namespace View3D.view
             var stl = SingleSelectedModel;
             if (stl == null) return;
             float old = stl.Position.z;
-            float.TryParse(textTransZ.Text, NumberStyles.Float, GCode.format, out stl.Position.z);
+            float.TryParse(textTransZ.Text, out stl.Position.z);
             if (Math.Abs(old - stl.Position.z) < 0.001f) return;
             UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
@@ -787,8 +768,7 @@ namespace View3D.view
             if (_suppressTextEvents) return;
             var stl = SingleSelectedModel;
             if (stl == null) return;
-            float.TryParse(textScaleX.Text, NumberStyles.Float, GCode.format, out stl.Scale.x);
-            if (LockAspectRatio) { stl.Scale.y = stl.Scale.z = stl.Scale.x; SyncScaleFields(stl); }
+            float.TryParse(textScaleX.Text, out stl.Scale.x);
             UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
@@ -798,7 +778,7 @@ namespace View3D.view
             if (_suppressTextEvents) return;
             var stl = SingleSelectedModel;
             if (stl == null) return;
-            float.TryParse(textScaleY.Text, NumberStyles.Float, GCode.format, out stl.Scale.y);
+            float.TryParse(textScaleY.Text, out stl.Scale.y);
             UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
@@ -809,7 +789,7 @@ namespace View3D.view
             var stl = SingleSelectedModel;
             if (stl == null) return;
             float old = stl.Scale.z;
-            float.TryParse(textScaleZ.Text, NumberStyles.Float, GCode.format, out stl.Scale.z);
+            float.TryParse(textScaleZ.Text, out stl.Scale.z);
             stl.UpdateBoundingBoxAndMatrix();
             if (old != stl.Scale.z) stl.Land();
             UpdateOutOfBound();
@@ -823,7 +803,7 @@ namespace View3D.view
             var stl = SingleSelectedModel;
             if (stl == null) return;
             float old = stl.Rotation.x;
-            float.TryParse(textRotX.Text, NumberStyles.Float, GCode.format, out stl.Rotation.x);
+            float.TryParse(textRotX.Text, out stl.Rotation.x);
             stl.UpdateBoundingBoxAndMatrix();
             if (Math.Abs(old - stl.Rotation.x) < 0.001f) return;
             UpdateOutOfBound();
@@ -836,7 +816,7 @@ namespace View3D.view
             var stl = SingleSelectedModel;
             if (stl == null) return;
             float old = stl.Rotation.y;
-            float.TryParse(textRotY.Text, NumberStyles.Float, GCode.format, out stl.Rotation.y);
+            float.TryParse(textRotY.Text, out stl.Rotation.y);
             stl.UpdateBoundingBoxAndMatrix();
             if (Math.Abs(old - stl.Rotation.y) < 0.001f) return;
             UpdateOutOfBound();
@@ -849,7 +829,7 @@ namespace View3D.view
             var stl = SingleSelectedModel;
             if (stl == null) return;
             float old = stl.Rotation.z;
-            float.TryParse(textRotZ.Text, NumberStyles.Float, GCode.format, out stl.Rotation.z);
+            float.TryParse(textRotZ.Text, out stl.Rotation.z);
             stl.UpdateBoundingBoxAndMatrix();
             if (Math.Abs(old - stl.Rotation.z) < 0.001f) return;
             if (typeof(PrintModel) == stl.GetType()) UpdateOutOfBound();
@@ -870,12 +850,6 @@ namespace View3D.view
         // =====================================================================
         //  Event handlers – buttons
         // =====================================================================
-        private void buttonLockAspect_Click(object sender, RoutedEventArgs e)
-        {
-            LockAspectRatio = !LockAspectRatio;
-            if (LockAspectRatio) textScaleX_TextChanged(null, null);
-        }
-
         private void buttonRemoveObject_Click(object sender, RoutedEventArgs e)
         {
             var btn   = (System.Windows.Controls.Button)sender;

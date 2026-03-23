@@ -136,28 +136,6 @@
                              Style="{StaticResource ValidatedTextBox}"
                              TextChanged="textScaleZ_TextChanged"/>
 
-                    <!-- Lock aspect button (column 7, rows 1) -->
-                    <ToggleButton x:Name="buttonLockAspect"
-                                  Grid.Row="1" Grid.Column="7"
-                                  Width="57" Height="28"
-                                  Margin="4" VerticalAlignment="Center"
-                                  ToolTip="Lock aspect ratio"
-                                  Click="buttonLockAspect_Click">
-
-                        <Image Width="16" Height="16">
-                            <Image.Style>
-                                <Style TargetType="Image">
-                                    <Setter Property="Source" Value="/OpenGL3DViewerNET10;component/Resources/unlock16.png"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsChecked, ElementName=buttonLockAspect}" Value="True">
-                                            <Setter Property="Source" Value="/OpenGL3DViewerNET10;component/Resources/lock16.png"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                    </ToggleButton>
-
                     <!-- Rotate -->
                     <TextBox x:Name="textRotX" Grid.Row="2" Grid.Column="2"
                              Margin="4,4" VerticalAlignment="Center"
