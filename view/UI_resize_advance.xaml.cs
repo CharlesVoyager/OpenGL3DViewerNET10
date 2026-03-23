@@ -518,9 +518,9 @@ namespace View3D.view
                 Double tAddScaleY = tbeforeY * temp;
                 Double tAddScaleZ = tbeforeZ * temp;
 
-                MainWindow.main.stlComposer.textScaleX.Text = tAddScaleX.ToString("0.0000000000000");
-                MainWindow.main.stlComposer.textScaleY.Text = tAddScaleY.ToString("0.0000000000000");
-                MainWindow.main.stlComposer.textScaleZ.Text = tAddScaleZ.ToString("0.0000000000000");
+                MainWindow.main.stlComposer.textScaleX.Text = tAddScaleX.ToString("0.000");
+                MainWindow.main.stlComposer.textScaleY.Text = tAddScaleY.ToString("0.000");
+                MainWindow.main.stlComposer.textScaleZ.Text = tAddScaleZ.ToString("0.000");
                 gIsShow = true;
                 dimX = stl.BoundingBoxWOSupport.Size.x;
                 updateTxt(Enums.Axis.X);

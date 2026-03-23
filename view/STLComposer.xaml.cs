@@ -617,16 +617,18 @@ namespace View3D.view
                 textTransY.TextChanged -= textTransY_TextChanged;
                 textTransZ.TextChanged -= textTransZ_TextChanged;
 
-                textRotX.Text = stl.Rotation.x.ToString(GCode.format);
-                textRotY.Text = stl.Rotation.y.ToString(GCode.format);
-                textRotZ.Text = stl.Rotation.z.ToString(GCode.format);
-                LockAspectRatio = stl.Scale.x == stl.Scale.y && stl.Scale.x == stl.Scale.z;
-                textScaleX.Text = stl.Scale.x.ToString(GCode.format);
-                textScaleY.Text = stl.Scale.y.ToString(GCode.format);
-                textScaleZ.Text = stl.Scale.z.ToString(GCode.format);
-                textTransX.Text = stl.Position.x.ToString(GCode.format);
-                textTransY.Text = stl.Position.y.ToString(GCode.format);
-                textTransZ.Text = stl.Position.z.ToString(GCode.format);
+                textTransX.Text = stl.Position.x.ToString("0");
+                textTransY.Text = stl.Position.y.ToString("0");
+                textTransZ.Text = stl.Position.z.ToString("0");
+
+                LockAspectRatio = (stl.Scale.x == stl.Scale.y && stl.Scale.x == stl.Scale.z);
+                textScaleX.Text = stl.Scale.x.ToString("0.000");
+                textScaleY.Text = stl.Scale.y.ToString("0.000");
+                textScaleZ.Text = stl.Scale.z.ToString("0.000");
+
+                textRotX.Text = stl.Rotation.x.ToString("0");
+                textRotY.Text = stl.Rotation.y.ToString("0");
+                textRotZ.Text = stl.Rotation.z.ToString("0");
 
                 textRotX.TextChanged += textRotX_TextChanged;
                 textRotY.TextChanged += textRotY_TextChanged;
