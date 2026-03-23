@@ -477,14 +477,7 @@ namespace View3D
             UI_move.slider_moveY.Minimum = -1000;
             UI_move.slider_moveY.Maximum = 1000;
 
-            OutofBound.Visibility = Visibility.Hidden;
-
             stlComposer.buttonRemoveSTL_Click(null, null);
-            stlComposer.UpdateSTLState(null);
-            threeDControl.UpdateChanges();
-
-            if (stlComposer.listObjects.Items.Count > 0)
-                stlComposer.UpdateSTLState(stlComposer.SingleSelectedModel);
             Focus();
         }
 
