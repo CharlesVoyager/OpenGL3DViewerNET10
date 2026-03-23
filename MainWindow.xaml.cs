@@ -125,6 +125,14 @@ namespace View3D
                     stlComposer.buttonRemoveSTL_Click(null, null);
                     threeDControl.UpdateChanges();
                 }
+                else if (e.Key == Key.Subtract) 
+                {
+                    threeDControl.ZoomOutKeyHandling(null, null);
+                }
+                else if (e.Key == Key.Add)
+                {
+                    threeDControl.ZoomInKeyHandling(null, null);
+                }
             }
             catch { }
         }
