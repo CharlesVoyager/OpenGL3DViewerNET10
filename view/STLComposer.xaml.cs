@@ -271,18 +271,14 @@ namespace View3D.view
 
             if (models[last].Model.triangles.Count > 0)
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    AddObject(models[last]);
-                    if (modelToLand) Autoposition();
-                    UpdateSTLState(models[last]);
-                });
+                AddObject(models[last]);
+                if (modelToLand) Autoposition();
+                UpdateSTLState(models[last]);
             }
 
-            double xxx = models[last].BoundingBox.Size.x * models[last].BoundingBox.Size.y
-                       * models[last].BoundingBox.Size.z * 0.001;
+            double xxx = models[last].BoundingBox.Size.x * models[last].BoundingBox.Size.y * models[last].BoundingBox.Size.z * 0.001;
 
-            if (xxx < 0.1)
+            if (xxx < 0.1)  // the object is too small.
             {
                 var dlg = new ObjectResizeDialog(
                     models[last].BoundingBox.Size.x,
@@ -296,7 +292,7 @@ namespace View3D.view
             }
             else if (models[last].BoundingBox.Size.x - 1e-4 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth)  ||
                      models[last].BoundingBox.Size.y - 1e-4 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth)  ||
-                     Math.Floor(models[last].BoundingBox.Size.z * 1000) / 1000 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight))
+                     Math.Floor(models[last].BoundingBox.Size.z * 1000) / 1000 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight))  // the object is too big.
             {
                 double tXBound = models[last].BoundingBox.Size.x / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth);
                 double tYBound = models[last].BoundingBox.Size.y / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth);
@@ -553,10 +549,10 @@ namespace View3D.view
         // =====================================================================
         public bool Autoposition()
         {
-            if (listObjects.Items.Count == 1)
+            if (models.Count == 1)
             {
-                var row = (ListViewItemModel)listObjects.Items[0];
-                row.Model.CenterWOLand(MainWindow.main.threeDSettings.PrintAreaWidth / 2, MainWindow.main.threeDSettings.PrintAreaDepth / 2);
+                var model = models[0];
+                model.CenterWOLand(MainWindow.main.threeDSettings.PrintAreaWidth / 2, MainWindow.main.threeDSettings.PrintAreaDepth / 2);
 
                 if (MainWindow.main.threeDControl != null)
                     MainWindow.main.threeDControl.UpdateChanges();
