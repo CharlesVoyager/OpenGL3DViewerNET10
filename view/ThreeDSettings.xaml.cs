@@ -94,23 +94,12 @@ namespace View3D.view
                 threedKey.SetValue("showFaces",             _showFaces  ? 1 : 0);
                 threedKey.SetValue("showPrintbed",          showPrintbed.IsChecked == true ? 1 : 0);
                 threedKey.SetValue("enableLight1",          enableLight1.IsChecked == true ? 1 : 0);
-                threedKey.SetValue("enableLight2",          enableLight2.IsChecked == true ? 1 : 0);
-                threedKey.SetValue("enableLight3",          enableLight3.IsChecked == true ? 1 : 0);
-                threedKey.SetValue("enableLight4",          enableLight4.IsChecked == true ? 1 : 0);
                 threedKey.SetValue("drawMethod",            comboDrawMethod.SelectedIndex);
 
                 threedKey.SetValue("ambient1Color",   ToArgb(ambient1));
                 threedKey.SetValue("diffuse1Color",   ToArgb(diffuse1));
                 threedKey.SetValue("specular1Color",  ToArgb(specular1));
-                threedKey.SetValue("ambient2Color",   ToArgb(ambient2));
-                threedKey.SetValue("diffuse2Color",   ToArgb(diffuse2));
-                threedKey.SetValue("specular2Color",  ToArgb(specular2));
-                threedKey.SetValue("ambient3Color",   ToArgb(ambient3));
-                threedKey.SetValue("diffuse3Color",   ToArgb(diffuse3));
-                threedKey.SetValue("specular3Color",  ToArgb(specular3));
-                threedKey.SetValue("ambient4Color",   ToArgb(ambient4));
-                threedKey.SetValue("diffuse4Color",   ToArgb(diffuse4));
-                threedKey.SetValue("specular4Color",  ToArgb(specular4));
+;
                 threedKey.SetValue("selectionBoxColor", ToArgb(selectionBox));
                 threedKey.SetValue("errorModelColor",   ToArgb(errorModel));
                 threedKey.SetValue("insideFacesColor",  ToArgb(insideFaces));
@@ -118,15 +107,7 @@ namespace View3D.view
                 threedKey.SetValue("light1X", xdir1.Text);
                 threedKey.SetValue("light1Y", ydir1.Text);
                 threedKey.SetValue("light1Z", zdir1.Text);
-                threedKey.SetValue("light2X", xdir2.Text);
-                threedKey.SetValue("light2Y", ydir2.Text);
-                threedKey.SetValue("light2Z", zdir2.Text);
-                threedKey.SetValue("light3X", xdir3.Text);
-                threedKey.SetValue("light3Y", ydir3.Text);
-                threedKey.SetValue("light3Z", zdir3.Text);
-                threedKey.SetValue("light4X", xdir4.Text);
-                threedKey.SetValue("light4Y", ydir4.Text);
-                threedKey.SetValue("light4Z", zdir4.Text);
+
             }
             catch { }
         }
@@ -151,24 +132,14 @@ namespace View3D.view
 
                 showPrintbed.IsChecked  = 0 != (int)(threedKey.GetValue("showPrintbed",  showPrintbed.IsChecked  == true ? 1 : 0));
                 enableLight1.IsChecked  = 0 != (int)(threedKey.GetValue("enableLight1",  enableLight1.IsChecked  == true ? 1 : 0));
-                enableLight2.IsChecked  = 0 != (int)(threedKey.GetValue("enableLight2",  enableLight2.IsChecked  == true ? 1 : 0));
-                enableLight3.IsChecked  = 0 != (int)(threedKey.GetValue("enableLight3",  enableLight3.IsChecked  == true ? 1 : 0));
-                enableLight4.IsChecked  = 0 != (int)(threedKey.GetValue("enableLight4",  enableLight4.IsChecked  == true ? 1 : 0));
+
 
                 comboDrawMethod.SelectedIndex = (int)(threedKey.GetValue("drawMethod", 0));
 
                 SetSwatchColor(ambient1,  "ambient1Color",  ambient1);
                 SetSwatchColor(diffuse1,  "diffuse1Color",  diffuse1);
                 SetSwatchColor(specular1, "specular1Color", specular1);
-                SetSwatchColor(ambient2,  "ambient2Color",  ambient2);
-                SetSwatchColor(diffuse2,  "diffuse2Color",  diffuse2);
-                SetSwatchColor(specular2, "specular2Color", specular2);
-                SetSwatchColor(ambient3,  "ambient3Color",  ambient3);
-                SetSwatchColor(diffuse3,  "diffuse3Color",  diffuse3);
-                SetSwatchColor(specular3, "specular3Color", specular3);
-                SetSwatchColor(ambient4,  "ambient4Color",  ambient4);
-                SetSwatchColor(diffuse4,  "diffuse4Color",  diffuse4);
-                SetSwatchColor(specular4, "specular4Color", specular4);
+
                 SetSwatchColor(selectionBox,  "selectionBoxColor", selectionBox);
                 SetSwatchColor(errorModel,    "errorModelColor",   errorModel);
                 SetSwatchColor(insideFaces,   "insideFacesColor",  insideFaces);
@@ -176,15 +147,7 @@ namespace View3D.view
                 xdir1.Text = (string)threedKey.GetValue("light1X", xdir1.Text);
                 ydir1.Text = (string)threedKey.GetValue("light1Y", ydir1.Text);
                 zdir1.Text = (string)threedKey.GetValue("light1Z", zdir1.Text);
-                xdir2.Text = (string)threedKey.GetValue("light2X", xdir2.Text);
-                ydir2.Text = (string)threedKey.GetValue("light2Y", ydir2.Text);
-                zdir2.Text = (string)threedKey.GetValue("light2Z", zdir2.Text);
-                xdir3.Text = (string)threedKey.GetValue("light3X", xdir3.Text);
-                ydir3.Text = (string)threedKey.GetValue("light3Y", ydir3.Text);
-                zdir3.Text = (string)threedKey.GetValue("light3Z", zdir3.Text);
-                xdir4.Text = (string)threedKey.GetValue("light4X", xdir4.Text);
-                ydir4.Text = (string)threedKey.GetValue("light4Y", ydir4.Text);
-                zdir4.Text = (string)threedKey.GetValue("light4Z", zdir4.Text);
+
 
                 // Migrate legacy key
                 if (threedKey.GetValue("backgroundColor", null) != null)
@@ -519,36 +482,7 @@ namespace View3D.view
             });
             return output;
         }
-        public bool EnableLight2()
-        {
-            bool output = false;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = (enableLight2.IsChecked == true);
-            });
-            return output;
-        }
-
-        public bool EnableLight3()
-        {
-            bool output = false;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = (enableLight3.IsChecked == true);
-            });
-            return output;
-        }
-
-        public bool EnableLight4()
-        {
-            bool output = false;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = (enableLight4.IsChecked == true);
-            });
-            return output;
-        }
-
+      
         public float[] Dir1()
         {
             float[] output = null;
@@ -559,35 +493,7 @@ namespace View3D.view
             return output;
         }
 
-        public float[] Dir2()
-        {
-            float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToDir(xdir2, ydir2, zdir2);
-            });
-            return output;
-        }
-
-        public float[] Dir3()
-        {
-            float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToDir(xdir3, ydir3, zdir3);
-            });
-            return output;
-        }
-
-        public float[] Dir4()
-        {
-            float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToDir(xdir4, xdir4, xdir4);
-            });
-            return output;
-        }
+      
 
         public float[] Diffuse1()//  => ToGLColor(diffuse1);
         {
@@ -616,87 +522,9 @@ namespace View3D.view
             });
             return output;
         }
-        public float[] Diffuse2()//  => ToGLColor(diffuse2);
-        {
-            float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(diffuse2);
-            });
-            return output;
-        }
-        public float[] Ambient2()//  => ToGLColor(ambient2);
-        {
-            float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(ambient2);
-            });
-            return output;
-        }
-        public float[] Specular2()// => ToGLColor(specular2);
-        {
-            float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(specular2);
-            });
-            return output;
-        }
-        public float[] Diffuse3()//  => ToGLColor(diffuse3);
-        {
-            float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(diffuse3);
-            });
-            return output;
-        }
-        public float[] Ambient3()//  => ToGLColor(ambient3);
-        {
-            float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(ambient3);
-            });
-            return output;
-        }
-        public float[] Specular3()// => ToGLColor(specular3);
-        {
-            float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(specular3);
-            });
-            return output;
-        }
-        public float[] Diffuse4()//  => ToGLColor(diffuse4);
-        {
-            float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(diffuse4);
-            });
-            return output;
-        }
-        public float[] Ambient4()//  => ToGLColor(ambient4);
-        {
-            float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(ambient4);
-            });
-            return output;
-        }
-        public float[] Specular4()// => ToGLColor(specular4);
-        {
-            float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(specular4);
-            });
-            return output;
-        }
+   
+     
+      
 
 
         public System.Drawing.Color InsideFacesBackgroundColor()

@@ -180,21 +180,9 @@
 
                     <!-- Column headers -->
                     <TextBlock Grid.Row="0" Grid.Column="1" Text="Light 1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Light 2" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Row="0" Grid.Column="3" Text="Light 3" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    <TextBlock Grid.Row="0" Grid.Column="4" Text="Light 4" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
                     <!-- Enable checkboxes -->
                     <CheckBox x:Name="enableLight1" Grid.Row="1" Grid.Column="1" Content="Enable light" IsChecked="True"
-                              HorizontalAlignment="Center" VerticalAlignment="Center"
-                              Checked="showEdges_CheckedChanged" Unchecked="showEdges_CheckedChanged"/>
-                    <CheckBox x:Name="enableLight2" Grid.Row="1" Grid.Column="2" Content="Enable light" IsChecked="True"
-                              HorizontalAlignment="Center" VerticalAlignment="Center"
-                              Checked="showEdges_CheckedChanged" Unchecked="showEdges_CheckedChanged"/>
-                    <CheckBox x:Name="enableLight3" Grid.Row="1" Grid.Column="3" Content="Enable light"
-                              HorizontalAlignment="Center" VerticalAlignment="Center"
-                              Checked="showEdges_CheckedChanged" Unchecked="showEdges_CheckedChanged"/>
-                    <CheckBox x:Name="enableLight4" Grid.Row="1" Grid.Column="4" Content="Enable light"
                               HorizontalAlignment="Center" VerticalAlignment="Center"
                               Checked="showEdges_CheckedChanged" Unchecked="showEdges_CheckedChanged"/>
 
@@ -208,39 +196,21 @@
 
                     <!-- X direction -->
                     <TextBox x:Name="xdir1" Grid.Row="2" Grid.Column="1" Text="-1"   Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
-                    <TextBox x:Name="xdir2" Grid.Row="2" Grid.Column="2" Text="1"    Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
-                    <TextBox x:Name="xdir3" Grid.Row="2" Grid.Column="3" Text="1"    Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
-                    <TextBox x:Name="xdir4" Grid.Row="2" Grid.Column="4" Text="1.7"  Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
 
                     <!-- Y direction -->
                     <TextBox x:Name="ydir1" Grid.Row="3" Grid.Column="1" Text="-1"   Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
-                    <TextBox x:Name="ydir2" Grid.Row="3" Grid.Column="2" Text="2"    Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
-                    <TextBox x:Name="ydir3" Grid.Row="3" Grid.Column="3" Text="-2"   Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
-                    <TextBox x:Name="ydir4" Grid.Row="3" Grid.Column="4" Text="-1"   Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
 
                     <!-- Z direction -->
                     <TextBox x:Name="zdir1" Grid.Row="4" Grid.Column="1" Text="2"    Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
-                    <TextBox x:Name="zdir2" Grid.Row="4" Grid.Column="2" Text="3"    Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
-                    <TextBox x:Name="zdir3" Grid.Row="4" Grid.Column="3" Text="2"    Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
-                    <TextBox x:Name="zdir4" Grid.Row="4" Grid.Column="4" Text="-2.5" Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
 
                     <!-- Ambient -->
                     <Border x:Name="ambient1" Grid.Row="5" Grid.Column="1" Background="Black"   Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
-                    <Border x:Name="ambient2" Grid.Row="5" Grid.Column="2" Background="Black"   Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
-                    <Border x:Name="ambient3" Grid.Row="5" Grid.Column="3" Background="Black"   Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
-                    <Border x:Name="ambient4" Grid.Row="5" Grid.Column="4" Background="Black"   Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
 
                     <!-- Diffuse -->
                     <Border x:Name="diffuse1" Grid.Row="6" Grid.Column="1" Background="#CCCCCC" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
-                    <Border x:Name="diffuse2" Grid.Row="6" Grid.Column="2" Background="#BBBBBB" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
-                    <Border x:Name="diffuse3" Grid.Row="6" Grid.Column="3" Background="#CCCCCC" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
-                    <Border x:Name="diffuse4" Grid.Row="6" Grid.Column="4" Background="#BBBBBB" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
 
                     <!-- Specular -->
                     <Border x:Name="specular1" Grid.Row="7" Grid.Column="1" Background="White"  Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
-                    <Border x:Name="specular2" Grid.Row="7" Grid.Column="2" Background="White"  Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
-                    <Border x:Name="specular3" Grid.Row="7" Grid.Column="3" Background="White"  Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
-                    <Border x:Name="specular4" Grid.Row="7" Grid.Column="4" Background="White"  Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
                 </Grid>
             </TabItem>
 
