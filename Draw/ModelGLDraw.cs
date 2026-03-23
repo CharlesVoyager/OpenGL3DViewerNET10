@@ -81,8 +81,8 @@ namespace OpenGL3DViewerNET10.Draw
                 stlVertices.Add(printModel.submesh.glVertices[i + 1]);
                 stlVertices.Add(printModel.submesh.glVertices[i + 2]);
                 stlVertices.Add(printModel.submesh.glNormals[i]);
-                stlVertices.Add(printModel.submesh.glNormals[i] + 1);
-                stlVertices.Add(printModel.submesh.glNormals[i] + 2);
+                stlVertices.Add(printModel.submesh.glNormals[i + 1]);
+                stlVertices.Add(printModel.submesh.glNormals[i + 2]);
             }
 
             stlVao = GL.GenVertexArray();
