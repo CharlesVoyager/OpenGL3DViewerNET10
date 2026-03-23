@@ -16,6 +16,11 @@ namespace OpenGL3DViewerNET10.Draw
         int stlModelLoc, stlViewLoc, stlProjLoc;
         List<float> stlVertices = new List<float>();
 
+        // Add these fields
+        int lightPosLoc, lightColorLoc, viewPosLoc;
+        int objectColorLoc, ambientLoc, specularLoc, shininessLoc;
+        int normalMatrixLoc;
+
         // Vertex shader
         private const string VertSrc = @"
                                 #version 330 core
@@ -26,13 +31,17 @@ namespace OpenGL3DViewerNET10.Draw
                                 uniform mat4 model;
                                 uniform mat4 view;
                                 uniform mat4 projection;
+                                uniform mat3 normalMatrix; 
 
-                                out vec3 Normal;
+                                out vec3 FragPos;    // world-space position
+                                out vec3 Normal;     // world-space normal
 
                                 void main()
                                 {
-                                    gl_Position = projection * view * model * vec4(aPosition,1.0);
-                                    Normal = aNormal;
+                                    vec4 worldPos   = model * vec4(aPosition, 1.0);
+                                    FragPos         = worldPos.xyz;
+                                    Normal          = normalize(normalMatrix * aNormal);
+                                    gl_Position     = projection * view * worldPos;
                                 }
 ";
 
@@ -40,15 +49,40 @@ namespace OpenGL3DViewerNET10.Draw
         private const string FragSrc = @"
                                 #version 330 core
 
-                                in vec3 Normal;
+                                in  vec3 FragPos;
+                                in  vec3 Normal;
                                 out vec4 FragColor;
+
+                                // Light properties
+                                uniform vec3  lightPos;       // world-space position
+                                uniform vec3  lightColor;
+                                uniform vec3  viewPos;        // camera position for specular
+
+                                // Material properties
+                                uniform vec3  objectColor;
+                                uniform float ambientStrength;
+                                uniform float specularStrength;
+                                uniform float shininess;
 
                                 void main()
                                 {
-                                    float lighting = dot(normalize(Normal), normalize(vec3(1,1,1)));
-                                    lighting = max(lighting,0.2);
+                                    // Ambient
+                                    vec3 ambient = ambientStrength * lightColor;
 
-                                    FragColor = vec4(vec3(lighting),1.0);
+                                    // Diffuse
+                                    vec3 norm     = normalize(Normal);
+                                    vec3 lightDir = normalize(lightPos - FragPos);
+                                    float diff    = max(dot(norm, lightDir), 0.0);
+                                    vec3 diffuse  = diff * lightColor;
+
+                                    // Specular (Blinn-Phong)
+                                    vec3 viewDir    = normalize(viewPos - FragPos);
+                                    vec3 halfwayDir = normalize(lightDir + viewDir);
+                                    float spec      = pow(max(dot(norm, halfwayDir), 0.0), shininess);
+                                    vec3 specular   = specularStrength * spec * lightColor;
+
+                                    vec3 result = (ambient + diffuse + specular) * objectColor;
+                                    FragColor   = vec4(result, 1.0);
                                 }
 ";
 
@@ -67,6 +101,15 @@ namespace OpenGL3DViewerNET10.Draw
             stlModelLoc = GL.GetUniformLocation(shader, "model");
             stlViewLoc = GL.GetUniformLocation(shader, "view");
             stlProjLoc = GL.GetUniformLocation(shader, "projection");
+
+            normalMatrixLoc = GL.GetUniformLocation(shader, "normalMatrix");
+            lightPosLoc = GL.GetUniformLocation(shader, "lightPos");
+            lightColorLoc = GL.GetUniformLocation(shader, "lightColor");
+            viewPosLoc = GL.GetUniformLocation(shader, "viewPos");
+            objectColorLoc = GL.GetUniformLocation(shader, "objectColor");
+            ambientLoc = GL.GetUniformLocation(shader, "ambientStrength");
+            specularLoc = GL.GetUniformLocation(shader, "specularStrength");
+            shininessLoc = GL.GetUniformLocation(shader, "shininess");
         }
 
         private void uploadMeshToGPU()
@@ -136,34 +179,44 @@ namespace OpenGL3DViewerNET10.Draw
         {
             if (stlVertices.Count == 0) return;
 
-            GL.Enable(EnableCap.PolygonSmooth);
-            GL.Enable(EnableCap.LineSmooth);
-            GL.Enable(EnableCap.CullFace);
             GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.CullFace);
 
             Matrix4 model = Matrix4.Identity;
             Matrix4 view = Matrix4.Identity;
             Matrix4 proj = Matrix4.Identity;
-
             MainWindow.main.threeDCamera.GetModelViewProj(ref model, ref view, ref proj);
+
+            // Normal matrix = transpose of inverse of model's 3x3
+            Matrix3 normalMatrix = new Matrix3(Matrix4.Transpose(Matrix4.Invert(model)));
 
             GL.UseProgram(shader);
 
-#if true
+            GL.UniformMatrix4(stlModelLoc, false, ref model);
             GL.UniformMatrix4(stlViewLoc, false, ref view);
             GL.UniformMatrix4(stlProjLoc, false, ref proj);
+            GL.UniformMatrix3(normalMatrixLoc, false, ref normalMatrix);
+
+            // --- Customizable light values ---
+            GL.Uniform3(lightPosLoc, new Vector3(100f, 200f, 300f)); // light position
+            GL.Uniform3(lightColorLoc, new Vector3(1.0f, 1.0f, 1.0f)); // white light
+            GL.Uniform3(viewPosLoc, MainWindow.main.threeDCamera.CameraPosition); // camera pos
+
+            GL.Uniform3(objectColorLoc, new Vector3(0.6f, 0.7f, 0.8f)); // model color
+            GL.Uniform1(ambientLoc, 0.15f);     // ambient intensity
+            GL.Uniform1(specularLoc, 0.5f);     // specular intensity
+            GL.Uniform1(shininessLoc, 32.0f);   // shininess exponent
 
             GL.UniformMatrix4(stlModelLoc, false, ref printModel.trans);
             GL.BindVertexArray(stlVao);
             GL.DrawArrays(PrimitiveType.Triangles, 0, stlVertices.Count / 6);
-#else
-            GL.UniformMatrix4(stlModelLoc, false, ref model);
-            GL.UniformMatrix4(stlViewLoc, false, ref view);
-            GL.UniformMatrix4(stlProjLoc, false, ref proj);
-            GL.BindVertexArray(stlVao);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, stlVertices.Count / 6);
-#endif
         }
+
+        // In your settings class, add properties like:
+        public Vector3 LightPosition { get; set; } = new Vector3(100, 200, 300);
+        public Vector3 LightColor { get; set; } = new Vector3(1, 1, 1);
+        public Vector3 ModelColor { get; set; } = new Vector3(0.6f, 0.7f, 0.8f);
+        public float AmbientStrength { get; set; } = 0.15f;
 
         public void Dispose()
         {
