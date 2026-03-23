@@ -23,7 +23,6 @@ namespace View3D.model.geom
         public int loopEdges = 0;
         public int manyShardEdges = 0;
         public bool manifold = false;
-        public bool normalsOriented = false;
 
         public void Clear()
         {
@@ -62,7 +61,6 @@ namespace View3D.model.geom
             newModel.loopEdges = loopEdges;
             newModel.manyShardEdges = 0;
             newModel.manifold = manifold;
-            newModel.normalsOriented = normalsOriented;
             return newModel;
         }
 
@@ -84,7 +82,7 @@ namespace View3D.model.geom
                 if (updateRate != null && (model.vertices.v.Count > MinVertexNumForProress)
                     && (cnt % (model.vertices.v.Count / 10) == 0))
                 {
-                    updateRate((double)cnt / model.vertices.v.Count *50.0);
+                    updateRate((double)cnt / model.vertices.v.Count * 50.0);
                 }
             }
             cnt = 0;
@@ -98,7 +96,7 @@ namespace View3D.model.geom
                 if (updateRate != null && (model.vertices.v.Count > MinVertexNumForProress)
                     && (cnt % (model.triangles.Count / 10) == 0))
                 {
-                    updateRate((double)cnt / model.triangles.Count *50.0 + 50);
+                    updateRate((double)cnt / model.triangles.Count * 50.0 + 50);
                 }
             }
         }
@@ -300,10 +298,7 @@ namespace View3D.model.geom
         public void FillMesh(Submesh mesh,int defaultColor)
         {
             foreach (TopoTriangle t in triangles)
-            {
                 mesh.AddTriangle(t.vertices[0].pos, t.vertices[1].pos, t.vertices[2].pos, defaultColor);
-            }
         }
-
     }
 }
