@@ -210,19 +210,20 @@
                     <TextBlock Grid.Row="5" Grid.Column="0" Text="Light Color:" VerticalAlignment="Center"/>
                     <Border x:Name="lightColor" Grid.Row="5" Grid.Column="1" Background="White" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
 
-                    <!-- Model Color, EX: 0.6f, 0.7f, 0.8f  / 154, 179,  205         -->
+                    <!-- Model Color, EX: 0.6f, 0.7f, 0.8f  / 154, 179,  205  -->
                     <TextBlock Grid.Row="6" Grid.Column="0" Text="Model Color:" VerticalAlignment="Center"/>
                     <Border x:Name="modelColor" Grid.Row="6" Grid.Column="1" Background="#9AB3CD" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
 
-                    <!-- Ambient -->
-                    <TextBlock Grid.Row="8" Grid.Column="0" Text="Ambient color:" VerticalAlignment="Center"/>
-                    <Border x:Name="ambient1" Grid.Row="8" Grid.Column="1" Background="Black" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
+                    <!-- Ambient intensity -->
+                    <TextBlock Grid.Row="8" Grid.Column="0" Text="Ambient Intensity:" VerticalAlignment="Center"/>
+                    <Slider Grid.Row="8" Grid.Column="1" Name="sliderAmbient" HorizontalAlignment="Left" VerticalAlignment="Center" Width="120" ValueChanged="AmbientIntensity_ValueChanged" Minimum="0" Maximum="1.0" Value="0.15"/>
+                    <TextBlock Grid.Row="8" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Width="54" Text="{Binding ElementName=sliderAmbient, Path=Value, StringFormat={}{0:0.##}}" TextAlignment="Right" FontFamily="Arial" />
 
-                    <!-- Diffuse -->
-                    <TextBlock Grid.Row="9" Grid.Column="0" Text="Diffuse color:" VerticalAlignment="Center"/>
+                    <!-- Specular intensity -->
+                    <TextBlock Grid.Row="9" Grid.Column="0" Text="Specular Intensity:" VerticalAlignment="Center"/>
                     <Border x:Name="diffuse1" Grid.Row="9" Grid.Column="1" Background="#CCCCCC" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
 
-                    <!-- Specular -->
+                    <!-- Shininess exponent -->
                     <TextBlock Grid.Row="10" Grid.Column="0" Text="Specular color:" VerticalAlignment="Center"/>
                     <Border x:Name="specular1" Grid.Row="10" Grid.Column="1" Background="White" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
                 </Grid>

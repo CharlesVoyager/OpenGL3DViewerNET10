@@ -96,10 +96,6 @@ namespace View3D.view
                 threedKey.SetValue("enableLight1",          enableLight1.IsChecked == true ? 1 : 0);
                 threedKey.SetValue("drawMethod",            comboDrawMethod.SelectedIndex);
 
-                threedKey.SetValue("ambient1Color",   ToArgb(ambient1));
-                threedKey.SetValue("diffuse1Color",   ToArgb(diffuse1));
-                threedKey.SetValue("specular1Color",  ToArgb(specular1));
-;
                 threedKey.SetValue("selectionBoxColor", ToArgb(selectionBox));
                 threedKey.SetValue("errorModelColor",   ToArgb(errorModel));
                 threedKey.SetValue("insideFacesColor",  ToArgb(insideFaces));
@@ -133,12 +129,7 @@ namespace View3D.view
                 showPrintbed.IsChecked  = 0 != (int)(threedKey.GetValue("showPrintbed",  showPrintbed.IsChecked  == true ? 1 : 0));
                 enableLight1.IsChecked  = 0 != (int)(threedKey.GetValue("enableLight1",  enableLight1.IsChecked  == true ? 1 : 0));
 
-
                 comboDrawMethod.SelectedIndex = (int)(threedKey.GetValue("drawMethod", 0));
-
-                SetSwatchColor(ambient1,  "ambient1Color",  ambient1);
-                SetSwatchColor(diffuse1,  "diffuse1Color",  diffuse1);
-                SetSwatchColor(specular1, "specular1Color", specular1);
 
                 SetSwatchColor(selectionBox,  "selectionBoxColor", selectionBox);
                 SetSwatchColor(errorModel,    "errorModelColor",   errorModel);
@@ -496,7 +487,7 @@ namespace View3D.view
         public float[] LightColor()
         {
             float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 output = ToGLColor(lightColor);
             });
@@ -506,46 +497,27 @@ namespace View3D.view
         public float[] ModelColor()
         {
             float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 output = ToGLColor(modelColor);
             });
             return output;
         }
 
-        public float[] Diffuse1()
+        public float GetAmbientIntensity()
         {
-            float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            float output = 0;
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                output = ToGLColor(diffuse1);
+                output = (float)sliderAmbient.Value;
             });
             return output;
         }
-        public float[] Ambient1()
-        {
-            float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(ambient1);
-            });
-            return output;
-        }
-        public float[] Specular1()
-        {
-            float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(specular1);
-            });
-            return output;
-        }
-   
 
         public System.Drawing.Color InsideFacesBackgroundColor()
         {
             System.Drawing.Color color = System.Drawing.Color.Empty;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 color = ToDrawingColor(insideFaces.Background);
             });
@@ -715,6 +687,11 @@ namespace View3D.view
                 result = showPrintbed.IsChecked == true;
             });
             return result;
+        }
+
+        private void AmbientIntensity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            MainWindow.main.Update3D();
         }
     }
 }

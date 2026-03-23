@@ -207,8 +207,8 @@ namespace OpenGL3DViewerNET10.Draw
             GL.Uniform3(lightColorLoc, LightColor); // Light Color, Default: 1.0f, 1.0f, 1.0f
             GL.Uniform3(viewPosLoc, MainWindow.main.threeDCamera.CameraPosition); // camera pos
 
-            GL.Uniform3(objectColorLoc, ModelColor); // Model Color: Default: 0.6f, 0.7f, 0.8f
-            GL.Uniform1(ambientLoc, 0.15f);     // ambient intensity
+            GL.Uniform3(objectColorLoc, ModelColor); // Model Color, Default: 0.6f, 0.7f, 0.8f
+            GL.Uniform1(ambientLoc, MainWindow.main.threeDSettings.GetAmbientIntensity());     // Ambient intensity, Default: 0.15f
             GL.Uniform1(specularLoc, 0.5f);     // specular intensity
             GL.Uniform1(shininessLoc, 32.0f);   // shininess exponent
 
@@ -245,7 +245,6 @@ namespace OpenGL3DViewerNET10.Draw
                 return outputColor;
             }
         }
-        public float AmbientStrength { get; set; } = 0.15f;
 
         public void Dispose()
         {
