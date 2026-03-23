@@ -736,6 +736,7 @@ namespace View3D.view
             float.TryParse(textTransX.Text, out stl.Position.x);
             if (Math.Abs(old - stl.Position.x) < 0.001f) return;
             if (typeof(PrintModel) == stl.GetType()) UpdateOutOfBound();
+            stl.UpdateBoundingBoxAndMatrix();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -748,6 +749,7 @@ namespace View3D.view
             float.TryParse(textTransY.Text, out stl.Position.y);
             if (Math.Abs(old - stl.Position.y) < 0.001f) return;
             if (typeof(PrintModel) == stl.GetType()) UpdateOutOfBound();
+            stl.UpdateBoundingBoxAndMatrix();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -760,6 +762,7 @@ namespace View3D.view
             float.TryParse(textTransZ.Text, out stl.Position.z);
             if (Math.Abs(old - stl.Position.z) < 0.001f) return;
             UpdateOutOfBound();
+            stl.UpdateBoundingBoxAndMatrix();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -770,6 +773,7 @@ namespace View3D.view
             if (stl == null) return;
             float.TryParse(textScaleX.Text, out stl.Scale.x);
             UpdateOutOfBound();
+            stl.UpdateBoundingBoxAndMatrix();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -780,6 +784,7 @@ namespace View3D.view
             if (stl == null) return;
             float.TryParse(textScaleY.Text, out stl.Scale.y);
             UpdateOutOfBound();
+            stl.UpdateBoundingBoxAndMatrix();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -790,10 +795,9 @@ namespace View3D.view
             if (stl == null) return;
             float old = stl.Scale.z;
             float.TryParse(textScaleZ.Text, out stl.Scale.z);
-            stl.UpdateBoundingBoxAndMatrix();
             if (old != stl.Scale.z) stl.Land();
             UpdateOutOfBound();
-
+            stl.UpdateBoundingBoxAndMatrix();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -807,6 +811,7 @@ namespace View3D.view
             stl.UpdateBoundingBoxAndMatrix();
             if (Math.Abs(old - stl.Rotation.x) < 0.001f) return;
             UpdateOutOfBound();
+            stl.UpdateBoundingBoxAndMatrix();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -820,6 +825,7 @@ namespace View3D.view
             stl.UpdateBoundingBoxAndMatrix();
             if (Math.Abs(old - stl.Rotation.y) < 0.001f) return;
             UpdateOutOfBound();
+            stl.UpdateBoundingBoxAndMatrix();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -833,18 +839,8 @@ namespace View3D.view
             stl.UpdateBoundingBoxAndMatrix();
             if (Math.Abs(old - stl.Rotation.z) < 0.001f) return;
             if (typeof(PrintModel) == stl.GetType()) UpdateOutOfBound();
+            stl.UpdateBoundingBoxAndMatrix();
             MainWindow.main.threeDControl.UpdateChanges();
-        }
-
-        /// <summary>
-        /// Helper: update Scale text fields without triggering cascade TextChanged events.
-        /// </summary>
-        private void SyncScaleFields(PrintModel stl)
-        {
-            _suppressTextEvents = true;
-            textScaleY.Text = stl.Scale.y.ToString(GCode.format);
-            textScaleZ.Text = stl.Scale.z.ToString(GCode.format);
-            _suppressTextEvents = false;
         }
 
         // =====================================================================
