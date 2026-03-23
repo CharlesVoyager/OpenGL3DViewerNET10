@@ -469,7 +469,7 @@ namespace View3D.view
         {
             if (sender is System.Windows.Controls.TextBox tb)
             {
-                //bool valid = float.TryParse(tb.Text, NumberStyles.Float, GCode.format, out _);
+                //bool valid = float.TryParse(tb.Text, out _);
                 //tb.BorderBrush = valid
                 //    ? SystemColors.ControlDarkBrush
                 //    : Brushes.Red;
@@ -502,9 +502,9 @@ namespace View3D.view
 
         private static float[] ToDir(System.Windows.Controls.TextBox x, System.Windows.Controls.TextBox y, System.Windows.Controls.TextBox z)
         {
-            float.TryParse(x.Text, NumberStyles.Float, GCode.format, out float xf);
-            float.TryParse(y.Text, NumberStyles.Float, GCode.format, out float yf);
-            float.TryParse(z.Text, NumberStyles.Float, GCode.format, out float zf);
+            float.TryParse(x.Text, out float xf);
+            float.TryParse(y.Text, out float yf);
+            float.TryParse(z.Text, out float zf);
             return new float[] { xf, yf, zf, 0f };
         }
 

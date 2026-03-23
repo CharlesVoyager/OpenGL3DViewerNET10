@@ -184,7 +184,7 @@ namespace View3D.view
                     try
                     {
                         float val;
-                        float.TryParse(sv, NumberStyles.Float, GCode.format, out val);
+                        float.TryParse(sv, out val);
                         MainWindow.main.threeDSettings.OpenGLVersion = val;
                     }
                     catch 
