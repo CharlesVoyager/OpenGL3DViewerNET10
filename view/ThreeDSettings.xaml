@@ -176,6 +176,11 @@
                         <RowDefinition Height="34"/>
                         <RowDefinition Height="34"/>
                         <RowDefinition Height="34"/>
+                        <RowDefinition Height="34"/>
+                        <RowDefinition Height="34"/>
+                        <RowDefinition Height="34"/>
+                        <RowDefinition Height="34"/>
+                        <RowDefinition Height="34"/>
                     </Grid.RowDefinitions>
 
                     <!-- Column headers -->
@@ -190,27 +195,36 @@
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="X direction:"    VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="Y direction:"    VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="4" Grid.Column="0" Text="Z direction:"    VerticalAlignment="Center"/>
-                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Ambient color:"  VerticalAlignment="Center"/>
-                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Diffuse color:"  VerticalAlignment="Center"/>
-                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Specular color:" VerticalAlignment="Center"/>
 
                     <!-- X direction -->
-                    <TextBox x:Name="xdir1" Grid.Row="2" Grid.Column="1" Text="-1"   Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
+                    <TextBox x:Name="xdir1" Grid.Row="2" Grid.Column="1" Text="100" Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
 
                     <!-- Y direction -->
-                    <TextBox x:Name="ydir1" Grid.Row="3" Grid.Column="1" Text="-1"   Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
+                    <TextBox x:Name="ydir1" Grid.Row="3" Grid.Column="1" Text="200" Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
 
                     <!-- Z direction -->
-                    <TextBox x:Name="zdir1" Grid.Row="4" Grid.Column="1" Text="2"    Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
+                    <TextBox x:Name="zdir1" Grid.Row="4" Grid.Column="1" Text="300" Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
+
+                    
+                    <!-- Light Color -->
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Light Color:" VerticalAlignment="Center"/>
+                    <Border x:Name="lightColor" Grid.Row="5" Grid.Column="1" Background="White" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
+
+                    <!-- Model Color, EX: 0.6f, 0.7f, 0.8f  / 154, 179,  205         -->
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Model Color:" VerticalAlignment="Center"/>
+                    <Border x:Name="modelColor" Grid.Row="6" Grid.Column="1" Background="#9AB3CD" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
 
                     <!-- Ambient -->
-                    <Border x:Name="ambient1" Grid.Row="5" Grid.Column="1" Background="Black"   Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
+                    <TextBlock Grid.Row="8" Grid.Column="0" Text="Ambient color:" VerticalAlignment="Center"/>
+                    <Border x:Name="ambient1" Grid.Row="8" Grid.Column="1" Background="Black" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
 
                     <!-- Diffuse -->
-                    <Border x:Name="diffuse1" Grid.Row="6" Grid.Column="1" Background="#CCCCCC" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
+                    <TextBlock Grid.Row="9" Grid.Column="0" Text="Diffuse color:" VerticalAlignment="Center"/>
+                    <Border x:Name="diffuse1" Grid.Row="9" Grid.Column="1" Background="#CCCCCC" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
 
                     <!-- Specular -->
-                    <Border x:Name="specular1" Grid.Row="7" Grid.Column="1" Background="White"  Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
+                    <TextBlock Grid.Row="10" Grid.Column="0" Text="Specular color:" VerticalAlignment="Center"/>
+                    <Border x:Name="specular1" Grid.Row="10" Grid.Column="1" Background="White" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
                 </Grid>
             </TabItem>
 

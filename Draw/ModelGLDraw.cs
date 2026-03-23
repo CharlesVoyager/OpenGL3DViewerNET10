@@ -204,10 +204,10 @@ namespace OpenGL3DViewerNET10.Draw
 
             // --- Customizable light values ---
             GL.Uniform3(lightPosLoc, new Vector3(100f, 200f, 300f)); // light position
-            GL.Uniform3(lightColorLoc, new Vector3(1.0f, 1.0f, 1.0f)); // white light
+            GL.Uniform3(lightColorLoc, LightColor); // Light Color, Default: 1.0f, 1.0f, 1.0f
             GL.Uniform3(viewPosLoc, MainWindow.main.threeDCamera.CameraPosition); // camera pos
 
-            GL.Uniform3(objectColorLoc, new Vector3(0.6f, 0.7f, 0.8f)); // model color
+            GL.Uniform3(objectColorLoc, ModelColor); // Model Color: Default: 0.6f, 0.7f, 0.8f
             GL.Uniform1(ambientLoc, 0.15f);     // ambient intensity
             GL.Uniform1(specularLoc, 0.5f);     // specular intensity
             GL.Uniform1(shininessLoc, 32.0f);   // shininess exponent
@@ -219,8 +219,32 @@ namespace OpenGL3DViewerNET10.Draw
 
         // In your settings class, add properties like:
         public Vector3 LightPosition { get; set; } = new Vector3(100, 200, 300);
-        public Vector3 LightColor { get; set; } = new Vector3(1, 1, 1);
-        public Vector3 ModelColor { get; set; } = new Vector3(0.6f, 0.7f, 0.8f);
+        public Vector3 LightColor
+        {
+            get
+            {
+                float[] colors = MainWindow.main.threeDSettings.LightColor();
+                Vector3 outputColor = new Vector3();
+                outputColor.X = colors[0];
+                outputColor.Y = colors[1];
+                outputColor.Z = colors[2];
+
+                return outputColor;
+            }
+        } 
+        public Vector3 ModelColor
+        {
+            get
+            {
+                float[] colors = MainWindow.main.threeDSettings.ModelColor();
+                Vector3 outputColor = new Vector3();
+                outputColor.X = colors[0];
+                outputColor.Y = colors[1];
+                outputColor.Z = colors[2];
+
+                return outputColor;
+            }
+        }
         public float AmbientStrength { get; set; } = 0.15f;
 
         public void Dispose()

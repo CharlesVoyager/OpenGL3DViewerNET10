@@ -432,7 +432,7 @@ namespace View3D.view
         {
             if (sender is System.Windows.Controls.TextBox tb)
             {
-                //bool valid = float.TryParse(tb.Text, out _);
+                bool valid = float.TryParse(tb.Text, out _);
                 //tb.BorderBrush = valid
                 //    ? SystemColors.ControlDarkBrush
                 //    : Brushes.Red;
@@ -476,7 +476,7 @@ namespace View3D.view
         public bool EnableLight1() 
         {
             bool output = false;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 output = (enableLight1.IsChecked == true);
             });
@@ -486,16 +486,34 @@ namespace View3D.view
         public float[] Dir1()
         {
             float[] output = null;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 output = ToDir(xdir1, ydir1, zdir1);
             });
             return output;
         }
 
-      
+        public float[] LightColor()
+        {
+            float[] output = null;
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                output = ToGLColor(lightColor);
+            });
+            return output;
+        }
 
-        public float[] Diffuse1()//  => ToGLColor(diffuse1);
+        public float[] ModelColor()
+        {
+            float[] output = null;
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                output = ToGLColor(modelColor);
+            });
+            return output;
+        }
+
+        public float[] Diffuse1()
         {
             float[] output = null;
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
@@ -504,7 +522,7 @@ namespace View3D.view
             });
             return output;
         }
-        public float[] Ambient1()//  => ToGLColor(ambient1);
+        public float[] Ambient1()
         {
             float[] output = null;
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
@@ -513,7 +531,7 @@ namespace View3D.view
             });
             return output;
         }
-        public float[] Specular1()// => ToGLColor(specular1);
+        public float[] Specular1()
         {
             float[] output = null;
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
@@ -523,9 +541,6 @@ namespace View3D.view
             return output;
         }
    
-     
-      
-
 
         public System.Drawing.Color InsideFacesBackgroundColor()
         {
