@@ -196,6 +196,5 @@ namespace View3D.model.geom
         {
             return "(" + x.ToString() + ";" + y.ToString() + ";" + z.ToString() + ")";
         }
-
     }
 }

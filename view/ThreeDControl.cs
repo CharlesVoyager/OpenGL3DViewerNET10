@@ -420,7 +420,6 @@ namespace View3D.view
                 MainWindow.main.Dispatcher.Invoke(() =>
                 {
                     stlComp.buttonRemoveSTL_Click(null, null);
-                    stlComp.UpdateSTLState(null);
                 });
                 Invalidate();
             }

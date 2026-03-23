@@ -131,10 +131,8 @@ namespace View3D.view
             stl.reset = true;
             MainWindow.main.UI_move.button_land_Click(null, null);
 
-            // ADDED BY: J. SAHAGUN 03-29-2019 | Port from Facet to Base function
             if (sliderX.Value == 0 && sliderY.Value == 0 && sliderZ.Value == 0)
             {
-                MainWindow.main.stlComposer.UpdateSTLState(stl);
                 stl.LandToZ(0);
                 stl.Rotation.x = stl.Rotation.y = stl.Rotation.z = 0;
             }
@@ -148,7 +146,7 @@ namespace View3D.view
             sliderY.Value = 0;
             sliderZ.Value = 0;
             stl.LandToZ(oriZmin);
-            MainWindow.main.stlComposer.UpdateSTLState(stl);
+            MainWindow.main.stlComposer.UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -354,7 +352,8 @@ namespace View3D.view
                 sliderX.Value = Convert.ToDouble(textboxX.Text);
                 MainWindow.main.stlComposer.textRotX.Text = textboxX.Text;
                 stl.LandToZ(oriZmin);
-                MainWindow.main.stlComposer.UpdateSTLState(stl);
+                stl.UpdateBoundingBoxAndMatrix();
+                MainWindow.main.stlComposer.UpdateOutOfBound();
             }
             catch { }
         }
@@ -372,7 +371,8 @@ namespace View3D.view
                 sliderY.Value = Convert.ToDouble(textboxY.Text);
                 MainWindow.main.stlComposer.textRotY.Text = textboxY.Text;
                 stl.LandToZ(oriZmin);
-                MainWindow.main.stlComposer.UpdateSTLState(stl);
+                stl.UpdateBoundingBoxAndMatrix();
+                MainWindow.main.stlComposer.UpdateOutOfBound();
             }
             catch { }
         }
@@ -390,7 +390,8 @@ namespace View3D.view
                 sliderZ.Value = Convert.ToDouble(textboxZ.Text);
                 MainWindow.main.stlComposer.textRotZ.Text = textboxZ.Text;
                 stl.LandToZ(oriZmin);
-                MainWindow.main.stlComposer.UpdateSTLState(stl);
+                stl.UpdateBoundingBoxAndMatrix();
+                MainWindow.main.stlComposer.UpdateOutOfBound();
             }
             catch { }
         }

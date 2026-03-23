@@ -141,7 +141,7 @@ namespace View3D.view
         {
             if (typeof(PrintModel) != model.GetType()) return;
             if (null == model.Model) return;
-            model.LandUpdateBB();
+            model.Land();
         }
 
         public void RemoveAllObject()
@@ -206,9 +206,9 @@ namespace View3D.view
 
             listObjects.SelectedItems.Clear();
             models.Add(new PrintModel());
-            bool modelToLand = true;
-            var  modelIO     = new ModelInOut();
-
+            bool modelToLand    = true;
+            var  modelIO        = new ModelInOut();
+            int last            = models.Count - 1;
             try
             {
                 MainWindow.main.BusyWindow.EnableBusyWindow();
@@ -216,7 +216,8 @@ namespace View3D.view
                 // Offload heavy work to background thread — UI thread is free immediately
                 await Task.Run(() =>
                 {
-                    modelIO.LoadWOCatch(file, models[models.Count - 1].Model);
+                    modelIO.LoadWOCatch(file, models[last].Model);
+                    models[last].CopyTopoModelBoundingBoxToPrintModel();
                     _stlModelDataReady.Set();
                     Console.WriteLine("LoadWOCatch Done.");
                 });
@@ -246,34 +247,32 @@ namespace View3D.view
                 return;
             }
 
-            int last = models.Count - 1;
             models[last].mid              = last;
             models[last].serNum           = last;
             models[last].ListviewGetModels += ListObjects;
 
             if (modelToLand)
             {
-                models[last].Center(MainWindow.main.threeDSettings.PrintAreaWidth / 2, MainWindow.main.threeDSettings.PrintAreaDepth / 2);
                 if (models[last].BoundingBox.Center.x != 0 ||
                     models[last].BoundingBox.Center.y != 0 ||
                     models[last].BoundingBox.Center.z != 0)
                     models[last].ResetVertexPosToBBox();
-                models[last].Land();
+                models[last].Center(MainWindow.main.threeDSettings.PrintAreaWidth / 2, MainWindow.main.threeDSettings.PrintAreaDepth / 2);  // Center and Land
             }
             else
             {
                 models[last].ResetVertexPosToBBox();
-                models[last].Position.x = (float)models[last].Model.boundingBox.Center.x;
-                models[last].Position.y = (float)models[last].Model.boundingBox.Center.y;
-                models[last].Position.z = (float)models[last].Model.boundingBox.Center.z;
-                models[last].UpdateBoundingBox();
+                models[last].Position.x = (float)models[last].BoundingBox.Center.x;
+                models[last].Position.y = (float)models[last].BoundingBox.Center.y;
+                models[last].Position.z = (float)models[last].BoundingBox.Center.z;
             }
+            models[last].UpdateBoundingBoxAndMatrix();
 
             if (models[last].Model.triangles.Count > 0)
             {
                 AddObject(models[last]);
                 if (modelToLand) Autoposition();
-                UpdateSTLState(models[last]);
+                UpdateOutOfBound();
             }
 
             double xxx = models[last].BoundingBox.Size.x * models[last].BoundingBox.Size.y * models[last].BoundingBox.Size.z * 0.001;
@@ -356,7 +355,7 @@ namespace View3D.view
                 newModel.Drawer.Init();
             });
 
-            newModel.UpdateBoundingBox();
+            newModel.UpdateBoundingBoxAndMatrix();
             newModel.mid    = models.Count;
             newModel.serNum = models.Count;
             models.Add(newModel);
@@ -364,8 +363,8 @@ namespace View3D.view
             listObjects.Items.Add(BuildRow(newModel));
             listObjects.SelectedItems.Clear();
             SetObjectSelected(newModel, true);
-            UpdateSTLState(newModel);
             Autoposition();
+            UpdateOutOfBound();
             return true;
         }
 
@@ -391,18 +390,15 @@ namespace View3D.view
 
             return true;
         }
-        public void UpdateSTLState(PrintModel stl2)
+        public void UpdateOutOfBound()
         {
-            if (stl2 != null)
-                stl2.UpdateBoundingBox();
-
             bool dataChanged = false;
             var testList  = ListObjects(false);
-            foreach (var pm in testList) { pm.oldOutside = pm.outside; pm.outside = false; }
 
-            bool allPointsInside = true;
+            bool allModelsInside = true;
             foreach (var stl in testList)
             {
+                stl.outside = false;
                 if (    !pointInPrintArea(stl.xMin, stl.yMin, stl.zMin) ||
                         !pointInPrintArea(stl.xMax, stl.yMin, stl.zMin) ||
                         !pointInPrintArea(stl.xMin, stl.yMax, stl.zMin) ||
@@ -413,23 +409,11 @@ namespace View3D.view
                         !pointInPrintArea(stl.xMax, stl.yMax, stl.zMax))
                 {
                     stl.outside = true;
-                    allPointsInside = false;
+                    allModelsInside = false;
                 }
             }
 
-            MainWindow.main.OutofBound.Visibility = allPointsInside ? Visibility.Collapsed : Visibility.Visible;
-
-            foreach (var pm in testList)
-            {
-                if (pm.oldOutside != pm.outside)
-                {
-                    dataChanged = true;
-                    pm.ForceViewRegeneration();
-                }
-            }
-
-            if (dataChanged)
-                RefreshAllRows();
+            MainWindow.main.OutofBound.Visibility = allModelsInside ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void RefreshAllRows()
@@ -488,9 +472,8 @@ namespace View3D.view
         {
             foreach (var stl in ListObjects(true).ToList())
                 RemoveModel(stl);
-            if (models.Count == 0)
-                MainWindow.main.OutofBound.Visibility = Visibility.Collapsed;
 
+            UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -590,7 +573,7 @@ namespace View3D.view
                     var s = (PrintModel)outPacker.vRects[i].obj;
                     s.Position.x += xOff + xCenter + outPacker.vRects[i].x + border - 1000 - xOrigPos - s.xMin;
                     s.Position.y += yOff + yCenter + outPacker.vRects[i].y + border - 1000 - yOrigPos - s.yMin;
-                    s.UpdateBoundingBox();
+                    s.UpdateBoundingBoxAndMatrix();
                 }
                 MessageBox.Show(Trans.T("M_PRINTER_BED_FULL_TEXT"),
                                 Trans.T("W_PRINTER_BED_FULL"),
@@ -606,7 +589,7 @@ namespace View3D.view
                 var s = (PrintModel)rect.obj;
                 s.Position.x += xOff + xAdd + rect.x + border - s.xMin;
                 s.Position.y += yOff + yAdd + rect.y + border - s.yMin;
-                s.UpdateBoundingBox();
+                s.UpdateBoundingBoxAndMatrix();
             }
             MainWindow.main.threeDControl.UpdateChanges();
             return true;
@@ -773,7 +756,7 @@ namespace View3D.view
             float old = stl.Position.x;
             float.TryParse(textTransX.Text, NumberStyles.Float, GCode.format, out stl.Position.x);
             if (Math.Abs(old - stl.Position.x) < 0.001f) return;
-            if (typeof(PrintModel) == stl.GetType()) UpdateSTLState(stl);
+            if (typeof(PrintModel) == stl.GetType()) UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -785,7 +768,7 @@ namespace View3D.view
             float old = stl.Position.y;
             float.TryParse(textTransY.Text, NumberStyles.Float, GCode.format, out stl.Position.y);
             if (Math.Abs(old - stl.Position.y) < 0.001f) return;
-            if (typeof(PrintModel) == stl.GetType()) UpdateSTLState(stl);
+            if (typeof(PrintModel) == stl.GetType()) UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -797,7 +780,7 @@ namespace View3D.view
             float old = stl.Position.z;
             float.TryParse(textTransZ.Text, NumberStyles.Float, GCode.format, out stl.Position.z);
             if (Math.Abs(old - stl.Position.z) < 0.001f) return;
-            UpdateSTLState(stl);
+            UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -808,7 +791,7 @@ namespace View3D.view
             if (stl == null) return;
             float.TryParse(textScaleX.Text, NumberStyles.Float, GCode.format, out stl.Scale.x);
             if (LockAspectRatio) { stl.Scale.y = stl.Scale.z = stl.Scale.x; SyncScaleFields(stl); }
-            UpdateSTLState(stl);
+            UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -818,7 +801,7 @@ namespace View3D.view
             var stl = SingleSelectedModel;
             if (stl == null) return;
             float.TryParse(textScaleY.Text, NumberStyles.Float, GCode.format, out stl.Scale.y);
-            UpdateSTLState(stl);
+            UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -829,9 +812,9 @@ namespace View3D.view
             if (stl == null) return;
             float old = stl.Scale.z;
             float.TryParse(textScaleZ.Text, NumberStyles.Float, GCode.format, out stl.Scale.z);
-            stl.UpdateBoundingBox();
-            if (old != stl.Scale.z) stl.LandUpdateBBNoPreUpdate();
-            UpdateSTLState(stl);
+            stl.UpdateBoundingBoxAndMatrix();
+            if (old != stl.Scale.z) stl.Land();
+            UpdateOutOfBound();
 
             MainWindow.main.threeDControl.UpdateChanges();
         }
@@ -843,9 +826,9 @@ namespace View3D.view
             if (stl == null) return;
             float old = stl.Rotation.x;
             float.TryParse(textRotX.Text, NumberStyles.Float, GCode.format, out stl.Rotation.x);
-            stl.ForceViewRegeneration();
+            stl.UpdateBoundingBoxAndMatrix();
             if (Math.Abs(old - stl.Rotation.x) < 0.001f) return;
-            UpdateSTLState(stl);
+            UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -856,9 +839,9 @@ namespace View3D.view
             if (stl == null) return;
             float old = stl.Rotation.y;
             float.TryParse(textRotY.Text, NumberStyles.Float, GCode.format, out stl.Rotation.y);
-            stl.ForceViewRegeneration();
+            stl.UpdateBoundingBoxAndMatrix();
             if (Math.Abs(old - stl.Rotation.y) < 0.001f) return;
-            UpdateSTLState(stl);
+            UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -869,9 +852,9 @@ namespace View3D.view
             if (stl == null) return;
             float old = stl.Rotation.z;
             float.TryParse(textRotZ.Text, NumberStyles.Float, GCode.format, out stl.Rotation.z);
-            stl.ForceViewRegeneration();
+            stl.UpdateBoundingBoxAndMatrix();
             if (Math.Abs(old - stl.Rotation.z) < 0.001f) return;
-            if (typeof(PrintModel) == stl.GetType()) UpdateSTLState(stl);
+            if (typeof(PrintModel) == stl.GetType()) UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -921,7 +904,8 @@ namespace View3D.view
                     textTransY.Text = stl.Position.y.ToString(GCode.format);
                     _suppressTextEvents = false;
                 }
-                UpdateSTLState(stl);
+                stl.UpdateBoundingBoxAndMatrix();
+                UpdateOutOfBound();
             }
             MainWindow.main.threeDControl.UpdateChanges();
         }
@@ -971,7 +955,7 @@ namespace View3D.view
                 ui.dimZ    = bbox.Size.z; ui.updateTxt(Enums.Axis.Z);
                 ui.chk_Uniform_Checked(null, null);
                 ui.gIsShow = false;
-                UpdateSTLState(stl);
+                UpdateOutOfBound();
                 stl.LandToZ(0);
                 MainWindow.main.threeDControl.UpdateChanges();
             }
@@ -1056,8 +1040,8 @@ namespace View3D.view
                     textScaleX.Text = (tempX / ui.bboxnow).ToString("0.000");
                     textScaleY.Text = (tempY / ui.bboynow).ToString("0.000");
                     textScaleZ.Text = (tempZ / ui.bboznow).ToString("0.000");
-                    UpdateSTLState(stl);
-                    stl.LandUpdateBBNoPreUpdate();
+                    UpdateOutOfBound();
+                    stl.Land();
                     MainWindow.main.threeDControl.UpdateChanges();
                 }
             }
@@ -1081,8 +1065,8 @@ namespace View3D.view
                 textScaleX.Text = (tempX / ui.bboxnow).ToString("0.000");
                 textScaleY.Text = (tempY / ui.bboynow).ToString("0.000");
                 textScaleZ.Text = (tempZ / ui.bboznow).ToString("0.000");
-                UpdateSTLState(stl);
-                stl.LandUpdateBBNoPreUpdate();
+                UpdateOutOfBound();
+                stl.Land();
                 MainWindow.main.threeDControl.UpdateChanges();
             }
             catch { }

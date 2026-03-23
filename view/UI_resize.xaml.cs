@@ -145,7 +145,7 @@ namespace View3D.view
                 MainWindow.main.stlComposer.textScaleX.Text = Convert.ToString(int.Parse(resize_textbox.Text) / 100.00); 
                 stl.LandToZ(oriZmin);
                 MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBoxWOSupport.zMin;
-                MainWindow.main.stlComposer.UpdateSTLState(stl);
+                MainWindow.main.stlComposer.UpdateOutOfBound();
 
 
                 scaleValue = int.Parse(resize_textbox.Text) / 100.00;

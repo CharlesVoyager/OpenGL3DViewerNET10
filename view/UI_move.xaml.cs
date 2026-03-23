@@ -182,7 +182,7 @@ namespace View3D.view
             moveZ_textbox.Text = (Math.Round(slider_moveZ.Value - slider_moveZ.Minimum, 3)).ToString();
 
             MainWindow.main.stlComposer.landModel(stl);
-            MainWindow.main.stlComposer.UpdateSTLState(stl);
+            MainWindow.main.stlComposer.UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -200,7 +200,8 @@ namespace View3D.view
             moveY_textbox.Text = slider_moveY.Value.ToString();
             moveZ_textbox.Text = slider_moveZ.Value.ToString();
 
-            MainWindow.main.stlComposer.UpdateSTLState(stl);
+            stl.UpdateBoundingBoxAndMatrix();
+            MainWindow.main.stlComposer.UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -239,7 +240,7 @@ namespace View3D.view
                 {
                     PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
-  
+                    stl.UpdateBoundingBoxAndMatrix();
                     MainWindow.main.stlComposer.textTransX.Text = Convert.ToString(slider_moveX.Value);
                     MainWindow.main.threeDControl.UpdateChanges();
                 }
@@ -255,7 +256,7 @@ namespace View3D.view
                 {
                     PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
-
+                    stl.UpdateBoundingBoxAndMatrix();
                     MainWindow.main.stlComposer.textTransY.Text = Convert.ToString(slider_moveY.Value);
                     MainWindow.main.threeDControl.UpdateChanges();
                 }
@@ -271,7 +272,7 @@ namespace View3D.view
                 {
                     PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
-
+                    stl.UpdateBoundingBoxAndMatrix();
                     MainWindow.main.stlComposer.textTransZ.Text = Convert.ToString(slider_moveZ.Value);
                     MainWindow.main.threeDControl.UpdateChanges();
                 }

@@ -214,7 +214,7 @@ namespace View3D.view
                 stl.LandToZ(stl.zMin);
                 MainWindow.main.UI_move.slider_moveZ.Value = stl.Position.z;
                 MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBoxWOSupport.zMin;
-                MainWindow.main.stlComposer.UpdateSTLState(stl);
+                MainWindow.main.stlComposer.UpdateOutOfBound();
                 return;
             }
             try
@@ -291,7 +291,7 @@ namespace View3D.view
                 }
                     stl.LandToZ(stl.zMin);
                 MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBoxWOSupport.zMin;
-                MainWindow.main.stlComposer.UpdateSTLState(stl);
+                MainWindow.main.stlComposer.UpdateOutOfBound();
             }
             catch { }
         }

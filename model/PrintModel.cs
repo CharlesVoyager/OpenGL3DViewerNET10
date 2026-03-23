@@ -18,7 +18,7 @@ namespace View3D.model
         public List<Vector3> convexVectorList;
 
         public string name = "Unknown";
-        public bool outside = false, oldOutside = false;
+        public bool outside = false;
 
         public Matrix4 trans, invTrans;
 
@@ -79,7 +79,6 @@ namespace View3D.model
             }
             return new TopoTriangle(verWorArr[0], verWorArr[1], verWorArr[2]);
         }
-
         public void ResetVertexPosToBBox()
         {
             foreach (TopoVertex v in Model.vertices.v)
@@ -89,7 +88,6 @@ namespace View3D.model
                 v.pos.z -= Model.boundingBox.Center.z;
             }
         }
-
         public virtual object cloneWithModel()
         {
             PrintModel stl = new PrintModel();
@@ -124,11 +122,10 @@ namespace View3D.model
         {
             name = null;
             outside = false;
-            oldOutside = false;
             if (null != submesh)
                 submesh.Clear();
             submesh = null;
-            bbox = null;
+            bbox.Clear();
             extruder = 0;
 
             // It should dispose drawer in main thread. But, it causes black flash when deleting model. So, we just let GC to dispose it.
@@ -151,29 +148,17 @@ namespace View3D.model
         /// </summary>
         public void Land()
         {
-            UpdateBoundingBox();
+            UpdateBoundingBoxAndMatrix();
             Position.z -= zMin;
+            UpdateBoundingBoxAndMatrix();
         }
 
         public void LandToZ(float oriZmin)
         {
             if (Math.Abs(oriZmin - zMin) < 0.001) return;
             Position.z += oriZmin - zMin;
-            //Console.WriteLine("zMin="+zMin);
-            UpdateBoundingBox();
-        }
 
-        public void LandUpdateBB()
-        {
-            UpdateBoundingBox();
-            Position.z -= zMin;
-            UpdateBoundingBox();
-        }
-
-        public void LandUpdateBBNoPreUpdate()
-        {
-            Position.z -= zMin;
-            UpdateBoundingBox();
+            UpdateBoundingBoxAndMatrix();
         }
 
         public void Center(float x, float y)
@@ -209,7 +194,7 @@ namespace View3D.model
 
             centerX = centerX / objectCount;
             centerY = centerY / objectCount;
-            UpdateBoundingBox();
+            UpdateBoundingBoxAndMatrix();
             if (ListviewGetModels != null)
                 models = ListviewGetModels(false);
             Debug.Assert(models != null);
@@ -219,7 +204,7 @@ namespace View3D.model
                 stl.Position.x = x - (float)centerX;
                 stl.Position.y = y - (float)centerY;
             }
-            UpdateBoundingBox();
+            UpdateBoundingBoxAndMatrix();
         }
 
         public void Center3(float x, float y, PrintModel stl)
@@ -240,11 +225,12 @@ namespace View3D.model
             centerX = centerX / objectCount;
             centerY = centerY / objectCount;
 
-            UpdateBoundingBox();
+            UpdateBoundingBoxAndMatrix();
 
             stl.Position.x = x - (float)centerX;
             stl.Position.y = y - (float)centerY;
-            UpdateBoundingBox();
+
+            UpdateBoundingBoxAndMatrix();
         }
 
         public override Vector3 getCenter()
@@ -327,7 +313,7 @@ namespace View3D.model
             }
         }
 
-        public void UpdateBoundingBox()
+        public void UpdateBoundingBoxAndMatrix()
         {
             UpdateMatrix();
             bbox.Clear();
@@ -374,11 +360,6 @@ namespace View3D.model
             outv.z = Vector4.Dot(invTrans.Column2, v4);
         }
 
-        public void ForceViewRegeneration()
-        {
-        }
-
-
         public override void Paint()
         {
             TopoModel model = Model;
@@ -392,6 +373,16 @@ namespace View3D.model
             submesh.Compress();
         }
 
+        public void CopyTopoModelBoundingBoxToPrintModel()
+        {
+            bbox.Add(Model.boundingBox);
+            xMin = (float)bbox.xMin;
+            xMax = (float)bbox.xMax;
+            yMin = (float)bbox.yMin;
+            yMax = (float)bbox.yMax;
+            zMin = (float)bbox.zMin;
+            zMax = (float)bbox.zMax;
+        }
         /// <summary>
         /// Get bounding box of model with support
         /// </summary>
@@ -400,11 +391,11 @@ namespace View3D.model
         {
             get
             {
-                RHBoundingBox bbox = new RHBoundingBox();
-                bbox.Add(xMin, yMin, zMin);
-                bbox.Add(xMax, yMax, zMax);
+                RHBoundingBox return_bbox = new RHBoundingBox();
+                return_bbox.Add(xMin, yMin, zMin);
+                return_bbox.Add(xMax, yMax, zMax);
 
-                return bbox;
+                return return_bbox;
             }
 
             protected set
