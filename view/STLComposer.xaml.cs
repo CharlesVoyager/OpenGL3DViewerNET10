@@ -617,9 +617,9 @@ namespace View3D.view
                 textTransY.TextChanged -= textTransY_TextChanged;
                 textTransZ.TextChanged -= textTransZ_TextChanged;
 
-                textTransX.Text = stl.Position.x.ToString("0");
-                textTransY.Text = stl.Position.y.ToString("0");
-                textTransZ.Text = stl.Position.z.ToString("0");
+                textTransX.Text = stl.Position.x.ToString("0.000");
+                textTransY.Text = stl.Position.y.ToString("0.000");
+                textTransZ.Text = stl.Position.z.ToString("0.000");
 
                 LockAspectRatio = (stl.Scale.x == stl.Scale.y && stl.Scale.x == stl.Scale.z);
                 textScaleX.Text = stl.Scale.x.ToString("0.000");
@@ -898,8 +898,8 @@ namespace View3D.view
                 if (listObjects.SelectedItems.Count == 1)
                 {
                     _suppressTextEvents = true;
-                    textTransX.Text = stl.Position.x.ToString(GCode.format);
-                    textTransY.Text = stl.Position.y.ToString(GCode.format);
+                    textTransX.Text = stl.Position.x.ToString("0.000");
+                    textTransY.Text = stl.Position.y.ToString("0.000");
                     _suppressTextEvents = false;
                 }
                 stl.UpdateBoundingBoxAndMatrix();

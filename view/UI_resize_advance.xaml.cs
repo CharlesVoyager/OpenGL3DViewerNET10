@@ -66,19 +66,19 @@ namespace View3D.view
                 Double tMultScale = 0.0;
 
                 tMultScale = tTempx / tbefore;
-                MainWindow.main.stlComposer.textScaleX.Text = tTempx.ToString();
+                MainWindow.main.stlComposer.textScaleX.Text = tTempx.ToString("0.000");
                 if (chk_Uniform.IsChecked == true)// && gFlag == true)
                 {
                     Double temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleY.Text) * tMultScale;
                     if (temp > 0)
                     {
-                        MainWindow.main.stlComposer.textScaleY.Text = temp.ToString();
+                        MainWindow.main.stlComposer.textScaleY.Text = temp.ToString("0.000");
                     }
 
                     temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleZ.Text) * tMultScale;
                     if (temp > 0)
                     {
-                        MainWindow.main.stlComposer.textScaleZ.Text = temp.ToString();
+                        MainWindow.main.stlComposer.textScaleZ.Text = temp.ToString("0.000");
                     }
 
                     gIsShow = true;
@@ -149,19 +149,19 @@ namespace View3D.view
 
                 tMultScale = tTempy / tbefore;
 
-                MainWindow.main.stlComposer.textScaleY.Text = tTempy.ToString();
+                MainWindow.main.stlComposer.textScaleY.Text = tTempy.ToString("0.000");
                 if (chk_Uniform.IsChecked == true)//&& gFlag==true)
                 {
                     Double temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text) * tMultScale;
                     if (temp > 0)
                     {
-                        MainWindow.main.stlComposer.textScaleX.Text = temp.ToString();
+                        MainWindow.main.stlComposer.textScaleX.Text = temp.ToString("0.000");
                     }
 
                     temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleZ.Text) * tMultScale;
                     if (temp > 0)
                     {
-                        MainWindow.main.stlComposer.textScaleZ.Text = temp.ToString();
+                        MainWindow.main.stlComposer.textScaleZ.Text = temp.ToString("0.000");
                     }
 
                     gIsShow = true;
@@ -240,19 +240,19 @@ namespace View3D.view
 
                 tMultScale = tTempz / tbefore;
 
-                MainWindow.main.stlComposer.textScaleZ.Text = tTempz.ToString();
+                MainWindow.main.stlComposer.textScaleZ.Text = tTempz.ToString("0.000");
                 if (chk_Uniform.IsChecked == true)//&& gFlag==true)
                 {
                     Double temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text) * tMultScale;
                     if (temp > 0)
                     {
-                        MainWindow.main.stlComposer.textScaleX.Text = temp.ToString();
+                        MainWindow.main.stlComposer.textScaleX.Text = temp.ToString("0.000");
                     }
 
                     temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleY.Text) * tMultScale;
                     if (temp > 0)
                     {
-                        MainWindow.main.stlComposer.textScaleY.Text = temp.ToString();
+                        MainWindow.main.stlComposer.textScaleY.Text = temp.ToString("0.000");
                     }
 
                     gIsShow = true;
