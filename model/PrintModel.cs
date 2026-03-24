@@ -294,11 +294,9 @@ namespace View3D.model
 
         public override void Paint()
         {
-            TopoModel model = Model;
-
             submesh.Clear();
 
-            model.FillMeshCheckRAM(this.trans, submesh, outside ? Submesh.MESHCOLOR_OUTSIDE : Submesh.MESHCOLOR_FRONTBACK);
+            Model.FillMeshCheckRAM(this.trans, submesh, outside ? Submesh.MESHCOLOR_OUTSIDE : Submesh.MESHCOLOR_FRONTBACK);
 
             submesh.selected = Selected;
             submesh.extruder = extruder;
