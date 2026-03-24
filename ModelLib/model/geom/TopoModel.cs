@@ -277,7 +277,7 @@ namespace View3D.model.geom
             double triWorNormalValue = 0.0;
             foreach (TopoTriangle t in triangles)
             {
-                TopoTriangle triWor = null; //modified by RCGREY for STL Slice Previewer
+                TopoTriangle triWor = null;
 
                 if (0 == cnt % 50000)
                 {
@@ -295,7 +295,7 @@ namespace View3D.model.geom
             }
         }
 
-        public void FillMesh(Submesh mesh,int defaultColor)
+        public void FillMesh(Submesh mesh, int defaultColor)
         {
             foreach (TopoTriangle t in triangles)
                 mesh.AddTriangle(t.vertices[0].pos, t.vertices[1].pos, t.vertices[2].pos, defaultColor);

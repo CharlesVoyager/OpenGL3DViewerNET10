@@ -174,7 +174,7 @@ namespace View3D.model.geom
                 triangles.Add(new SubmeshTriangle(VertexId(v1), VertexId(v2), VertexId(v3), color));
         }
 
-        public void UpdateDrawLists()
+        private void UpdateDrawLists()
         {
             int idx = 0;
             foreach (SubmeshTriangle t in triangles)
