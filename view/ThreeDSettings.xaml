@@ -197,13 +197,13 @@
                     <TextBlock Grid.Row="4" Grid.Column="0" Text="Z direction:"    VerticalAlignment="Center"/>
 
                     <!-- X direction -->
-                    <TextBox x:Name="xdir1" Grid.Row="2" Grid.Column="1" Text="100" Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
+                    <TextBox x:Name="xdir1" Grid.Row="2" Grid.Column="1" Text="100" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
 
                     <!-- Y direction -->
-                    <TextBox x:Name="ydir1" Grid.Row="3" Grid.Column="1" Text="200" Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
+                    <TextBox x:Name="ydir1" Grid.Row="3" Grid.Column="1" Text="200" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
 
                     <!-- Z direction -->
-                    <TextBox x:Name="zdir1" Grid.Row="4" Grid.Column="1" Text="300" Margin="4,3" TextChanged="light_TextChanged" LostFocus="float_LostFocus"/>
+                    <TextBox x:Name="zdir1" Grid.Row="4" Grid.Column="1" Text="300" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
 
                     
                     <!-- Light Color -->

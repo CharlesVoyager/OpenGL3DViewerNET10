@@ -410,11 +410,6 @@ namespace View3D.view
                 MainWindow.main.Update3D();
         }
 
-        private void light_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            MainWindow.main.Update3D();
-        }
-
         /// <summary>
         /// Validates that the TextBox contains a valid float.
         /// Mirrors WinForms float_Validating / ErrorProvider pattern using a red border.
@@ -714,6 +709,10 @@ namespace View3D.view
         {
             MainWindow.main.Update3D();
         }
+        private void LightSetting_ValueChanged(object sender, TextChangedEventArgs e)
+        {
+            MainWindow.main.Update3D();
+        }
 
         private void ResetLightSettingsToDefault_Click(object sender, RoutedEventArgs e)
         {
@@ -729,5 +728,7 @@ namespace View3D.view
             sliderSpecular.Value = 0.5;
             sliderShininess.Value = 32;
         }
+
+       
     }
 }
