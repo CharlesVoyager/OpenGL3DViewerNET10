@@ -1,7 +1,4 @@
 ﻿using OpenTK.Mathematics;
-using System;
-using System.Collections.Generic;
-using View3D.Calculation;
 using View3D.Enumeration;
 using View3D.Raycasting;
 using View3D.Extensions;
@@ -31,12 +28,12 @@ namespace View3D.ModelObjectTool
                 nowX = matrix.X[0] * x + matrix.Y[0] * y + matrix.Z[0] * z + matrix.W[0];
                 nowY = matrix.X[1] * x + matrix.Y[1] * y + matrix.Z[1] * z + matrix.W[1];
                 nowZ = matrix.X[2] * x + matrix.Y[2] * y + matrix.Z[2] * z + matrix.W[2];
-                maxX = CalculateMath.Max(maxX, nowX);
-                minX = CalculateMath.Min(minX, nowX);
-                maxY = CalculateMath.Max(maxY, nowY);
-                minY = CalculateMath.Min(minY, nowY);
-                maxZ = CalculateMath.Max(maxZ, nowZ);
-                minZ = CalculateMath.Min(minZ, nowZ);
+                maxX = Math.Max(maxX, nowX);
+                minX = Math.Min(minX, nowX);
+                maxY = Math.Max(maxY, nowY);
+                minY = Math.Min(minY, nowY);
+                maxZ = Math.Max(maxZ, nowZ);
+                minZ = Math.Min(minZ, nowZ);
             }
             return new BoundingBox3(minX, maxX, minY, maxY, minZ, maxZ);
         }
