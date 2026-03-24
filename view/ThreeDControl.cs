@@ -25,6 +25,7 @@ namespace View3D.view
     {
         BackgroundDraw backgroundDraw = null;
         PrinterbedDraw printerbedDraw = null;
+        PrinterAreaFrameDraw printerAreaFrameDraw = null;
         BoundingBoxDraw boundingBoxDraw = null;
         RedBorderDraw redBorderDraw = null;
 
@@ -204,6 +205,10 @@ namespace View3D.view
             // Printer bed
             printerbedDraw = new PrinterbedDraw();
             printerbedDraw.Init();
+
+            // Printer area frame (256 × 256 × 200 mm build volume)
+            printerAreaFrameDraw = new PrinterAreaFrameDraw();
+            printerAreaFrameDraw.Init();
          
             // Red Border
             redBorderDraw = new RedBorderDraw();
@@ -258,6 +263,7 @@ namespace View3D.view
 
             backgroundDraw.Dispose();
             printerbedDraw.Dispose();
+            printerAreaFrameDraw.Dispose();
             redBorderDraw.Dispose();
             boundingBoxDraw.Dispose();
 
@@ -464,6 +470,7 @@ namespace View3D.view
 
                 printerbedDraw.Draw();
 
+                printerAreaFrameDraw.Draw();
                 boundingBoxDraw.Draw();
 
                 redBorderDraw.Draw();
