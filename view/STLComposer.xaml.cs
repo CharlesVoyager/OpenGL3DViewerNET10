@@ -215,7 +215,7 @@ namespace View3D.view
                 models.RemoveAt(models.Count - 1);
                 MainWindow.main.BusyWindow.Visibility = Visibility.Hidden;
                 GC.Collect();
-                MessageBox.Show("Error(" + (short)Protocol.ErrorCode.LOAD_FILE_FAIL + "): " + Trans.T("M_LOAD_FILE_FAIL"));
+                MessageBox.Show("Error: " + Trans.T("M_LOAD_FILE_FAIL"));
                 return;
             }
             catch
