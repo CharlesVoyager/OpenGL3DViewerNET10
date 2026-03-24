@@ -13,9 +13,15 @@ namespace View3D.view
 {
     public partial class ThreeDSettings : Window, INotifyPropertyChanged
     {
+#if true
         public float PrintAreaWidth = 256;  // x-axis direction
         public float PrintAreaDepth = 256;  // y-axis direction
         public float PrintAreaHeight = 200; // z-axis direction
+#else
+        public float PrintAreaWidth = 512;  // x-axis direction
+        public float PrintAreaDepth = 512;  // y-axis direction
+        public float PrintAreaHeight = 400; // z-axis direction
+#endif
 
         // UseVBOs and OpenGLVersion will be updated in OnLoad of ThreeDControl.
         public bool UseVBOs = false;

@@ -78,13 +78,15 @@ namespace OpenGL3DViewerNET10.Draw
             gridColorLoc = GL.GetUniformLocation(shader, "gridColor");
             gridSpacingLoc = GL.GetUniformLocation(shader, "gridSpacing");
 
+            float x1 = MainWindow.main.threeDSettings.PrintAreaWidth;
+            float y1 = MainWindow.main.threeDSettings.PrintAreaDepth;
 
             float[] vertices =
             {
-                0f,   0f,   0f,
-                256f, 0f,   0f,
-                256f, 256f, 0f,
-                0f,   256f, 0f
+                0f, 0f, 0f,
+                x1, 0f, 0f,
+                x1, y1, 0f,
+                0f, y1, 0f
             };
 
             vao = GL.GenVertexArray();
