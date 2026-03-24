@@ -169,7 +169,7 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="36"/>
-                        <RowDefinition Height="36"/>
+                        <RowDefinition Height="34"/>
                         <RowDefinition Height="34"/>
                         <RowDefinition Height="34"/>
                         <RowDefinition Height="34"/>
@@ -183,29 +183,21 @@
                         <RowDefinition Height="34"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Column headers -->
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Light (Plastic)" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-
-                    <!-- Enable checkboxes -->
-                    <CheckBox x:Name="enableLight1" Grid.Row="1" Grid.Column="1" Content="Enable light" IsChecked="True"
-                              HorizontalAlignment="Center" VerticalAlignment="Center"
-                              Checked="showEdges_CheckedChanged" Unchecked="showEdges_CheckedChanged"/>
-
-                    <!-- Row labels -->
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="X direction:"    VerticalAlignment="Center"/>
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Y direction:"    VerticalAlignment="Center"/>
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Z direction:"    VerticalAlignment="Center"/>
+                    <!-- Light (Plastic) -->
+                    <RadioButton x:Name="enableLightPlastic" Grid.Row="0" Grid.Column="1" Content="Light (Plastic)" IsChecked="True" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
 
                     <!-- X direction -->
-                    <TextBox x:Name="xdir1" Grid.Row="2" Grid.Column="1" Text="100" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="X direction:" VerticalAlignment="Center"/>
+                    <TextBox x:Name="xdir1" Grid.Row="1" Grid.Column="1" Text="100" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
 
                     <!-- Y direction -->
-                    <TextBox x:Name="ydir1" Grid.Row="3" Grid.Column="1" Text="200" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Y direction:" VerticalAlignment="Center"/>
+                    <TextBox x:Name="ydir1" Grid.Row="2" Grid.Column="1" Text="200" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
 
                     <!-- Z direction -->
-                    <TextBox x:Name="zdir1" Grid.Row="4" Grid.Column="1" Text="300" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Z direction:" VerticalAlignment="Center"/>
+                    <TextBox x:Name="zdir1" Grid.Row="3" Grid.Column="1" Text="300" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
 
-                    
                     <!-- Light Color -->
                     <TextBlock Grid.Row="5" Grid.Column="0" Text="Light Color:" VerticalAlignment="Center"/>
                     <Border x:Name="lightColor" Grid.Row="5" Grid.Column="1" Background="White" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>

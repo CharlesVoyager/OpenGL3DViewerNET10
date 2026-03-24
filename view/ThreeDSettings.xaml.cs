@@ -93,7 +93,6 @@ namespace View3D.view
                 threedKey.SetValue("showEdges",             _showEdges  ? 1 : 0);
                 threedKey.SetValue("showFaces",             _showFaces  ? 1 : 0);
                 threedKey.SetValue("showPrintbed",          showPrintbed.IsChecked == true ? 1 : 0);
-                threedKey.SetValue("enableLight1",          enableLight1.IsChecked == true ? 1 : 0);
                 threedKey.SetValue("drawMethod",            comboDrawMethod.SelectedIndex);
 
                 threedKey.SetValue("selectionBoxColor", ToArgb(selectionBox));
@@ -127,7 +126,6 @@ namespace View3D.view
                 _showFaces = 0 != (int)(threedKey.GetValue("showFaces",  _showFaces  ? 1 : 0));
 
                 showPrintbed.IsChecked  = 0 != (int)(threedKey.GetValue("showPrintbed",  showPrintbed.IsChecked  == true ? 1 : 0));
-                enableLight1.IsChecked  = 0 != (int)(threedKey.GetValue("enableLight1",  enableLight1.IsChecked  == true ? 1 : 0));
 
                 comboDrawMethod.SelectedIndex = (int)(threedKey.GetValue("drawMethod", 0));
 
@@ -458,16 +456,6 @@ namespace View3D.view
         }
 
         // ── Public API (identical signatures to the original) ────────────────────
-
-        public bool EnableLight1() 
-        {
-            bool output = false;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = (enableLight1.IsChecked == true);
-            });
-            return output;
-        }
       
         public float[] LightPosition()
         {
