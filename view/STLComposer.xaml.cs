@@ -192,37 +192,35 @@ namespace View3D.view
             models.Add(new PrintModel());
             bool modelToLand    = true;
             var  modelIO        = new ModelInOut();
-            int last            = models.Count - 1;
-            try
+            int last            = models.Count - 1;   
+            MainWindow.main.BusyWindow.EnableBusyWindow();
+            _stlModelDataReady.Reset();
+            // Offload heavy work to background thread — UI thread is free immediately
+            await Task.Run(() =>
             {
-                MainWindow.main.BusyWindow.EnableBusyWindow();
-                _stlModelDataReady.Reset();
-                // Offload heavy work to background thread — UI thread is free immediately
-                await Task.Run(() =>
+                try
                 {
                     modelIO.LoadWOCatch(file, models[last].Model);
-                    models[last].CopyTopoModelBoundingBoxToPrintModel();
-                    _stlModelDataReady.Set();
-                    Console.WriteLine("LoadWOCatch Done.");
-                });
-
-                MainWindow.main.BusyWindow.DisableBusyWindow();
-                models[models.Count - 1].name = Path.GetFileName(file);
-            }
-            catch (OutOfMemoryException)
+                }
+                catch (Exception)
+                {
+                    models[models.Count - 1].Clear();
+                    models.RemoveAt(models.Count - 1);
+                    GC.Collect();
+                    MessageBox.Show("Error: " + Trans.T("M_LOAD_FILE_FAIL"));
+                    return;
+                }
+                models[last].CopyTopoModelBoundingBoxToPrintModel();
+                _stlModelDataReady.Set();
+                Console.WriteLine("LoadWOCatch Done.");
+            });
+            MainWindow.main.BusyWindow.DisableBusyWindow();
+            if (_stlModelDataReady.Wait(0) == false)// It means some expection happens when loading a STL file.
             {
-                models[models.Count - 1].Clear();
-                models.RemoveAt(models.Count - 1);
-                MainWindow.main.BusyWindow.Visibility = Visibility.Hidden;
-                GC.Collect();
-                MessageBox.Show("Error: " + Trans.T("M_LOAD_FILE_FAIL"));
-                return;
+                _stlModelDataReady.Set();
+                return; 
             }
-            catch
-            {
-                MessageBox.Show(Trans.T("M_LOAD_STL_FILE_ERROR"), Trans.T("W_LOAD_STL_FILE_ERROR"),
-                                MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            models[models.Count - 1].name = Path.GetFileName(file);
 
             if (MainWindow.main.BusyWindow.killed)
             {
