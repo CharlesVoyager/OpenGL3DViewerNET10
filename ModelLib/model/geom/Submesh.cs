@@ -1,9 +1,4 @@
 ﻿using OpenTK.Mathematics;
-using OpenTK.Graphics.OpenGL;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Threading;
 
 namespace View3D.model.geom
 {
