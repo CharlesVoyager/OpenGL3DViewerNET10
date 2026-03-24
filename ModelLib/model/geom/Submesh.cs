@@ -115,18 +115,6 @@ namespace View3D.model.geom
             trianglesError.Clear();
         }
 
-        //int ConvertColorIndex(int idx, Color frontBackColor)
-        //{
-        //    if (drawer != null)
-        //        return drawer.GetColorRGBA((MeshColor)idx, frontBackColor);
-        //    else
-        //        return ColorToRgba32(Color.White);
-        //}
-        private int ColorToRgba32(Color c)
-        {
-            return (int)((c.A << 24) | (c.B << 16) | (c.G << 8) | c.R);
-        }
-
         /// <summary>
         /// Remove unneded temporary data
         /// </summary>
