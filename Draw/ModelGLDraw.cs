@@ -160,11 +160,17 @@ namespace OpenGL3DViewerNET10.Draw
             int vertexShader = GL.CreateShader(ShaderType.VertexShader);
             GL.ShaderSource(vertexShader, VertSrc);
             GL.CompileShader(vertexShader);
+            GL.GetShader(vertexShader, ShaderParameter.CompileStatus, out int vsStatus);
+            if (vsStatus == 0)
+                throw new Exception("Vertex shader compile error: " + GL.GetShaderInfoLog(vertexShader));
 
             // Same as vertex shader
             int fragmentShader = GL.CreateShader(ShaderType.FragmentShader);
             GL.ShaderSource(fragmentShader, FragSrc);
             GL.CompileShader(fragmentShader);
+            GL.GetShader(fragmentShader, ShaderParameter.CompileStatus, out int fsStatus);
+            if (fsStatus == 0)
+                throw new Exception("Fragment shader compile error: " + GL.GetShaderInfoLog(fragmentShader));
 
             // Attach the shaders to the shader program
             GL.AttachShader(shaderProgram, vertexShader);
@@ -172,6 +178,9 @@ namespace OpenGL3DViewerNET10.Draw
 
             // Link the program to OpenGL
             GL.LinkProgram(shaderProgram);
+            GL.GetProgram(shaderProgram, GetProgramParameterName.LinkStatus, out int linkStatus);
+            if (linkStatus == 0)
+                throw new Exception("Shader link error: " + GL.GetProgramInfoLog(shaderProgram));
 
             // delete the shaders
             GL.DeleteShader(vertexShader);
@@ -185,22 +194,20 @@ namespace OpenGL3DViewerNET10.Draw
 
             GL.Enable(EnableCap.DepthTest);
             GL.Disable(EnableCap.CullFace); // Draw both front and back faces
-
             Matrix4 model = Matrix4.Identity;
             Matrix4 view = Matrix4.Identity;
             Matrix4 proj = Matrix4.Identity;
             MainWindow.main.threeDCamera.GetModelViewProj(ref model, ref view, ref proj);
             Matrix3 normalMatrix = new Matrix3(Matrix4.Transpose(Matrix4.Invert(printModel.trans)));
-           
+
             GL.UseProgram(shader);
 
-            GL.UniformMatrix4(stlModelLoc, false, ref printModel.trans);
             GL.UniformMatrix4(stlViewLoc, false, ref view);
             GL.UniformMatrix4(stlProjLoc, false, ref proj);
             GL.UniformMatrix3(normalMatrixLoc, false, ref normalMatrix);
 
             // --- Customizable light values ---
-            Vector3 dir = Vector3.Normalize(LightDirection);// direction, not position, so scale doesn't matter.
+            Vector3 dir = Vector3.Normalize(LightDirection); // direction, not position, so scale doesn't matter.
             GL.Uniform3(lightDirLoc, dir);
             GL.Uniform3(lightColorLoc, LightColor); // Light Color
             GL.Uniform3(viewPosLoc, MainWindow.main.threeDCamera.CameraPosition); // camera pos
@@ -210,22 +217,19 @@ namespace OpenGL3DViewerNET10.Draw
             GL.Uniform1(specularLoc, MainWindow.main.threeDSettings.GetSpecularIntensity());    // Specular intensity
             GL.Uniform1(shininessLoc, MainWindow.main.threeDSettings.GetShininess());           // Shininess exponent
 
-            GL.UniformMatrix4(stlModelLoc, false, ref printModel.trans);
+            GL.UniformMatrix4(stlModelLoc, false, ref printModel.trans); // set model matrix once, here
             GL.BindVertexArray(stlVao);
             GL.DrawArrays(PrimitiveType.Triangles, 0, stlVertices.Count / 6);
         }
 
         public Vector3 LightDirection
-        {             
+        {
             get
             {
                 float[] dir = MainWindow.main.threeDSettings.LightDirection();
-                Vector3 output = new Vector3();
-                output.X = dir[0];
-                output.Y = dir[1];
-                output.Z = dir[2];
-
-                return output;
+                Vector3 output = new Vector3(dir[0], dir[1], dir[2]);
+                // Guard against zero vector — normalize would produce NaN
+                return output.LengthSquared > 0f ? output : new Vector3(1f, 2f, 1f);
             }
         }
         public Vector3 LightColor
@@ -233,25 +237,15 @@ namespace OpenGL3DViewerNET10.Draw
             get
             {
                 float[] colors = MainWindow.main.threeDSettings.LightColor();
-                Vector3 outputColor = new Vector3();
-                outputColor.X = colors[0];
-                outputColor.Y = colors[1];
-                outputColor.Z = colors[2];
-
-                return outputColor;
+                return new Vector3(colors[0], colors[1], colors[2]);
             }
-        } 
+        }
         public Vector3 ModelColor
         {
             get
             {
                 float[] colors = MainWindow.main.threeDSettings.ModelColor();
-                Vector3 outputColor = new Vector3();
-                outputColor.X = colors[0];
-                outputColor.Y = colors[1];
-                outputColor.Z = colors[2];
-
-                return outputColor;
+                return new Vector3(colors[0], colors[1], colors[2]);
             }
         }
         public void Dispose()
