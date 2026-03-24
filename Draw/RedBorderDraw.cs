@@ -117,7 +117,7 @@ namespace OpenGL3DViewerNET10.Draw
             int mvpLoc = GL.GetUniformLocation(redBorderShader, "uMVP");
             int colorLoc = GL.GetUniformLocation(redBorderShader, "uColor");
             GL.UniformMatrix4(mvpLoc, false, ref mvp);
-            GL.Uniform4(colorLoc, 1f, 0f, 0f, 0f); // white — adjust as needed
+            GL.Uniform4(colorLoc, 1f, 0f, 0f, 0f); // Red.
 
             GL.BindVertexArray(redBorderVao);
             GL.DrawArrays(PrimitiveType.LineStrip, 0, redBorderVertexCount);
