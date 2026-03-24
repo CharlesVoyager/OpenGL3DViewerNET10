@@ -216,18 +216,18 @@
 
                     <!-- Ambient intensity -->
                     <TextBlock Grid.Row="7" Grid.Column="0" Text="Ambient intensity:" VerticalAlignment="Center"/>
-                    <Slider Grid.Row="7" Grid.Column="1" Name="sliderAmbient" HorizontalAlignment="Left" VerticalAlignment="Center" Width="120" ValueChanged="LightSetting_ValueChanged" Minimum="0" Maximum="1.0" Value="0.15"/>
-                    <TextBlock Grid.Row="7" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Width="54" Text="{Binding ElementName=sliderAmbient, Path=Value, StringFormat={}{0:0.##}}" TextAlignment="Right" FontFamily="Arial" />
+                    <Slider Grid.Row="7" Grid.Column="1" Name="sliderAmbient" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="0" Maximum="1.0" Value="0.15"/>
+                    <TextBlock Grid.Row="7" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Width="24" Text="{Binding ElementName=sliderAmbient, Path=Value, StringFormat={}{0:0.##}}" TextAlignment="Right" FontFamily="Arial" />
 
                     <!-- Specular intensity -->
                     <TextBlock Grid.Row="8" Grid.Column="0" Text="Specular intensity:" VerticalAlignment="Center"/>
-                    <Slider Grid.Row="8" Grid.Column="1" Name="sliderSpecular" HorizontalAlignment="Left" VerticalAlignment="Center" Width="120" ValueChanged="LightSetting_ValueChanged" Minimum="0" Maximum="1.0" Value="0.5"/>
-                    <TextBlock Grid.Row="8" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Width="54" Text="{Binding ElementName=sliderSpecular, Path=Value, StringFormat={}{0:0.##}}" TextAlignment="Right" FontFamily="Arial" />
+                    <Slider Grid.Row="8" Grid.Column="1" Name="sliderSpecular" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="0" Maximum="1.0" Value="0.5"/>
+                    <TextBlock Grid.Row="8" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Width="24" Text="{Binding ElementName=sliderSpecular, Path=Value, StringFormat={}{0:0.##}}" TextAlignment="Right" FontFamily="Arial" />
 
                     <!-- Shininess exponent -->
                     <TextBlock Grid.Row="9" Grid.Column="0" Text="Shininess exponent:" VerticalAlignment="Center"/>
-                    <Slider Grid.Row="9" Grid.Column="1" Name="sliderShininess" HorizontalAlignment="Left" VerticalAlignment="Center" Width="120" ValueChanged="LightSetting_ValueChanged" Minimum="1" Maximum="256" Value="32" TickFrequency="1" IsSnapToTickEnabled="True"/>
-                    <TextBlock Grid.Row="9" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Width="54" Text="{Binding ElementName=sliderShininess, Path=Value, StringFormat={}{0:0.##}}" TextAlignment="Right" FontFamily="Arial" />
+                    <Slider Grid.Row="9" Grid.Column="1" Name="sliderShininess" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="1" Maximum="256" Value="32" TickFrequency="1" IsSnapToTickEnabled="True"/>
+                    <TextBlock Grid.Row="9" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Width="24" Text="{Binding ElementName=sliderShininess, Path=Value, StringFormat={}{0:0.##}}" TextAlignment="Right" FontFamily="Arial" />
 
                     <!-- Reset to default -->
                     <Button Grid.Row="10" Grid.Column="0" Margin="6" Content="Reset to default" Click="ResetLightSettingsToDefault_Click"/>
