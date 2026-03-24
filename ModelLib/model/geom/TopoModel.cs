@@ -273,12 +273,8 @@ namespace View3D.model.geom
         public void FillMeshCheckRAM(Matrix4 modelMx, Submesh mesh, int defaultColor)
         {
             int cnt = 0;
-            
-            double triWorNormalValue = 0.0;
             foreach (TopoTriangle t in triangles)
             {
-                TopoTriangle triWor = null;
-
                 if (0 == cnt % 50000)
                 {
                     if (!Utils.RamTools.IsRamSizeValid())
@@ -286,11 +282,7 @@ namespace View3D.model.geom
                         throw new System.OutOfMemoryException();
                     }
                 }
-                getTriInWorld(modelMx, t, out triWor);
-                triWorNormalValue = triWor.normal.z / triWor.normal.Length;
-
                 mesh.AddTriangle(t.vertices[0].pos, t.vertices[1].pos, t.vertices[2].pos, defaultColor);
-       
                 cnt++;
             }
         }
