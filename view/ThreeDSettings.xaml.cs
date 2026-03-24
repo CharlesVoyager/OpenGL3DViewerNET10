@@ -39,6 +39,7 @@ namespace View3D.view
             InitializeComponent();
             comboDrawMethod.SelectedIndex = 0; // Autodetect best
             RegistryToForm();
+            ResetLightSettingsToDefault_Click(null, null);
             MainWindow.main.languageChanged += translate;
         }
 
@@ -457,7 +458,7 @@ namespace View3D.view
 
         // ── Public API (identical signatures to the original) ────────────────────
       
-        public float[] LightPosition()
+        public float[] LightDirection()
         {
             float[] output = null;
             Application.Current.Dispatcher.Invoke(() =>
@@ -704,19 +705,17 @@ namespace View3D.view
 
         private void ResetLightSettingsToDefault_Click(object sender, RoutedEventArgs e)
         {
-            xdir1.Text = "100";
-            ydir1.Text = "200";
-            zdir1.Text = "300";
+            xdir1.Text = "1";
+            ydir1.Text = "0.5";
+            zdir1.Text = "2";
 
             lightColor.Background = Brushes.White;
             var drawingColor = System.Drawing.ColorTranslator.FromHtml("#9AB3CD");
             modelColor.Background = new SolidColorBrush(Color.FromArgb(drawingColor.A, drawingColor.R, drawingColor.G, drawingColor.B));
 
-            sliderAmbient.Value = 0.15;
-            sliderSpecular.Value = 0.5;
-            sliderShininess.Value = 32;
+            sliderAmbient.Value = 0.3;
+            sliderSpecular.Value = 0.3;
+            sliderShininess.Value = 16;
         }
-
-       
     }
 }
