@@ -474,7 +474,7 @@ namespace View3D.view
             return output;
         }
       
-        public float[] Dir1()
+        public float[] LightPosition()
         {
             float[] output = null;
             Application.Current.Dispatcher.Invoke(() =>
@@ -717,7 +717,17 @@ namespace View3D.view
 
         private void ResetLightSettingsToDefault_Click(object sender, RoutedEventArgs e)
         {
+            xdir1.Text = "100";
+            ydir1.Text = "200";
+            zdir1.Text = "300";
 
+            lightColor.Background = Brushes.White;
+            var drawingColor = System.Drawing.ColorTranslator.FromHtml("#9AB3CD");
+            modelColor.Background = new SolidColorBrush(Color.FromArgb(drawingColor.A, drawingColor.R, drawingColor.G, drawingColor.B));
+
+            sliderAmbient.Value = 0.15;
+            sliderSpecular.Value = 0.5;
+            sliderShininess.Value = 32;
         }
     }
 }

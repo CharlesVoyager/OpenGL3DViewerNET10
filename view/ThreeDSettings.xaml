@@ -184,7 +184,7 @@
                     </Grid.RowDefinitions>
 
                     <!-- Column headers -->
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Light 1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Light (Plastic)" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
                     <!-- Enable checkboxes -->
                     <CheckBox x:Name="enableLight1" Grid.Row="1" Grid.Column="1" Content="Enable light" IsChecked="True"

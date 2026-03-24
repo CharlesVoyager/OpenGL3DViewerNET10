@@ -203,7 +203,7 @@ namespace OpenGL3DViewerNET10.Draw
             GL.UniformMatrix3(normalMatrixLoc, false, ref normalMatrix);
 
             // --- Customizable light values ---
-            GL.Uniform3(lightPosLoc, new Vector3(100f, 200f, 300f)); // light position
+            GL.Uniform3(lightPosLoc, LightPosition); // Light position, Default: 100, 200, 300
             GL.Uniform3(lightColorLoc, LightColor); // Light Color, Default: 1.0f, 1.0f, 1.0f
             GL.Uniform3(viewPosLoc, MainWindow.main.threeDCamera.CameraPosition); // camera pos
 
@@ -217,8 +217,19 @@ namespace OpenGL3DViewerNET10.Draw
             GL.DrawArrays(PrimitiveType.Triangles, 0, stlVertices.Count / 6);
         }
 
-        // In your settings class, add properties like:
-        public Vector3 LightPosition { get; set; } = new Vector3(100, 200, 300);
+        public Vector3 LightPosition
+        {             
+            get
+            {
+                float[] pos = MainWindow.main.threeDSettings.LightPosition();
+                Vector3 outputPosition = new Vector3();
+                outputPosition.X = pos[0];
+                outputPosition.Y = pos[1];
+                outputPosition.Z = pos[2];
+
+                return outputPosition;
+            }
+        }
         public Vector3 LightColor
         {
             get
@@ -245,7 +256,6 @@ namespace OpenGL3DViewerNET10.Draw
                 return outputColor;
             }
         }
-
         public void Dispose()
         {
             GL.DeleteVertexArray(stlVao);
