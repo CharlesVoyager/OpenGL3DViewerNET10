@@ -15,6 +15,8 @@ namespace View3D.model.geom
         public TopoTriangleStorage triangles = new TopoTriangleStorage();
         public RHBoundingBox boundingBox = new RHBoundingBox();
 
+        public float[] glVertices = null;  // [x y z nx ny nz]
+
         public void Clear()
         {
             vertices.Clear();
@@ -24,7 +26,11 @@ namespace View3D.model.geom
             GC.Collect();
         }
         
-        public void EnsureCapacity(int triCount) { triangles.EnsureCapacity(triCount); }
+        public void EnsureCapacity(int triCount) 
+        { 
+            triangles.EnsureCapacity(triCount);
+            glVertices = new float[triCount * 3 * 6];
+        }
 
         public TopoModel Copy()
         {
@@ -138,21 +144,17 @@ namespace View3D.model.geom
             return AddTriangle(triangle);
         }
 
-        public TopoTriangle AddTriangle(TopoTriangle triangle)
+        private TopoTriangle AddTriangle(TopoTriangle triangle)
         {
             triangles.Add(triangle);
             return triangle;
         }
 
-        public void removeTriangle(TopoTriangle triangle)
+        private void removeTriangle(TopoTriangle triangle)
         {
             triangles.Remove(triangle);
         }
 
-        public bool CheckNormals()
-        {
-            return true;
-        }
         
         public double Surface()
         {
@@ -172,10 +174,6 @@ namespace View3D.model.geom
             return Math.Abs(volume);
         }
         
-        public bool JoinTouchedOpenEdges(double limit)
-        {
-            return false;
-        }
 
         public void getTriInWorld(Matrix4 trans, TopoTriangle tInObj, out TopoTriangle tInWorld)
         {
