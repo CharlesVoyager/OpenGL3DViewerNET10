@@ -15,7 +15,8 @@ namespace View3D.model.geom
         public TopoTriangleStorage triangles = new TopoTriangleStorage();
         public RHBoundingBox boundingBox = new RHBoundingBox();
 
-        public float[] glVertices = null;  // [x y z nx ny nz]
+        // Under construction: To store vertices and normals in glVertices for later binding to GL buffer.
+        public List<float> glVertices = new List<float>(); 
 
         public void Clear()
         {
@@ -23,13 +24,15 @@ namespace View3D.model.geom
             triangles.Clear();
             boundingBox.Clear();
 
+            glVertices.Clear();
+
             GC.Collect();
         }
         
         public void EnsureCapacity(int triCount) 
         { 
             triangles.EnsureCapacity(triCount);
-            glVertices = new float[triCount * 3 * 6];
+            glVertices.EnsureCapacity(triCount * 3 * 6);   // [x y z nx ny nz]
         }
 
         public TopoModel Copy()
