@@ -20,6 +20,7 @@ namespace View3D.model
         public int mid = 0;     // model id
         public int serNum = 0;
 
+        public Matrix4 curPos = Matrix4.Identity;  // position/rotation/scale
         public Matrix4 trans, invTrans;
 
         protected RHBoundingBox bbox = new RHBoundingBox();
