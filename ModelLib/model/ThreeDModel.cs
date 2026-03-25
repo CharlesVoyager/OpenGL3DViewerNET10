@@ -1,7 +1,4 @@
-﻿using OpenTK.Mathematics;
-using System.Collections.Generic;
-
-namespace View3D.model
+﻿namespace View3D.model
 {
     public class Coord3D
     {
@@ -69,10 +66,5 @@ namespace View3D.model
         }
 
         abstract public void Paint();
-
-        public virtual Vector3 getCenter()
-        {
-            return new Vector3(0, 0, 0);
-        }
     }
 }

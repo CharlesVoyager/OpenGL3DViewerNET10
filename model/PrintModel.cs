@@ -157,11 +157,6 @@ namespace View3D.model
             Position.y += y - (float)center.y;
         }
 
-        public override Vector3 getCenter()
-        {
-            return bbox.Center.asVector3();
-        }
-
         private double mxDist(Matrix4 mx1, Matrix4 mx2)
         {
             return Vector4.Subtract(mx1.Row0, mx2.Row0).LengthSquared +
