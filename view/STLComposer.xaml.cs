@@ -108,7 +108,6 @@ namespace View3D.view
 
             labelVertices.Text             = model.Model.vertices.Count.ToString();
             labelFaces.Text                = model.Model.triangles.Count.ToString();
-            labelShells.Text               = model.Model.shells.ToString();
             labelLoopEdges.Text            = model.Model.loopEdges.ToString();
             labelHighConnected.Text        = model.Model.manyShardEdges.ToString();
 

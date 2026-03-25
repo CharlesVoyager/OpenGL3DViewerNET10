@@ -16,7 +16,6 @@ namespace View3D.model.geom
         public TopoTriangleStorage triangles = new TopoTriangleStorage();
         public RHBoundingBox boundingBox = new RHBoundingBox();
 
-        public int shells = 0;
         public int updatedNormals = 0;
         public int loopEdges = 0;
         public int manyShardEdges = 0;
@@ -53,7 +52,6 @@ namespace View3D.model.geom
             }
             UpdateVertexNumbers();
             newModel.UpdateVertexNumbers();
-            newModel.shells = shells;
             newModel.updatedNormals = updatedNormals;
             newModel.loopEdges = loopEdges;
             newModel.manyShardEdges = 0;
