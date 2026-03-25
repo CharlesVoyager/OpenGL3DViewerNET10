@@ -166,7 +166,7 @@ namespace View3D.model
         }
 
         // Scale → Rotate → Translate (applied right-to-left in matrix multiplication):
-        private void UpdateMatrix()
+        private void updateMatrix()
         {
             float x = Rotation.x;
             float y = Rotation.y;
@@ -218,7 +218,7 @@ namespace View3D.model
 
         public void UpdateBoundingBoxAndMatrix()
         {
-            UpdateMatrix();
+            updateMatrix();
             bbox.Clear();
 
             calcBoundingBox();
