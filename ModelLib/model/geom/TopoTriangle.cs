@@ -88,9 +88,6 @@ namespace View3D.model.geom
             TopoVertex v = vertices[0];
             vertices[0] = vertices[1];
             vertices[1] = v;
-            //TopoEdge e = edges[1];
-            //edges[1] = edges[2];
-            //edges[2] = e;
         }
 
         public void RecomputeNormal()
@@ -119,16 +116,6 @@ namespace View3D.model.geom
             RHVector3 d1 = vertices[1].pos.Subtract(vertices[0].pos);
             RHVector3 d2 = vertices[2].pos.Subtract(vertices[1].pos);
             return 0.5 * d1.CrossProduct(d2).Length;
-        }
-
-        public TopoEdge EdgeWithVertices(TopoVertex v1, TopoVertex v2)
-        {
-            /*foreach (TopoEdge e in edges)
-            {
-                if ((e.v1 == v1 && e.v2 == v2) || (e.v2 == v1 && e.v1 == v2))
-                    return e;
-            }*/
-            return null;
         }
 
         public bool IsDegenerated()
@@ -191,105 +178,8 @@ namespace View3D.model.geom
             get
             {
                 RHVector3 c = vertices[0].pos.Add(vertices[1].pos).Add(vertices[2].pos);
-#if PRECISION_SINGLE
-                c.Scale(1.0F / 3.0F);
-#else
                 c.Scale(1.0 / 3.0);
-#endif
                 return c;
-            }
-        }
-
-        public void ToSphere(out RHVector3 center, out double radius)
-        {
-            center = new RHVector3(this.Center);
-            radius = vertices[0].pos.Distance(center);
-        }
-
-        //--- MODEL_SLA	// milton
-        // 實作論文的方法 - Fast, Minimum Storage RayTriangle Intersection
-        // t => delta, 如果有打到物體,t>0,否則t<0
-        public bool IntersectsLineTest(RHVector3 orig, RHVector3 dir, out double t, out double u, out double v)
-        {
-            t = u = v = 0;
-            //Debug.WriteLine("IntersectsLine orig " + orig + " dir " + dir );
-            //Debug.WriteLine("IntersectsLine ver1 " + vertices[0].pos + " ver2 " + vertices[1].pos + " ver3 " + vertices[2].pos);
-            RHVector3 vert0 = vertices[0].pos;
-            /*  find vectors for two edges sharing vert0 
-                SUB(edge1, vert1, vert0)
-                SUB(edge2, vert2, vert0) */
-            RHVector3 edge1 = vertices[1].pos.Subtract(vert0);
-            RHVector3 edge2 = vertices[2].pos.Subtract(vert0);
-            /* begin calculating determinant - also used to calculate U parameter 
-            CROSS(pvec, dir, edge2)*/
-            RHVector3 pvec = dir.CrossProduct(edge2);
-
-            /* if determinant is near zero, ray lies in plane of triangle 
-            det = DOT(edge1, pvec)*/
-            double det = edge1.ScalarProduct(pvec);
-            //Debug.WriteLine("IntersectsLine det " + det);
-            /* define TEST_CULL if culling is desired 
-            if (det < EPSILON)return 0*/
-            if (det < 0.000001) return false;
-            /* calculate distance from vert0 to ray origin 
-            SUB(tvec, orig, vert0)*/
-            RHVector3 tvec = orig.Subtract(vert0);
-            //Debug.WriteLine("IntersectsLine tvec " + tvec);
-            /* calculate U parameter and test bounds 
-            *u = DOT(tvec, pvec)*/
-            u = tvec.ScalarProduct(pvec);
-            /*if (*u < 0.0 || *u > det) return 0;*/
-            //Debug.WriteLine("IntersectsLine u " + u);
-            if (u < 0 || u > det) return false;
-            /* prepare to test V parameter 
-            CROSS(qvec, tvec, edge1)*/
-            RHVector3 qvec = tvec.CrossProduct(edge1);
-            /* calculate V parameter and test bounds 
-            *v = DOT(dir, qvec)*/
-            v = dir.ScalarProduct(qvec);
-            //Debug.WriteLine("IntersectsLine v " + v);
-            /*if (*v < 0.0 || *u + *v > det) return 0*/
-            if (v < 0 || (u + v) > det) return false;
-            /* calculate t, scale parameters, ray intersects triangle 
-             *t = DOT(edge2, qvec)
-             inv_det = 1.0 / det
-             *t *= inv_det
-             *u *= inv_det
-             *v *= inv_det*/
-            double inv_det = 1.0 / det;
-            t = edge2.ScalarProduct(qvec);
-            t *= inv_det;
-            u *= inv_det;
-            v *= inv_det;
-            return true;
-        }
-        //---
-
-        public double DistanceToPlane(RHVector3 pos)
-        {
-            double d = vertices[0].pos.ScalarProduct(normal);
-            return pos.ScalarProduct(normal) - d;
-        }
-
-        private void DominantAxis(out int d1, out int d2)
-        {
-            double n1 = Math.Abs(normal.x);
-            double n2 = Math.Abs(normal.y);
-            double n3 = Math.Abs(normal.z);
-            if (n1 > n2 && n1 > n3)
-            {
-                d1 = 1;
-                d2 = 2;
-            }
-            else if (n2 > n3)
-            {
-                d1 = 0;
-                d2 = 2;
-            }
-            else
-            {
-                d1 = 0;
-                d2 = 1;
             }
         }
     }
