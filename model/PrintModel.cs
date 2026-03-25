@@ -180,8 +180,6 @@ namespace View3D.model
 
         private void UpdateMatrix()
         {
-            Matrix4 oldTrans = trans;
-
             float x = Rotation.x;
             float y = Rotation.y;
             float z = Rotation.z;
