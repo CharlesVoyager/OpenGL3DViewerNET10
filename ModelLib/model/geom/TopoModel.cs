@@ -32,7 +32,7 @@ namespace View3D.model.geom
         public void EnsureCapacity(int triCount) 
         { 
             triangles.EnsureCapacity(triCount);
-            glVertices.EnsureCapacity(triCount * 3 * 6);   // [x y z nx ny nz]
+            // glVertices.EnsureCapacity(triCount * 3 * 6);   // [x y z nx ny nz]
         }
 
         public TopoModel Copy()
