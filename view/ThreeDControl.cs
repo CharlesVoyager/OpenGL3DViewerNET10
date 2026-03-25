@@ -523,43 +523,42 @@ namespace View3D.view
 
         private ThreeDModel Picktest(int x, int y)
         {
-            Vector3 near, far;
+            //Stopwatch sw = Stopwatch.StartNew();
 
             Matrix4 modelMatrix = Matrix4.Identity;
             Matrix4 view = Matrix4.Identity;
             Matrix4 proj = Matrix4.Identity;
             Vector2i windowSize = ClientSize;
             threeDCam.GetModelViewProj(ref modelMatrix, ref view, ref proj);
-            Ray ray = RayCasting.GenerateRay(x, y, view, proj, windowSize, out near, out far);
+            Ray ray = RayCasting.GenerateRay(x, y, view, proj, windowSize, out Vector3 near, out _);
 
             float length = float.MaxValue;
             ThreeDModel nearestModel = null;
 
+            // Cache these once outside the loop
+            float[] rayPos = { ray.Position.X, ray.Position.Y, ray.Position.Z };
+            float[] rayNor = { ray.Normal.X, ray.Normal.Y, ray.Normal.Z };
+            var tool = ModelObjectToolWrapper.Instance.Tool;
+
             foreach (PrintModel model in stlComp.models)
             {
                 if (!RayCasting.RaycastAABB(ray, model)) continue;
-                float[] rayPos = { ray.Position.X, ray.Position.Y, ray.Position.Z };
-                float[] rayNor = { ray.Normal.X, ray.Normal.Y, ray.Normal.Z };
+
                 ModelMatrix mtx = ModelObjectToolHelper.ToModelMatrix(model.trans);
 
-                int id; float output;
-                if (ModelObjectToolWrapper.Instance.Tool.RayIntersectTriangle(
-                        mtx, model.submesh.glVertices, rayPos, rayNor, out id, out output))
+                if (tool.RayIntersectTriangle(mtx, model.submesh.glVertices, rayPos, rayNor, out _, out float output))
                 {
                     Vector3 hitP = ray.Position + ray.Normal * output;
-                    float lineLen = new Line(near, hitP).Length;
+                    float lineLen = (hitP - near).Length;   // Avoid allocating a Line object
                     if (lineLen <= length)
                     {
                         length = lineLen;
                         nearestModel = model;
                     }
                 }
-                GC.Collect();
             }
 
-            // Debug
-            //Debug.WriteLine($"Picktest: nearest model is {(nearestModel != null ? "Hit" : "null")}, length = {length}");    
-          
+            //Debug.WriteLine("[ThreeDModel.Picktest]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
             return nearestModel;
         }
 

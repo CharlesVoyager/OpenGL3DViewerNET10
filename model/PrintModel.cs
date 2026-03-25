@@ -189,7 +189,9 @@ namespace View3D.model
         }
 
         private unsafe void calcBoundingBox()
-        {
+        {   
+            //Stopwatch sw = Stopwatch.StartNew();
+            
             ConvexVector();
             Vector3[] vec = convexVectorList.ToArray();
 
@@ -202,6 +204,8 @@ namespace View3D.model
                 bbox.Add(box3.MaxX, box3.MaxY, box3.MaxZ);
                 bbox.Add(box3.MinX, box3.MinY, box3.MinZ);
             }
+
+            //Debug.WriteLine("[PrintModel.calcBoundingBox]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }
 
         private void ConvexVector()
