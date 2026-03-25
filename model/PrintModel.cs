@@ -188,7 +188,7 @@ namespace View3D.model
             trans = scale * rotX * rotY * rotZ * transl;
         }
 
-        public unsafe void CalcBoundingBox()
+        private unsafe void calcBoundingBox()
         {
             ConvexVector();
             Vector3[] vec = convexVectorList.ToArray();
@@ -221,7 +221,7 @@ namespace View3D.model
             UpdateMatrix();
             bbox.Clear();
 
-            CalcBoundingBox();
+            calcBoundingBox();
 
             xMin = (float)bbox.xMin;
             xMax = (float)bbox.xMax;
@@ -258,6 +258,8 @@ namespace View3D.model
 
         public override void Paint()
         {
+            //Stopwatch sw = Stopwatch.StartNew();
+
             submesh.Clear();
 
             Model.FillMeshCheckRAM(this.trans, submesh, outside ? Submesh.MESHCOLOR_OUTSIDE : Submesh.MESHCOLOR_FRONTBACK);
@@ -265,6 +267,8 @@ namespace View3D.model
             submesh.selected = Selected;
             submesh.extruder = extruder;
             submesh.Compress();
+
+            //Debug.WriteLine("[PrintModel.Paint]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }
 
         public void CopyTopoModelBoundingBoxToPrintModel()
