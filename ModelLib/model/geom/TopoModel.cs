@@ -16,8 +16,6 @@ namespace View3D.model.geom
         public TopoTriangleStorage triangles = new TopoTriangleStorage();
         public RHBoundingBox boundingBox = new RHBoundingBox();
 
-        public int badEdges = 0;
-        public int badTriangles = 0;
         public int shells = 0;
         public int updatedNormals = 0;
         public int loopEdges = 0;
@@ -55,8 +53,6 @@ namespace View3D.model.geom
             }
             UpdateVertexNumbers();
             newModel.UpdateVertexNumbers();
-            newModel.badEdges = 0;
-            newModel.badTriangles = badTriangles;
             newModel.shells = shells;
             newModel.updatedNormals = updatedNormals;
             newModel.loopEdges = loopEdges;
