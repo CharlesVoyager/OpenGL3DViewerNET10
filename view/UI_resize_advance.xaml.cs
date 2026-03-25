@@ -27,6 +27,7 @@ namespace View3D.view
             InitializeComponent();
             try
             {
+                slider_resize.Minimum = 1;  // NOTE: The value of resize cannot be zero; otherwise, exception happens.
                 if (MainWindow.main != null)
                     MainWindow.main.languageChanged += translate;
             }
