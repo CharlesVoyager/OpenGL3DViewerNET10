@@ -107,7 +107,6 @@ namespace View3D.view
             if (model == null) return;
 
             labelVertices.Text             = model.Model.vertices.Count.ToString();
-            labelEdges.Text                = model.Model.edges.Count.ToString();
             labelFaces.Text                = model.Model.triangles.Count.ToString();
             labelShells.Text               = model.Model.shells.ToString();
             labelIntersectingTriangles.Text = model.Model.intersectingTriangles.Count.ToString();

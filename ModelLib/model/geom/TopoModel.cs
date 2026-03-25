@@ -13,7 +13,6 @@ namespace View3D.model.geom
         public const float epsilon = 0.001f;
         public TopoVertexStorage vertices = new TopoVertexStorage();
         public TopoTriangleStorage triangles = new TopoTriangleStorage();
-        public LinkedList<TopoEdge> edges = new LinkedList<TopoEdge>();
         public RHBoundingBox boundingBox = new RHBoundingBox();
         public HashSet<TopoTriangle> intersectingTriangles = new HashSet<TopoTriangle>();
         public int badEdges = 0;
@@ -28,7 +27,6 @@ namespace View3D.model.geom
         {
             vertices.Clear();
             triangles.Clear();
-            edges.Clear();
             boundingBox.Clear();
 
             GC.Collect();
@@ -203,13 +201,6 @@ namespace View3D.model.geom
             CheckNormals();
             manyShardEdges = 0;
             loopEdges = 0;
-            foreach (TopoEdge edge in edges)
-            {
-                if (edge.connectedFaces < 2) 
-                    loopEdges++;
-                else if (edge.connectedFaces > 2) 
-                    manyShardEdges++;
-            }
             if (loopEdges + manyShardEdges == 0)
             {
                 manifold = true;
@@ -222,32 +213,6 @@ namespace View3D.model.geom
             UpdateVertexNumbers();
 
             return manifold;
-        }
-
-        public void checkEdgesOver2()
-        {
-            foreach (TopoEdge e in edges)
-            {
-                if (e.connectedFaces > 2)
-                {
-                    Console.WriteLine("Too many connected faces");
-                    return;
-                }
-            }
-        }
-
-        public void CutMesh(Submesh mesh, RHVector3 normal, RHVector3 point,int defaultFaceColor)
-        {
-            TopoPlane plane = new TopoPlane(normal, point);
-
-            foreach (TopoEdge e in edges)
-                e.algHelper = 0; // Mark drawn edges, so we insert them only once
-
-            foreach (TopoTriangle t in triangles)
-            {
-                int side = plane.testTriangleSideFast(t);
-                mesh.AddTriangle(t.vertices[0].pos, t.vertices[1].pos, t.vertices[2].pos, defaultFaceColor);
-            }
         }
 
         public void getTriInWorld(Matrix4 trans, TopoTriangle tInObj, out TopoTriangle tInWorld)
