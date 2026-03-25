@@ -7,7 +7,6 @@ using View3D.Primitive;
 
 namespace View3D.view.utils
 {
-  
     public class BoundingBox
     {
         private Vector3 minPoint = Vector3.One * float.MaxValue;

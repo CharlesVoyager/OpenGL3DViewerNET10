@@ -159,19 +159,16 @@ namespace View3D.ModelObjectTool
                     if (temp <= length)
                     {                        
                         length = temp;
-                        selected = true;
                         id = triId;
+                        selected = true;
+                        output = length;
+                        return true;
                     }
 #if DEBUG_MODE
                         Console.WriteLine("Pos: " + hitP + ", Dist: " + line.Length);
 #endif
                 }
                 triId++;
-            }
-
-            if (selected == true)
-            {
-                output = length;
             }
             return selected;
         }
