@@ -152,16 +152,12 @@ namespace View3D.model.geom
 
         public TopoTriangle AddTriangle(TopoTriangle triangle)
         {
-            if (triangle.IsDegenerated())
-                triangle.Unlink(this);
-            else
-                triangles.Add(triangle);
+            triangles.Add(triangle);
             return triangle;
         }
 
         public void removeTriangle(TopoTriangle triangle)
         {
-            triangle.Unlink(this);
             triangles.Remove(triangle);
         }
 

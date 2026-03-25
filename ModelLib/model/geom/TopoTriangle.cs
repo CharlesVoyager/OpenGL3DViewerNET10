@@ -72,16 +72,6 @@ namespace View3D.model.geom
                     (this.vertices[2].pos.x + this.vertices[2].pos.y + this.vertices[2].pos.z) * 3267000013).GetHashCode();
         }
 
-        public void Unlink(TopoModel model)
-        {
-            //edges[0].disconnectFace(this,model);
-            //edges[1].disconnectFace(this,model);
-            //edges[2].disconnectFace(this,model);
-            //vertices[0].disconnectFace(this);
-            //vertices[1].disconnectFace(this);
-            //vertices[2].disconnectFace(this);
-        }
-
         public void FlipDirection()
         {
             normal.Scale(-1);
