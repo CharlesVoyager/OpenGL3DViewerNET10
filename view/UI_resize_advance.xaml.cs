@@ -270,7 +270,7 @@ namespace View3D.view
                     {
                         updateSliderValue(Enums.Axis.Z);
                     }
-                    //Fix_resize_issue_160803
+
                     if (scaleKeyDown != "x")
                     {
                         dimX = stl.BoundingBoxWOSupport.Size.x;
