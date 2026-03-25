@@ -69,7 +69,7 @@ namespace View3D.model
             }
             return new TopoTriangle(verWorArr[0], verWorArr[1], verWorArr[2]);
         }
-        public void ResetVertexPosToBBox()
+        public void CenterVertices()
         {
             foreach (TopoVertex v in Model.vertices.v)
             {

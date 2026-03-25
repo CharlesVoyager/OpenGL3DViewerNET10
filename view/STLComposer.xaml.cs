@@ -211,6 +211,13 @@ namespace View3D.view
                     return;
                 }
                 models[last].CopyTopoModelBoundingBoxToPrintModel();
+
+                // Center vertices
+                if (    models[last].BoundingBox.Center.x != 0 ||
+                        models[last].BoundingBox.Center.y != 0 ||
+                        models[last].BoundingBox.Center.z != 0)
+                    models[last].CenterVertices();
+
                 _stlModelDataReady.Set();
                 Console.WriteLine("LoadWOCatch Done.");
             });
@@ -234,15 +241,10 @@ namespace View3D.view
 
             if (modelToLand)
             {
-                if (models[last].BoundingBox.Center.x != 0 ||
-                    models[last].BoundingBox.Center.y != 0 ||
-                    models[last].BoundingBox.Center.z != 0)
-                    models[last].ResetVertexPosToBBox();
                 models[last].Center(MainWindow.main.threeDSettings.PrintAreaWidth / 2, MainWindow.main.threeDSettings.PrintAreaDepth / 2);  // Center and Land
             }
             else
             {
-                models[last].ResetVertexPosToBBox();
                 models[last].Position.x = (float)models[last].BoundingBox.Center.x;
                 models[last].Position.y = (float)models[last].BoundingBox.Center.y;
                 models[last].Position.z = (float)models[last].BoundingBox.Center.z;
