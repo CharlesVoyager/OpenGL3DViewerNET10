@@ -11,10 +11,11 @@ namespace View3D.model.geom
 
         public const bool debugRepair = false;
         public const float epsilon = 0.001f;
+
         public TopoVertexStorage vertices = new TopoVertexStorage();
         public TopoTriangleStorage triangles = new TopoTriangleStorage();
         public RHBoundingBox boundingBox = new RHBoundingBox();
-        public HashSet<TopoTriangle> intersectingTriangles = new HashSet<TopoTriangle>();
+
         public int badEdges = 0;
         public int badTriangles = 0;
         public int shells = 0;

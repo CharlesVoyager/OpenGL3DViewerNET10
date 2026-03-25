@@ -109,14 +109,13 @@ namespace View3D.view
             labelVertices.Text             = model.Model.vertices.Count.ToString();
             labelFaces.Text                = model.Model.triangles.Count.ToString();
             labelShells.Text               = model.Model.shells.ToString();
-            labelIntersectingTriangles.Text = model.Model.intersectingTriangles.Count.ToString();
             labelLoopEdges.Text            = model.Model.loopEdges.ToString();
             labelHighConnected.Text        = model.Model.manyShardEdges.ToString();
 
             // Colour: black when zero, red when non-zero
             var red   = new SolidColorBrush(Colors.Red);
             var black = new SolidColorBrush(Colors.Black);
-            labelIntersectingTriangles.Foreground = model.Model.intersectingTriangles.Count == 0 ? black : red;
+
             labelLoopEdges.Foreground             = model.Model.loopEdges            == 0 ? black : red;
             labelHighConnected.Foreground         = model.Model.manyShardEdges       == 0 ? black : red;
         }
