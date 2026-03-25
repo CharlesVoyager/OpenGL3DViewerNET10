@@ -91,12 +91,6 @@ namespace View3D.model
             stl.Rotation.x = Rotation.x;
             stl.Rotation.y = Rotation.y;
             stl.Rotation.z = Rotation.z;
-            stl.preRX = preRX;
-            stl.preRX2 = preRX2;
-            stl.preRY = preRY;
-            stl.preRY2 = preRY2;
-            stl.preRZ = preRZ;
-            stl.preRZ2 = preRZ2;
             stl.trans = trans;
             stl.Selected = false;
 
@@ -182,9 +176,6 @@ namespace View3D.model
             float x = Rotation.x;
             float y = Rotation.y;
             float z = Rotation.z;
-            //x -= preRX2;
-            //y -= preRY2;
-            //z -= preRZ2;
 
             Matrix4 scale = Matrix4.CreateScale(
                      Scale.x != 0 ? Scale.x : 1,
@@ -200,10 +191,6 @@ namespace View3D.model
 
             // Combine: Scale → RotX → RotY → RotZ → Translate
             trans = scale * rotX * rotY * rotZ * transl;
-
-            preRX2 = Rotation.x;
-            preRY2 = Rotation.y;
-            preRZ2 = Rotation.z;
         }
 
         public unsafe void CalcBoundingBox()
