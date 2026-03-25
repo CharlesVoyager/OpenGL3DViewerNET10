@@ -369,7 +369,7 @@ namespace View3D.MeshInOut
         protected void importSTLWOCatch(string filename, TopoModel model, Action<int> updateRate)
         {
             Status = STATUS.Busy;
-           
+
             model.Clear();
             FileStream f = null;
             BinaryReader r = null;
@@ -389,46 +389,11 @@ namespace View3D.MeshInOut
                 }
                 else
                 {
-                    for (int i = 0; i < nTri; i++)
-                    {
-                        if (i > 0 && i % 4000 == 0)
-                        {
-                            if (updateRate != null)
-                                updateRate((int)(((double)i / nTri) * 100.0));
-
-                            if (Command == COMMAND.Abort)
-                            {
-                                Command = COMMAND.None;
-                                Status = STATUS.UserAbort;
-                                return;
-                            }
-
-                            if (!Utils.RamTools.IsRamSizeValid())
-                            {
-                                throw new System.OutOfMemoryException();
-                            }
-                        }
-
-                        RHVector3 normal = new RHVector3(r.ReadSingle(), r.ReadSingle(), r.ReadSingle());
-                        RHVector3 p1 = new RHVector3(r.ReadSingle(), r.ReadSingle(), r.ReadSingle());
-                        RHVector3 p2 = new RHVector3(r.ReadSingle(), r.ReadSingle(), r.ReadSingle());
-                        RHVector3 p3 = new RHVector3(r.ReadSingle(), r.ReadSingle(), r.ReadSingle());
-                        
-                        TopoVertex v1 = new TopoVertex(0, p1);
-                        TopoVertex v2 = new TopoVertex(1, p2);
-                        TopoVertex v3 = new TopoVertex(2, p3);
-
-
-                        RHVector3 d1 = v2.pos.Subtract(v1.pos);
-                        RHVector3 d2 = v3.pos.Subtract(v2.pos);
-                        RHVector3 normal2 = d1.CrossProduct(d2);
-                        normal2.NormalizeSafe();
-
-                        model.addTriangle(p1, p2, p3, normal2);
-                        r.ReadUInt16();
-                    }
+                    r.Close();
+                    f.Close();
+                    importSTLBinary(filename, model, updateRate);
                 }
-            } // let the upper methods catch the exception
+            }
             finally
             {
                 if (r != null)
@@ -436,6 +401,73 @@ namespace View3D.MeshInOut
 
                 if (f != null)
                     f.Close();
+            }
+        }
+        void importSTLBinary(string filename, TopoModel model, Action<int> updateRate)
+        {
+            Status = STATUS.Busy;
+            model.Clear();
+
+            try
+            {
+                using var f = new FileStream(filename, FileMode.Open, FileAccess.Read,
+                                             FileShare.Read, 1 << 16); // 64KB buffer
+
+                // Read 80-byte header
+                byte[] header = new byte[80];
+                f.Read(header, 0, 80);
+
+                // Read triangle count
+                byte[] countBuf = new byte[4];
+                f.Read(countBuf, 0, 4);
+                int nTri = BitConverter.ToInt32(countBuf, 0);
+
+                // Read all triangle data at once
+                byte[] data = new byte[nTri * 50];
+                f.Read(data, 0, data.Length);
+
+                model.EnsureCapacity(nTri); // if supported
+
+                for (int i = 0; i < nTri; i++)
+                {
+                    if (i > 0 && i % 20000 == 0)
+                    {
+                        updateRate?.Invoke((int)((double)i / nTri * 100.0));
+
+                        if (Command == COMMAND.Abort)
+                        {
+                            Command = COMMAND.None;
+                            Status = STATUS.UserAbort;
+                            return;
+                        }
+                        if (!Utils.RamTools.IsRamSizeValid())
+                            throw new OutOfMemoryException();
+                    }
+
+                    int o = i * 50;
+                    // Skip file normal (o+0..o+11) — we recalculate below
+                    var p1 = new RHVector3(BitConverter.ToSingle(data, o + 12),
+                                           BitConverter.ToSingle(data, o + 16),
+                                           BitConverter.ToSingle(data, o + 20));
+                    var p2 = new RHVector3(BitConverter.ToSingle(data, o + 24),
+                                           BitConverter.ToSingle(data, o + 28),
+                                           BitConverter.ToSingle(data, o + 32));
+                    var p3 = new RHVector3(BitConverter.ToSingle(data, o + 36),
+                                           BitConverter.ToSingle(data, o + 40),
+                                           BitConverter.ToSingle(data, o + 44));
+                    // attribute bytes at o+48..o+49 skipped
+
+                    RHVector3 d1 = p2.Subtract(p1);
+                    RHVector3 d2 = p3.Subtract(p2);
+                    RHVector3 normal = d1.CrossProduct(d2);
+                    normal.NormalizeSafe();
+
+                    model.addTriangle(p1, p2, p3, normal);
+                }
+            }
+            finally
+            {
+                // FileStream disposed by `using`
             }
 
             if (Status == STATUS.Busy)

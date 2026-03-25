@@ -5,6 +5,11 @@
         private Dictionary<TopoTriangle, int> _idDict = new Dictionary<TopoTriangle, int>();
         private List<TopoTriangle> _triangles = new List<TopoTriangle>();
 
+        public void EnsureCapacity(int capacity)
+        {
+            _triangles.EnsureCapacity(capacity); // List<T> has this natively in .NET 6+
+        }
+
         public void Add(TopoTriangle triangle)
         {
             int id;

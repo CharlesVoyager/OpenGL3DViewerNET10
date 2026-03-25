@@ -34,6 +34,8 @@ namespace View3D.model.geom
             GC.Collect();
         }
         
+        public void EnsureCapacity(int triCount) { triangles.EnsureCapacity(triCount); }
+
         public TopoModel Copy()
         {
             TopoModel newModel = new TopoModel();
