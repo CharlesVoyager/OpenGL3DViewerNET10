@@ -77,8 +77,8 @@ namespace View3D.view
             {
                 Name                 = model.name,
                 Model                = model,
-                MeshStatusImage      = _icons[model.Model.manifold ? 2 : 3],
-                CollisionStatusImage = _icons[model.outside        ? 3 : 2],
+                //MeshStatusImage      = _icons[2],                                 // _icons[2]: V, _icons[3]: X
+                //CollisionStatusImage = _icons[model.outside        ? 3 : 2],
             };
         }
 
@@ -108,15 +108,10 @@ namespace View3D.view
 
             labelVertices.Text             = model.Model.vertices.Count.ToString();
             labelFaces.Text                = model.Model.triangles.Count.ToString();
-            labelLoopEdges.Text            = model.Model.loopEdges.ToString();
-            labelHighConnected.Text        = model.Model.manyShardEdges.ToString();
 
             // Colour: black when zero, red when non-zero
             var red   = new SolidColorBrush(Colors.Red);
             var black = new SolidColorBrush(Colors.Black);
-
-            labelLoopEdges.Foreground             = model.Model.loopEdges            == 0 ? black : red;
-            labelHighConnected.Foreground         = model.Model.manyShardEdges       == 0 ? black : red;
         }
 
         public void SetObjectSelected(PrintModel model, bool select)
@@ -403,7 +398,7 @@ namespace View3D.view
                 int idx = listObjects.Items.IndexOf(row);
                 if (idx < 0) continue;
                 row.CollisionStatusImage = _icons[row.Model.outside ? 3 : 2];
-                row.MeshStatusImage      = _icons[row.Model.Model.manifold ? 2 : 3];
+                row.MeshStatusImage      = _icons[2];
                 listObjects.Items.RemoveAt(idx);
                 listObjects.Items.Insert(idx, row);
             }

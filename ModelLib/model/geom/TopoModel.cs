@@ -17,9 +17,6 @@ namespace View3D.model.geom
         public RHBoundingBox boundingBox = new RHBoundingBox();
 
         public int updatedNormals = 0;
-        public int loopEdges = 0;
-        public int manyShardEdges = 0;
-        public bool manifold = false;
 
         public void Clear()
         {
@@ -53,9 +50,6 @@ namespace View3D.model.geom
             UpdateVertexNumbers();
             newModel.UpdateVertexNumbers();
             newModel.updatedNormals = updatedNormals;
-            newModel.loopEdges = loopEdges;
-            newModel.manyShardEdges = 0;
-            newModel.manifold = manifold;
             return newModel;
         }
 
@@ -185,25 +179,6 @@ namespace View3D.model.geom
         public bool JoinTouchedOpenEdges(double limit)
         {
             return false;
-        }
-
-        public bool Analyse()
-        {
-            CheckNormals();
-            manyShardEdges = 0;
-            loopEdges = 0;
-            if (loopEdges + manyShardEdges == 0)
-            {
-                manifold = true;
-            }
-            else
-            {
-                manifold = false;
-                ////MessageBox.Show(Trans.T("M_OBJECT_IS_NON_MANIFOLD"), Trans.T("W_OBJECT_IS_NON_MANIFOLD"));
-            }
-            UpdateVertexNumbers();
-
-            return manifold;
         }
 
         public void getTriInWorld(Matrix4 trans, TopoTriangle tInObj, out TopoTriangle tInWorld)
