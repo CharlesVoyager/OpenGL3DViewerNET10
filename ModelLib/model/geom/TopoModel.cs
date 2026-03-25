@@ -95,7 +95,7 @@ namespace View3D.model.geom
             }
         }
 
-        public void addVertex(TopoVertex v)
+        private void addVertex(TopoVertex v)
         {
             vertices.Add(v);
             boundingBox.Add(v.pos);
@@ -106,7 +106,7 @@ namespace View3D.model.geom
             return vertices.SearchPoint(pos);
         }
 
-        public TopoVertex addVertex(RHVector3 pos)
+        private TopoVertex addVertex(RHVector3 pos)
         {
             TopoVertex newVertex = findVertexOrNull(pos);
             if (newVertex == null)
@@ -117,7 +117,7 @@ namespace View3D.model.geom
             return newVertex;
         }
 
-        public void UpdateVertexNumbers()
+        private void UpdateVertexNumbers()
         {
             int i = 1;
             foreach (TopoVertex v in vertices.v)
