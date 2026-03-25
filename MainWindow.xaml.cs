@@ -521,11 +521,6 @@ namespace View3D
             {
                 System.Diagnostics.Debug.WriteLine($"Model: {m.name}, Position: {m.Position.ToString()}, Rotation: {m.Rotation.ToString()}, Scale: {m.Scale.ToString()}");
 
-                System.Diagnostics.Debug.WriteLine("curPos: " + m.curPos.Row0.ToString());
-                System.Diagnostics.Debug.WriteLine("        " + m.curPos.Row1.ToString());
-                System.Diagnostics.Debug.WriteLine("        " + m.curPos.Row2.ToString());
-                System.Diagnostics.Debug.WriteLine("        " + m.curPos.Row3.ToString());
-                System.Diagnostics.Debug.WriteLine("");
                 System.Diagnostics.Debug.WriteLine("trans: " + m.trans.Row0.ToString());
                 System.Diagnostics.Debug.WriteLine("       " + m.trans.Row1.ToString());
                 System.Diagnostics.Debug.WriteLine("       " + m.trans.Row2.ToString());
