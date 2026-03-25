@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Interop;
 using View3D.model;
 using View3D.ModelObjectTool;
+using View3D.Primitive;
 using View3D.view.utils;
 
 namespace View3D.view
@@ -523,7 +524,7 @@ namespace View3D.view
 
         private ThreeDModel Picktest(int x, int y)
         {
-            //Stopwatch sw = Stopwatch.StartNew();
+            Stopwatch sw = Stopwatch.StartNew();
 
             Matrix4 modelMatrix = Matrix4.Identity;
             Matrix4 view = Matrix4.Identity;
@@ -542,7 +543,7 @@ namespace View3D.view
 
             foreach (PrintModel model in stlComp.models)
             {
-                if (!RayCasting.RaycastAABB(ray, model)) continue;
+                if (!RayCasting.RaycastAABB(ray, model)) continue;  // Check if it hit bounding box of a model.
 
                 ModelMatrix mtx = ModelObjectToolHelper.ToModelMatrix(model.trans);
 
@@ -558,7 +559,7 @@ namespace View3D.view
                 }
             }
 
-            //Debug.WriteLine("[ThreeDModel.Picktest]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
+            Debug.WriteLine("[ThreeDModel.Picktest]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
             return nearestModel;
         }
 

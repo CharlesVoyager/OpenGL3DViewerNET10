@@ -3,98 +3,11 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using View3D.Extensions;
 using View3D.model;
+using View3D.Primitive;
 
 namespace View3D.view.utils
 {
-    class Line
-    {
-        public Vector3 Start;
-        public Vector3 End;
-        public float Length
-        {
-            get
-            {
-                Vector3 line = End - Start;
-                return line.Length;
-            }
-        }
-
-        public float LengthSq
-        {
-            get
-            {
-                Vector3 line = End - Start;
-                return line.LengthSquared;
-            }
-        }
-
-        public Line(Line copy)
-        {
-            Start = new Vector3(copy.Start.X, copy.Start.Y, copy.Start.Z);
-            End = new Vector3(copy.End.X, copy.End.Y, copy.End.Z);
-        }
-
-        public Line(Vector3 p1, Vector3 p2)
-        {
-            Start = p1;
-            End = p2;
-        }
-
-        public Vector3 ToVector()
-        {
-            return new Vector3(End.X - Start.X, End.Y - Start.Y, End.Z - Start.Z);
-        }
-
-        public override string ToString()
-        {
-            string result = "Start: (" + Start.X + ", " + Start.Y + ", " + Start.Z + "), ";
-            result += "End: ( " + End.X + ", " + End.Y + ", " + End.Z + ")";
-            return result;
-        }
-    }
-
-    public class Ray
-    {
-        public Vector3 Position;
-        private Vector3 _normal;
-
-        public Vector3 Normal
-        {
-            get
-            {
-                return _normal;
-            }
-            set
-            {
-                _normal = value;
-                _normal.Normalize();
-            }
-        }
-
-        public Ray()
-        {
-            //ray at origin
-            //points down to z axis
-            Position = new Vector3(0, 0, 0);
-            _normal = new Vector3(0, 0, 1);
-        }
-
-        public Ray(Vector3 p, Vector3 dir)
-        {
-            //normalize!
-            Position = p;
-            _normal = dir;
-            _normal.Normalize();
-        }
-
-        public override string ToString()
-        {
-            string result = "P: (" + Position.X + ", " + Position.Y + ", " + Position.Z + "), ";
-            result += "D: ( " + _normal.X + ", " + _normal.Y + ", " + _normal.Z + ")";
-            return result;
-        }
-    }
-
+  
     public class BoundingBox
     {
         private Vector3 minPoint = Vector3.One * float.MaxValue;
