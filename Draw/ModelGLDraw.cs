@@ -5,6 +5,20 @@ using View3D.model;
 
 namespace OpenGL3DViewerNET10.Draw
 {
+    /*
+Load STL File (CPU)
+↓
+Parse Geometry (vertices, normals)
+↓
+center the model
+↓
+Fill Mesh (Submesh)
+↓
+Upload to GPU (VBO / VAO)
+↓
+Render Loop (OpenGL draw calls)
+     */
+
     public class ModelGLDraw
     {
         PrintModel printModel;
