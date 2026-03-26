@@ -6,7 +6,6 @@
         public RHVector3 minPoint = null;
         public RHVector3 maxPoint = null;
 
- 		//--- MODEL_SLA	// milton
         public TopoTriangle[] getBoundingTri()
         {
             TopoTriangle[] triangles = new TopoTriangle[12];
@@ -60,7 +59,7 @@
             return false;
         }
 
-        // Milton:  Efficient AABB/triangle intersection algoirthm 
+        // Efficient AABB/triangle intersection algoirthm 
         // from http://stackoverflow.com/questions/17458562/efficient-aabb-triangle-intersection-in-c-sharp
         public bool overlapTri(TopoTriangle triangle)
         {
@@ -224,11 +223,7 @@
         {
             get { 
                 RHVector3 center = MaxPoint.Add(MinPoint);
-#if PRECISION_SINGLE
-                center.Scale(0.5F);
-#else
                 center.Scale(0.5);
-#endif
                 return center;
             }
         }
