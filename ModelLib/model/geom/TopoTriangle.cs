@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace View3D.model.geom
 {
     public class TopoTriangle
@@ -17,7 +15,7 @@ namespace View3D.model.geom
             vertices[2] = v3;
             RecomputeNormal();
         }
-        //---
+
         public TopoTriangle(TopoVertex v1, TopoVertex v2, TopoVertex v3)
         {
             vertices[0] = v1;
@@ -25,9 +23,9 @@ namespace View3D.model.geom
             vertices[2] = v3;
             RecomputeNormal();
         }
-        //---
 
-        public TopoTriangle(TopoModel model, TopoVertex v1, TopoVertex v2, TopoVertex v3, double nx, double ny, double nz)
+
+        public TopoTriangle(TopoVertex v1, TopoVertex v2, TopoVertex v3, double nx, double ny, double nz)
         {
             vertices[0] = v1;
             vertices[1] = v2;
@@ -36,41 +34,6 @@ namespace View3D.model.geom
             //RHVector3 normalTest = new RHVector3(nx, ny, nz);
         }
 
-        public TopoTriangle(TopoModel model, TopoVertex v1, TopoVertex v2, TopoVertex v3)
-        {
-            vertices[0] = v1;
-            vertices[1] = v2;
-            vertices[2] = v3;
-            RecomputeNormal();
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null || !(obj is TopoTriangle)) return false;
-
-            //if (((TopoTriangle)obj).vertices[0] == this.vertices[0])
-            //    System.Console.WriteLine("Same 0!");
-
-            //if (((TopoTriangle)obj).vertices[1] == this.vertices[1])
-            //    System.Console.WriteLine("Same 1!");
-
-            //if (((TopoTriangle)obj).vertices[2] == this.vertices[2])
-            //    System.Console.WriteLine("Same 2!");
-
-            return (((TopoTriangle)obj).vertices[0] == this.vertices[0] && ((TopoTriangle)obj).vertices[1] == this.vertices[1] && ((TopoTriangle)obj).vertices[2] == this.vertices[2]);
-        }
-
-        public override int GetHashCode()
-        {
-            //return (Convert.ToInt64(this.vertices[0].pos.x * 1000000) ^ Convert.ToInt64(this.vertices[0].pos.y * 1000000) ^ Convert.ToInt64(this.vertices[0].pos.z * 1000000) ^
-            //       Convert.ToInt64(this.vertices[1].pos.x * 1000000) ^ Convert.ToInt64(this.vertices[1].pos.y * 1000000) ^ Convert.ToInt64(this.vertices[1].pos.z * 1000000) ^
-            //       Convert.ToInt64(this.vertices[2].pos.x * 1000000) ^ Convert.ToInt64(this.vertices[2].pos.y * 1000000) ^ Convert.ToInt64(this.vertices[2].pos.z * 1000000)).GetHashCode();
-
-
-            return ((this.vertices[0].pos.x + this.vertices[0].pos.y + this.vertices[0].pos.z) * 5915587277 +
-                    (this.vertices[1].pos.x + this.vertices[1].pos.y + this.vertices[1].pos.z) * 1500450271 +
-                    (this.vertices[2].pos.x + this.vertices[2].pos.y + this.vertices[2].pos.z) * 3267000013).GetHashCode();
-        }
 
         public void FlipDirection()
         {
