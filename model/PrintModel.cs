@@ -13,7 +13,8 @@ namespace View3D.model
         public TopoModel Model;
         public Submesh submesh;
         public ModelGLDraw Drawer;
-        protected RHBoundingBox bbox;
+        private RHBoundingBox bbox;
+        private List<Vector3> convexVectorList;
 
         public string name = "Unknown";
         public bool outside = false;
@@ -32,6 +33,8 @@ namespace View3D.model
             submesh = new Submesh();
             Drawer = new ModelGLDraw(this);
             bbox = new RHBoundingBox();
+
+            convexVectorList = new List<Vector3>();
         }
 
         /// <summary>
@@ -98,6 +101,7 @@ namespace View3D.model
             Model.Clear();
             submesh.Clear();
             bbox.Clear();
+            convexVectorList.Clear();
 
             name = null;
             outside = false;
@@ -188,7 +192,8 @@ namespace View3D.model
             //Stopwatch sw = Stopwatch.StartNew();
 
             bbox.Clear();
-            List<Vector3> convexVectorList = new List<Vector3>(Model.vertices.Count);
+            convexVectorList.Clear();
+            convexVectorList.EnsureCapacity(Model.vertices.Count);
             for (int i = 0; i < Model.vertices.Count; i++)
             {
                 Vector3 vector3 = new Vector3((float)Model.vertices.v[i].pos.x,
