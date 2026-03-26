@@ -95,26 +95,10 @@ namespace View3D.model.geom
             }
         }
 
-        private void addVertex(TopoVertex v)
-        {
-            vertices.Add(v);
-            boundingBox.Add(v.pos);
-        }
 
         public TopoVertex findVertexOrNull(RHVector3 pos)
         {
             return vertices.SearchPoint(pos);
-        }
-
-        private TopoVertex addVertex(RHVector3 pos)
-        {
-            TopoVertex newVertex = findVertexOrNull(pos);
-            if (newVertex == null)
-            {
-                newVertex = new TopoVertex(vertices.Count, pos); // vertex id start from 0
-                addVertex(newVertex);
-            }
-            return newVertex;
         }
 
         private void UpdateVertexNumbers()
@@ -132,9 +116,9 @@ namespace View3D.model.geom
             TopoVertex v1 = addVertex(new RHVector3(p1x, p1y, p1z));
             TopoVertex v2 = addVertex(new RHVector3(p2x, p2y, p2z));
             TopoVertex v3 = addVertex(new RHVector3(p3x, p3y, p3z));
-            
-            TopoTriangle triangle = new TopoTriangle(this, v1, v2, v3, nx, ny, nz);
-            return AddTriangle(triangle);
+            TopoTriangle triangle = addTriangle(new TopoTriangle(this, v1, v2, v3, nx, ny, nz));
+
+            return triangle;
         }
 
         public TopoTriangle addTriangle(RHVector3 p1, RHVector3 p2, RHVector3 p3, RHVector3 normal)
@@ -142,12 +126,29 @@ namespace View3D.model.geom
             TopoVertex v1 = addVertex(p1);
             TopoVertex v2 = addVertex(p2);
             TopoVertex v3 = addVertex(p3);
-            TopoTriangle triangle = new TopoTriangle(this, v1, v2, v3, normal.x, normal.y, normal.z);
+            TopoTriangle triangle = addTriangle(new TopoTriangle(this, v1, v2, v3, normal.x, normal.y, normal.z));
 
-            return AddTriangle(triangle);
+            return triangle;
         }
 
-        private TopoTriangle AddTriangle(TopoTriangle triangle)
+        private void addVertex(TopoVertex v)
+        {
+            vertices.Add(v);
+            boundingBox.Add(v.pos);
+        }
+
+        private TopoVertex addVertex(RHVector3 pos)
+        {
+            TopoVertex newVertex = findVertexOrNull(pos);
+            if (newVertex == null)
+            {
+                newVertex = new TopoVertex(vertices.Count, pos); // vertex id start from 0
+                addVertex(newVertex);
+            }
+            return newVertex;
+        }
+
+        private TopoTriangle addTriangle(TopoTriangle triangle)
         {
             triangles.Add(triangle);
             return triangle;
