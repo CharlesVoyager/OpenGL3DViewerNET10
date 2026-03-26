@@ -353,7 +353,7 @@ namespace View3D.view
         // =====================================================================
         //  STL state / out-of-bounds
         // =====================================================================
-        public bool pointInPrintArea(float x, float y, float z)
+        private bool pointInPrintArea(float x, float y, float z)
         {
             double epsilon = 1e-4; // 0.0001
 
