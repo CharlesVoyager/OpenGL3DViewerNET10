@@ -34,6 +34,20 @@ namespace View3D.model.geom
             //RHVector3 normalTest = new RHVector3(nx, ny, nz);
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is TopoTriangle)) return false;
+            return (((TopoTriangle)obj).vertices[0] == this.vertices[0] && ((TopoTriangle)obj).vertices[1] == this.vertices[1] && ((TopoTriangle)obj).vertices[2] == this.vertices[2]);
+        }
+
+        // This function GetHashCode() is necessary. DO NOT DELETE IT.
+        // For example, in the case: Dictionary<TopoTriangle, int>, it needs GetHashCode() to check if the keys are duplicate!!!
+        public override int GetHashCode()
+        {
+            return ((this.vertices[0].pos.x + this.vertices[0].pos.y + this.vertices[0].pos.z) * 5915587277 +
+                   (this.vertices[1].pos.x + this.vertices[1].pos.y + this.vertices[1].pos.z) * 1500450271 +
+                   (this.vertices[2].pos.x + this.vertices[2].pos.y + this.vertices[2].pos.z) * 3267000013).GetHashCode();
+        }
 
         public void FlipDirection()
         {
