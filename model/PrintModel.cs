@@ -13,7 +13,6 @@ namespace View3D.model
         public TopoModel Model;
         public Submesh submesh;
         public ModelGLDraw Drawer;
-        public List<Vector3> convexVectorList;
         protected RHBoundingBox bbox;
 
         public string name = "Unknown";
@@ -34,7 +33,6 @@ namespace View3D.model
             Model = new TopoModel();
             submesh = new Submesh();
             Drawer = new ModelGLDraw(this);
-            convexVectorList = new List<Vector3>();
             bbox = new RHBoundingBox();
         }
 
@@ -67,6 +65,7 @@ namespace View3D.model
             }
             return new TopoTriangle(verWorArr[0], verWorArr[1], verWorArr[2]);
         }
+
         public void CenterVertices()
         {
             foreach (TopoVertex v in Model.vertices.v)
@@ -76,9 +75,11 @@ namespace View3D.model
                 v.pos.z -= Model.boundingBox.Center.z;
             }
         }
+
         public virtual object cloneWithModel()
         {
             PrintModel stl = new PrintModel();
+            stl.Model = Model.Copy();   // NOTE: Just clone Model is enough. submesh/Drawer/bbox do not need to clone.
             stl.name = name;
             stl.Position.x = Position.x;
             stl.Position.y = Position.y;
@@ -91,9 +92,6 @@ namespace View3D.model
             stl.Rotation.z = Rotation.z;
             stl.trans = trans;
             stl.Selected = false;
-
-            // NOTE: Don't need to clone Drawer.
-            stl.Model = Model.Copy();
             return stl;
         }
 
@@ -101,7 +99,6 @@ namespace View3D.model
         {
             Model.Clear();
             submesh.Clear();
-            convexVectorList.Clear();
             bbox.Clear();
 
             name = null;
@@ -188,15 +185,24 @@ namespace View3D.model
             trans = scale * rotX * rotY * rotZ * transl;
         }
 
-        private unsafe void calcBoundingBox()
-        {   
+        private unsafe void updateBoundingBox()
+        {
             //Stopwatch sw = Stopwatch.StartNew();
-            
-            ConvexVector();
+
+            bbox.Clear();
+            List<Vector3> convexVectorList = new List<Vector3>(Model.vertices.Count);
+            for (int i = 0; i < Model.vertices.Count; i++)
+            {
+                Vector3 vector3 = new Vector3((float)Model.vertices.v[i].pos.x,
+                                            (float)Model.vertices.v[i].pos.y,
+                                            (float)Model.vertices.v[i].pos.z);
+                convexVectorList.Add(vector3);
+            }
             Vector3[] vec = convexVectorList.ToArray();
 
             if (vec.Length == 0)
                 return;
+
             ModelMatrix mtx = ModelObjectToolHelper.ToModelMatrix(trans);
             fixed (float* ptr = &vec[0].X)
             {
@@ -208,25 +214,11 @@ namespace View3D.model
             //Debug.WriteLine("[PrintModel.calcBoundingBox]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }
 
-        private void ConvexVector()
-        {
-            convexVectorList.Clear();
-            for (int i = 0; i < Model.vertices.Count; i++)
-            {
-                Vector3 vector3 = new Vector3((float)Model.vertices.v[i].pos.x,
-                                            (float)Model.vertices.v[i].pos.y,
-                                            (float)Model.vertices.v[i].pos.z);
-                convexVectorList.Add(vector3);
-            }
-        }
-
         public void UpdateBoundingBoxAndMatrix()
         {
-            updateMatrix();
-            bbox.Clear();
+            updateMatrix(); // Must update trans Matrix before updating Bounding Box.
 
-            calcBoundingBox();
-
+            updateBoundingBox();
             xMin = (float)bbox.xMin;
             xMax = (float)bbox.xMax;
             yMin = (float)bbox.yMin;
