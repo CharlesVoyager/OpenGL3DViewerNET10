@@ -17,8 +17,6 @@ namespace View3D.model
 
         public string name = "Unknown";
         public bool outside = false;
-        public int mid = 0;     // model id
-        public int serNum = 0;
 
         public Matrix4 trans;
 

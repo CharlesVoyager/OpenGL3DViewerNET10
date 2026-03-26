@@ -228,9 +228,6 @@ namespace View3D.view
                 return;
             }
 
-            models[last].mid              = last;
-            models[last].serNum           = last;
-
             if (modelToLand)
             {
                 models[last].Center(MainWindow.main.threeDSettings.PrintAreaWidth / 2, MainWindow.main.threeDSettings.PrintAreaDepth / 2);  // Center and Land
@@ -331,8 +328,6 @@ namespace View3D.view
             });
 
             newModel.UpdateBoundingBoxAndMatrix();
-            newModel.mid    = models.Count;
-            newModel.serNum = models.Count;
             models.Add(newModel);
 
             listObjects.Items.Add(BuildRow(newModel));
