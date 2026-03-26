@@ -547,7 +547,7 @@ namespace View3D.view
 
                 ModelMatrix mtx = ModelObjectToolHelper.ToModelMatrix(model.trans);
 
-                if (tool.RayIntersectTriangle(mtx, model.submesh.glVertices, rayPos, rayNor, out _, out float output))
+                if (tool.RayIntersectTriangle(mtx, model.Mesh.glVertices, rayPos, rayNor, out _, out float output))
                 {
                     Vector3 hitP = ray.Position + ray.Normal * output;
                     float lineLen = (hitP - near).Length;   // Avoid allocating a Line object

@@ -11,8 +11,10 @@ namespace View3D.model
     public partial class PrintModel : ThreeDModel
     {
         public TopoModel Model;
-        public Submesh submesh;
+
+        public Submesh Mesh;
         public ModelGLDraw Drawer;
+
         private RHBoundingBox bbox;
         private List<Vector3> convexVectorList;
 
@@ -30,7 +32,7 @@ namespace View3D.model
         public PrintModel()
         {            
             Model = new TopoModel();
-            submesh = new Submesh();
+            Mesh = new Submesh();
             Drawer = new ModelGLDraw(this);
             bbox = new RHBoundingBox();
 
@@ -44,19 +46,19 @@ namespace View3D.model
         /// <returns>world coordinate of triangle vertex</returns>
         public TopoTriangle getTriWorByMesh(int triIdx)
         {
-            if (triIdx > (submesh.triangles.Count - 1)) return null;
+            if (triIdx > (Mesh.triangles.Count - 1)) return null;
 
             TopoVertex[] verWorArr = new TopoVertex[3]; // variable for world coordinate
 
             // triangles紀錄XYZ的值(vertex1~3)
-            int n1 = 3 * submesh.triangles[triIdx].vertex1;
-            int n2 = 3 * submesh.triangles[triIdx].vertex2;
-            int n3 = 3 * submesh.triangles[triIdx].vertex3;
+            int n1 = 3 * Mesh.triangles[triIdx].vertex1;
+            int n2 = 3 * Mesh.triangles[triIdx].vertex2;
+            int n3 = 3 * Mesh.triangles[triIdx].vertex3;
 
             // glVettices紀錄個別X/Y/Z座標的值
-            verWorArr[0] = new TopoVertex(0, new RHVector3(submesh.glVertices[n1], submesh.glVertices[n1 + 1], submesh.glVertices[n1 + 2]));
-            verWorArr[1] = new TopoVertex(1, new RHVector3(submesh.glVertices[n2], submesh.glVertices[n2 + 1], submesh.glVertices[n2 + 2]));
-            verWorArr[2] = new TopoVertex(2, new RHVector3(submesh.glVertices[n3], submesh.glVertices[n3 + 1], submesh.glVertices[n3 + 2]));
+            verWorArr[0] = new TopoVertex(0, new RHVector3(Mesh.glVertices[n1], Mesh.glVertices[n1 + 1], Mesh.glVertices[n1 + 2]));
+            verWorArr[1] = new TopoVertex(1, new RHVector3(Mesh.glVertices[n2], Mesh.glVertices[n2 + 1], Mesh.glVertices[n2 + 2]));
+            verWorArr[2] = new TopoVertex(2, new RHVector3(Mesh.glVertices[n3], Mesh.glVertices[n3 + 1], Mesh.glVertices[n3 + 2]));
 
             for (int i = 0; i < verWorArr.Count(); i++)
             {
@@ -80,7 +82,7 @@ namespace View3D.model
         public virtual object cloneWithModel()
         {
             PrintModel stl = new PrintModel();
-            stl.Model = Model.Copy();   // NOTE: Just clone Model is enough. submesh/Drawer/bbox do not need to clone.
+            stl.Model = Model.Copy();   // NOTE: Just clone Model is enough. Mesh/Drawer/bbox do not need to clone.
             stl.name = name;
             stl.Position.x = Position.x;
             stl.Position.y = Position.y;
@@ -99,7 +101,7 @@ namespace View3D.model
         public virtual void Clear()
         {
             Model.Clear();
-            submesh.Clear();
+            Mesh.Clear();
             bbox.Clear();
             convexVectorList.Clear();
 
@@ -313,13 +315,13 @@ namespace View3D.model
         {
             //Stopwatch sw = Stopwatch.StartNew();
 
-            submesh.Clear();
+            Mesh.Clear();
 
-            Model.FillMeshCheckRAM(this.trans, submesh, outside ? Submesh.MESHCOLOR_OUTSIDE : Submesh.MESHCOLOR_FRONTBACK);
+            Model.FillMeshCheckRAM(this.trans, Mesh, outside ? Submesh.MESHCOLOR_OUTSIDE : Submesh.MESHCOLOR_FRONTBACK);
 
-            submesh.selected = Selected;
-            submesh.extruder = extruder;
-            submesh.Compress();
+            Mesh.selected = Selected;
+            Mesh.extruder = extruder;
+            Mesh.Compress();
 
             //Debug.WriteLine("[PrintModel.Paint]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }

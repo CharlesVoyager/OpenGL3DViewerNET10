@@ -136,14 +136,14 @@ Render Loop (OpenGL draw calls)
 
             printModel.Paint();
 
-            for (int i = 0; i < printModel.submesh.glVertices.Length; i += 3)
+            for (int i = 0; i < printModel.Mesh.glVertices.Length; i += 3)
             {   // [x y z nx ny nz]
-                stlVertices.Add(printModel.submesh.glVertices[i]);
-                stlVertices.Add(printModel.submesh.glVertices[i + 1]);
-                stlVertices.Add(printModel.submesh.glVertices[i + 2]);
-                stlVertices.Add(printModel.submesh.glNormals[i]);
-                stlVertices.Add(printModel.submesh.glNormals[i + 1]);
-                stlVertices.Add(printModel.submesh.glNormals[i + 2]);
+                stlVertices.Add(printModel.Mesh.glVertices[i]);
+                stlVertices.Add(printModel.Mesh.glVertices[i + 1]);
+                stlVertices.Add(printModel.Mesh.glVertices[i + 2]);
+                stlVertices.Add(printModel.Mesh.glNormals[i]);
+                stlVertices.Add(printModel.Mesh.glNormals[i + 1]);
+                stlVertices.Add(printModel.Mesh.glNormals[i + 2]);
             }
 
             stlVao = GL.GenVertexArray();
