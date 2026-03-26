@@ -14,6 +14,7 @@ namespace View3D.model
         public Submesh submesh;
         public ModelGLDraw Drawer;
         public List<Vector3> convexVectorList;
+        protected RHBoundingBox bbox;
 
         public string name = "Unknown";
         public bool outside = false;
@@ -22,22 +23,19 @@ namespace View3D.model
 
         public Matrix4 trans;
 
-        protected RHBoundingBox bbox = new RHBoundingBox();
         public int extruder = 0;
         public double maxScaleVector = 0;
         public double minScaleVector = 0;
         public double m = 0;
         public double b = 0;
 
-        public RHVector3[] vtxPosWorldCor;
-        public RHVector3[] triNormalWorldCor;
-
         public PrintModel()
-        {
-            submesh = new Submesh();
+        {            
             Model = new TopoModel();
+            submesh = new Submesh();
             Drawer = new ModelGLDraw(this);
             convexVectorList = new List<Vector3>();
+            bbox = new RHBoundingBox();
         }
 
         /// <summary>
@@ -101,12 +99,14 @@ namespace View3D.model
 
         public virtual void Clear()
         {
+            Model.Clear();
+            submesh.Clear();
+            convexVectorList.Clear();
+            bbox.Clear();
+
             name = null;
             outside = false;
-            if (null != submesh)
-                submesh.Clear();
-            submesh = null;
-            bbox.Clear();
+
             extruder = 0;
 
             // It should dispose drawer in main thread. But, it causes black flash when deleting model. So, we just let GC to dispose it.
