@@ -2,10 +2,8 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using View3D.model;
-using View3D.model.geom;
 using View3D.view;
 
 namespace View3D
@@ -538,6 +536,13 @@ namespace View3D
             TopoVertex v3 = new TopoVertex(2, p3);
 
             TopoTriangle t1 = new TopoTriangle(v1, v2, v3);
+            TopoTriangle t2 = new TopoTriangle(v2, v2, v3);
+            TopoTriangle t3 = new TopoTriangle(v1, v2, v3);
+
+            HashSet<TopoTriangle> topoTriangles = new HashSet<TopoTriangle>();
+            topoTriangles.Add(t1);
+            topoTriangles.Add(t2);
+            topoTriangles.Add(t3);
 #endif
         }
     }
