@@ -6,9 +6,10 @@ namespace View3D.model.geom
 {
     public class TopoVertexStorage
     {
+        public List<TopoVertex> v = new List<TopoVertex>();
+
         TopoVertexStorage left = null, right = null;
         TopoVertexStorageLeaf leaf = null;
-        public List<TopoVertex> v = new List<TopoVertex>();
         Dictionary<Int64, int> hash = new Dictionary<Int64, int>();
 
         int splitDimension = -1;
