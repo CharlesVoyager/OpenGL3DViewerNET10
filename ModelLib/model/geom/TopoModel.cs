@@ -45,7 +45,7 @@ namespace View3D.model.geom
         }
 
 
-        public void addTriangle(RHVector3 p1, RHVector3 p2, RHVector3 p3, RHVector3 normal)
+        public void AddTriangle(RHVector3 p1, RHVector3 p2, RHVector3 p3, RHVector3 normal)
         {
             TopoVertex v1 = new TopoVertex(p1);
             TopoVertex v2 = new TopoVertex(p2);

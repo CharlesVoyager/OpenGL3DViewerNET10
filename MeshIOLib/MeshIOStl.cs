@@ -292,7 +292,7 @@ namespace View3D.MeshInOut
                         else if (vertexIndex == 1) p2 = v;
                         else if (vertexIndex == 2)
                         {
-                            model.addTriangle(p1, p2, v, normalVect);
+                            model.AddTriangle(p1, p2, v, normalVect);
                         }
                         vertexIndex++;
                     }
@@ -462,7 +462,7 @@ namespace View3D.MeshInOut
                     RHVector3 normal = d1.CrossProduct(d2);
                     normal.NormalizeSafe();
 
-                    model.addTriangle(p1, p2, p3, normal);
+                    model.AddTriangle(p1, p2, p3, normal);
                 }
             }
             finally
@@ -521,7 +521,7 @@ namespace View3D.MeshInOut
                         RHVector3 p2 = new RHVector3(r.ReadSingle(), r.ReadSingle(), r.ReadSingle());
                         RHVector3 p3 = new RHVector3(r.ReadSingle(), r.ReadSingle(), r.ReadSingle());
                         normal.NormalizeSafe();
-                        model.addTriangle(p1, p2, p3, normal);
+                        model.AddTriangle(p1, p2, p3, normal);
                         //timer.Stop();
                         r.ReadUInt16();
                     }
@@ -582,7 +582,7 @@ namespace View3D.MeshInOut
                     RHVector3 p2 = new RHVector3(r.ReadSingle(), r.ReadSingle(), r.ReadSingle());
                     RHVector3 p3 = new RHVector3(r.ReadSingle(), r.ReadSingle(), r.ReadSingle());
                     normal.NormalizeSafe();
-                    model.addTriangle(p1, p2, p3, normal);
+                    model.AddTriangle(p1, p2, p3, normal);
                     //timer.Stop();
                     r.ReadUInt16();
                 }
