@@ -201,7 +201,7 @@ namespace View3D.model.geom
             tInWorld = new TopoTriangle(v1, v2, v3);
         }
 
-        public void FillMeshCheckRAM(Matrix4 modelMx, Submesh mesh, int defaultColor)
+        public void FillMeshCheckRAM(Submesh mesh, int defaultColor)
         {
             int cnt = 0;
             foreach (TopoTriangle t in triangles)

@@ -309,7 +309,7 @@ namespace View3D.model
 
             Mesh.Clear();
 
-            Model.FillMeshCheckRAM(this.trans, Mesh, outside ? Submesh.MESHCOLOR_OUTSIDE : Submesh.MESHCOLOR_FRONTBACK);
+            Model.FillMeshCheckRAM(Mesh, outside ? Submesh.MESHCOLOR_OUTSIDE : Submesh.MESHCOLOR_FRONTBACK);
 
             Mesh.selected = Selected;
             Mesh.extruder = extruder;
