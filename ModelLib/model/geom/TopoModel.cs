@@ -7,10 +7,6 @@ namespace View3D.model.geom
 {
     public class TopoModel
     {
-        static int MinVertexNumForProress = 2000; // large than all support part vertices number
-
-        public const float epsilon = 0.001f;
-
         public HashSet<TopoTriangle> triangles = new HashSet<TopoTriangle>();
 
         public RHBoundingBox boundingBox = new RHBoundingBox();
