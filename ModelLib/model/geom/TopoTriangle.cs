@@ -31,7 +31,6 @@ namespace View3D.model.geom
             vertices[1] = v2;
             vertices[2] = v3;
             normal = new RHVector3(nx, ny, nz);
-            //RHVector3 normalTest = new RHVector3(nx, ny, nz);
         }
 
         public override bool Equals(object obj)
