@@ -472,6 +472,7 @@ namespace View3D.view
                 printerbedDraw.Draw();
 
                 printerAreaFrameDraw.Draw();
+
                 boundingBoxDraw.Draw();
 
                 redBorderDraw.Draw();

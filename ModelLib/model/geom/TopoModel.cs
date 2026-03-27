@@ -48,6 +48,9 @@ namespace View3D.model.geom
             TopoVertex v3 = new TopoVertex(p3);
 
             triangles.Add(new TopoTriangle(v1, v2, v3, normal));
+            boundingBox.Add(p1);
+            boundingBox.Add(p2);
+            boundingBox.Add(p3);
         }
 
 
