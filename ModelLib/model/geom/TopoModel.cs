@@ -123,5 +123,14 @@ namespace View3D.model.geom
             foreach (TopoTriangle t in triangles)
                 mesh.AddTriangle(t.vertices[0].pos, t.vertices[1].pos, t.vertices[2].pos, defaultColor);
         }
+
+        public void CenterVertices()
+        {
+            foreach (var v in triangles)
+            {
+                for (int i = 0; i < 3; i++)
+                    v.vertices[i].pos= v.vertices[i].pos.Subtract(boundingBox.Center);
+            }
+        }
     }
 }

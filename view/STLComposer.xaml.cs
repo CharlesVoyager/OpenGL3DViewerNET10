@@ -208,7 +208,7 @@ namespace View3D.view
                 if (    models[last].BoundingBox.Center.x != 0 ||
                         models[last].BoundingBox.Center.y != 0 ||
                         models[last].BoundingBox.Center.z != 0)
-                    models[last].CenterVertices();
+                    models[last].Model.CenterVertices();
 
                 _stlModelDataReady.Set();
                 Console.WriteLine("LoadWOCatch Done.");

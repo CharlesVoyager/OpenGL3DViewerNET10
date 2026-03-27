@@ -39,20 +39,6 @@ namespace View3D.model
             convexVectorList = new List<Vector3>();
         }
 
-
-        public void CenterVertices()
-        {
-            foreach (var v in Model.triangles)
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    v.vertices[i].pos.x -= Model.boundingBox.Center.x;
-                    v.vertices[i].pos.y -= Model.boundingBox.Center.y;
-                    v.vertices[i].pos.z -= Model.boundingBox.Center.z;
-                }
-            }
-        }
-
         public virtual object cloneWithModel()
         {
             PrintModel stl = new PrintModel();
