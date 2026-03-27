@@ -158,14 +158,6 @@ namespace View3D.model
             Position.y += y - (float)center.y;
         }
 
-        private double mxDist(Matrix4 mx1, Matrix4 mx2)
-        {
-            return Vector4.Subtract(mx1.Row0, mx2.Row0).LengthSquared +
-                    Vector4.Subtract(mx1.Row1, mx2.Row1).LengthSquared +
-                    Vector4.Subtract(mx1.Row2, mx2.Row2).LengthSquared +
-                    Vector4.Subtract(mx1.Row3, mx2.Row3).LengthSquared;
-        }
-
         // Scale → Rotate → Translate (applied right-to-left in matrix multiplication):
         private void updateMatrix()
         {
