@@ -11,7 +11,7 @@ namespace View3D.model.geom
             for (int i = 0; i < 3; i++)
                 vertices[i] = new TopoVertex(new RHVector3(t.vertices[i].pos.x, t.vertices[i].pos.y, t.vertices[i].pos.z));
 
-            RecomputeNormal();
+            normal = new RHVector3(t.normal.x, t.normal.y, t.normal.z);
         }
 
         public TopoTriangle(TopoVertex v1, TopoVertex v2, TopoVertex v3)
@@ -144,6 +144,17 @@ namespace View3D.model.geom
                 c.Scale(1.0 / 3.0);
                 return c;
             }
+        }
+
+        public override string ToString()
+        {
+            string output = string.Empty;
+            for (int i = 0;i < 3; i++)
+            {
+                output += "V" + i.ToString() +": " + vertices[i].pos.x.ToString("0.0") + " " + vertices[i].pos.y.ToString("0.0") + " " + vertices[i].pos.z.ToString("0.0");
+                output += "\n";
+            }
+            return output;
         }
     }
 }

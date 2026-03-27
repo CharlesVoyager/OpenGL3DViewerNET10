@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using View3D.model;
+using View3D.model.geom;
 using View3D.view;
 
 namespace View3D
@@ -543,6 +544,24 @@ namespace View3D
             topoTriangles.Add(t1);
             topoTriangles.Add(t2);
             topoTriangles.Add(t3);
+#endif
+
+#if false
+
+            TopoModel topoModel = null;
+            if (stlComposer.SingleSelectedModel != null)
+            {
+                topoModel = stlComposer.SingleSelectedModel.Model;
+
+                int count = 0;
+                foreach (var v in topoModel.triangles)
+                { 
+                    System.Diagnostics.Debug.WriteLine(v.ToString());
+                    count++;
+                    if (count >= Math.Min(topoModel.triangles.Count, 2))
+                        break;
+                }
+            }
 #endif
         }
     }
