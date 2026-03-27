@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using View3D.model;
+using View3D.model.geom;
 using View3D.view;
 
 namespace View3D
@@ -527,6 +528,17 @@ namespace View3D
                 System.Diagnostics.Debug.WriteLine("       " + m.trans.Row3.ToString());
                 // System.Diagnostics.Debug.WriteLine($"  BoundingBox: Min({m.BoundingBox.xMin}, {m.BoundingBox.yMin}, {m.BoundingBox.zMin}), Max({m.BoundingBox.xMax}, {m.BoundingBox.yMax}, {m.BoundingBox.zMax})");
             }
+
+#if false
+            RHVector3 p1 = new RHVector3(1.1, 2.3, 3.2);
+            RHVector3 p2 = new RHVector3(1.1, 5.3, 3.2);
+            RHVector3 p3 = new RHVector3(8.1, 8.3, 3.2);
+            TopoVertex v1 = new TopoVertex(0, p1);
+            TopoVertex v2 = new TopoVertex(1, p2);
+            TopoVertex v3 = new TopoVertex(2, p3);
+
+            TopoTriangle t1 = new TopoTriangle(v1, v2, v3);
+#endif
         }
     }
 }

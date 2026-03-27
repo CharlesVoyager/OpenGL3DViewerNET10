@@ -4,17 +4,7 @@ namespace View3D.model.geom
     public class TopoTriangle
     {
         public TopoVertex[] vertices = new TopoVertex[3];
-        public int id ;
         public RHVector3 normal;
-
-        public TopoTriangle(int _id,TopoVertex v1, TopoVertex v2, TopoVertex v3)
-        {
-            id = _id;
-            vertices[0] = v1;
-            vertices[1] = v2;
-            vertices[2] = v3;
-            RecomputeNormal();
-        }
 
         public TopoTriangle(TopoVertex v1, TopoVertex v2, TopoVertex v3)
         {
@@ -23,7 +13,6 @@ namespace View3D.model.geom
             vertices[2] = v3;
             RecomputeNormal();
         }
-
 
         public TopoTriangle(TopoVertex v1, TopoVertex v2, TopoVertex v3, RHVector3 n)
         {
