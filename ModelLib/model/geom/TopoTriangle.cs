@@ -6,6 +6,14 @@ namespace View3D.model.geom
         public TopoVertex[] vertices = new TopoVertex[3];
         public RHVector3 normal;
 
+        public TopoTriangle(TopoTriangle t)
+        {
+            for (int i = 0; i < 3; i++)
+                vertices[i] = new TopoVertex(new RHVector3(t.vertices[i].pos.x, t.vertices[i].pos.y, t.vertices[i].pos.z));
+
+            RecomputeNormal();
+        }
+
         public TopoTriangle(TopoVertex v1, TopoVertex v2, TopoVertex v3)
         {
             vertices[0] = v1;

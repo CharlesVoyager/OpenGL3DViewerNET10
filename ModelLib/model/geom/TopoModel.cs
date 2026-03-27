@@ -11,8 +11,8 @@ namespace View3D.model.geom
 
         public const float epsilon = 0.001f;
 
-        public TopoVertexStorage vertices = new TopoVertexStorage();
-        public TopoTriangleStorage triangles = new TopoTriangleStorage();
+        public HashSet<TopoTriangle> triangles = new HashSet<TopoTriangle>();
+
         public RHBoundingBox boundingBox = new RHBoundingBox();
 
         // Under construction: To store vertices and normals in glVertices for later binding to GL buffer.
@@ -20,8 +20,8 @@ namespace View3D.model.geom
 
         public void Clear()
         {
-            vertices.Clear();
             triangles.Clear();
+
             boundingBox.Clear();
 
             glVertices.Clear();
@@ -38,110 +38,22 @@ namespace View3D.model.geom
         public TopoModel Copy()
         {
             TopoModel newModel = new TopoModel();
-            int nOld = vertices.Count;
-            int i = 0;
-            List<TopoVertex> vcopy = new List<TopoVertex>(vertices.Count);
-            foreach (TopoVertex v in vertices.v)
-            {
-                v.id = i++;
-                TopoVertex newVert = new TopoVertex(v.id, v.pos);
-                newModel.addVertex(newVert);
-                vcopy.Add(newVert);
-            }
+
             foreach (TopoTriangle t in triangles)
-            {
-                TopoTriangle triangle = new TopoTriangle(vcopy[t.vertices[0].id], vcopy[t.vertices[1].id], vcopy[t.vertices[2].id], t.normal);
-                newModel.triangles.Add(triangle);
-            }
-            UpdateVertexNumbers();
-            newModel.UpdateVertexNumbers();
+                newModel.triangles.Add(new TopoTriangle(t));
             return newModel;
         }
 
-        public void Merge(TopoModel model, Matrix4 trans, Action<double> updateRate)
+
+        public void addTriangle(RHVector3 p1, RHVector3 p2, RHVector3 p3, RHVector3 normal)
         {
-            int nOld = vertices.Count;
-            int i = 0;
-            double cnt = 0;
+            TopoVertex v1 = new TopoVertex(p1);
+            TopoVertex v2 = new TopoVertex(p2);
+            TopoVertex v3 = new TopoVertex(p3);
 
-            List<TopoVertex> vcopy = new List<TopoVertex>(model.vertices.Count);
-            foreach (TopoVertex v in model.vertices.v)
-            {
-                v.id = i++;
-                TopoVertex newVert = new TopoVertex(v.id, v.pos, trans);
-                addVertex(newVert);
-                vcopy.Add(newVert);
-
-                cnt++;
-                if (updateRate != null && (model.vertices.v.Count > MinVertexNumForProress)
-                    && (cnt % (model.vertices.v.Count / 10) == 0))
-                {
-                    updateRate((double)cnt / model.vertices.v.Count * 50.0);
-                }
-            }
-            cnt = 0;
-            foreach (TopoTriangle t in model.triangles)
-            {
-                TopoTriangle triangle = new TopoTriangle(vcopy[t.vertices[0].id], vcopy[t.vertices[1].id], vcopy[t.vertices[2].id]);
-                triangle.RecomputeNormal();
-                triangles.Add(triangle);
-
-                cnt++;
-                if (updateRate != null && (model.vertices.v.Count > MinVertexNumForProress)
-                    && (cnt % (model.triangles.Count / 10) == 0))
-                {
-                    updateRate((double)cnt / model.triangles.Count * 50.0 + 50);
-                }
-            }
+            triangles.Add(new TopoTriangle(v1, v2, v3, normal));
         }
 
-
-        public TopoVertex findVertexOrNull(RHVector3 pos)
-        {
-            return vertices.SearchPoint(pos);
-        }
-
-        private void UpdateVertexNumbers()
-        {
-            int i = 1;
-            foreach (TopoVertex v in vertices.v)
-            {
-                v.id = i++;
-            }
-        }
-
-        public TopoTriangle addTriangle(RHVector3 p1, RHVector3 p2, RHVector3 p3, RHVector3 normal)
-        {
-            TopoVertex v1 = addVertex(p1);
-            TopoVertex v2 = addVertex(p2);
-            TopoVertex v3 = addVertex(p3);
-            TopoTriangle triangle = addTriangle(new TopoTriangle(v1, v2, v3, normal));
-
-            return triangle;
-        }
-
-        private void addVertex(TopoVertex v)
-        {
-            vertices.Add(v);
-            boundingBox.Add(v.pos);
-        }
-
-        private TopoVertex addVertex(RHVector3 pos)
-        {
-            TopoVertex newVertex = findVertexOrNull(pos);
-            if (newVertex == null)
-            {
-                newVertex = new TopoVertex(vertices.Count, pos); // vertex id start from 0
-                addVertex(newVertex);
-            }
-            return newVertex;
-        }
-
-        private TopoTriangle addTriangle(TopoTriangle triangle)
-        {
-            triangles.Add(triangle);
-            return triangle;
-        }
 
         private void removeTriangle(TopoTriangle triangle)
         {
@@ -184,9 +96,9 @@ namespace View3D.model.geom
             ver3 = ver3 * trans;
 #endif
 
-            TopoVertex v1 = new TopoVertex(0, new RHVector3(ver1.X, ver1.Y, ver1.Z));
-            TopoVertex v2 = new TopoVertex(1, new RHVector3(ver2.X, ver2.Y, ver2.Z));
-            TopoVertex v3 = new TopoVertex(2, new RHVector3(ver3.X, ver3.Y, ver3.Z));
+            TopoVertex v1 = new TopoVertex(new RHVector3(ver1.X, ver1.Y, ver1.Z));
+            TopoVertex v2 = new TopoVertex(new RHVector3(ver2.X, ver2.Y, ver2.Z));
+            TopoVertex v3 = new TopoVertex(new RHVector3(ver3.X, ver3.Y, ver3.Z));
             tInWorld = new TopoTriangle(v1, v2, v3);
         }
 

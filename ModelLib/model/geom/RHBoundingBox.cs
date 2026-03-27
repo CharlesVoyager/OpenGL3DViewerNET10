@@ -38,15 +38,15 @@
            RHVector3 MAX = maxPoint;
            RHVector3 min = minPoint;
            // one box contain 8 points
-           vertices[0] = new TopoVertex(0, new RHVector3(min.x, min.y, min.z));
-           vertices[1] = new TopoVertex(1, new RHVector3(min.x, min.y, MAX.z));
-           vertices[2] = new TopoVertex(2, new RHVector3(min.x, MAX.y, min.z));
-           vertices[3] = new TopoVertex(3, new RHVector3(min.x, MAX.y, MAX.z));
+           vertices[0] = new TopoVertex(new RHVector3(min.x, min.y, min.z));
+           vertices[1] = new TopoVertex(new RHVector3(min.x, min.y, MAX.z));
+           vertices[2] = new TopoVertex(new RHVector3(min.x, MAX.y, min.z));
+           vertices[3] = new TopoVertex(new RHVector3(min.x, MAX.y, MAX.z));
 
-           vertices[4] = new TopoVertex(4, new RHVector3(MAX.x, min.y, min.z));
-           vertices[5] = new TopoVertex(5, new RHVector3(MAX.x, min.y, MAX.z));
-           vertices[6] = new TopoVertex(6, new RHVector3(MAX.x, MAX.y, min.z));
-           vertices[7] = new TopoVertex(7, new RHVector3(MAX.x, MAX.y, MAX.z));
+           vertices[4] = new TopoVertex(new RHVector3(MAX.x, min.y, min.z));
+           vertices[5] = new TopoVertex(new RHVector3(MAX.x, min.y, MAX.z));
+           vertices[6] = new TopoVertex(new RHVector3(MAX.x, MAX.y, min.z));
+           vertices[7] = new TopoVertex(new RHVector3(MAX.x, MAX.y, MAX.z));
            return vertices;
         }
 

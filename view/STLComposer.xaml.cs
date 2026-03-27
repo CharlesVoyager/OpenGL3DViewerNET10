@@ -106,7 +106,7 @@ namespace View3D.view
             PrintModel model = SingleSelectedModel;
             if (model == null) return;
 
-            labelVertices.Text             = model.Model.vertices.Count.ToString();
+            labelVertices.Text             = (model.Model.triangles.Count * 3).ToString();
             labelFaces.Text                = model.Model.triangles.Count.ToString();
 
             // Colour: black when zero, red when non-zero

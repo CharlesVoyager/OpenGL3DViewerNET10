@@ -39,43 +39,17 @@ namespace View3D.model
             convexVectorList = new List<Vector3>();
         }
 
-        /// <summary>
-        /// Transfer triangle vertex coordinate to world coordinate. Before transferring, the origin is at the center of model.
-        /// </summary>
-        /// <param name="triIdx">index of triangle</param>
-        /// <returns>world coordinate of triangle vertex</returns>
-        public TopoTriangle getTriWorByMesh(int triIdx)
-        {
-            if (triIdx > (Mesh.triangles.Count - 1)) return null;
-
-            TopoVertex[] verWorArr = new TopoVertex[3]; // variable for world coordinate
-
-            // triangles紀錄XYZ的值(vertex1~3)
-            int n1 = 3 * Mesh.triangles[triIdx].vertex1;
-            int n2 = 3 * Mesh.triangles[triIdx].vertex2;
-            int n3 = 3 * Mesh.triangles[triIdx].vertex3;
-
-            // glVettices紀錄個別X/Y/Z座標的值
-            verWorArr[0] = new TopoVertex(0, new RHVector3(Mesh.glVertices[n1], Mesh.glVertices[n1 + 1], Mesh.glVertices[n1 + 2]));
-            verWorArr[1] = new TopoVertex(1, new RHVector3(Mesh.glVertices[n2], Mesh.glVertices[n2 + 1], Mesh.glVertices[n2 + 2]));
-            verWorArr[2] = new TopoVertex(2, new RHVector3(Mesh.glVertices[n3], Mesh.glVertices[n3 + 1], Mesh.glVertices[n3 + 2]));
-
-            for (int i = 0; i < verWorArr.Count(); i++)
-            {
-                RHVector3 verWor = new RHVector3(0, 0, 0);
-                TransformPoint(verWorArr[i].pos, verWor);       // 轉為實際座標,轉換前以中心點(64,64)當作原點(0,0)
-                verWorArr[i] = new TopoVertex(i, verWor);       // 此時verWorArr放的是實際座標
-            }
-            return new TopoTriangle(verWorArr[0], verWorArr[1], verWorArr[2]);
-        }
 
         public void CenterVertices()
         {
-            foreach (TopoVertex v in Model.vertices.v)
+            foreach (var v in Model.triangles)
             {
-                v.pos.x -= Model.boundingBox.Center.x;
-                v.pos.y -= Model.boundingBox.Center.y;
-                v.pos.z -= Model.boundingBox.Center.z;
+                for (int i = 0; i < 3; i++)
+                {
+                    v.vertices[i].pos.x -= Model.boundingBox.Center.x;
+                    v.vertices[i].pos.y -= Model.boundingBox.Center.y;
+                    v.vertices[i].pos.z -= Model.boundingBox.Center.z;
+                }
             }
         }
 
@@ -187,13 +161,16 @@ namespace View3D.model
 
             bbox.Clear();
             convexVectorList.Clear();
-            convexVectorList.EnsureCapacity(Model.vertices.Count);
-            for (int i = 0; i < Model.vertices.Count; i++)
+            convexVectorList.EnsureCapacity(Model.triangles.Count * 3);
+            foreach (var t in Model.triangles)
             {
-                Vector3 vector3 = new Vector3((float)Model.vertices.v[i].pos.x,
-                                            (float)Model.vertices.v[i].pos.y,
-                                            (float)Model.vertices.v[i].pos.z);
-                convexVectorList.Add(vector3);
+                for (int i = 0; i < 3; i++)
+                {
+                    Vector3 vector3 = new Vector3(  (float)t.vertices[i].pos.x,
+                                                    (float)t.vertices[i].pos.y,
+                                                    (float)t.vertices[i].pos.z);
+                    convexVectorList.Add(vector3);
+                }
             }
             Vector3[] vec = convexVectorList.ToArray();
 
