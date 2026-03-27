@@ -25,12 +25,12 @@ namespace View3D.model.geom
         }
 
 
-        public TopoTriangle(TopoVertex v1, TopoVertex v2, TopoVertex v3, double nx, double ny, double nz)
+        public TopoTriangle(TopoVertex v1, TopoVertex v2, TopoVertex v3, RHVector3 n)
         {
             vertices[0] = v1;
             vertices[1] = v2;
             vertices[2] = v3;
-            normal = new RHVector3(nx, ny, nz);
+            normal = new RHVector3(n);
         }
 
         public override bool Equals(object obj)

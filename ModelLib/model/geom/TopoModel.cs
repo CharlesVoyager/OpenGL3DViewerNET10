@@ -50,7 +50,7 @@ namespace View3D.model.geom
             }
             foreach (TopoTriangle t in triangles)
             {
-                TopoTriangle triangle = new TopoTriangle(vcopy[t.vertices[0].id], vcopy[t.vertices[1].id], vcopy[t.vertices[2].id], t.normal.x, t.normal.y, t.normal.z);
+                TopoTriangle triangle = new TopoTriangle(vcopy[t.vertices[0].id], vcopy[t.vertices[1].id], vcopy[t.vertices[2].id], t.normal);
                 newModel.triangles.Add(triangle);
             }
             UpdateVertexNumbers();
@@ -110,23 +110,12 @@ namespace View3D.model.geom
             }
         }
 
-        public TopoTriangle addTriangle(double p1x, double p1y, double p1z, double p2x, double p2y, double p2z,
-            double p3x, double p3y, double p3z, double nx, double ny, double nz)
-        {
-            TopoVertex v1 = addVertex(new RHVector3(p1x, p1y, p1z));
-            TopoVertex v2 = addVertex(new RHVector3(p2x, p2y, p2z));
-            TopoVertex v3 = addVertex(new RHVector3(p3x, p3y, p3z));
-            TopoTriangle triangle = addTriangle(new TopoTriangle(v1, v2, v3, nx, ny, nz));
-
-            return triangle;
-        }
-
         public TopoTriangle addTriangle(RHVector3 p1, RHVector3 p2, RHVector3 p3, RHVector3 normal)
         {
             TopoVertex v1 = addVertex(p1);
             TopoVertex v2 = addVertex(p2);
             TopoVertex v3 = addVertex(p3);
-            TopoTriangle triangle = addTriangle(new TopoTriangle(v1, v2, v3, normal.x, normal.y, normal.z));
+            TopoTriangle triangle = addTriangle(new TopoTriangle(v1, v2, v3, normal));
 
             return triangle;
         }
