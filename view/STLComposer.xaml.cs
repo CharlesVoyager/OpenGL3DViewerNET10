@@ -219,38 +219,27 @@ namespace View3D.view
             }
             models[models.Count - 1].name = Path.GetFileName(file);
 
-            if (MainWindow.main.BusyWindow.killed)
+            if (MainWindow.main.BusyWindow.killed || models[last].Model.triangles.Count == 0)
             {
                 models[models.Count - 1].Clear();
                 models.RemoveAt(models.Count - 1);
                 return;
             }
-
+            AddObject(models[last]);
+            models[last].Position.z = -models[last].zMin;
             if (modelToLand)
             {
-                float x = MainWindow.main.threeDSettings.PrintAreaWidth / 2;
-                float y = MainWindow.main.threeDSettings.PrintAreaDepth / 2;
-
-                models[last].Position.x = x;
-                models[last].Position.y = y;
-                models[last].Position.z = (float)(models[last].BoundingBox.zMax - models[last].BoundingBox.zMin) / 2;
+                Autoposition();
             }
             else
             {
                 models[last].Position.x = (float)models[last].BoundingBox.Center.x;
                 models[last].Position.y = (float)models[last].BoundingBox.Center.y;
-                models[last].Position.z = (float)models[last].BoundingBox.Center.z;
+                models[last].UpdateBoundingBoxAndMatrix();
             }
 
-            models[last].UpdateBoundingBoxAndMatrix();
-
-            if (models[last].Model.triangles.Count > 0)
-            {
-                AddObject(models[last]);
-                if (modelToLand) Autoposition();
-                UpdateOutOfBound();
-            }
-
+            UpdateOutOfBound();
+       
             double xxx = models[last].BoundingBox.Size.x * models[last].BoundingBox.Size.y * models[last].BoundingBox.Size.z * 0.001;
 
             if (xxx < 0.1)  // the object is too small.
@@ -503,10 +492,12 @@ namespace View3D.view
             if (models.Count == 1)
             {
                 var model = models[0];
-                model.CenterWOLand();
+                float x = MainWindow.main.threeDSettings.PrintAreaWidth / 2;
+                float y = MainWindow.main.threeDSettings.PrintAreaDepth / 2;
 
-                if (MainWindow.main.threeDControl != null)
-                    MainWindow.main.threeDControl.UpdateChanges();
+                model.Position.x = x;
+                model.Position.y = y;
+                model.UpdateBoundingBoxAndMatrix();
                 return true;
             }
 
@@ -559,7 +550,6 @@ namespace View3D.view
                 s.Position.y += yOff + yAdd + rect.y + border - s.yMin;
                 s.UpdateBoundingBoxAndMatrix();
             }
-            MainWindow.main.threeDControl.UpdateChanges();
             return true;
         }
 

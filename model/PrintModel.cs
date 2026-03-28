@@ -100,15 +100,6 @@ namespace View3D.model
             UpdateBoundingBoxAndMatrix();
         }
 
-        public void CenterWithLand()
-        {
-            float x = MainWindow.main.threeDSettings.PrintAreaWidth / 2;
-            float y = MainWindow.main.threeDSettings.PrintAreaDepth / 2;
-            Land();
-            Position.x += x - (float)bbox.Center.x;
-            Position.y += y - (float)bbox.Center.y;
-        }
-
         public void CenterWOLand()
         {
             float x = MainWindow.main.threeDSettings.PrintAreaWidth / 2;
