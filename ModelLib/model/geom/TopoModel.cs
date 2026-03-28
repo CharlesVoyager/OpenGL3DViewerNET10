@@ -100,37 +100,5 @@ namespace View3D.model.geom
             TopoVertex v3 = new TopoVertex(new RHVector3(ver3.X, ver3.Y, ver3.Z));
             tInWorld = new TopoTriangle(v1, v2, v3);
         }
-
-        public void FillMeshCheckRAM(Submesh mesh, int defaultColor)
-        {
-            int cnt = 0;
-            foreach (TopoTriangle t in triangles)
-            {
-                if (0 == cnt % 50000)
-                {
-                    if (!Utils.RamTools.IsRamSizeValid())
-                    {
-                        throw new System.OutOfMemoryException();
-                    }
-                }
-                mesh.AddTriangle(t.vertices[0].pos, t.vertices[1].pos, t.vertices[2].pos, defaultColor);
-                cnt++;
-            }
-        }
-
-        public void FillMesh(Submesh mesh, int defaultColor)
-        {
-            foreach (TopoTriangle t in triangles)
-                mesh.AddTriangle(t.vertices[0].pos, t.vertices[1].pos, t.vertices[2].pos, defaultColor);
-        }
-
-        public void CenterVertices()
-        {
-            foreach (var v in triangles)
-            {
-                for (int i = 0; i < 3; i++)
-                    v.vertices[i].pos= v.vertices[i].pos.Subtract(boundingBox.Center);
-            }
-        }
     }
 }

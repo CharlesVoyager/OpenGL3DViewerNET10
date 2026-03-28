@@ -202,15 +202,10 @@ namespace View3D.view
                     MessageBox.Show("Error: " + Trans.T("M_LOAD_FILE_FAIL"));
                     return;
                 }
-                models[last].CopyTopoModelBoundingBoxToPrintModel();
+                models[last].TopoModelToMesh();
+                models[last].UpdateBoundingBoxAndMatrix();
 
-                // Center vertices
-                if (    models[last].BoundingBox.Center.x != 0 ||
-                        models[last].BoundingBox.Center.y != 0 ||
-                        models[last].BoundingBox.Center.z != 0)
-                    models[last].Model.CenterVertices();
-
-                _stlModelDataReady.Set();
+               _stlModelDataReady.Set();
                 Console.WriteLine("LoadWOCatch Done.");
             });
             MainWindow.main.BusyWindow.DisableBusyWindow();
@@ -230,7 +225,12 @@ namespace View3D.view
 
             if (modelToLand)
             {
-                models[last].Center(MainWindow.main.threeDSettings.PrintAreaWidth / 2, MainWindow.main.threeDSettings.PrintAreaDepth / 2);  // Center and Land
+                float x = MainWindow.main.threeDSettings.PrintAreaWidth / 2;
+                float y = MainWindow.main.threeDSettings.PrintAreaDepth / 2;
+
+                models[last].Position.x = x;
+                models[last].Position.y = y;
+                models[last].Position.z = (float)(models[last].BoundingBox.zMax - models[last].BoundingBox.zMin) / 2;
             }
             else
             {
@@ -238,6 +238,7 @@ namespace View3D.view
                 models[last].Position.y = (float)models[last].BoundingBox.Center.y;
                 models[last].Position.z = (float)models[last].BoundingBox.Center.z;
             }
+
             models[last].UpdateBoundingBoxAndMatrix();
 
             if (models[last].Model.triangles.Count > 0)
@@ -500,7 +501,7 @@ namespace View3D.view
             if (models.Count == 1)
             {
                 var model = models[0];
-                model.CenterWOLand(MainWindow.main.threeDSettings.PrintAreaWidth / 2, MainWindow.main.threeDSettings.PrintAreaDepth / 2);
+                model.CenterWOLand();
 
                 if (MainWindow.main.threeDControl != null)
                     MainWindow.main.threeDControl.UpdateChanges();

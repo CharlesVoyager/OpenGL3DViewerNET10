@@ -134,8 +134,6 @@ Render Loop (OpenGL draw calls)
         {
             stlVertices.Clear();
 
-            printModel.Paint();
-
             for (int i = 0; i < printModel.Mesh.glVertices.Length; i += 3)
             {   // [x y z nx ny nz]
                 stlVertices.Add(printModel.Mesh.glVertices[i]);

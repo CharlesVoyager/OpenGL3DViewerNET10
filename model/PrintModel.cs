@@ -103,19 +103,22 @@ namespace View3D.model
             UpdateBoundingBoxAndMatrix();
         }
 
-        public void Center(float x, float y)
+        public void CenterWithLand()
         {
+            float x = MainWindow.main.threeDSettings.PrintAreaWidth / 2;
+            float y = MainWindow.main.threeDSettings.PrintAreaDepth / 2;
             Land();
-            RHVector3 center = bbox.Center;
-            Position.x += x - (float)center.x;
-            Position.y += y - (float)center.y;
+            Position.x += x - (float)bbox.Center.x;
+            Position.y += y - (float)bbox.Center.y;
         }
 
-        public void CenterWOLand(float x, float y)
+        public void CenterWOLand()
         {
-            RHVector3 center = bbox.Center;
-            Position.x += x - (float)center.x;
-            Position.y += y - (float)center.y;
+            float x = MainWindow.main.threeDSettings.PrintAreaWidth / 2;
+            float y = MainWindow.main.threeDSettings.PrintAreaDepth / 2;
+
+            Position.x += x - (float)bbox.Center.x;
+            Position.y += y - (float)bbox.Center.y;
         }
 
         // Scale → Rotate → Translate (applied right-to-left in matrix multiplication):
@@ -146,27 +149,14 @@ namespace View3D.model
             //Stopwatch sw = Stopwatch.StartNew();
 
             bbox.Clear();
-            convexVectorList.Clear();
-            convexVectorList.EnsureCapacity(Model.triangles.Count * 3);
-            foreach (var t in Model.triangles)
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    Vector3 vector3 = new Vector3(  (float)t.vertices[i].pos.x,
-                                                    (float)t.vertices[i].pos.y,
-                                                    (float)t.vertices[i].pos.z);
-                    convexVectorList.Add(vector3);
-                }
-            }
-            Vector3[] vec = convexVectorList.ToArray();
 
-            if (vec.Length == 0)
+            if (Mesh.glVertices.Length == 0)
                 return;
 
             ModelMatrix mtx = ModelObjectToolHelper.ToModelMatrix(trans);
-            fixed (float* ptr = &vec[0].X)
+            fixed (float* ptr = &Mesh.glVertices[0])
             {
-                BoundingBox3 box3 = ModelObjectToolWrapper.Instance.Tool.GetBoundingBox(mtx, ptr, vec.Length);
+                BoundingBox3 box3 = ModelObjectToolWrapper.Instance.Tool.GetBoundingBox(mtx, ptr, Mesh.glVertices.Length / 3);
                 bbox.Add(box3.MaxX, box3.MaxY, box3.MaxZ);
                 bbox.Add(box3.MinX, box3.MinY, box3.MinZ);
             }
@@ -266,13 +256,30 @@ namespace View3D.model
         }
 
 
-        public override void Paint()
+        public void TopoModelToMesh()
         {
             //Stopwatch sw = Stopwatch.StartNew();
 
             Mesh.Clear();
 
-            Model.FillMeshCheckRAM(Mesh, outside ? Submesh.MESHCOLOR_OUTSIDE : Submesh.MESHCOLOR_FRONTBACK);
+            // Fill Mesh with checking RAM 
+            int cnt = 0;
+            foreach (TopoTriangle t in Model.triangles)
+            {
+                if (0 == cnt % 50000)
+                {
+                    if (!Utils.RamTools.IsRamSizeValid())
+                    {
+                        throw new System.OutOfMemoryException();
+                    }
+                }
+                Mesh.AddTriangle(   t.vertices[0].pos.Subtract(Model.boundingBox.Center),
+                                    t.vertices[1].pos.Subtract(Model.boundingBox.Center),
+                                    t.vertices[2].pos.Subtract(Model.boundingBox.Center),
+                                    Submesh.MESHCOLOR_FRONTBACK);
+                cnt++;
+            }
+            // <>
 
             Mesh.selected = Selected;
             Mesh.extruder = extruder;
@@ -281,16 +288,6 @@ namespace View3D.model
             //Debug.WriteLine("[PrintModel.Paint]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }
 
-        public void CopyTopoModelBoundingBoxToPrintModel()
-        {
-            bbox.Add(Model.boundingBox);
-            xMin = (float)bbox.xMin;
-            xMax = (float)bbox.xMax;
-            yMin = (float)bbox.yMin;
-            yMax = (float)bbox.yMax;
-            zMin = (float)bbox.zMin;
-            zMax = (float)bbox.zMax;
-        }
         /// <summary>
         /// Get bounding box of model with support
         /// </summary>

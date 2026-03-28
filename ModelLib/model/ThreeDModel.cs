@@ -64,7 +64,5 @@
         {
             // Console.Write("ThreeDModel:Clear()");
         }
-
-        abstract public void Paint();
     }
 }
