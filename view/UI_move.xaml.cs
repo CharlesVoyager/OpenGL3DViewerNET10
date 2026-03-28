@@ -170,18 +170,8 @@ namespace View3D.view
             slider_moveY.Value = stl.Position.iniy;
             slider_moveZ.Value = stl.Position.iniz;
 
-            slider_moveX.Value = Math.Round(slider_moveX.Value);
-            slider_moveY.Value = Math.Round(slider_moveY.Value);
-            if (slider_moveZ.Value != Convert.ToDouble(moveZ_textbox.Text) + slider_moveZ.Minimum)
-            {
-                slider_moveZ.Value = Convert.ToDouble(moveZ_textbox.Text) + slider_moveZ.Minimum;
-            }
-
-            moveX_textbox.Text = slider_moveX.Value.ToString();
-            moveY_textbox.Text = slider_moveY.Value.ToString();
-            moveZ_textbox.Text = (Math.Round(slider_moveZ.Value - slider_moveZ.Minimum, 3)).ToString();
-
             stl.Land();
+
             MainWindow.main.stlComposer.UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
@@ -196,10 +186,7 @@ namespace View3D.view
             slider_moveX.Value = Math.Round(stl.Position.x);
             slider_moveY.Value = Math.Round(stl.Position.y);
             slider_moveZ.Value = Math.Round(stl.Position.z);
-            moveX_textbox.Text = slider_moveX.Value.ToString();
-            moveY_textbox.Text = slider_moveY.Value.ToString();
-            moveZ_textbox.Text = slider_moveZ.Value.ToString();
-
+ 
             MainWindow.main.stlComposer.UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
