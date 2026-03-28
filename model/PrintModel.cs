@@ -16,7 +16,7 @@ namespace View3D.model
 
         public ModelGLDraw Drawer;
 
-        private RHBoundingBox bbox;
+        public RHBoundingBox BoundingBox;
 
         public string name = "Unknown";
         public bool outside = false;
@@ -33,13 +33,13 @@ namespace View3D.model
             Model = new TopoModel();
             Mesh = new Submesh();
             Drawer = new ModelGLDraw(this);
-            bbox = new RHBoundingBox();
+            BoundingBox = new RHBoundingBox();
         }
 
         public virtual object cloneWithModel()
         {
             PrintModel stl = new PrintModel();
-            Model.CopyTo(stl.Model);   // NOTE: Just clone Model is enough. Drawer/bbox do not need to clone.
+            Model.CopyTo(stl.Model);   // NOTE: Just clone Model is enough. Drawer/BoundingBox do not need to clone.
             Mesh.CopyTo(stl.Mesh);
             stl.name = name;
             stl.Position.x = Position.x;
@@ -60,7 +60,7 @@ namespace View3D.model
         {
             Model.Clear();
             Mesh.Clear();
-            bbox.Clear();
+            BoundingBox.Clear();
 
             name = null;
             outside = false;
@@ -102,8 +102,8 @@ namespace View3D.model
             float x = MainWindow.main.threeDSettings.PrintAreaWidth / 2;
             float y = MainWindow.main.threeDSettings.PrintAreaDepth / 2;
 
-            Position.x += x - (float)bbox.Center.x;
-            Position.y += y - (float)bbox.Center.y;
+            Position.x += x - (float)BoundingBox.Center.x;
+            Position.y += y - (float)BoundingBox.Center.y;
         }
 
         // Scale → Rotate → Translate (applied right-to-left in matrix multiplication):
@@ -133,7 +133,7 @@ namespace View3D.model
         {
             //Stopwatch sw = Stopwatch.StartNew();
 
-            bbox.Clear();
+            BoundingBox.Clear();
 
             if (Mesh.glVertices.Length == 0)
                 return;
@@ -142,8 +142,8 @@ namespace View3D.model
             fixed (float* ptr = &Mesh.glVertices[0])
             {
                 BoundingBox3 box3 = ModelObjectToolWrapper.Instance.Tool.GetBoundingBox(mtx, ptr, Mesh.glVertices.Length / 3);
-                bbox.Add(box3.MaxX, box3.MaxY, box3.MaxZ);
-                bbox.Add(box3.MinX, box3.MinY, box3.MinZ);
+                BoundingBox.Add(box3.MaxX, box3.MaxY, box3.MaxZ);
+                BoundingBox.Add(box3.MinX, box3.MinY, box3.MinZ);
             }
 
             //Debug.WriteLine("[PrintModel.calcBoundingBox]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
@@ -156,12 +156,12 @@ namespace View3D.model
             updateMatrix(); // Must update trans Matrix before updating Bounding Box.
 
             updateBoundingBox();
-            xMin = (float)bbox.xMin;
-            xMax = (float)bbox.xMax;
-            yMin = (float)bbox.yMin;
-            yMax = (float)bbox.yMax;
-            zMin = (float)bbox.zMin;
-            zMax = (float)bbox.zMax;
+            xMin = (float)BoundingBox.xMin;
+            xMax = (float)BoundingBox.xMax;
+            yMin = (float)BoundingBox.yMin;
+            yMax = (float)BoundingBox.yMax;
+            zMin = (float)BoundingBox.zMin;
+            zMax = (float)BoundingBox.zMax;
 
             //Debug.WriteLine("[PrintModel.UpdateBoundingBoxAndMatrix]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }
@@ -175,13 +175,13 @@ namespace View3D.model
             updateMatrix(); // Must update trans Matrix before updating Bounding Box.
 
             // Centerized current bounding box.
-            float xMinCenter = (float)(bbox.xMin - bbox.Center.x);
-            float yMinCenter = (float)(bbox.yMin - bbox.Center.y);
-            float zMinCenter = (float)(bbox.zMin - bbox.Center.z);
+            float xMinCenter = (float)(BoundingBox.xMin - BoundingBox.Center.x);
+            float yMinCenter = (float)(BoundingBox.yMin - BoundingBox.Center.y);
+            float zMinCenter = (float)(BoundingBox.zMin - BoundingBox.Center.z);
 
-            float xMaxCenter = (float)(bbox.xMax - bbox.Center.x);
-            float yMaxCenter = (float)(bbox.yMax - bbox.Center.y);
-            float zMaxCenter = (float)(bbox.zMax - bbox.Center.z);
+            float xMaxCenter = (float)(BoundingBox.xMax - BoundingBox.Center.x);
+            float yMaxCenter = (float)(BoundingBox.yMax - BoundingBox.Center.y);
+            float zMaxCenter = (float)(BoundingBox.zMax - BoundingBox.Center.z);
 
             Vector4 minVertex = new Vector4(xMinCenter, yMinCenter, zMinCenter, 1.0f);
             Vector4 maxVertex = new Vector4(xMaxCenter, yMaxCenter, zMaxCenter, 1.0f);
@@ -191,20 +191,20 @@ namespace View3D.model
             Vector4 newMinVertex = minVertex * transl;
             Vector4 newMaxVertex = maxVertex * transl;
 
-            bbox.minPoint.x = newMinVertex.X;
-            bbox.minPoint.y = newMinVertex.Y;
-            bbox.minPoint.z = newMinVertex.Z;
+            BoundingBox.minPoint.x = newMinVertex.X;
+            BoundingBox.minPoint.y = newMinVertex.Y;
+            BoundingBox.minPoint.z = newMinVertex.Z;
 
-            bbox.maxPoint.x = newMaxVertex.X;
-            bbox.maxPoint.y = newMaxVertex.Y;
-            bbox.maxPoint.z = newMaxVertex.Z;
+            BoundingBox.maxPoint.x = newMaxVertex.X;
+            BoundingBox.maxPoint.y = newMaxVertex.Y;
+            BoundingBox.maxPoint.z = newMaxVertex.Z;
 
-            xMin = (float)bbox.xMin;
-            xMax = (float)bbox.xMax;
-            yMin = (float)bbox.yMin;
-            yMax = (float)bbox.yMax;
-            zMin = (float)bbox.zMin;
-            zMax = (float)bbox.zMax;
+            xMin = (float)BoundingBox.xMin;
+            xMax = (float)BoundingBox.xMax;
+            yMin = (float)BoundingBox.yMin;
+            yMax = (float)BoundingBox.yMax;
+            zMin = (float)BoundingBox.zMin;
+            zMax = (float)BoundingBox.zMax;
 
             //Debug.WriteLine("[PrintModel.UpdateBoundingBoxByMatrix]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }
@@ -267,35 +267,13 @@ namespace View3D.model
 
         public void CopyTopoModelBoundingBoxToPrintModel()
         {
-            bbox.Add(Model.boundingBox);
-            xMin = (float)bbox.xMin;
-            xMax = (float)bbox.xMax;
-            yMin = (float)bbox.yMin;
-            yMax = (float)bbox.yMax;
-            zMin = (float)bbox.zMin;
-            zMax = (float)bbox.zMax;
-        }
-
-        /// <summary>
-        /// Get bounding box of model with support
-        /// </summary>
-        /// <returns></returns>
-        public RHBoundingBox BoundingBox
-        {
-            get
-            {
-                RHBoundingBox return_bbox = new RHBoundingBox();
-                return_bbox.Add(xMin, yMin, zMin);
-                return_bbox.Add(xMax, yMax, zMax);
-
-                return return_bbox;
-            }
-
-            protected set
-            {
-                bbox.Clear();
-                bbox.Add(value);
-            }
+            BoundingBox.Add(Model.boundingBox);
+            xMin = (float)BoundingBox.xMin;
+            xMax = (float)BoundingBox.xMax;
+            yMin = (float)BoundingBox.yMin;
+            yMax = (float)BoundingBox.yMax;
+            zMin = (float)BoundingBox.zMin;
+            zMax = (float)BoundingBox.zMax;
         }
 
         /// <summary>
@@ -307,7 +285,7 @@ namespace View3D.model
             get
             {
                 // not copy data, may be modified by reference
-                return bbox;
+                return BoundingBox;
             }
         }
     }
