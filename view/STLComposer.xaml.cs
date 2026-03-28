@@ -230,7 +230,7 @@ namespace View3D.view
                 return;
             }
             AddObject(models[last]);
-            models[last].Position.z = (float)(models[last].BoundingBox.zMax - models[last].BoundingBox.zMin) / 2;
+            models[last].Position.z = (float)(models[last].BoundingBox.Size.z / 2);
             if (modelToLand)
             {
                 Autoposition();
