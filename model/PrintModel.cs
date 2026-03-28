@@ -75,7 +75,6 @@ namespace View3D.model
                 Drawer.Dispose();
             });
 #endif
-            GC.Collect();
         }
 
         public override string ToString()

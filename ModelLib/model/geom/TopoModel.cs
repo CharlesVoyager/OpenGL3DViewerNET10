@@ -21,8 +21,6 @@ namespace View3D.model.geom
             boundingBox.Clear();
 
             glVertices.Clear();
-
-            GC.Collect();
         }
         
         public void EnsureCapacity(int triCount) 

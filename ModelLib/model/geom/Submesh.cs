@@ -108,6 +108,14 @@ namespace View3D.model.geom
             edges.Clear();
             triangles.Clear();
             trianglesError.Clear();
+
+            glVertices = null;
+            glColors = null;
+            glEdges = null;
+            glTriangles = null;
+            glTrianglesError = null;
+            glBuffer = null;
+            glNormals = null;
         }
 
         /// <summary>

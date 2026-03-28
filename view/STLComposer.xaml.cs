@@ -198,7 +198,6 @@ namespace View3D.view
                 {
                     models[models.Count - 1].Clear();
                     models.RemoveAt(models.Count - 1);
-                    GC.Collect();
                     MessageBox.Show("Error: " + Trans.T("M_LOAD_FILE_FAIL"));
                     return;
                 }
@@ -437,7 +436,6 @@ namespace View3D.view
                 if (models[i] == model) { models.RemoveAt(i); break; }
 
             model.Clear();
-            GC.Collect();
         }
 
         private void RemoveAllSelectedModels()
