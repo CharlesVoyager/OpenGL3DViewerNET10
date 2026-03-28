@@ -57,8 +57,6 @@ namespace View3D.view
                 if (stl == null) return;
                 oriZmin = stl.zMin;
                 sliderX.Value = ConvertPositionAngel(new System.Windows.Point(stackpanelX.Width / 2, stackpanelX.Height / 2), e.GetPosition(stackpanelX));
-                //stl.LandToZ(oriZmin);
-                //MainWindow.main.stlComposer.updateSTLState(stl);
             }
         }
 
@@ -86,8 +84,6 @@ namespace View3D.view
      
                 oriZmin = stl.zMin;
                 sliderY.Value = ConvertPositionAngel(new System.Windows.Point(stackpanelY.Width / 2, stackpanelY.Height / 2), e.GetPosition(stackpanelY));
-                //stl.LandToZ(oriZmin);
-                //MainWindow.main.stlComposer.updateSTLState(stl);
             }
         }
 
