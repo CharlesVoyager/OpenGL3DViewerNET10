@@ -7,23 +7,6 @@ using View3D.Primitive;
 
 namespace View3D.view.utils
 {
-    public class BoundingBox
-    {
-        private Vector3 minPoint = Vector3.One * float.MaxValue;
-        private Vector3 maxPoint = Vector3.One * float.MinValue;
-
-        public Vector3 MinPoint3
-        {
-            get { return minPoint; }
-            set { minPoint = value; }
-        }
-        public Vector3 MaxPoint3
-        {
-            get { return maxPoint; }
-            set { maxPoint = value; }
-        }
-    }
-
     public class RayCasting
     {
         // OpenTK 3.3.3.0
@@ -124,16 +107,15 @@ namespace View3D.view.utils
 
         public static bool RaycastAABB(Ray ray, PrintModel md)
         {
-            BoundingBox aabb = new BoundingBox();
-            aabb.MinPoint3 = new Vector3((float)md.BoundingBox.minPoint.x, (float)md.BoundingBox.minPoint.y, (float)md.BoundingBox.minPoint.z);
-            aabb.MaxPoint3 = new Vector3((float)md.BoundingBox.maxPoint.x, (float)md.BoundingBox.maxPoint.y, (float)md.BoundingBox.maxPoint.z);
+            Vector3 aabbMinPoint3 = new Vector3((float)md.BoundingBox.minPoint.x, (float)md.BoundingBox.minPoint.y, (float)md.BoundingBox.minPoint.z);
+            Vector3 aabbMaxPoint3 = new Vector3((float)md.BoundingBox.maxPoint.x, (float)md.BoundingBox.maxPoint.y, (float)md.BoundingBox.maxPoint.z);
 
-            float t1 = (aabb.MinPoint3.X - ray.Position.X) / ray.Normal.X;
-            float t2 = (aabb.MaxPoint3.X - ray.Position.X) / ray.Normal.X;
-            float t3 = (aabb.MinPoint3.Y - ray.Position.Y) / ray.Normal.Y;
-            float t4 = (aabb.MaxPoint3.Y - ray.Position.Y) / ray.Normal.Y;
-            float t5 = (aabb.MinPoint3.Z - ray.Position.Z) / ray.Normal.Z;
-            float t6 = (aabb.MaxPoint3.Z - ray.Position.Z) / ray.Normal.Z;
+            float t1 = (aabbMinPoint3.X - ray.Position.X) / ray.Normal.X;
+            float t2 = (aabbMaxPoint3.X - ray.Position.X) / ray.Normal.X;
+            float t3 = (aabbMinPoint3.Y - ray.Position.Y) / ray.Normal.Y;
+            float t4 = (aabbMaxPoint3.Y - ray.Position.Y) / ray.Normal.Y;
+            float t5 = (aabbMinPoint3.Z - ray.Position.Z) / ray.Normal.Z;
+            float t6 = (aabbMaxPoint3.Z - ray.Position.Z) / ray.Normal.Z;
 
             float tmin = Math.Max(Math.Max(Math.Min(t1, t2), Math.Min(t3, t4)), Math.Min(t5, t6));
             float tmax = Math.Min(Math.Min(Math.Max(t1, t2), Math.Max(t3, t4)), Math.Max(t5, t6));
