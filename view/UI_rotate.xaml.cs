@@ -45,25 +45,17 @@ namespace View3D.view
             StackPanelX_MouseMove(sender, e);
         }
 
-        private void StackPanelX_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        private void StackPanelX_MouseMove(object sender, MouseEventArgs e)
         {
             label_X.Visibility = Visibility.Hidden;
             textboxX.Visibility = Visibility.Visible;
             labelX.Visibility = Visibility.Visible;
             if (e.LeftButton == MouseButtonState.Pressed && textboxX.IsMouseDirectlyOver == false)
             {
-                float oriZmin;
                 PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                oriZmin = stl.zMin;
-                sliderX.Value = ConvertPositionAngel(new System.Windows.Point(stackpanelX.Width / 2, stackpanelX.Height / 2), e.GetPosition(stackpanelX));
+                sliderX.Value = ConvertPositionAngel(new Point(stackpanelX.Width / 2, stackpanelX.Height / 2), e.GetPosition(stackpanelX));
             }
-        }
-
-        private void StackPanelX_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-            if (stl == null) return;
         }
 
         private void StackPanelY_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -71,7 +63,7 @@ namespace View3D.view
             StackPanelY_MouseMove(sender, e);
         }
 
-        private void StackPanelY_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        private void StackPanelY_MouseMove(object sender, MouseEventArgs e)
         {
             label_Y.Visibility = Visibility.Hidden;
             textboxY.Visibility = Visibility.Visible;
@@ -83,14 +75,8 @@ namespace View3D.view
                 if (stl == null) return;
      
                 oriZmin = stl.zMin;
-                sliderY.Value = ConvertPositionAngel(new System.Windows.Point(stackpanelY.Width / 2, stackpanelY.Height / 2), e.GetPosition(stackpanelY));
+                sliderY.Value = ConvertPositionAngel(new Point(stackpanelY.Width / 2, stackpanelY.Height / 2), e.GetPosition(stackpanelY));
             }
-        }
-
-        private void StackPanelY_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-            if (stl == null) return;
         }
 
         private void StackPanelZ_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -98,7 +84,7 @@ namespace View3D.view
             StackPanelZ_MouseMove(sender, e);
         }
 
-        private void StackPanelZ_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        private void StackPanelZ_MouseMove(object sender, MouseEventArgs e)
         {
             label_Z.Visibility = Visibility.Hidden;
             textboxZ.Visibility = Visibility.Visible;
@@ -109,14 +95,8 @@ namespace View3D.view
                 PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
                 oriZmin = stl.zMin;
-                sliderZ.Value = ConvertPositionAngel(new System.Windows.Point(stackpanelZ.Width / 2, stackpanelZ.Height / 2), e.GetPosition(stackpanelZ));
+                sliderZ.Value = ConvertPositionAngel(new Point(stackpanelZ.Width / 2, stackpanelZ.Height / 2), e.GetPosition(stackpanelZ));
             }
-        }
-
-        private void StackPanelZ_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-            if (stl == null) return;
         }
 
         public void button_rotate_reset_Click(object sender, RoutedEventArgs e)

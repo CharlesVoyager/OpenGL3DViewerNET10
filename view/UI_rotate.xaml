@@ -153,7 +153,7 @@
                         </ToggleButton.Background>
                     </ToggleButton>
                 </StackPanel>
-                <StackPanel Width="110" Height="115" Name="stackpanelZ" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" MouseMove="StackPanelZ_MouseMove" MouseDown="StackPanelZ_MouseLeftButtonDown" MouseUp="StackPanelZ_MouseUp" Margin="110,0,0,0" MouseLeave="stackpanelZ_MouseLeave" PreviewMouseWheel="orangeZ_PreviewMouseWheel">
+                <StackPanel Width="110" Height="115" Name="stackpanelZ" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" MouseMove="StackPanelZ_MouseMove" MouseDown="StackPanelZ_MouseLeftButtonDown" Margin="110,0,0,0" MouseLeave="stackpanelZ_MouseLeave" PreviewMouseWheel="orangeZ_PreviewMouseWheel">
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                         <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="White" StrokeThickness="55" Angle="360" Radius="1" />
                         <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="#FF878889" StrokeThickness="10" Angle="360" Radius="30" />
@@ -164,7 +164,7 @@
                         <Label Content="Z" FontSize="30" HorizontalAlignment="Center" Name="label_Z" VerticalAlignment="Center" FontFamily="Arial" />
                     </Grid>
                 </StackPanel>
-                <StackPanel Width="110" Height="115" Name="stackpanelY" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" MouseMove="StackPanelY_MouseMove" MouseDown="StackPanelY_MouseLeftButtonDown" MouseUp="StackPanelY_MouseUp" Margin="-40,0,0,2" MouseLeave="stackpanelY_MouseLeave" PreviewMouseWheel="orangeY_PreviewMouseWheel">
+                <StackPanel Width="110" Height="115" Name="stackpanelY" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" MouseMove="StackPanelY_MouseMove" MouseDown="StackPanelY_MouseLeftButtonDown" Margin="-40,0,0,2" MouseLeave="stackpanelY_MouseLeave" PreviewMouseWheel="orangeY_PreviewMouseWheel">
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                         <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="White" StrokeThickness="55" Angle="360" Radius="1" />
                         <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="#FF878889" StrokeThickness="10" Angle="360" Radius="30" />
@@ -175,7 +175,7 @@
                         <Label Content="Y" FontSize="30" HorizontalAlignment="Center" Name="label_Y" VerticalAlignment="Center" FontFamily="Arial" />
                     </Grid>
                 </StackPanel>
-                <StackPanel Width="110" Height="115" Name="stackpanelX" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" MouseMove="StackPanelX_MouseMove" MouseDown="StackPanelX_MouseLeftButtonDown" MouseUp="StackPanelX_MouseUp" Margin="-190,0,0,0" MouseLeave="stackpanelX_MouseLeave" PreviewMouseWheel="orangeX_PreviewMouseWheel">
+                <StackPanel Width="110" Height="115" Name="stackpanelX" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" MouseMove="StackPanelX_MouseMove" MouseDown="StackPanelX_MouseLeftButtonDown" Margin="-190,0,0,0" MouseLeave="stackpanelX_MouseLeave" PreviewMouseWheel="orangeX_PreviewMouseWheel">
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                         <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="White" StrokeThickness="55" Angle="360" Radius="1" />
                         <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="#FF878889" StrokeThickness="10" Angle="360" Radius="30" />
