@@ -84,8 +84,7 @@ namespace View3D.model
         /// </summary>
         public void Land()
         {
-            UpdateBoundingBoxAndMatrix();
-            Position.z -= zMin;
+            Position.z = (float)(BoundingBox.Size.z / 2);
             UpdateBoundingBoxAndMatrix();
         }
 

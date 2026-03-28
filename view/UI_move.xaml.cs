@@ -200,7 +200,6 @@ namespace View3D.view
             moveY_textbox.Text = slider_moveY.Value.ToString();
             moveZ_textbox.Text = slider_moveZ.Value.ToString();
 
-            stl.UpdateBoundingBoxByMatrix();
             MainWindow.main.stlComposer.UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
