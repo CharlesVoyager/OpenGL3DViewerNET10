@@ -310,13 +310,9 @@ namespace View3D.view
                 limitRotateAngle(textboxX);
                 PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                float oriZmin;
-                oriZmin = stl.zMin;
+
                 sliderX.Value = Convert.ToDouble(textboxX.Text);
                 MainWindow.main.stlComposer.textRotX.Text = textboxX.Text;
-                stl.LandToZ(oriZmin);
-                stl.UpdateBoundingBoxAndMatrix();
-                MainWindow.main.stlComposer.UpdateOutOfBound();
             }
             catch { }
         }

@@ -352,7 +352,6 @@ namespace View3D.view
         }
         public void UpdateOutOfBound()
         {
-            bool dataChanged = false;
             var testList  = ListObjects(false);
 
             bool allModelsInside = true;
@@ -783,12 +782,14 @@ namespace View3D.view
             if (_suppressTextEvents) return;
             var stl = SingleSelectedModel;
             if (stl == null) return;
+            float oriZmin = stl.zMin;
             float old = stl.Rotation.x;
             float.TryParse(textRotX.Text, out stl.Rotation.x);
-            stl.UpdateBoundingBoxAndMatrix();
             if (Math.Abs(old - stl.Rotation.x) < 0.001f) return;
-            UpdateOutOfBound();
             stl.UpdateBoundingBoxAndMatrix();
+            //stl.LandToZ(oriZmin);
+            //stl.UpdateBoundingBoxAndMatrix();
+            UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
