@@ -560,7 +560,7 @@ namespace View3D.view
                 }
             }
 
-            Debug.WriteLine("[ThreeDModel.Picktest]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
+            // Debug.WriteLine("[ThreeDModel.Picktest]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
             return nearestModel;
         }
 

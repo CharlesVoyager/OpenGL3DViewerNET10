@@ -202,7 +202,11 @@ namespace View3D.view
                     MessageBox.Show("Error: " + Trans.T("M_LOAD_FILE_FAIL"));
                     return;
                 }
-                models[last].TopoModelToMesh();
+
+                // NOTES:
+                // 1. Model (TopoModel): Original STL file triangles data.
+                // 2. Mesh (Submesh): Centerized triangles data. 
+                models[last].ModelToMesh();
                 models[last].UpdateBoundingBoxAndMatrix();
 
                _stlModelDataReady.Set();

@@ -10,13 +10,13 @@ namespace View3D.model
     public delegate LinkedList<PrintModel> ListviewGetModelsDelegate(bool selected);
     public partial class PrintModel : ThreeDModel
     {
-        public TopoModel Model;
+        public TopoModel Model;         // Original STL file triangles data.
 
-        public Submesh Mesh;
+        public Submesh Mesh;            // Centerized triangles data.
+
         public ModelGLDraw Drawer;
 
         private RHBoundingBox bbox;
-        private List<Vector3> convexVectorList;
 
         public string name = "Unknown";
         public bool outside = false;
@@ -35,14 +35,13 @@ namespace View3D.model
             Mesh = new Submesh();
             Drawer = new ModelGLDraw(this);
             bbox = new RHBoundingBox();
-
-            convexVectorList = new List<Vector3>();
         }
 
         public virtual object cloneWithModel()
         {
             PrintModel stl = new PrintModel();
-            stl.Model = Model.Copy();   // NOTE: Just clone Model is enough. Mesh/Drawer/bbox do not need to clone.
+            Model.CopyTo(stl.Model);   // NOTE: Just clone Model is enough. Drawer/bbox do not need to clone.
+            Mesh.CopyTo(stl.Mesh);
             stl.name = name;
             stl.Position.x = Position.x;
             stl.Position.y = Position.y;
@@ -63,7 +62,6 @@ namespace View3D.model
             Model.Clear();
             Mesh.Clear();
             bbox.Clear();
-            convexVectorList.Clear();
 
             name = null;
             outside = false;
@@ -256,7 +254,7 @@ namespace View3D.model
         }
 
 
-        public void TopoModelToMesh()
+        public void ModelToMesh()
         {
             //Stopwatch sw = Stopwatch.StartNew();
 

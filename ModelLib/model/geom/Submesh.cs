@@ -118,6 +118,23 @@ namespace View3D.model.geom
             Compress(false, 0);
         }
 
+        public void CopyTo(Submesh newMesh)
+        {
+            newMesh.glVertices = new float[glVertices.Length];
+            newMesh.glNormals = new float[glNormals.Length];
+            newMesh.glColors = new int[glColors.Length];
+            newMesh.glEdges = new int[glEdges.Length];
+            newMesh.glTriangles = new int[glTriangles.Length];
+            newMesh.glTrianglesError = new int[glTrianglesError.Length];
+
+            Array.Copy(glVertices,          newMesh.glVertices,         glVertices.Length);
+            Array.Copy(glNormals,           newMesh.glNormals,          glNormals.Length);
+            Array.Copy(glColors,            newMesh.glColors,           glColors.Length);
+            Array.Copy(glEdges,             newMesh.glEdges,            glEdges.Length);
+            Array.Copy(glTriangles,         newMesh.glTriangles,        glTriangles.Length);
+            Array.Copy(glTrianglesError,    newMesh.glTrianglesError,   glTrianglesError.Length);
+        }
+
         private void Compress(bool override_color, int color)
         {
             glVertices = new float[3 * vertices.Count];

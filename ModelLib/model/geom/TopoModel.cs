@@ -31,13 +31,10 @@ namespace View3D.model.geom
             // glVertices.EnsureCapacity(triCount * 3 * 6);   // [x y z nx ny nz]
         }
 
-        public TopoModel Copy()
+        public void CopyTo(TopoModel newModel)
         {
-            TopoModel newModel = new TopoModel();
-
             foreach (TopoTriangle t in triangles)
                 newModel.triangles.Add(new TopoTriangle(t));
-            return newModel;
         }
 
 
