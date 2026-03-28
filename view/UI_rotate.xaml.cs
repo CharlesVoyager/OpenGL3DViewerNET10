@@ -101,27 +101,14 @@ namespace View3D.view
 
         public void button_rotate_reset_Click(object sender, RoutedEventArgs e)
         {
-            float oriZmin = 0.0f;
             PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
-            stl.reset = true;
-            MainWindow.main.UI_move.button_land_Click(null, null);
-
-            if (sliderX.Value == 0 && sliderY.Value == 0 && sliderZ.Value == 0)
-            {
-                stl.LandToZ(0);
-                stl.Rotation.x = stl.Rotation.y = stl.Rotation.z = 0;
-            }
-            else
-            {
-                oriZmin = stl.zMin;
-                stl.LandToZ(oriZmin);
-            }
-
+       
             sliderX.Value = 0;
             sliderY.Value = 0;
             sliderZ.Value = 0;
-            stl.LandToZ(oriZmin);
+
+            stl.UpdateBoundingBoxAndMatrix();
             MainWindow.main.stlComposer.UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }

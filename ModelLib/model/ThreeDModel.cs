@@ -22,7 +22,6 @@
     public abstract class ThreeDModel
     {
         private bool selected = false;
-        public bool reset = false;
         private Coord3D position = new Coord3D();      // shift position
         private Coord3D rotation = new Coord3D();      // rotate vector
         private Coord3D scale = new Coord3D(1, 1, 1);  // scaler magnitude
