@@ -88,21 +88,13 @@ namespace View3D.model
             UpdateBoundingBoxByMatrix();
         }
 
+        // Keep same height to the printer base after rotation.
         public void LandToZ(float oriZmin)
         {
             if (Math.Abs(oriZmin - zMin) < 0.001) return;
             Position.z += oriZmin - zMin;
 
-            UpdateBoundingBoxAndMatrix();
-        }
-
-        public void CenterWOLand()
-        {
-            float x = MainWindow.main.threeDSettings.PrintAreaWidth / 2;
-            float y = MainWindow.main.threeDSettings.PrintAreaDepth / 2;
-
-            Position.x += x - (float)BoundingBox.Center.x;
-            Position.y += y - (float)BoundingBox.Center.y;
+            UpdateBoundingBoxByMatrix();
         }
 
         // Scale → Rotate → Translate (applied right-to-left in matrix multiplication):
