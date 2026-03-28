@@ -206,9 +206,13 @@ namespace View3D.view
                 // 1. Model (TopoModel): Original STL file triangles data.
                 // 2. Mesh (Submesh): Centerized triangles data. 
                 models[last].ModelToMesh();
-                models[last].UpdateBoundingBoxAndMatrix();
 
-               _stlModelDataReady.Set();
+                // NOTES:
+                // 1. Auto position needs bounding box information.
+                // 2. Current bounding box is for orignal STL data. 
+                models[last].CopyTopoModelBoundingBoxToPrintModel();
+
+                _stlModelDataReady.Set();
                 Console.WriteLine("LoadWOCatch Done.");
             });
             MainWindow.main.BusyWindow.DisableBusyWindow();
@@ -226,7 +230,7 @@ namespace View3D.view
                 return;
             }
             AddObject(models[last]);
-            models[last].Position.z = -models[last].zMin;
+            models[last].Position.z = (float)(models[last].BoundingBox.zMax - models[last].BoundingBox.zMin) / 2;
             if (modelToLand)
             {
                 Autoposition();

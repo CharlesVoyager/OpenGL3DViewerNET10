@@ -154,6 +154,8 @@ namespace View3D.model
 
         public void UpdateBoundingBoxAndMatrix()
         {
+            //Stopwatch sw = Stopwatch.StartNew();
+
             updateMatrix(); // Must update trans Matrix before updating Bounding Box.
 
             updateBoundingBox();
@@ -163,6 +165,8 @@ namespace View3D.model
             yMax = (float)bbox.yMax;
             zMin = (float)bbox.zMin;
             zMax = (float)bbox.zMax;
+
+            //Debug.WriteLine("[PrintModel.UpdateBoundingBoxAndMatrix]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }
 
         // This function only works for the model without scaling and rotation.
@@ -274,6 +278,17 @@ namespace View3D.model
             Mesh.Compress();
 
             //Debug.WriteLine("[PrintModel.Paint]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
+        }
+
+        public void CopyTopoModelBoundingBoxToPrintModel()
+        {
+            bbox.Add(Model.boundingBox);
+            xMin = (float)bbox.xMin;
+            xMax = (float)bbox.xMax;
+            yMin = (float)bbox.yMin;
+            yMax = (float)bbox.yMax;
+            zMin = (float)bbox.zMin;
+            zMax = (float)bbox.zMax;
         }
 
         /// <summary>
