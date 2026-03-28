@@ -85,7 +85,7 @@ namespace View3D.model
         public void Land()
         {
             Position.z = (float)(BoundingBox.Size.z / 2);
-            UpdateBoundingBoxAndMatrix();
+            UpdateBoundingBoxByMatrix();
         }
 
         public void LandToZ(float oriZmin)
