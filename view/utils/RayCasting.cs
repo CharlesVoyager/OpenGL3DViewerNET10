@@ -107,6 +107,9 @@ namespace View3D.view.utils
 
         public static bool RaycastAABB(Ray ray, PrintModel md)
         {
+            if (md.BoundingBox.minPoint == null || md.BoundingBox.maxPoint == null)
+                return false;
+
             Vector3 aabbMinPoint3 = new Vector3((float)md.BoundingBox.minPoint.x, (float)md.BoundingBox.minPoint.y, (float)md.BoundingBox.minPoint.z);
             Vector3 aabbMaxPoint3 = new Vector3((float)md.BoundingBox.maxPoint.x, (float)md.BoundingBox.maxPoint.y, (float)md.BoundingBox.maxPoint.z);
 

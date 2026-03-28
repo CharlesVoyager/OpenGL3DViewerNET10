@@ -9,15 +9,11 @@ namespace View3D.model.geom
 
         public RHBoundingBox boundingBox = new RHBoundingBox();
 
-        public List<float> glVertices = new List<float>(); 
-
         public void Clear()
         {
             triangles.Clear();
 
             boundingBox.Clear();
-
-            glVertices.Clear();
         }
         
         public void EnsureCapacity(int triCount) 
