@@ -92,7 +92,6 @@ namespace View3D.model.geom
         public List<SubmeshTriangle> triangles = new List<SubmeshTriangle>();
         public List<SubmeshTriangle> trianglesError = new List<SubmeshTriangle>();
         public bool selected = false;
-        public int extruder = 0;
 
         public float[] glVertices = null;
         public int[] glColors = null;

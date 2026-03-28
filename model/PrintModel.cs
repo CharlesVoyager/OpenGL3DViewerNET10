@@ -23,7 +23,6 @@ namespace View3D.model
 
         public Matrix4 trans;
 
-        public int extruder = 0;
         public double maxScaleVector = 0;
         public double minScaleVector = 0;
         public double m = 0;
@@ -65,8 +64,6 @@ namespace View3D.model
 
             name = null;
             outside = false;
-
-            extruder = 0;
 
             // It should dispose drawer in main thread. But, it causes black flash when deleting model. So, we just let GC to dispose it.
 #if false
@@ -263,7 +260,6 @@ namespace View3D.model
             // <>
 
             Mesh.selected = Selected;
-            Mesh.extruder = extruder;
             Mesh.Compress();
 
             //Debug.WriteLine("[PrintModel.Paint]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
