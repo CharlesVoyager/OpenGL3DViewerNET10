@@ -891,7 +891,7 @@ namespace View3D.view
                 ui.button_mmtoinch.IsEnabled = false;
                 ui.button_inchtomm.IsEnabled = true;
                 ui.chk_Uniform.IsChecked     = true;
-                var bbox = stl.BoundingBoxWOSupport;
+                var bbox = stl.BoundingBox;
                 ui.bboxnow = bbox.Size.x / Convert.ToDouble(textScaleX.Text);
                 ui.bboynow = bbox.Size.y / Convert.ToDouble(textScaleY.Text);
                 ui.bboznow = bbox.Size.z / Convert.ToDouble(textScaleZ.Text);
@@ -919,7 +919,7 @@ namespace View3D.view
             try
             {
                 var ui   = MainWindow.main.UI_resize_advance;
-                var bbox = stl.BoundingBoxWOSupport;
+                var bbox = stl.BoundingBox;
                 ui.bboxnow = bbox.Size.x / Convert.ToDouble(textScaleX.Text);
                 ui.bboynow = bbox.Size.y / Convert.ToDouble(textScaleY.Text);
                 ui.bboznow = bbox.Size.z / Convert.ToDouble(textScaleZ.Text);
@@ -943,7 +943,7 @@ namespace View3D.view
             try
             {
                 var ui   = MainWindow.main.UI_resize_advance;
-                var bbox = stl.BoundingBoxWOSupport;
+                var bbox = stl.BoundingBox;
                 ui.chk_Uniform.IsChecked = true;
                 ui.bboxnow = bbox.Size.x / Convert.ToDouble(textScaleX.Text);
                 ui.bboynow = bbox.Size.y / Convert.ToDouble(textScaleY.Text);
@@ -1005,7 +1005,7 @@ namespace View3D.view
             try
             {
                 var ui   = MainWindow.main.UI_resize_advance;
-                var bbox = stl.BoundingBoxWOSupport;
+                var bbox = stl.BoundingBox;
                 ui.chk_Uniform.IsChecked = true;
                 double tempX = bbox.Size.x / 25.4, tempY = bbox.Size.y / 25.4, tempZ = bbox.Size.z / 25.4;
                 ui.gIsShow = true;

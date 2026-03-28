@@ -99,17 +99,17 @@ namespace View3D.view
                     //Fix_resize_issue_160803
                     if (scaleKeyDown != "x")
                     {
-                        dimX = stl.BoundingBoxWOSupport.Size.x;
+                        dimX = stl.BoundingBox.Size.x;
                         updateTxt(Enums.Axis.X);
                     }
                     if (scaleKeyDown != "y")
                     {
-                        dimY = stl.BoundingBoxWOSupport.Size.y;
+                        dimY = stl.BoundingBox.Size.y;
                         updateTxt(Enums.Axis.Y);
                     }
                     if (scaleKeyDown != "z")
                     {
-                        dimZ = stl.BoundingBoxWOSupport.Size.z;
+                        dimZ = stl.BoundingBox.Size.z;
                         updateTxt(Enums.Axis.Z);
                     }
                     gIsShow = false;
@@ -182,17 +182,17 @@ namespace View3D.view
 
                     if (scaleKeyDown != "x")
                     {
-                        dimX = stl.BoundingBoxWOSupport.Size.x;
+                        dimX = stl.BoundingBox.Size.x;
                         updateTxt(Enums.Axis.X);
                     }
                     if (scaleKeyDown != "y")
                     {
-                        dimY = stl.BoundingBoxWOSupport.Size.y;
+                        dimY = stl.BoundingBox.Size.y;
                         updateTxt(Enums.Axis.Y);
                     }
                     if (scaleKeyDown != "z")
                     {
-                        dimZ = stl.BoundingBoxWOSupport.Size.z;
+                        dimZ = stl.BoundingBox.Size.z;
                         updateTxt(Enums.Axis.Z);
                     }
                     gIsShow = false;
@@ -214,7 +214,7 @@ namespace View3D.view
             {
                 stl.LandToZ(stl.zMin);
                 MainWindow.main.UI_move.slider_moveZ.Value = stl.Position.z;
-                MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBoxWOSupport.zMin;
+                MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBox.zMin;
                 MainWindow.main.stlComposer.UpdateOutOfBound();
                 return;
             }
@@ -273,17 +273,17 @@ namespace View3D.view
 
                     if (scaleKeyDown != "x")
                     {
-                        dimX = stl.BoundingBoxWOSupport.Size.x;
+                        dimX = stl.BoundingBox.Size.x;
                         updateTxt(Enums.Axis.X);
                     }
                     if (scaleKeyDown != "y")
                     {
-                        dimY = stl.BoundingBoxWOSupport.Size.y;
+                        dimY = stl.BoundingBox.Size.y;
                         updateTxt(Enums.Axis.Y);
                     }
                     if (scaleKeyDown != "z")
                     {
-                        dimZ = stl.BoundingBoxWOSupport.Size.z;
+                        dimZ = stl.BoundingBox.Size.z;
                         updateTxt(Enums.Axis.Z);
                     }
 
@@ -291,7 +291,7 @@ namespace View3D.view
                     IsScale = true;
                 }
                     stl.LandToZ(stl.zMin);
-                MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBoxWOSupport.zMin;
+                MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBox.zMin;
                 MainWindow.main.stlComposer.UpdateOutOfBound();
             }
             catch { }
@@ -449,7 +449,7 @@ namespace View3D.view
             if (MainWindow.main == null) return;
             PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
-            model.geom.RHBoundingBox bbox = stl.BoundingBoxWOSupport;
+            model.geom.RHBoundingBox bbox = stl.BoundingBox;
             MainWindow.main.stlComposer.textScaleX.Text = "1";
             MainWindow.main.stlComposer.textScaleY.Text = "1";
             MainWindow.main.stlComposer.textScaleZ.Text = "1";
@@ -507,7 +507,7 @@ namespace View3D.view
             PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
-            model.geom.RHBoundingBox bbox = stl.BoundingBoxWOSupport;
+            model.geom.RHBoundingBox bbox = stl.BoundingBox;
 
             try
             {
@@ -523,11 +523,11 @@ namespace View3D.view
                 MainWindow.main.stlComposer.textScaleY.Text = tAddScaleY.ToString("0.000");
                 MainWindow.main.stlComposer.textScaleZ.Text = tAddScaleZ.ToString("0.000");
                 gIsShow = true;
-                dimX = stl.BoundingBoxWOSupport.Size.x;
+                dimX = stl.BoundingBox.Size.x;
                 updateTxt(Enums.Axis.X);
-                dimY = stl.BoundingBoxWOSupport.Size.y;
+                dimY = stl.BoundingBox.Size.y;
                 updateTxt(Enums.Axis.Y);
-                dimZ = stl.BoundingBoxWOSupport.Size.z;
+                dimZ = stl.BoundingBox.Size.z;
                 updateTxt(Enums.Axis.Z);
                 gIsShow = false;
                 //checkMin();
@@ -556,11 +556,11 @@ namespace View3D.view
 
             try
             {
-                dimX = stl.BoundingBoxWOSupport.Size.x;
+                dimX = stl.BoundingBox.Size.x;
                 updateTxt(Enums.Axis.X);
-                dimY = stl.BoundingBoxWOSupport.Size.y;
+                dimY = stl.BoundingBox.Size.y;
                 updateTxt(Enums.Axis.Y);
-                dimZ = stl.BoundingBoxWOSupport.Size.z;
+                dimZ = stl.BoundingBox.Size.z;
                 updateTxt(Enums.Axis.Z);
 
                 scaleKeyDown = "";

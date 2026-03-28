@@ -35,7 +35,7 @@ namespace View3D.view
                 volume += t.SignedVolume();
             }
 
-            RHBoundingBox bbox = pm.BoundingBoxWOSupport;
+            RHBoundingBox bbox = pm.BoundingBox;
 
             string CubicCM = (0.001 * Math.Abs(volume)).ToString("0.000");
             if (CubicCM == "0.000")

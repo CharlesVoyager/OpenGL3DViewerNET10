@@ -275,18 +275,5 @@ namespace View3D.model
             zMin = (float)BoundingBox.zMin;
             zMax = (float)BoundingBox.zMax;
         }
-
-        /// <summary>
-        /// Get bounding box of model without support
-        /// </summary>
-        /// <returns></returns>
-        public RHBoundingBox BoundingBoxWOSupport
-        {
-            get
-            {
-                // not copy data, may be modified by reference
-                return BoundingBox;
-            }
-        }
     }
 }

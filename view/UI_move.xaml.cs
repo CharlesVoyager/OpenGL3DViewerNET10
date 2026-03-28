@@ -147,8 +147,8 @@ namespace View3D.view
                 slider_moveY.Minimum = moveMin;
             }
 
-            moveMax = MainWindow.main.threeDSettings.PrintAreaHeight - (stl.BoundingBoxWOSupport.zMax - stl.Position.z);
-            moveMin = stl.Position.z - stl.BoundingBoxWOSupport.zMin;
+            moveMax = MainWindow.main.threeDSettings.PrintAreaHeight - (stl.BoundingBox.zMax - stl.Position.z);
+            moveMin = stl.Position.z - stl.BoundingBox.zMin;
             if (moveMin > moveMax)
                 moveMin = moveMax;
             if (moveMin <= stl.Position.z && moveMax >= stl.Position.z)

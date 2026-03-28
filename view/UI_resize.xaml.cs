@@ -144,7 +144,7 @@ namespace View3D.view
                 oriZmin = stl.zMin;
                 MainWindow.main.stlComposer.textScaleX.Text = Convert.ToString(int.Parse(resize_textbox.Text) / 100.00); 
                 stl.LandToZ(oriZmin);
-                MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBoxWOSupport.zMin;
+                MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBox.zMin;
                 MainWindow.main.stlComposer.UpdateOutOfBound();
 
 
