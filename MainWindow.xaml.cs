@@ -390,7 +390,7 @@ namespace View3D
             if (stl == null) return;
             UI_move.slider_moveZ.Maximum = 1000;
 
-            model.geom.RHBoundingBox bbox = stl.BoundingBoxWOSupport;
+            RHBoundingBox bbox = stl.BoundingBoxWOSupport;
             UI_resize_advance.bboxnow = bbox.Size.x / Convert.ToDouble(stlComposer.textScaleX.Text);
             UI_resize_advance.bboynow = bbox.Size.y / Convert.ToDouble(stlComposer.textScaleY.Text);
             UI_resize_advance.bboznow = bbox.Size.z / Convert.ToDouble(stlComposer.textScaleZ.Text);
