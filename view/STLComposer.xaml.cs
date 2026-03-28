@@ -901,7 +901,7 @@ namespace View3D.view
                 ui.chk_Uniform_Checked(null, null);
                 ui.gIsShow = false;
                 UpdateOutOfBound();
-                stl.LandToZ(0);
+                stl.Land();
                 MainWindow.main.threeDControl.UpdateChanges();
             }
             catch { }
