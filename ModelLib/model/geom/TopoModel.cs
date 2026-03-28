@@ -1,17 +1,14 @@
 ﻿using OpenTK.Mathematics;
-using System;
-using System.Collections.Generic;
-using View3D.Extensions;
 
 namespace View3D.model.geom
 {
+    // TopoModel: Used to store orginal STL file triangle data with intact.
     public class TopoModel
     {
         public HashSet<TopoTriangle> triangles = new HashSet<TopoTriangle>();
 
         public RHBoundingBox boundingBox = new RHBoundingBox();
 
-        // Under construction: To store vertices and normals in glVertices for later binding to GL buffer.
         public List<float> glVertices = new List<float>(); 
 
         public void Clear()
@@ -26,7 +23,6 @@ namespace View3D.model.geom
         public void EnsureCapacity(int triCount) 
         { 
             triangles.EnsureCapacity(triCount);
-            // glVertices.EnsureCapacity(triCount * 3 * 6);   // [x y z nx ny nz]
         }
 
         public void CopyTo(TopoModel newModel)
