@@ -200,7 +200,7 @@ namespace View3D.view
             moveY_textbox.Text = slider_moveY.Value.ToString();
             moveZ_textbox.Text = slider_moveZ.Value.ToString();
 
-            stl.UpdateBoundingBoxAndMatrix();
+            stl.UpdateBoundingBoxByMatrix();
             MainWindow.main.stlComposer.UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
@@ -240,7 +240,6 @@ namespace View3D.view
                 {
                     PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
-                    stl.UpdateBoundingBoxAndMatrix();
                     MainWindow.main.stlComposer.textTransX.Text = slider_moveX.Value.ToString("0.000");
                     MainWindow.main.threeDControl.UpdateChanges();
                 }
@@ -256,7 +255,6 @@ namespace View3D.view
                 {
                     PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
-                    stl.UpdateBoundingBoxAndMatrix();
                     MainWindow.main.stlComposer.textTransY.Text = slider_moveY.Value.ToString("0.000");
                     MainWindow.main.threeDControl.UpdateChanges();
                 }
@@ -272,7 +270,6 @@ namespace View3D.view
                 {
                     PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
-                    stl.UpdateBoundingBoxAndMatrix();
                     MainWindow.main.stlComposer.textTransZ.Text = slider_moveZ.Value.ToString("0.000");
                     MainWindow.main.threeDControl.UpdateChanges();
                 }

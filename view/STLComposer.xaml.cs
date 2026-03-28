@@ -720,7 +720,7 @@ namespace View3D.view
             float.TryParse(textTransX.Text, out stl.Position.x);
             if (Math.Abs(old - stl.Position.x) < 0.001f) return;
             if (typeof(PrintModel) == stl.GetType()) UpdateOutOfBound();
-            stl.UpdateBoundingBoxAndMatrix();
+            stl.UpdateBoundingBoxByMatrix();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -733,7 +733,7 @@ namespace View3D.view
             float.TryParse(textTransY.Text, out stl.Position.y);
             if (Math.Abs(old - stl.Position.y) < 0.001f) return;
             if (typeof(PrintModel) == stl.GetType()) UpdateOutOfBound();
-            stl.UpdateBoundingBoxAndMatrix();
+            stl.UpdateBoundingBoxByMatrix();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -746,7 +746,7 @@ namespace View3D.view
             float.TryParse(textTransZ.Text, out stl.Position.z);
             if (Math.Abs(old - stl.Position.z) < 0.001f) return;
             UpdateOutOfBound();
-            stl.UpdateBoundingBoxAndMatrix();
+            stl.UpdateBoundingBoxByMatrix();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -856,7 +856,7 @@ namespace View3D.view
                     textTransY.Text = stl.Position.y.ToString("0.000");
                     _suppressTextEvents = false;
                 }
-                stl.UpdateBoundingBoxAndMatrix();
+                stl.UpdateBoundingBoxByMatrix();
                 UpdateOutOfBound();
             }
             MainWindow.main.threeDControl.UpdateChanges();

@@ -169,22 +169,15 @@ namespace View3D.model
             //Debug.WriteLine("[PrintModel.UpdateBoundingBoxAndMatrix]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }
 
-        // This function only works for the model without scaling and rotation.
-        // If the model just moves without scaling and rotation, this functon is useful for updating bounding box very quickly.
+        // This function is used when moving the object for saving bounding box compuation.
+        // NOTE THAT: If the model is rotated, the bounding box can not be obtained just through trans matrix but compute all vertices in regular way.
         public void UpdateBoundingBoxByMatrix()
         {
+            //Stopwatch sw = Stopwatch.StartNew();
+
             updateMatrix(); // Must update trans Matrix before updating Bounding Box.
 
-#if false   // TopoModel boundingBox is original bounding box of the model without rotation.
-            float xMinCenter = (float)(Model.boundingBox.xMin - Model.boundingBox.Center.x);
-            float yMinCenter = (float)(Model.boundingBox.yMin - Model.boundingBox.Center.y);
-            float zMinCenter = (float)(Model.boundingBox.zMin - Model.boundingBox.Center.z);
-
-            float xMaxCenter = (float)(Model.boundingBox.xMax - Model.boundingBox.Center.x);
-            float yMaxCenter = (float)(Model.boundingBox.yMax - Model.boundingBox.Center.y);
-            float zMaxCenter = (float)(Model.boundingBox.zMax - Model.boundingBox.Center.z);
-#else
-
+            // Centerized current bounding box.
             float xMinCenter = (float)(bbox.xMin - bbox.Center.x);
             float yMinCenter = (float)(bbox.yMin - bbox.Center.y);
             float zMinCenter = (float)(bbox.zMin - bbox.Center.z);
@@ -192,20 +185,14 @@ namespace View3D.model
             float xMaxCenter = (float)(bbox.xMax - bbox.Center.x);
             float yMaxCenter = (float)(bbox.yMax - bbox.Center.y);
             float zMaxCenter = (float)(bbox.zMax - bbox.Center.z);
-#endif
 
             Vector4 minVertex = new Vector4(xMinCenter, yMinCenter, zMinCenter, 1.0f);
             Vector4 maxVertex = new Vector4(xMaxCenter, yMaxCenter, zMaxCenter, 1.0f);
 
-            Matrix4 scale = Matrix4.CreateScale(
-                     Scale.x != 0 ? Scale.x : 1,
-                     Scale.y != 0 ? Scale.y : 1,
-                     Scale.z != 0 ? Scale.z : 1
-            );
             Matrix4 transl = Matrix4.CreateTranslation(Position.x, Position.y, Position.z);
 
-            Vector4 newMinVertex = minVertex * scale * transl;
-            Vector4 newMaxVertex = maxVertex * scale * transl;
+            Vector4 newMinVertex = minVertex * transl;
+            Vector4 newMaxVertex = maxVertex * transl;
 
             bbox.minPoint.x = newMinVertex.X;
             bbox.minPoint.y = newMinVertex.Y;
@@ -221,6 +208,8 @@ namespace View3D.model
             yMax = (float)bbox.yMax;
             zMin = (float)bbox.zMin;
             zMax = (float)bbox.zMax;
+
+            //Debug.WriteLine("[PrintModel.UpdateBoundingBoxByMatrix]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }
 
         public void TransformPoint(ref Vector3 v, out float x, out float y, out float z)
