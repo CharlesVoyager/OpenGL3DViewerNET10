@@ -181,7 +181,7 @@ namespace View3D.view
             moveY_textbox.Text = slider_moveY.Value.ToString();
             moveZ_textbox.Text = (Math.Round(slider_moveZ.Value - slider_moveZ.Minimum, 3)).ToString();
 
-            MainWindow.main.stlComposer.landModel(stl);
+            stl.Land();
             MainWindow.main.stlComposer.UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
@@ -191,7 +191,7 @@ namespace View3D.view
             PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
-            MainWindow.main.stlComposer.landModel(stl);
+            stl.Land();
 
             slider_moveX.Value = Math.Round(stl.Position.x);
             slider_moveY.Value = Math.Round(stl.Position.y);

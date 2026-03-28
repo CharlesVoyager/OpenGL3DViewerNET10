@@ -129,13 +129,6 @@ namespace View3D.view
             }
         }
 
-        public void landModel(PrintModel model)
-        {
-            if (typeof(PrintModel) != model.GetType()) return;
-            if (null == model.Model) return;
-            model.Land();
-        }
-
         public void RemoveAllObject()
         {
             foreach (var row in AllRows().ToList())
