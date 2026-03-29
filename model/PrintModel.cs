@@ -137,7 +137,7 @@ namespace View3D.model
                 BoundingBox.Add(box3.MinX, box3.MinY, box3.MinZ);
             }
 
-            //Debug.WriteLine("[PrintModel.calcBoundingBox]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
+            //Debug.WriteLine("[PrintModel.updateBoundingBox]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }
 
         public void UpdateBoundingBoxAndMatrix()
@@ -156,8 +156,6 @@ namespace View3D.model
         // Import Test Case: Rotate the model 40 degress -> Move the object to check if the bounding box is align correctly.
         public void UpdateBoundingBoxByShift(float shiftX, float shiftY, float shiftZ)
         {
-            //Stopwatch sw = Stopwatch.StartNew();
-
             BoundingBox.MaxPoint.x += shiftX;
             BoundingBox.MinPoint.x += shiftX;
 
@@ -166,8 +164,6 @@ namespace View3D.model
 
             BoundingBox.MaxPoint.z += shiftZ;
             BoundingBox.MinPoint.z += shiftZ;
-
-            //Debug.WriteLine("[PrintModel.UpdateBoundingBoxByMatrix]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }
 
         public void TransformPoint(ref Vector3 v, out float x, out float y, out float z)
