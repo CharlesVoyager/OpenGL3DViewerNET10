@@ -327,51 +327,6 @@ namespace View3D.view
             }
         }
 
-        private void slider_moveX_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-            if (stl == null) return;
-        }
-
-        private void slider_moveY_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-            if (stl == null) return;
-        }
-
-        private void slider_moveZ_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-            if (stl == null) return;
-        }
-
-        private void slider_moveX_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == Key.Right || e.Key == Key.Up || e.Key == Key.Left || e.Key == Key.Down)
-            {
-                PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-                if (stl == null) return;
-            }
-        }
-
-        private void slider_moveY_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == Key.Right || e.Key == Key.Up || e.Key == Key.Left || e.Key == Key.Down)
-            {
-                PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-                if (stl == null) return;
-            }
-        }
-
-        private void slider_moveZ_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == Key.Right || e.Key == Key.Up || e.Key == Key.Left || e.Key == Key.Down)
-            {
-                PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-                if (stl == null) return;
-            }
-        }
-
         private void moveX_textbox_LostFocus(object sender, RoutedEventArgs e)
         {
             if (moveX_textbox.Text.Trim() == "")
