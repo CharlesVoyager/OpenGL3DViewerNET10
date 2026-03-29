@@ -212,7 +212,6 @@ namespace View3D.view
 
             if (gIsShow == true)
             {
-                stl.LandToMinZ(stl.zMin);
                 MainWindow.main.UI_move.slider_moveZ.Value = stl.Position.z;
                 MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBox.zMin;
                 MainWindow.main.stlComposer.UpdateOutOfBound();
@@ -365,9 +364,6 @@ namespace View3D.view
             PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
-            gIsShow = true;
-            gIsShow = false;
-
             switch (xyzbind)
             {
                 case "x":
@@ -392,7 +388,6 @@ namespace View3D.view
                     }
                     break;
             }
-
             txt_Scale.Text = (Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text) * 100).ToString("0");
         }
 
