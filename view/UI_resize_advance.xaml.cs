@@ -212,7 +212,7 @@ namespace View3D.view
 
             if (gIsShow == true)
             {
-                stl.LandToZ(stl.zMin);
+                stl.LandToMinZ(stl.zMin);
                 MainWindow.main.UI_move.slider_moveZ.Value = stl.Position.z;
                 MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBox.zMin;
                 MainWindow.main.stlComposer.UpdateOutOfBound();
@@ -290,7 +290,7 @@ namespace View3D.view
                     gIsShow = false;
                     IsScale = true;
                 }
-                    stl.LandToZ(stl.zMin);
+                    stl.LandToMinZ(stl.zMin);
                 MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBox.zMin;
                 MainWindow.main.stlComposer.UpdateOutOfBound();
             }

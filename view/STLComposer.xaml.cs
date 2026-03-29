@@ -790,7 +790,7 @@ namespace View3D.view
             float.TryParse(textRotX.Text, out stl.Rotation.x);
             if (Math.Abs(old - stl.Rotation.x) < 0.001f) return;
             stl.UpdateBoundingBoxAndMatrix();
-            stl.LandToZ(oriZmin);
+            stl.LandToMinZ(oriZmin);
             UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
@@ -805,7 +805,7 @@ namespace View3D.view
             float.TryParse(textRotY.Text, out stl.Rotation.y);
             if (Math.Abs(old - stl.Rotation.y) < 0.001f) return;
             stl.UpdateBoundingBoxAndMatrix();
-            stl.LandToZ(oriZmin);
+            stl.LandToMinZ(oriZmin);
             UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
@@ -820,7 +820,7 @@ namespace View3D.view
             float.TryParse(textRotZ.Text, out stl.Rotation.z);
             if (Math.Abs(old - stl.Rotation.z) < 0.001f) return;
             stl.UpdateBoundingBoxAndMatrix();
-            stl.LandToZ(oriZmin);
+            stl.LandToMinZ(oriZmin);
             UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }

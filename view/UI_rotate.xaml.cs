@@ -144,8 +144,7 @@ namespace View3D.view
         {
             PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
-            float oriZmin;
-            oriZmin = stl.zMin;
+            float oriZmin = stl.zMin;
 
             if (e.Delta > 0)
                 sliderX.Value++;
@@ -153,39 +152,37 @@ namespace View3D.view
                 sliderX.Value--;
             e.Handled = true;
 
-            stl.LandToZ(oriZmin);
+            stl.LandToMinZ(oriZmin);
         }
 
         private void orangeY_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
-            float oriZmin;
-            oriZmin = stl.zMin;
-
+            float oriZmin = stl.zMin;
+   
             if (e.Delta > 0)
                 sliderY.Value++;
             else
                 sliderY.Value--;
             e.Handled = true;
 
-            stl.LandToZ(oriZmin);
+            stl.LandToMinZ(oriZmin);
         }
 
         private void orangeZ_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
-            float oriZmin;
-            oriZmin = stl.zMin;
-
+            float oriZmin = stl.zMin;
+       
             if (e.Delta > 0)
                 sliderZ.Value++;
             else
                 sliderZ.Value--;
             e.Handled = true;
 
-            stl.LandToZ(oriZmin);
+            stl.LandToMinZ(oriZmin);
         }
 
         private void textboxX_LostFocus(object sender, RoutedEventArgs e)

@@ -86,11 +86,11 @@ namespace View3D.model
         }
 
         // Keep same height to the printer base after rotation.
-        public void LandToZ(float oriZmin)
+        public void LandToMinZ(float targetMinZ)
         {
-            if (Math.Abs(oriZmin - zMin) < 0.001) return;
+            if (Math.Abs(targetMinZ - zMin) < 0.001) return;
 
-            float shiftZ = oriZmin - zMin;
+            float shiftZ = targetMinZ - zMin;
             Position.z += shiftZ;
 
             UpdateTransMatrix();
