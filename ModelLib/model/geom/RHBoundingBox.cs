@@ -228,6 +228,20 @@
             }
         }
 
+        public void Centerized()
+        {
+            double cx = (maxPoint.x + minPoint.x) * 0.5;
+            double cy = (maxPoint.y + minPoint.y) * 0.5;    
+            double cz = (maxPoint.z + minPoint.z) * 0.5;
+
+            MinPoint.x -= cx;
+            MinPoint.y -= cy;
+            MinPoint.z -= cz;
+
+            MaxPoint.x -= cx;
+            MaxPoint.y -= cy;
+            MaxPoint.z -= cz;
+        }
         /// <summary>
         /// Convert the box range into bitpattern for a fast intersection test.
         /// 

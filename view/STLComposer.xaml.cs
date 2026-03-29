@@ -226,6 +226,8 @@ namespace View3D.view
             models[last].Position.z = (float)(models[last].BoundingBox.Size.z / 2);
             if (modelToLand)
             {
+                // NOTE: Autoposition needs xMin and yMin data. Therefore, centering BoundingBox first to avoid some STL files with large xMin/yMin values being placed outside the printer bed.
+                models[last].BoundingBox.Centerized();
                 Autoposition();
             }
             else
