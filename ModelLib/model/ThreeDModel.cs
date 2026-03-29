@@ -25,7 +25,6 @@
         private Coord3D position = new Coord3D();      // shift position
         private Coord3D rotation = new Coord3D();      // rotate vector
         private Coord3D scale = new Coord3D(1, 1, 1);  // scaler magnitude
-        public float xMin = 0, yMin = 0, zMin = 0, xMax = 0, yMax = 0, zMax = 0;              // min and max print region
 
         public bool Selected
         {

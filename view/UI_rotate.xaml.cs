@@ -310,7 +310,6 @@ namespace View3D.view
                 limitRotateAngle(textboxX);
                 PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-
                 sliderX.Value = Convert.ToDouble(textboxX.Text);
                 MainWindow.main.stlComposer.textRotX.Text = textboxX.Text;
             }
@@ -324,14 +323,8 @@ namespace View3D.view
                 limitRotateAngle(textboxY);
                 PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                float oriZmin;
-
-                oriZmin = stl.zMin;
                 sliderY.Value = Convert.ToDouble(textboxY.Text);
                 MainWindow.main.stlComposer.textRotY.Text = textboxY.Text;
-                stl.LandToZ(oriZmin);
-                stl.UpdateBoundingBoxAndMatrix();
-                MainWindow.main.stlComposer.UpdateOutOfBound();
             }
             catch { }
         }
@@ -342,15 +335,8 @@ namespace View3D.view
             {
                 limitRotateAngle(textboxZ);
                 PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-                if (stl == null) return;
-                float oriZmin;
-
-                oriZmin = stl.zMin;
                 sliderZ.Value = Convert.ToDouble(textboxZ.Text);
                 MainWindow.main.stlComposer.textRotZ.Text = textboxZ.Text;
-                stl.LandToZ(oriZmin);
-                stl.UpdateBoundingBoxAndMatrix();
-                MainWindow.main.stlComposer.UpdateOutOfBound();
             }
             catch { }
         }

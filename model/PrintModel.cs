@@ -84,21 +84,26 @@ namespace View3D.model
         /// </summary>
         public void Land()
         {
+            float oriZ = Position.z;
             Position.z = (float)(BoundingBox.Size.z / 2);
-            UpdateBoundingBoxByMatrix();
+            UpdateTransMatrix();
+            UpdateBoundingBoxByShift(0, 0, Position.z - oriZ);
         }
 
         // Keep same height to the printer base after rotation.
         public void LandToZ(float oriZmin)
         {
             if (Math.Abs(oriZmin - zMin) < 0.001) return;
-            Position.z += oriZmin - zMin;
 
-            UpdateBoundingBoxByMatrix();
+            float shiftZ = oriZmin - zMin;
+            Position.z += shiftZ;
+
+            UpdateTransMatrix();
+            UpdateBoundingBoxByShift(0, 0, shiftZ);
         }
 
         // Scale → Rotate → Translate (applied right-to-left in matrix multiplication):
-        private void updateMatrix()
+        public void UpdateTransMatrix()
         {
             float x = Rotation.x;
             float y = Rotation.y;
@@ -144,58 +149,28 @@ namespace View3D.model
         {
             //Stopwatch sw = Stopwatch.StartNew();
 
-            updateMatrix(); // Must update trans Matrix before updating Bounding Box.
+            UpdateTransMatrix(); // Must update trans Matrix before updating Bounding Box.
 
             updateBoundingBox();
-            xMin = (float)BoundingBox.xMin;
-            xMax = (float)BoundingBox.xMax;
-            yMin = (float)BoundingBox.yMin;
-            yMax = (float)BoundingBox.yMax;
-            zMin = (float)BoundingBox.zMin;
-            zMax = (float)BoundingBox.zMax;
 
             //Debug.WriteLine("[PrintModel.UpdateBoundingBoxAndMatrix]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }
 
         // This function is used when moving the object for saving bounding box compuation.
-        // NOTE THAT: If the model is rotated, the bounding box can not be obtained just through trans matrix but compute all vertices in regular way.
-        public void UpdateBoundingBoxByMatrix()
+        // NOTE NOTE NOTE: If the model is rotated, the bounding box can not be obtained just through trans matrix but compute all vertices in regular way.
+        // Import Test Case: Rotate the model 40 degress -> Move the object to check if the bounding box is align correctly.
+        public void UpdateBoundingBoxByShift(float shiftX, float shiftY, float shiftZ)
         {
             //Stopwatch sw = Stopwatch.StartNew();
 
-            updateMatrix(); // Must update trans Matrix before updating Bounding Box.
+            BoundingBox.MaxPoint.x += shiftX;
+            BoundingBox.MinPoint.x += shiftX;
 
-            // Centerized current bounding box.
-            float xMinCenter = (float)(BoundingBox.xMin - BoundingBox.Center.x);
-            float yMinCenter = (float)(BoundingBox.yMin - BoundingBox.Center.y);
-            float zMinCenter = (float)(BoundingBox.zMin - BoundingBox.Center.z);
+            BoundingBox.MaxPoint.y += shiftY;
+            BoundingBox.MinPoint.y += shiftY;
 
-            float xMaxCenter = (float)(BoundingBox.xMax - BoundingBox.Center.x);
-            float yMaxCenter = (float)(BoundingBox.yMax - BoundingBox.Center.y);
-            float zMaxCenter = (float)(BoundingBox.zMax - BoundingBox.Center.z);
-
-            Vector4 minVertex = new Vector4(xMinCenter, yMinCenter, zMinCenter, 1.0f);
-            Vector4 maxVertex = new Vector4(xMaxCenter, yMaxCenter, zMaxCenter, 1.0f);
-
-            Matrix4 transl = Matrix4.CreateTranslation(Position.x, Position.y, Position.z);
-
-            Vector4 newMinVertex = minVertex * transl;
-            Vector4 newMaxVertex = maxVertex * transl;
-
-            BoundingBox.minPoint.x = newMinVertex.X;
-            BoundingBox.minPoint.y = newMinVertex.Y;
-            BoundingBox.minPoint.z = newMinVertex.Z;
-
-            BoundingBox.maxPoint.x = newMaxVertex.X;
-            BoundingBox.maxPoint.y = newMaxVertex.Y;
-            BoundingBox.maxPoint.z = newMaxVertex.Z;
-
-            xMin = (float)BoundingBox.xMin;
-            xMax = (float)BoundingBox.xMax;
-            yMin = (float)BoundingBox.yMin;
-            yMax = (float)BoundingBox.yMax;
-            zMin = (float)BoundingBox.zMin;
-            zMax = (float)BoundingBox.zMax;
+            BoundingBox.MaxPoint.z += shiftZ;
+            BoundingBox.MinPoint.z += shiftZ;
 
             //Debug.WriteLine("[PrintModel.UpdateBoundingBoxByMatrix]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }
@@ -258,13 +233,37 @@ namespace View3D.model
 
         public void CopyTopoModelBoundingBoxToPrintModel()
         {
-            BoundingBox.Add(Model.boundingBox);
-            xMin = (float)BoundingBox.xMin;
-            xMax = (float)BoundingBox.xMax;
-            yMin = (float)BoundingBox.yMin;
-            yMax = (float)BoundingBox.yMax;
-            zMin = (float)BoundingBox.zMin;
-            zMax = (float)BoundingBox.zMax;
+            BoundingBox.Add(Model.boundingBox); // Copy TopoModel's Bounding Box to PrintModel.
+        }
+
+        public float xMin
+        {
+            get { return (float)BoundingBox.MinPoint.x; }
+        }
+
+        public float yMin
+        {
+            get { return (float)BoundingBox.MinPoint.y; }
+        }
+
+        public float zMin
+        {
+            get { return (float)BoundingBox.MinPoint.z; }
+        }
+
+        public float xMax
+        {
+            get { return (float)BoundingBox.MaxPoint.x; }
+        }
+
+        public float yMax
+        {
+            get { return (float)BoundingBox.MaxPoint.y; }
+        }
+
+        public float zMax
+        {
+            get { return (float)BoundingBox.MaxPoint.z; }
         }
     }
 }
