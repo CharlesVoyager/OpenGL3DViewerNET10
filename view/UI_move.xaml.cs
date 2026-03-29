@@ -227,7 +227,6 @@ namespace View3D.view
                     PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     MainWindow.main.stlComposer.textTransX.Text = slider_moveX.Value.ToString("0.000");
-                    MainWindow.main.threeDControl.UpdateChanges();
                 }
             }
             catch { }
@@ -242,7 +241,6 @@ namespace View3D.view
                     PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     MainWindow.main.stlComposer.textTransY.Text = slider_moveY.Value.ToString("0.000");
-                    MainWindow.main.threeDControl.UpdateChanges();
                 }
             }
             catch { }
@@ -257,13 +255,12 @@ namespace View3D.view
                     PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     MainWindow.main.stlComposer.textTransZ.Text = slider_moveZ.Value.ToString("0.000");
-                    MainWindow.main.threeDControl.UpdateChanges();
                 }
             }
             catch { }
         }
 
-        private void moveX_textbox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void moveX_textbox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
@@ -285,7 +282,7 @@ namespace View3D.view
             }
         }
 
-        private void moveY_textbox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void moveY_textbox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
@@ -307,7 +304,7 @@ namespace View3D.view
             }
         }
 
-        private void moveZ_textbox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void moveZ_textbox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
@@ -316,7 +313,7 @@ namespace View3D.view
                     PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     Double temp=slider_moveZ.Value;
-                        slider_moveZ.Value = Convert.ToDouble(moveZ_textbox.Text) + slider_moveZ.Minimum;
+                    slider_moveZ.Value = Convert.ToDouble(moveZ_textbox.Text) + slider_moveZ.Minimum;
                     if (temp == slider_moveZ.Value)
                     {
                         moveZ_textbox.Text = slider_moveZ.Value.ToString();
