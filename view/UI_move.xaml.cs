@@ -183,9 +183,9 @@ namespace View3D.view
 
             stl.Land();
 
-            slider_moveX.Value = Math.Round(stl.Position.x);
-            slider_moveY.Value = Math.Round(stl.Position.y);
-            slider_moveZ.Value = Math.Round(stl.Position.z);
+            slider_moveX.Value = stl.Position.x;
+            slider_moveY.Value = stl.Position.y;
+            slider_moveZ.Value = stl.Position.z;
  
             MainWindow.main.stlComposer.UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
