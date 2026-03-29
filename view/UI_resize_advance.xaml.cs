@@ -290,7 +290,7 @@ namespace View3D.view
                     gIsShow = false;
                     IsScale = true;
                 }
-                    stl.LandToMinZ(stl.zMin);
+                stl.Land();
                 MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.z - stl.BoundingBox.zMin;
                 MainWindow.main.stlComposer.UpdateOutOfBound();
             }
