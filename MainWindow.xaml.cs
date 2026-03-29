@@ -519,7 +519,7 @@ namespace View3D
         {
             foreach(var m in stlComposer.models)
             {
-                System.Diagnostics.Debug.WriteLine($"Model: {m.name}, Position: {m.Position.ToString()}, Rotation: {m.Rotation.ToString()}, Scale: {m.Scale.ToString()}");
+                System.Diagnostics.Debug.WriteLine($"Model: {m.Name}, Position: {m.Position.ToString()}, Rotation: {m.Rotation.ToString()}, Scale: {m.Scale.ToString()}");
 
                 System.Diagnostics.Debug.WriteLine("trans: " + m.trans.Row0.ToString());
                 System.Diagnostics.Debug.WriteLine("       " + m.trans.Row1.ToString());

@@ -18,7 +18,7 @@ namespace View3D.model
 
         public RHBoundingBox BoundingBox;
 
-        public string name = "Unknown";
+        public string Name = "Unknown";
         public bool outside = false;
 
         public Matrix4 trans;
@@ -41,7 +41,7 @@ namespace View3D.model
             PrintModel stl = new PrintModel();
             Model.CopyTo(stl.Model);   // NOTE: Just clone Model is enough. Drawer/BoundingBox do not need to clone.
             Mesh.CopyTo(stl.Mesh);
-            stl.name = name;
+            stl.Name = Name;
             stl.Position.x = Position.x;
             stl.Position.y = Position.y;
             stl.Position.z = Position.z;
@@ -62,7 +62,7 @@ namespace View3D.model
             Mesh.Clear();
             BoundingBox.Clear();
 
-            name = null;
+            Name = "Unknown";
             outside = false;
 
             // It should dispose drawer in main thread. But, it causes black flash when deleting model. So, we just let GC to dispose it.
@@ -72,11 +72,6 @@ namespace View3D.model
                 Drawer.Dispose();
             });
 #endif
-        }
-
-        public override string ToString()
-        {
-            return name;
         }
 
         /// <summary>

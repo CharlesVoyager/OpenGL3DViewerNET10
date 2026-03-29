@@ -75,7 +75,7 @@ namespace View3D.view
         {
             return new ListViewItemModel
             {
-                Name                 = model.name,
+                Name                 = model.Name,
                 Model                = model,
                 //MeshStatusImage      = _icons[2],                                 // _icons[2]: V, _icons[3]: X
                 //CollisionStatusImage = _icons[model.outside        ? 3 : 2],
@@ -214,7 +214,7 @@ namespace View3D.view
                 _stlModelDataReady.Set();
                 return; 
             }
-            models[models.Count - 1].name = Path.GetFileName(file);
+            models[models.Count - 1].Name = Path.GetFileName(file);
 
             if (MainWindow.main.BusyWindow.killed || models[last].Model.triangles.Count == 0)
             {
@@ -435,7 +435,7 @@ namespace View3D.view
         public void buttonRemoveSTL_Click(object sender, EventArgs e) => RemoveAllSelectedModels();
 
         private bool IsValidPrintModel(PrintModel model)
-            => model.name != "Unknown" &&
+            => model.Name != "Unknown" &&
                typeof(PrintModel) == model.GetType() &&
                model.Model != null;
 
