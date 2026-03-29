@@ -27,14 +27,8 @@ namespace View3D.view
 
         private void translate()
         {
-            //if (MainWindow.main.show_tooltip)
-            //{
-                button_resize_reset.ToolTip = Trans.T("B_RESET");
-            //}
-            //if (MainWindow.main.only_show_english_button)
-            //{
-                button_resize_reset.Content = Trans.T("B_RESET");
-            //}
+            button_resize_reset.ToolTip = Trans.T("B_RESET");
+            button_resize_reset.Content = Trans.T("B_RESET");
             button_mmtoinch.Content = Trans.T("L_MM")+" \r\n  > \r\n"+Trans.T("L_INCH")+" \r\n";
             button_inchtomm.Content = Trans.T("L_INCH") + " \r\n  > \r\n" + Trans.T("L_MM") + " \r\n";
         }
