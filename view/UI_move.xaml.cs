@@ -269,16 +269,8 @@ namespace View3D.view
                     PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     slider_moveX.Value = Convert.ToDouble(moveX_textbox.Text);
-                    if (slider_moveX.Value != Convert.ToDouble(moveX_textbox.Text))
-                    {
-                        moveX_textbox.Text = slider_moveX.Value.ToString();
-                    }
                 }
                 catch { }
-            }
-            if (moveX_textbox.Text.Trim() == "")
-            {
-                moveX_textbox.Text = "";
             }
         }
 
@@ -291,16 +283,8 @@ namespace View3D.view
                     PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     slider_moveY.Value = Convert.ToDouble(moveY_textbox.Text);
-                    if (slider_moveY.Value != Convert.ToDouble(moveY_textbox.Text))
-                    {
-                        moveY_textbox.Text = slider_moveY.Value.ToString();
-                    }
                 }
                 catch { }
-            }
-            if (moveY_textbox.Text.Trim() == "")
-            {
-                moveY_textbox.Text = "";
             }
         }
 
@@ -312,18 +296,9 @@ namespace View3D.view
                 {
                     PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
-                    Double temp=slider_moveZ.Value;
-                    slider_moveZ.Value = Convert.ToDouble(moveZ_textbox.Text) + slider_moveZ.Minimum;
-                    if (temp == slider_moveZ.Value)
-                    {
-                        moveZ_textbox.Text = slider_moveZ.Value.ToString();
-                    }
+                    slider_moveZ.Value = Convert.ToDouble(moveZ_textbox.Text);
                 }
                 catch { }
-            }
-            if (moveZ_textbox.Text.Trim() == "")
-            {
-                moveZ_textbox.Text = "";
             }
         }
 
