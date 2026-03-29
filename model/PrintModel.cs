@@ -79,10 +79,10 @@ namespace View3D.model
         /// </summary>
         public void Land()
         {
-            float oriZ = Position.z;
-            Position.z = (float)(BoundingBox.Size.z / 2);
+            float shiftZ = -zMin;
+            Position.z += shiftZ;
             UpdateTransMatrix();
-            UpdateBoundingBoxByShift(0, 0, Position.z - oriZ);
+            UpdateBoundingBoxByShift(0, 0, shiftZ);
         }
 
         // Keep same height to the printer base after rotation.
