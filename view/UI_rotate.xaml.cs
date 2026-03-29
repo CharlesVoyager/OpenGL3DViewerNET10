@@ -70,11 +70,8 @@ namespace View3D.view
             labelY.Visibility = Visibility.Visible;
             if (e.LeftButton == MouseButtonState.Pressed && textboxY.IsMouseDirectlyOver == false)
             {
-                float oriZmin;
                 PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-     
-                oriZmin = stl.zMin;
                 sliderY.Value = ConvertPositionAngel(new Point(stackpanelY.Width / 2, stackpanelY.Height / 2), e.GetPosition(stackpanelY));
             }
         }
@@ -91,10 +88,8 @@ namespace View3D.view
             labelZ.Visibility = Visibility.Visible;
             if (e.LeftButton == MouseButtonState.Pressed && textboxZ.IsMouseDirectlyOver == false)
             {
-                float oriZmin;
                 PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                oriZmin = stl.zMin;
                 sliderZ.Value = ConvertPositionAngel(new Point(stackpanelZ.Width / 2, stackpanelZ.Height / 2), e.GetPosition(stackpanelZ));
             }
         }
