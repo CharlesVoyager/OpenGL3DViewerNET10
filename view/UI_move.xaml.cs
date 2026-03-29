@@ -32,7 +32,7 @@ namespace View3D.view
             button_land.Content = Trans.T("B_LAND");
         }
 
-        protected override void OnPreviewTextInput( TextCompositionEventArgs e)
+        protected override void OnPreviewTextInput(TextCompositionEventArgs e)
         {
             if (e.Text == "")
             {
