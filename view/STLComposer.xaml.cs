@@ -711,9 +711,9 @@ namespace View3D.view
             float old = stl.Position.x;
             float.TryParse(textTransX.Text, out stl.Position.x);
             if (Math.Abs(old - stl.Position.x) < 0.001f) return;
-            if (typeof(PrintModel) == stl.GetType()) UpdateOutOfBound();
             stl.UpdateTransMatrix();
             stl.UpdateBoundingBoxByShift(stl.Position.x - old, 0, 0);
+            UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -725,9 +725,9 @@ namespace View3D.view
             float old = stl.Position.y;
             float.TryParse(textTransY.Text, out stl.Position.y);
             if (Math.Abs(old - stl.Position.y) < 0.001f) return;
-            if (typeof(PrintModel) == stl.GetType()) UpdateOutOfBound();
             stl.UpdateTransMatrix();
-            stl.UpdateBoundingBoxByShift(stl.Position.x - old, 0, 0);
+            stl.UpdateBoundingBoxByShift(0, stl.Position.y - old, 0);
+            UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -740,7 +740,8 @@ namespace View3D.view
             float.TryParse(textTransZ.Text, out stl.Position.z);
             if (Math.Abs(old - stl.Position.z) < 0.001f) return;
             stl.UpdateTransMatrix();
-            stl.UpdateBoundingBoxByShift(stl.Position.x - old, 0, 0);
+            stl.UpdateBoundingBoxByShift(0, 0, stl.Position.z - old);
+            UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -750,8 +751,8 @@ namespace View3D.view
             var stl = SingleSelectedModel;
             if (stl == null) return;
             float.TryParse(textScaleX.Text, out stl.Scale.x);
-            UpdateOutOfBound();
             stl.UpdateBoundingBoxAndMatrix();
+            UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -761,8 +762,8 @@ namespace View3D.view
             var stl = SingleSelectedModel;
             if (stl == null) return;
             float.TryParse(textScaleY.Text, out stl.Scale.y);
-            UpdateOutOfBound();
             stl.UpdateBoundingBoxAndMatrix();
+            UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -774,8 +775,8 @@ namespace View3D.view
             float old = stl.Scale.z;
             float.TryParse(textScaleZ.Text, out stl.Scale.z);
             if (old != stl.Scale.z) stl.Land();
-            UpdateOutOfBound();
             stl.UpdateBoundingBoxAndMatrix();
+            UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -790,7 +791,6 @@ namespace View3D.view
             if (Math.Abs(old - stl.Rotation.x) < 0.001f) return;
             stl.UpdateBoundingBoxAndMatrix();
             stl.LandToZ(oriZmin);
-            //stl.UpdateBoundingBoxAndMatrix();
             UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
@@ -800,12 +800,13 @@ namespace View3D.view
             if (_suppressTextEvents) return;
             var stl = SingleSelectedModel;
             if (stl == null) return;
+            float oriZmin = stl.zMin;
             float old = stl.Rotation.y;
             float.TryParse(textRotY.Text, out stl.Rotation.y);
-            stl.UpdateBoundingBoxAndMatrix();
             if (Math.Abs(old - stl.Rotation.y) < 0.001f) return;
-            UpdateOutOfBound();
             stl.UpdateBoundingBoxAndMatrix();
+            stl.LandToZ(oriZmin);
+            UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
@@ -814,12 +815,13 @@ namespace View3D.view
             if (_suppressTextEvents) return;
             var stl = SingleSelectedModel;
             if (stl == null) return;
+            float oriZmin = stl.zMin;
             float old = stl.Rotation.z;
             float.TryParse(textRotZ.Text, out stl.Rotation.z);
-            stl.UpdateBoundingBoxAndMatrix();
             if (Math.Abs(old - stl.Rotation.z) < 0.001f) return;
-            if (typeof(PrintModel) == stl.GetType()) UpdateOutOfBound();
             stl.UpdateBoundingBoxAndMatrix();
+            stl.LandToZ(oriZmin);
+            UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
 
