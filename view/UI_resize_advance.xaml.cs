@@ -35,7 +35,20 @@ namespace View3D.view
         }
 
         private void translate()
-        { }
+        {
+            lbl_XUnits.Content = Trans.T("L_MM");
+            lbl_YUnits.Content = Trans.T("L_MM");
+            lbl_ZUnits.Content = Trans.T("L_MM");
+
+            txt_Scale.Text = "";
+            button_Reset.ToolTip = Trans.T("B_RESET");
+            button_Reset.Content = Trans.T("B_RESET");
+            lbl_Uniform.Content = Trans.T("L_UNIFORM");
+            lbl_Size.Content = Trans.T("L_SIZE");
+            btn_Scale.Content = Trans.T("B_APPLY");
+            button_mmtoinch.Content = Trans.T("B_SCALE_UP") + " (" + Trans.T("L_MM") + "->" + Trans.T("L_INCH") + ")";
+            button_inchtomm.Content = Trans.T("B_SCALE_DOWN") + " (" + Trans.T("L_INCH") + "->" + Trans.T("L_MM") + ")";
+        }
 
         private void txtX_TextChanged(object sender, TextChangedEventArgs e)
         {

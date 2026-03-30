@@ -423,18 +423,6 @@ namespace View3D
             UI_resize_advance.gIsShow = false;
             UI_resize_advance.button_mmtoinch.IsEnabled = true;
             UI_resize_advance.button_inchtomm.IsEnabled = false;
-            UI_resize_advance.lbl_XUnits.Content = Trans.T("L_MM");
-            UI_resize_advance.lbl_YUnits.Content = Trans.T("L_MM");
-            UI_resize_advance.lbl_ZUnits.Content = Trans.T("L_MM");
-
-            UI_resize_advance.txt_Scale.Text = "";
-            UI_resize_advance.button_Reset.ToolTip = Trans.T("B_RESET");
-            UI_resize_advance.button_Reset.Content = Trans.T("B_RESET");
-            UI_resize_advance.lbl_Uniform.Content = Trans.T("L_UNIFORM");
-            UI_resize_advance.lbl_Size.Content = Trans.T("L_SIZE");
-            UI_resize_advance.btn_Scale.Content = Trans.T("B_APPLY");
-            UI_resize_advance.button_mmtoinch.Content = Trans.T("B_SCALE_UP") + " (" + Trans.T("L_MM") + "->" + Trans.T("L_INCH") + ")";
-            UI_resize_advance.button_inchtomm.Content = Trans.T("B_SCALE_DOWN") + " (" + Trans.T("L_INCH") + "->" + Trans.T("L_MM") + ")";
         }
 
         private void rotate_toggleButton_Unchecked(object sender, RoutedEventArgs e)
