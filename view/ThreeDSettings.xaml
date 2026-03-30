@@ -29,13 +29,18 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <GroupBox Header="Printbed" Grid.Row="0" Margin="0,0,0,10">
+                    <GroupBox Header="Print Area" Grid.Row="0" Margin="0,0,0,10">
                         <Grid Margin="6,4">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="160"/>
                                 <ColumnDefinition Width="160"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="110"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="34"/>
@@ -52,9 +57,9 @@
                                       Checked="showEdges_CheckedChanged"
                                       Unchecked="showEdges_CheckedChanged"/>
 
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Background Top:"   VerticalAlignment="Center"/>
-                            <Border x:Name="backgroundTop"   Grid.Row="1" Grid.Column="1"
-                                    Background="WhiteSmoke"    Style="{StaticResource SwatchStyle}"
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Background Top:" VerticalAlignment="Center"/>
+                            <Border x:Name="backgroundTop" Grid.Row="1" Grid.Column="1"
+                                    Background="WhiteSmoke" Style="{StaticResource SwatchStyle}"
                                     MouseLeftButtonUp="ColorSwatch_Click"/>
 
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="Background Bottom:" VerticalAlignment="Center"/>
@@ -62,15 +67,23 @@
                                     Background="CornflowerBlue" Style="{StaticResource SwatchStyle}"
                                     MouseLeftButtonUp="ColorSwatch_Click"/>
 
-                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Printer base:"      VerticalAlignment="Center"/>
-                            <Border x:Name="printerBase"      Grid.Row="3" Grid.Column="1"
-                                    Background="Gainsboro"     Style="{StaticResource SwatchStyle}"
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Printer base:" VerticalAlignment="Center"/>
+                            <Border x:Name="printerBase" Grid.Row="3" Grid.Column="1"
+                                    Background="Gainsboro"  Style="{StaticResource SwatchStyle}"
                                     MouseLeftButtonUp="ColorSwatch_Click"/>
 
-                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Printer Frame:"     VerticalAlignment="Center"/>
-                            <Border x:Name="printerFrame"     Grid.Row="4" Grid.Column="1"
-                                    Background="Black"         Style="{StaticResource SwatchStyle}"
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Printer Frame:" VerticalAlignment="Center"/>
+                            <Border x:Name="printerFrame" Grid.Row="4" Grid.Column="1"
+                                    Background="Black" Style="{StaticResource SwatchStyle}"
                                     MouseLeftButtonUp="ColorSwatch_Click"/>
+
+                            <Label Grid.Row="1" Grid.Column="3" Content="Print Area Width:" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            <Label Grid.Row="2" Grid.Column="3" Content="Print Area Depth:" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            <Label Grid.Row="3" Grid.Column="3" Content="Print Area Height:" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            <TextBox x:Name="txtPrintAreaWidth" Grid.Row="1" Grid.Column="4" Text="" Margin="0,6" TextChanged="PrintAreaWidth_TextChanged" />
+                            <TextBox x:Name="txtPrintAreaDepth" Grid.Row="2" Grid.Column="4" Text="" Margin="0,6" TextChanged="PrintAreaDepth_TextChanged"/>
+                            <TextBox x:Name="txtPrintAreaHeight" Grid.Row="3" Grid.Column="4" Text="" Margin="0,6" TextChanged="PrintAreaHeight_TextChanged"/>
+                            <Label Content="(Change print area dimension needs restart to apply.)" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#888"/>
                         </Grid>
                     </GroupBox>
 
@@ -82,6 +95,7 @@
                             <ComboBoxItem>Immediate (slow)</ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
+                    <Button Grid.Row="2" Content="Reset All Settings to Default" Width="200" Height="28" Margin="0,10" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="ResetSettings_Click"/>
                 </Grid>
             </TabItem>
 

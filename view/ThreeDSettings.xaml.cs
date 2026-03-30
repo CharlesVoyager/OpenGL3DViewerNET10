@@ -1,8 +1,5 @@
-using Microsoft.Win32;
-using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
@@ -17,32 +14,35 @@ namespace View3D.view
 {
     public class AppSettings
     {
-        public float PrintAreaWidth { get; set; } = 256;
-        public float PrintAreaDepth { get; set; } = 256;
-        public float PrintAreaHeight { get; set; } = 200;
+        public uint PrintAreaWidth { get; set; } = 256;
+        public uint PrintAreaDepth { get; set; } = 256;
+        public uint PrintAreaHeight { get; set; } = 200;
 
 
         public uint BackgroundTopColor { get; set; } = 0xFFF5F5F5;
         public uint BackgroundBottomColor { get; set; } = 0xFF6495ED;
-        public uint FacesColor { get; set; }
-        public uint EdgesColor { get; set; }
-        public uint SelectedFacesColor { get; set; }
-        public uint PrinterBaseColor { get; set; }
-        public uint PrinterFrameColor { get; set; }
-        public uint OutsidePrintbedColor { get; set; }
+        public uint FacesColor { get; set; } = 0xFF4169E1;
+        public uint EdgesColor { get; set; } = 0xFFA9A9A9;
+        public uint SelectedFacesColor { get; set; } = 0xFF6495ED;
+        public uint PrinterBaseColor { get; set; } = 0xFFDCDCDC;
+        public uint PrinterFrameColor { get; set; } = 0xFF000000;
+        public uint OutsidePrintbedColor { get; set; } = 0xFFFF0000;
+
 
         public bool ShowEdges { get; set; } = false;
-        public bool ShowFaces { get; set; } = false;
+        public bool ShowFaces { get; set; } = true;
         public bool ShowPrintbed { get; set; } = true;
         public int DrawMethod { get; set; } = 0;
+
 
         public uint SelectionBoxColor { get; set; } = 0;
         public uint ErrorModelColor { get; set; } = 0;
         public uint InsideFacesColor { get; set; } = 0;
 
-        public string Light1X { get; set; } = "";
-        public string Light1Y { get; set; } = "";
-        public string Light1Z { get; set; } = "";
+
+        public string Light1X { get; set; } = "1";
+        public string Light1Y { get; set; } = "0.5";
+        public string Light1Z { get; set; } = "2";
     }
 
     public class SettingsService
@@ -132,15 +132,9 @@ namespace View3D.view
     {
         SettingsService settingsService = null;
 
-#if true
-        public float PrintAreaWidth = 256;  // x-axis direction
-        public float PrintAreaDepth = 256;  // y-axis direction
-        public float PrintAreaHeight = 200; // z-axis direction
-#else
-        public float PrintAreaWidth = 512;  // x-axis direction
-        public float PrintAreaDepth = 512;  // y-axis direction
-        public float PrintAreaHeight = 400; // z-axis direction
-#endif
+        public float PrintAreaWidth;  // x-axis direction
+        public float PrintAreaDepth;  // y-axis direction
+        public float PrintAreaHeight; // z-axis direction
 
         // UseVBOs and OpenGLVersion will be updated in OnLoad of ThreeDControl.
         public bool UseVBOs = false;
@@ -165,7 +159,7 @@ namespace View3D.view
             string assemblyName = Assembly.GetEntryAssembly()?.GetName().Name;  // EX: OpenGL3DViewerNET10
             settingsService = new SettingsService(assemblyName);
 
-            LoadSettings();
+            loadSettings();
 
             ResetLightSettingsToDefault_Click(null, null);
             MainWindow.main.languageChanged += translate;
@@ -204,57 +198,14 @@ namespace View3D.view
             }
         }
 
-        // ── Registry persistence ─────────────────────────────────────────────────
 
-        /// <summary>Persist all current UI values to the registry.</summary>
-        public void SaveSettings()
+        void loadSettings()
         {
             try
             {
-                settingsService.Settings.PrintAreaWidth = PrintAreaWidth;
-                settingsService.Settings.PrintAreaDepth = PrintAreaDepth;
-                settingsService.Settings.PrintAreaHeight = PrintAreaHeight;
-
-                settingsService.Settings.BackgroundTopColor = ToArgb(backgroundTop);
-                settingsService.Settings.BackgroundBottomColor = ToArgb(backgroundBottom);
-                settingsService.Settings.FacesColor = ToArgb(faces);
-                settingsService.Settings.EdgesColor = ToArgb(edges);
-                settingsService.Settings.SelectedFacesColor = ToArgb(selectedFaces);
-                settingsService.Settings.PrinterBaseColor = ToArgb(printerBase);
-                settingsService.Settings.PrinterFrameColor = ToArgb(printerFrame);
-                settingsService.Settings.OutsidePrintbedColor = ToArgb(outsidePrintbed);
-
-                settingsService.Settings.ShowEdges = _showEdges;
-                settingsService.Settings.ShowFaces = _showFaces;
-                settingsService.Settings.ShowPrintbed = (showPrintbed.IsChecked == true ? true : false);
-
-                settingsService.Settings.DrawMethod = comboDrawMethod.SelectedIndex;
-                settingsService.Settings.SelectionBoxColor = ToArgb(selectionBox);
-                settingsService.Settings.ErrorModelColor = ToArgb(errorModel);
-                settingsService.Settings.InsideFacesColor = ToArgb(insideFaces);
-
-                settingsService.Settings.InsideFacesColor = ToArgb(insideFaces);
-
-                settingsService.Settings.Light1X = xdir1.Text;
-                settingsService.Settings.Light1Y = ydir1.Text;
-                settingsService.Settings.Light1Z = zdir1.Text;
-            }
-            catch { }
-        }
-
-        /// <summary>Restore all UI values from the registry.</summary>
-        private void LoadSettings()
-        {
-            Debug.WriteLine("=== MyApp Started ===");
-            Debug.WriteLine($"Settings file: {settingsService.GetSettingsPath()}");
-            Debug.WriteLine("");
-
-
-            try
-            {
-                PrintAreaWidth = settingsService.Settings.PrintAreaWidth;
-                PrintAreaDepth = settingsService.Settings.PrintAreaDepth;
-                PrintAreaHeight = settingsService.Settings.PrintAreaHeight;
+                txtPrintAreaWidth.Text = settingsService.Settings.PrintAreaWidth.ToString();
+                txtPrintAreaDepth.Text = settingsService.Settings.PrintAreaDepth.ToString();
+                txtPrintAreaHeight.Text = settingsService.Settings.PrintAreaHeight.ToString();
 
                 backgroundTop.Background = new SolidColorBrush(ArgbToColor(settingsService.Settings.BackgroundTopColor));
                 backgroundBottom.Background = new SolidColorBrush(ArgbToColor(settingsService.Settings.BackgroundBottomColor));
@@ -850,7 +801,68 @@ namespace View3D.view
         private void ThreeDSettings_Closed(object sender, EventArgs e)
         {
             Debug.WriteLine("Application exiting — saving settings...");
+            controlsToSettings();
             settingsService.Save();
+        }
+
+        private void ResetSettings_Click(object sender, RoutedEventArgs e)
+        {
+            settingsService.Reset();
+            loadSettings();
+        }
+
+        private void PrintAreaWidth_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (float.TryParse(txtPrintAreaWidth.Text, out float value))
+                PrintAreaWidth = value;
+        }
+
+        private void PrintAreaDepth_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (float.TryParse(txtPrintAreaDepth.Text, out float value))
+                PrintAreaDepth = value;
+        }
+
+        private void PrintAreaHeight_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (float.TryParse(txtPrintAreaHeight.Text, out float value))
+                PrintAreaHeight = value;
+        }
+
+        void controlsToSettings()
+        {
+            try
+            {
+                uint value;
+                if (uint.TryParse(txtPrintAreaWidth.Text, out value)) settingsService.Settings.PrintAreaWidth = value;
+                if (uint.TryParse(txtPrintAreaDepth.Text, out value)) settingsService.Settings.PrintAreaDepth = value;
+                if (uint.TryParse(txtPrintAreaHeight.Text, out value)) settingsService.Settings.PrintAreaHeight = value;
+
+                settingsService.Settings.BackgroundTopColor = ToArgb(backgroundTop);
+                settingsService.Settings.BackgroundBottomColor = ToArgb(backgroundBottom);
+                settingsService.Settings.FacesColor = ToArgb(faces);
+                settingsService.Settings.EdgesColor = ToArgb(edges);
+                settingsService.Settings.SelectedFacesColor = ToArgb(selectedFaces);
+                settingsService.Settings.PrinterBaseColor = ToArgb(printerBase);
+                settingsService.Settings.PrinterFrameColor = ToArgb(printerFrame);
+                settingsService.Settings.OutsidePrintbedColor = ToArgb(outsidePrintbed);
+
+                settingsService.Settings.ShowEdges = _showEdges;
+                settingsService.Settings.ShowFaces = _showFaces;
+                settingsService.Settings.ShowPrintbed = (showPrintbed.IsChecked == true ? true : false);
+
+                settingsService.Settings.DrawMethod = comboDrawMethod.SelectedIndex;
+                settingsService.Settings.SelectionBoxColor = ToArgb(selectionBox);
+                settingsService.Settings.ErrorModelColor = ToArgb(errorModel);
+                settingsService.Settings.InsideFacesColor = ToArgb(insideFaces);
+
+                settingsService.Settings.InsideFacesColor = ToArgb(insideFaces);
+
+                settingsService.Settings.Light1X = xdir1.Text;
+                settingsService.Settings.Light1Y = ydir1.Text;
+                settingsService.Settings.Light1Z = zdir1.Text;
+            }
+            catch { }
         }
     }
 }
