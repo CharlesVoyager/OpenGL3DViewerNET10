@@ -35,9 +35,9 @@ namespace View3D.view
         public int DrawMethod { get; set; } = 0;
 
 
-        public uint SelectionBoxColor { get; set; } = 0;
-        public uint ErrorModelColor { get; set; } = 0;
-        public uint InsideFacesColor { get; set; } = 0;
+        public uint SelectionBoxColor { get; set; } = 0xFFFFFFFF;
+        public uint ErrorModelColor { get; set; } = 0xFFFF0000;
+        public uint InsideFacesColor { get; set; } = 0xFF000000;
 
 
         public string Light1X { get; set; } = "1";
