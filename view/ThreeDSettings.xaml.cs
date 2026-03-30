@@ -21,10 +21,28 @@ namespace View3D.view
         public float PrintAreaDepth { get; set; } = 256;
         public float PrintAreaHeight { get; set; } = 200;
 
-        public string Theme { get; set; } = "Light";
-        public string Language { get; set; } = "en-US";
-        public int FontSize { get; set; } = 12;
-        public bool AutoSave { get; set; } = true;
+
+        public uint BackgroundTopColor { get; set; } = 0xFFF5F5F5;
+        public uint BackgroundBottomColor { get; set; } = 0xFF6495ED;
+        public uint FacesColor { get; set; }
+        public uint EdgesColor { get; set; }
+        public uint SelectedFacesColor { get; set; }
+        public uint PrinterBaseColor { get; set; }
+        public uint PrinterFrameColor { get; set; }
+        public uint OutsidePrintbedColor { get; set; }
+
+        public bool ShowEdges { get; set; } = false;
+        public bool ShowFaces { get; set; } = false;
+        public bool ShowPrintbed { get; set; } = true;
+        public int DrawMethod { get; set; } = 0;
+
+        public uint SelectionBoxColor { get; set; } = 0;
+        public uint ErrorModelColor { get; set; } = 0;
+        public uint InsideFacesColor { get; set; } = 0;
+
+        public string Light1X { get; set; } = "";
+        public string Light1Y { get; set; } = "";
+        public string Light1Z { get; set; } = "";
     }
 
     public class SettingsService
@@ -129,7 +147,6 @@ namespace View3D.view
         public float OpenGLVersion = 1.0f; // Version for feature detection
 
         // ── Fields ───────────────────────────────────────────────────────────────
-        private RegistryKey threedKey = null;
         public int drawMethod = 0;         // 0 = elements, 1 = drawElements, 2 = VBO
         private bool _showEdges = false;
         private bool _showFaces = true;
@@ -148,8 +165,8 @@ namespace View3D.view
             string assemblyName = Assembly.GetEntryAssembly()?.GetName().Name;  // EX: OpenGL3DViewerNET10
             settingsService = new SettingsService(assemblyName);
 
-            comboDrawMethod.SelectedIndex = 0; // Autodetect best
-            RegistryToForm();
+            LoadSettings();
+
             ResetLightSettingsToDefault_Click(null, null);
             MainWindow.main.languageChanged += translate;
         }
@@ -167,7 +184,8 @@ namespace View3D.view
             {
                 if (value == _showEdges) return;
                 _showEdges = value;
-                threedKey?.SetValue("showEdges", _showEdges ? 1 : 0);
+                settingsService.Settings.ShowEdges = _showEdges;
+
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(ShowEdges)));
                 MainWindow.main.Update3D();
             }
@@ -180,7 +198,7 @@ namespace View3D.view
             {
                 if (value == _showFaces) return;
                 _showFaces = value;
-                threedKey?.SetValue("showFaces", _showFaces ? 1 : 0);
+                settingsService.Settings.ShowFaces = _showFaces;
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(ShowFaces)));
                 MainWindow.main.Update3D();
             }
@@ -189,38 +207,43 @@ namespace View3D.view
         // ── Registry persistence ─────────────────────────────────────────────────
 
         /// <summary>Persist all current UI values to the registry.</summary>
-        public void FormToRegistry()
+        public void SaveSettings()
         {
-            if (threedKey == null) return;
             try
             {
-                threedKey.SetValue("backgroundTopColor",    ToArgb(backgroundTop));
-                threedKey.SetValue("backgroundBottomColor", ToArgb(backgroundBottom));
-                threedKey.SetValue("facesColor",            ToArgb(faces));
-                threedKey.SetValue("edgesColor",            ToArgb(edges));
-                threedKey.SetValue("selectedFacesColor",    ToArgb(selectedFaces));
-                threedKey.SetValue("printerBaseColor",      ToArgb(printerBase));
-                threedKey.SetValue("printerFrameColor",     ToArgb(printerFrame));
-                threedKey.SetValue("outsidePrintbedColor",  ToArgb(outsidePrintbed));
-                threedKey.SetValue("showEdges",             _showEdges  ? 1 : 0);
-                threedKey.SetValue("showFaces",             _showFaces  ? 1 : 0);
-                threedKey.SetValue("showPrintbed",          showPrintbed.IsChecked == true ? 1 : 0);
-                threedKey.SetValue("drawMethod",            comboDrawMethod.SelectedIndex);
+                settingsService.Settings.PrintAreaWidth = PrintAreaWidth;
+                settingsService.Settings.PrintAreaDepth = PrintAreaDepth;
+                settingsService.Settings.PrintAreaHeight = PrintAreaHeight;
 
-                threedKey.SetValue("selectionBoxColor", ToArgb(selectionBox));
-                threedKey.SetValue("errorModelColor",   ToArgb(errorModel));
-                threedKey.SetValue("insideFacesColor",  ToArgb(insideFaces));
+                settingsService.Settings.BackgroundTopColor = ToArgb(backgroundTop);
+                settingsService.Settings.BackgroundBottomColor = ToArgb(backgroundBottom);
+                settingsService.Settings.FacesColor = ToArgb(faces);
+                settingsService.Settings.EdgesColor = ToArgb(edges);
+                settingsService.Settings.SelectedFacesColor = ToArgb(selectedFaces);
+                settingsService.Settings.PrinterBaseColor = ToArgb(printerBase);
+                settingsService.Settings.PrinterFrameColor = ToArgb(printerFrame);
+                settingsService.Settings.OutsidePrintbedColor = ToArgb(outsidePrintbed);
 
-                threedKey.SetValue("light1X", xdir1.Text);
-                threedKey.SetValue("light1Y", ydir1.Text);
-                threedKey.SetValue("light1Z", zdir1.Text);
+                settingsService.Settings.ShowEdges = _showEdges;
+                settingsService.Settings.ShowFaces = _showFaces;
+                settingsService.Settings.ShowPrintbed = (showPrintbed.IsChecked == true ? true : false);
 
+                settingsService.Settings.DrawMethod = comboDrawMethod.SelectedIndex;
+                settingsService.Settings.SelectionBoxColor = ToArgb(selectionBox);
+                settingsService.Settings.ErrorModelColor = ToArgb(errorModel);
+                settingsService.Settings.InsideFacesColor = ToArgb(insideFaces);
+
+                settingsService.Settings.InsideFacesColor = ToArgb(insideFaces);
+
+                settingsService.Settings.Light1X = xdir1.Text;
+                settingsService.Settings.Light1Y = ydir1.Text;
+                settingsService.Settings.Light1Z = zdir1.Text;
             }
             catch { }
         }
 
         /// <summary>Restore all UI values from the registry.</summary>
-        private void RegistryToForm()
+        private void LoadSettings()
         {
             Debug.WriteLine("=== MyApp Started ===");
             Debug.WriteLine($"Settings file: {settingsService.GetSettingsPath()}");
@@ -233,36 +256,30 @@ namespace View3D.view
                 PrintAreaDepth = settingsService.Settings.PrintAreaDepth;
                 PrintAreaHeight = settingsService.Settings.PrintAreaHeight;
 
-                return;
-
-                SetSwatchColor(backgroundTop,    "backgroundTopColor",    backgroundTop);
-                SetSwatchColor(backgroundBottom, "backgroundBottomColor", backgroundBottom);
-                SetSwatchColor(faces,            "facesColor",            faces);
-                SetSwatchColor(edges,            "edgesColor",            faces);         // original used faces as fallback
-                SetSwatchColor(selectedFaces,    "selectedFacesColor",    selectedFaces);
-                SetSwatchColor(printerBase,      "printerBaseColor",      printerBase);
-                SetSwatchColor(printerFrame,     "printerFrameColor",     printerFrame);
-                SetSwatchColor(outsidePrintbed,  "outsidePrintbedColor",  outsidePrintbed);
-
-                _showEdges = 0 != (int)(threedKey.GetValue("showEdges",  _showEdges  ? 1 : 0));
-                _showFaces = 0 != (int)(threedKey.GetValue("showFaces",  _showFaces  ? 1 : 0));
-
-                showPrintbed.IsChecked  = 0 != (int)(threedKey.GetValue("showPrintbed",  showPrintbed.IsChecked  == true ? 1 : 0));
-
-                comboDrawMethod.SelectedIndex = (int)(threedKey.GetValue("drawMethod", 0));
-
-                SetSwatchColor(selectionBox,  "selectionBoxColor", selectionBox);
-                SetSwatchColor(errorModel,    "errorModelColor",   errorModel);
-                SetSwatchColor(insideFaces,   "insideFacesColor",  insideFaces);
-
-                xdir1.Text = (string)threedKey.GetValue("light1X", xdir1.Text);
-                ydir1.Text = (string)threedKey.GetValue("light1Y", ydir1.Text);
-                zdir1.Text = (string)threedKey.GetValue("light1Z", zdir1.Text);
+                backgroundTop.Background = new SolidColorBrush(ArgbToColor(settingsService.Settings.BackgroundTopColor));
+                backgroundBottom.Background = new SolidColorBrush(ArgbToColor(settingsService.Settings.BackgroundBottomColor));
+                faces.Background = new SolidColorBrush(ArgbToColor(settingsService.Settings.FacesColor));
+                edges.Background = new SolidColorBrush(ArgbToColor(settingsService.Settings.EdgesColor));
+                selectedFaces.Background = new SolidColorBrush(ArgbToColor(settingsService.Settings.SelectedFacesColor));
+                printerBase.Background = new SolidColorBrush(ArgbToColor(settingsService.Settings.PrinterBaseColor));
+                printerFrame.Background = new SolidColorBrush(ArgbToColor(settingsService.Settings.PrinterFrameColor));
+                outsidePrintbed.Background = new SolidColorBrush(ArgbToColor(settingsService.Settings.OutsidePrintbedColor));
 
 
-                // Migrate legacy key
-                if (threedKey.GetValue("backgroundColor", null) != null)
-                    threedKey.DeleteValue("backgroundColor");
+                _showEdges = settingsService.Settings.ShowEdges;
+                _showFaces = settingsService.Settings.ShowFaces;
+
+                showPrintbed.IsChecked  = settingsService.Settings.ShowPrintbed;
+
+                comboDrawMethod.SelectedIndex = settingsService.Settings.DrawMethod;
+
+                selectionBox.Background = new SolidColorBrush(ArgbToColor(settingsService.Settings.SelectionBoxColor));
+                errorModel.Background = new SolidColorBrush(ArgbToColor(settingsService.Settings.ErrorModelColor));
+                insideFaces.Background = new SolidColorBrush(ArgbToColor(settingsService.Settings.InsideFacesColor));
+
+                xdir1.Text = settingsService.Settings.Light1X;
+                ydir1.Text = settingsService.Settings.Light1Y;
+                zdir1.Text = settingsService.Settings.Light1Z;
             }
             catch { }
         }
@@ -270,27 +287,18 @@ namespace View3D.view
         // ── Color-swatch helpers ─────────────────────────────────────────────────
 
         /// <summary>Return the ARGB int of a swatch Border's SolidColorBrush background.</summary>
-        private static int ToArgb(Border b)
+        private static uint ToArgb(Border b)
         {
             if (b.Background is SolidColorBrush scb)
             {
                 var c = scb.Color;
-                return (c.A << 24) | (c.R << 16) | (c.G << 8) | c.B;
+                return (uint)((c.A << 24) | (c.R << 16) | (c.G << 8) | c.B);
             }
             return 0;
         }
 
-        /// <summary>
-        /// Read an ARGB int from the registry and apply it to <paramref name="target"/>.
-        /// Falls back to the current colour of <paramref name="fallback"/> when the key is absent.
-        /// </summary>
-        private void SetSwatchColor(Border target, string regKey, Border fallback)
-        {
-            int argb = (int)(threedKey.GetValue(regKey, ToArgb(fallback)));
-            target.Background = new SolidColorBrush(ArgbToColor(argb));
-        }
-
-        private static System.Windows.Media.Color ArgbToColor(int argb)
+   
+        private static Color ArgbToColor(uint argb)
         {
             byte a = (byte)((argb >> 24) & 0xFF);
             byte r = (byte)((argb >> 16) & 0xFF);
