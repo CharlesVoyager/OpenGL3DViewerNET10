@@ -98,10 +98,22 @@ namespace View3D.view
         {
             PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
-       
-            sliderX.Value = 0;
-            sliderY.Value = 0;
-            sliderZ.Value = 0;
+
+
+            if (textboxX.Text == "0" && textboxY.Text == "0" && textboxZ.Text == "0")
+            {
+                // Consider the case: Load a model -> Load another model then rotate -> Select a model then reset -> Select second model -> Click reset -> It will hit here...
+                textboxX_TextChanged(null, null);
+                textboxY_TextChanged(null, null);
+                textboxZ_TextChanged(null, null);
+            }
+            else
+            {
+                // slider value will trigger textbox value changed event, so no need to update textbox value here
+                textboxX.Text = "0";
+                textboxY.Text = "0";
+                textboxZ.Text = "0";
+            }
 
             stl.UpdateBoundingBoxAndMatrix();
             MainWindow.main.stlComposer.UpdateOutOfBound();
