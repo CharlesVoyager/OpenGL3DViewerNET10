@@ -1,7 +1,11 @@
 using Microsoft.Win32;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
+using System.IO;
+using System.Reflection;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -11,8 +15,105 @@ using View3D.model.geom;
 
 namespace View3D.view
 {
+    public class AppSettings
+    {
+        public float PrintAreaWidth { get; set; } = 256;
+        public float PrintAreaDepth { get; set; } = 256;
+        public float PrintAreaHeight { get; set; } = 200;
+
+        public string Theme { get; set; } = "Light";
+        public string Language { get; set; } = "en-US";
+        public int FontSize { get; set; } = 12;
+        public bool AutoSave { get; set; } = true;
+    }
+
+    public class SettingsService
+    {
+        private readonly string _settingsPath;
+        private readonly JsonSerializerOptions _jsonOptions;
+
+        public AppSettings Settings { get; private set; }
+
+        public SettingsService(string appName)
+        {
+            // Store in %AppData%\MyApp\settings.json (Windows)
+            // or ~/.config/MyApp/settings.json (Linux/macOS)
+            var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+            var appFolder = Path.Combine(appDataFolder, appName);
+
+            // Create folder if it doesn't exist
+            Directory.CreateDirectory(appFolder);
+
+            _settingsPath = Path.Combine(appFolder, "Settings.json");
+
+            _jsonOptions = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                PropertyNameCaseInsensitive = true
+            };
+
+            Settings = Load();
+        }
+
+        /// <summary>
+        /// Loads settings from disk. Returns defaults if file doesn't exist.
+        /// </summary>
+        private AppSettings Load()
+        {
+            try
+            {
+                if (!File.Exists(_settingsPath))
+                {
+                    Console.WriteLine("No settings file found. Using defaults.");
+                    return new AppSettings();
+                }
+
+                var json = File.ReadAllText(_settingsPath);
+                return JsonSerializer.Deserialize<AppSettings>(json, _jsonOptions)
+                       ?? new AppSettings();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load settings: {ex.Message}. Using defaults.");
+                return new AppSettings();
+            }
+        }
+
+        /// <summary>
+        /// Saves current settings to disk.
+        /// </summary>
+        public void Save()
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(Settings, _jsonOptions);
+                File.WriteAllText(_settingsPath, json);
+                Debug.WriteLine($"Settings saved to: {_settingsPath}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to save settings: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Resets settings back to defaults and saves.
+        /// </summary>
+        public void Reset()
+        {
+            Settings = new AppSettings();
+            Save();
+            Console.WriteLine("Settings reset to defaults.");
+        }
+
+        public string GetSettingsPath() => _settingsPath;
+    }
+
     public partial class ThreeDSettings : Window, INotifyPropertyChanged
     {
+        SettingsService settingsService = null;
+
 #if true
         public float PrintAreaWidth = 256;  // x-axis direction
         public float PrintAreaDepth = 256;  // y-axis direction
@@ -43,6 +144,10 @@ namespace View3D.view
         public ThreeDSettings()
         {
             InitializeComponent();
+
+            string assemblyName = Assembly.GetEntryAssembly()?.GetName().Name;  // EX: OpenGL3DViewerNET10
+            settingsService = new SettingsService(assemblyName);
+
             comboDrawMethod.SelectedIndex = 0; // Autodetect best
             RegistryToForm();
             ResetLightSettingsToDefault_Click(null, null);
@@ -117,9 +222,19 @@ namespace View3D.view
         /// <summary>Restore all UI values from the registry.</summary>
         private void RegistryToForm()
         {
-            if (threedKey == null) return;
+            Debug.WriteLine("=== MyApp Started ===");
+            Debug.WriteLine($"Settings file: {settingsService.GetSettingsPath()}");
+            Debug.WriteLine("");
+
+
             try
             {
+                PrintAreaWidth = settingsService.Settings.PrintAreaWidth;
+                PrintAreaDepth = settingsService.Settings.PrintAreaDepth;
+                PrintAreaHeight = settingsService.Settings.PrintAreaHeight;
+
+                return;
+
                 SetSwatchColor(backgroundTop,    "backgroundTopColor",    backgroundTop);
                 SetSwatchColor(backgroundBottom, "backgroundBottomColor", backgroundBottom);
                 SetSwatchColor(faces,            "facesColor",            faces);
@@ -722,6 +837,12 @@ namespace View3D.view
             sliderAmbient.Value = 0.3;
             sliderSpecular.Value = 0.3;
             sliderShininess.Value = 16;
+        }
+
+        private void ThreeDSettings_Closed(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Application exiting — saving settings...");
+            settingsService.Save();
         }
     }
 }

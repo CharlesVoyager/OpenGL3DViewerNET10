@@ -5,7 +5,8 @@
         Width="660" Height="500"
         ResizeMode="NoResize"
         Topmost="True"
-        Closing="ThreeDSettings_Closing">
+        Closing="ThreeDSettings_Closing"
+        Closed="ThreeDSettings_Closed">
 
     <Window.Resources>
         <Style x:Key="SwatchStyle" TargetType="Border">
