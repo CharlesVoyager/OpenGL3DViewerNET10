@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using View3D.model;
+using View3D.model.geom;
 
 namespace View3D.view
 {
@@ -48,6 +49,48 @@ namespace View3D.view
             btn_Scale.Content = Trans.T("B_APPLY");
             button_mmtoinch.Content = Trans.T("B_SCALE_UP") + " (" + Trans.T("L_MM") + "->" + Trans.T("L_INCH") + ")";
             button_inchtomm.Content = Trans.T("B_SCALE_DOWN") + " (" + Trans.T("L_INCH") + "->" + Trans.T("L_MM") + ")";
+        }
+
+        public void Init()
+        {
+            if (MainWindow.main == null) return; // At design time MainWindow.main is null. Add null guards to prevent NullReferenceException.
+            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            if (stl == null) return;
+            MainWindow.main.UI_move.slider_moveZ.Maximum = 1000;
+
+            RHBoundingBox bbox = stl.BoundingBox;
+            bboxnow = bbox.Size.x / Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text);
+            bboynow = bbox.Size.y / Convert.ToDouble(MainWindow.main.stlComposer.textScaleY.Text);
+            bboznow = bbox.Size.z / Convert.ToDouble(MainWindow.main.stlComposer.textScaleZ.Text);
+
+            gIsShow = true;
+            dimX = bbox.Size.x;
+            updateTxt(Enums.Axis.X);
+            dimY = bbox.Size.y;
+            updateTxt(Enums.Axis.Y);
+            dimZ = bbox.Size.z;
+            updateTxt(Enums.Axis.Z);
+
+            if (Convert.ToDouble(MainWindow.main.stlComposer.textRotX.Text) != 0 ||
+                Convert.ToDouble(MainWindow.main.stlComposer.textRotY.Text) != 0 ||
+                Convert.ToDouble(MainWindow.main.stlComposer.textRotZ.Text) != 0)
+            {
+                chk_Uniform.IsChecked = true;
+                chk_Uniform.IsEnabled = false;
+            }
+            else
+            {
+                chk_Uniform.IsEnabled = true;
+            }
+
+            if (chk_Uniform.IsChecked == true)
+            {
+                chk_Uniform_Checked(null, null);
+            }
+
+            gIsShow = false;
+            button_mmtoinch.IsEnabled = true;
+            button_inchtomm.IsEnabled = false;
         }
 
         private void txtX_TextChanged(object sender, TextChangedEventArgs e)

@@ -386,43 +386,7 @@ namespace View3D
             rotate_toggleButton.IsChecked = false;
             info_toggleButton.IsChecked = false;
 
-            PrintModel stl = stlComposer.SingleSelectedModel;
-            if (stl == null) return;
-            UI_move.slider_moveZ.Maximum = 1000;
-
-            RHBoundingBox bbox = stl.BoundingBox;
-            UI_resize_advance.bboxnow = bbox.Size.x / Convert.ToDouble(stlComposer.textScaleX.Text);
-            UI_resize_advance.bboynow = bbox.Size.y / Convert.ToDouble(stlComposer.textScaleY.Text);
-            UI_resize_advance.bboznow = bbox.Size.z / Convert.ToDouble(stlComposer.textScaleZ.Text);
-
-            UI_resize_advance.gIsShow = true;
-            UI_resize_advance.dimX = bbox.Size.x;
-            UI_resize_advance.updateTxt(Enums.Axis.X);
-            UI_resize_advance.dimY = bbox.Size.y;
-            UI_resize_advance.updateTxt(Enums.Axis.Y);
-            UI_resize_advance.dimZ = bbox.Size.z;
-            UI_resize_advance.updateTxt(Enums.Axis.Z);
-
-            if (Convert.ToDouble(stlComposer.textRotX.Text) != 0 ||
-                Convert.ToDouble(stlComposer.textRotY.Text) != 0 ||
-                Convert.ToDouble(stlComposer.textRotZ.Text) != 0)
-            {
-                UI_resize_advance.chk_Uniform.IsChecked = true;
-                UI_resize_advance.chk_Uniform.IsEnabled = false;
-            }
-            else
-            {
-                UI_resize_advance.chk_Uniform.IsEnabled = true;
-            }
-
-            if (UI_resize_advance.chk_Uniform.IsChecked == true)
-            {
-                UI_resize_advance.chk_Uniform_Checked(null, null);
-            }
-
-            UI_resize_advance.gIsShow = false;
-            UI_resize_advance.button_mmtoinch.IsEnabled = true;
-            UI_resize_advance.button_inchtomm.IsEnabled = false;
+            UI_resize_advance.Init();
         }
 
         private void rotate_toggleButton_Unchecked(object sender, RoutedEventArgs e)
