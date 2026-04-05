@@ -1,6 +1,4 @@
 ﻿using OpenTK.Mathematics;
-using View3D.Enumeration;
-using View3D.Raycasting;
 using View3D.Extensions;
 using View3D.Primitive;
 
@@ -47,15 +45,6 @@ namespace View3D.ModelObjectTool
 
         public override unsafe bool Select(ModelMatrix matrix, float* vertices, int vertexCount, float[] ray_Position, float[] ray_Normal)
         {            
-            RaycastType raycastType = RaycastType.TRIANGLE; 
-            RascastingArgs args = new RascastingArgs();
-            if (RaycastingFactory.Raycast(RaycastType.AABB, new Vector2(ray_Position[0], ray_Position[1]), args))
-            {
-                if (RaycastingFactory.Raycast(raycastType, new Vector2(ray_Position[0], ray_Position[1]), args))
-                {
-                    return true;
-                }
-            }
             return false;
         }
         public override bool Select(ModelMatrix matrix, float[] vertices, float[] ray_Position, float[] ray_Normal)

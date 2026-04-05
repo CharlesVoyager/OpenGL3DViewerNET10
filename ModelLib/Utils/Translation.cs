@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
 using System.Xml;
-using View3D.view.utils;
 
 namespace OpenGL3DViewerNET10.ModelLib.Utils
 {

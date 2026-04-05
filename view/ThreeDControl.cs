@@ -1,5 +1,6 @@
 using OpenGL3DViewerNET10.Draw;
 using OpenGL3DViewerNET10.ModelLib.model;
+using OpenGL3DViewerNET10.ModelLib.Utils;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -15,7 +16,6 @@ using System.Windows.Interop;
 using View3D.model;
 using View3D.ModelObjectTool;
 using View3D.Primitive;
-using View3D.view.utils;
 
 namespace View3D.view
 {

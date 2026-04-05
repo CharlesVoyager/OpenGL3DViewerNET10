@@ -5,7 +5,7 @@ using View3D.Extensions;
 using View3D.Primitive;
 using OpenGL3DViewerNET10.ModelLib.model;
 
-namespace View3D.view.utils
+namespace OpenGL3DViewerNET10.ModelLib.Utils
 {
     public class RayCasting
     {
