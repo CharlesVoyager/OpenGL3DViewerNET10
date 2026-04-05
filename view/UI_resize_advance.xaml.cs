@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using View3D.model;
@@ -7,6 +6,13 @@ using View3D.model.geom;
 
 namespace View3D.view
 {
+    public enum Axis
+    {
+        X,
+        Y,
+        Z
+    }
+
     /// <summary>
     /// Interaction logic for UI_resize.xaml
     /// </summary>
@@ -66,11 +72,11 @@ namespace View3D.view
 
             gIsShow = true;
             dimX = bbox.Size.x;
-            updateTxt(Enums.Axis.X);
+            updateTxt(Axis.X);
             dimY = bbox.Size.y;
-            updateTxt(Enums.Axis.Y);
+            updateTxt(Axis.Y);
             dimZ = bbox.Size.z;
-            updateTxt(Enums.Axis.Z);
+            updateTxt(Axis.Z);
 
             if (Convert.ToDouble(MainWindow.main.stlComposer.textRotX.Text) != 0 ||
                 Convert.ToDouble(MainWindow.main.stlComposer.textRotY.Text) != 0 ||
@@ -105,7 +111,7 @@ namespace View3D.view
                 if (dimX == 0)
                 {
                     dimX = 0.001;
-                    updateTxt(Enums.Axis.X);
+                    updateTxt(Axis.X);
                 }
                 else
                 {
@@ -141,30 +147,30 @@ namespace View3D.view
                     IsScale = false;
                     if (xyzbind == "x")
                     {
-                        updateSliderValue(Enums.Axis.X);
+                        updateSliderValue(Axis.X);
                     }
                     else if (xyzbind == "y")
                     {
-                        updateSliderValue(Enums.Axis.Y);
+                        updateSliderValue(Axis.Y);
                     }
                     else if (xyzbind == "z")
                     {
-                        updateSliderValue(Enums.Axis.Z);
+                        updateSliderValue(Axis.Z);
                     }
                     if (scaleKeyDown != "x")
                     {
                         dimX = stl.BoundingBox.Size.x;
-                        updateTxt(Enums.Axis.X);
+                        updateTxt(Axis.X);
                     }
                     if (scaleKeyDown != "y")
                     {
                         dimY = stl.BoundingBox.Size.y;
-                        updateTxt(Enums.Axis.Y);
+                        updateTxt(Axis.Y);
                     }
                     if (scaleKeyDown != "z")
                     {
                         dimZ = stl.BoundingBox.Size.z;
-                        updateTxt(Enums.Axis.Z);
+                        updateTxt(Axis.Z);
                     }
                     gIsShow = false;
                     IsScale = true;
@@ -186,7 +192,7 @@ namespace View3D.view
                 if (dimY == 0)
                 {
                     dimY = 0.001;
-                    updateTxt(Enums.Axis.Y);
+                    updateTxt(Axis.Y);
                 }
                 else
                 {
@@ -223,31 +229,31 @@ namespace View3D.view
                     IsScale = false;
                     if (xyzbind == "x")
                     {
-                        updateSliderValue(Enums.Axis.X);
+                        updateSliderValue(Axis.X);
                     }
                     else if (xyzbind == "y")
                     {
-                        updateSliderValue(Enums.Axis.Y);
+                        updateSliderValue(Axis.Y);
                     }
                     else if (xyzbind == "z")
                     {
-                        updateSliderValue(Enums.Axis.Z);
+                        updateSliderValue(Axis.Z);
                     }
 
                     if (scaleKeyDown != "x")
                     {
                         dimX = stl.BoundingBox.Size.x;
-                        updateTxt(Enums.Axis.X);
+                        updateTxt(Axis.X);
                     }
                     if (scaleKeyDown != "y")
                     {
                         dimY = stl.BoundingBox.Size.y;
-                        updateTxt(Enums.Axis.Y);
+                        updateTxt(Axis.Y);
                     }
                     if (scaleKeyDown != "z")
                     {
                         dimZ = stl.BoundingBox.Size.z;
-                        updateTxt(Enums.Axis.Z);
+                        updateTxt(Axis.Z);
                     }
                     gIsShow = false;
                     IsScale = true;
@@ -276,7 +282,7 @@ namespace View3D.view
                 if (dimZ == 0)
                 {
                     dimZ = 0.001;
-                    updateTxt(Enums.Axis.Z);
+                    updateTxt(Axis.Z);
                 }
                 else
                 {
@@ -313,31 +319,31 @@ namespace View3D.view
                     IsScale = false;
                     if (xyzbind == "x")
                     {
-                        updateSliderValue(Enums.Axis.X);
+                        updateSliderValue(Axis.X);
                     }
                     else if (xyzbind == "y")
                     {
-                        updateSliderValue(Enums.Axis.Y);
+                        updateSliderValue(Axis.Y);
                     }
                     else if (xyzbind == "z")
                     {
-                        updateSliderValue(Enums.Axis.Z);
+                        updateSliderValue(Axis.Z);
                     }
 
                     if (scaleKeyDown != "x")
                     {
                         dimX = stl.BoundingBox.Size.x;
-                        updateTxt(Enums.Axis.X);
+                        updateTxt(Axis.X);
                     }
                     if (scaleKeyDown != "y")
                     {
                         dimY = stl.BoundingBox.Size.y;
-                        updateTxt(Enums.Axis.Y);
+                        updateTxt(Axis.Y);
                     }
                     if (scaleKeyDown != "z")
                     {
                         dimZ = stl.BoundingBox.Size.z;
-                        updateTxt(Enums.Axis.Z);
+                        updateTxt(Axis.Z);
                     }
 
                     gIsShow = false;
@@ -366,19 +372,19 @@ namespace View3D.view
                 if (xyzbind == "x")
                 {
                     IsScale = false;
-                    updateSliderValue(Enums.Axis.X);
+                    updateSliderValue(Axis.X);
                     IsScale = true;
                 }
                 else if (xyzbind == "y")
                 {
                     IsScale = false;
-                    updateSliderValue(Enums.Axis.Y);
+                    updateSliderValue(Axis.Y);
                     IsScale = true;
                 }
                 else if (xyzbind == "z")
                 {
                     IsScale = false;
-                    updateSliderValue(Enums.Axis.Z);
+                    updateSliderValue(Axis.Z);
                     IsScale = true;
                 }
             }
@@ -424,21 +430,21 @@ namespace View3D.view
                     if (IsScale == true)
                     {
                         dimX = unit2MMTransform(slider_resize.Value);
-                        updateTxt(Enums.Axis.X);
+                        updateTxt(Axis.X);
                     }
                     break;
                 case "y":
                     if (IsScale == true)
                     {
                         dimY = unit2MMTransform(slider_resize.Value);
-                        updateTxt(Enums.Axis.Y);
+                        updateTxt(Axis.Y);
                     }
                     break;
                 case "z":
                     if (IsScale == true)
                     {
                         dimZ = unit2MMTransform(slider_resize.Value);
-                        updateTxt(Enums.Axis.Z);
+                        updateTxt(Axis.Z);
                     }
                     break;
             }
@@ -509,23 +515,23 @@ namespace View3D.view
 
             gIsShow = true;
             dimX = bbox.Size.x;
-            updateTxt(Enums.Axis.X);
+            updateTxt(Axis.X);
             dimY = bbox.Size.y;
-            updateTxt(Enums.Axis.Y);
+            updateTxt(Axis.Y);
             dimZ = bbox.Size.z;
-            updateTxt(Enums.Axis.Z);
+            updateTxt(Axis.Z);
             IsScale = false;
             if (xyzbind == "x")
             {
-                updateSliderValue(Enums.Axis.X);
+                updateSliderValue(Axis.X);
             }
             else if (xyzbind == "y")
             {
-                updateSliderValue(Enums.Axis.Y);
+                updateSliderValue(Axis.Y);
             }
             else if (xyzbind == "z")
             {
-                updateSliderValue(Enums.Axis.Z);
+                updateSliderValue(Axis.Z);
             }
             IsScale = true;
             gIsShow = false;
@@ -583,25 +589,25 @@ namespace View3D.view
                 MainWindow.main.stlComposer.textScaleZ.Text = tAddScaleZ.ToString("0.000");
                 gIsShow = true;
                 dimX = stl.BoundingBox.Size.x;
-                updateTxt(Enums.Axis.X);
+                updateTxt(Axis.X);
                 dimY = stl.BoundingBox.Size.y;
-                updateTxt(Enums.Axis.Y);
+                updateTxt(Axis.Y);
                 dimZ = stl.BoundingBox.Size.z;
-                updateTxt(Enums.Axis.Z);
+                updateTxt(Axis.Z);
                 gIsShow = false;
                 //checkMin();
                 IsScale = false;
                 if (xyzbind == "x")
                 {
-                    updateSliderValue(Enums.Axis.X);
+                    updateSliderValue(Axis.X);
                 }
                 else if (xyzbind == "y")
                 {
-                    updateSliderValue(Enums.Axis.Y);
+                    updateSliderValue(Axis.Y);
                 }
                 else if (xyzbind == "z")
                 {
-                    updateSliderValue(Enums.Axis.Z);
+                    updateSliderValue(Axis.Z);
                 }
                 IsScale = true;
             }
@@ -616,11 +622,11 @@ namespace View3D.view
             try
             {
                 dimX = stl.BoundingBox.Size.x;
-                updateTxt(Enums.Axis.X);
+                updateTxt(Axis.X);
                 dimY = stl.BoundingBox.Size.y;
-                updateTxt(Enums.Axis.Y);
+                updateTxt(Axis.Y);
                 dimZ = stl.BoundingBox.Size.z;
-                updateTxt(Enums.Axis.Z);
+                updateTxt(Axis.Z);
 
                 scaleKeyDown = "";
             }
@@ -637,13 +643,13 @@ namespace View3D.view
                 scaleKeyDown = "z";
         }
 
-        public void updateTxt(Enums.Axis axis, bool doUnitTransform = true)
+        public void updateTxt(Axis axis, bool doUnitTransform = true)
         {
             double dimForDisplay = 0.0;
 
             switch (axis)
             {
-                case Enums.Axis.X:
+                case Axis.X:
                     dimForDisplay = dimX;
                     if (doUnitTransform)
                     {
@@ -652,7 +658,7 @@ namespace View3D.view
                     txtX.Text = dimForDisplay.ToString("0.000");
                     break;
 
-                case Enums.Axis.Y:
+                case Axis.Y:
                     dimForDisplay = dimY;
                     if (doUnitTransform)
                     {
@@ -661,7 +667,7 @@ namespace View3D.view
                     txtY.Text = dimForDisplay.ToString("0.000");
                     break;
 
-                case Enums.Axis.Z:
+                case Axis.Z:
                     dimForDisplay = dimZ;
                     if (doUnitTransform)
                     {
@@ -672,20 +678,20 @@ namespace View3D.view
             }        
         }
 
-        public void updateSliderValue(Enums.Axis axis)
+        public void updateSliderValue(Axis axis)
         {
             double dimForDisplay = 0.0;
             switch (axis)
             {
-                case Enums.Axis.X:
+                case Axis.X:
                     dimForDisplay = dimX;
                     break;
 
-                case Enums.Axis.Y:
+                case Axis.Y:
                     dimForDisplay = dimY;
                     break;
 
-                case Enums.Axis.Z:
+                case Axis.Z:
                     dimForDisplay = dimZ;
                     break;
             }

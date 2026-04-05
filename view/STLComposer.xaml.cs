@@ -909,15 +909,15 @@ namespace View3D.view
                 ui.button_mmtoinch.IsEnabled = true;
                 ui.button_inchtomm.IsEnabled = false;
                 ui.gIsShow = true;
-                ui.dimX = 24; ui.updateTxt(Enums.Axis.X);
-                ui.dimY = 24; ui.updateTxt(Enums.Axis.Y);
-                ui.dimZ = 24; ui.updateTxt(Enums.Axis.Z);
+                ui.dimX = 24; ui.updateTxt(Axis.X);
+                ui.dimY = 24; ui.updateTxt(Axis.Y);
+                ui.dimZ = 24; ui.updateTxt(Axis.Z);
                 ui.gIsShow = false;
                 switch (tDecision)
                 {
-                    case "x": ui.dimX = newSizeMMx; ui.updateTxt(Enums.Axis.X); break;
-                    case "y": ui.dimY = newSizeMMy; ui.updateTxt(Enums.Axis.Y); break;
-                    case "z": ui.dimZ = newSizeMMz; ui.updateTxt(Enums.Axis.Z); break;
+                    case "x": ui.dimX = newSizeMMx; ui.updateTxt(Axis.X); break;
+                    case "y": ui.dimY = newSizeMMy; ui.updateTxt(Axis.Y); break;
+                    case "z": ui.dimZ = newSizeMMz; ui.updateTxt(Axis.Z); break;
                 }
                 setSliderBar(stl);
              
@@ -967,9 +967,9 @@ namespace View3D.view
                     }
                 }
                 ui.gIsShow = true;
-                ui.dimX    = bbox.Size.x; ui.updateTxt(Enums.Axis.X, false);
-                ui.dimY    = bbox.Size.y; ui.updateTxt(Enums.Axis.Y, false);
-                ui.dimZ    = bbox.Size.z; ui.updateTxt(Enums.Axis.Z, false);
+                ui.dimX    = bbox.Size.x; ui.updateTxt(Axis.X, false);
+                ui.dimY    = bbox.Size.y; ui.updateTxt(Axis.Y, false);
+                ui.dimZ    = bbox.Size.z; ui.updateTxt(Axis.Z, false);
                 ui.chk_Uniform_Checked(null, null);
                 ui.gIsShow = false;
                 textScaleX.Text = (tempX / ui.bboxnow).ToString("0.000");
@@ -991,9 +991,9 @@ namespace View3D.view
                 ui.chk_Uniform.IsChecked = true;
                 double tempX = bbox.Size.x / 25.4, tempY = bbox.Size.y / 25.4, tempZ = bbox.Size.z / 25.4;
                 ui.gIsShow = true;
-                ui.dimX    = tempX; ui.updateTxt(Enums.Axis.X, false);
-                ui.dimY    = tempY; ui.updateTxt(Enums.Axis.Y, false);
-                ui.dimZ    = tempZ; ui.updateTxt(Enums.Axis.Z, false);
+                ui.dimX    = tempX; ui.updateTxt(Axis.X, false);
+                ui.dimY    = tempY; ui.updateTxt(Axis.Y, false);
+                ui.dimZ    = tempZ; ui.updateTxt(Axis.Z, false);
                 ui.chk_Uniform_Checked(null, null);
                 ui.gIsShow = false;
                 textScaleX.Text = (tempX / ui.bboxnow).ToString("0.000");
