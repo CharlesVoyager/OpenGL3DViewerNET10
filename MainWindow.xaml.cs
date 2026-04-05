@@ -222,7 +222,7 @@ namespace View3D
         private void OnMmToInch() 
         {
             PrintModel m = stlComposer.SingleSelectedModel;
-            if (m != null) stlComposer.DoInchOrScale(m, true);
+            if (m != null) stlComposer.DoMmToInch(m);
         }
 
         private void OnInchToMm()

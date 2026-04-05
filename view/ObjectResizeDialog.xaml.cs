@@ -15,7 +15,7 @@ namespace View3D.view
         public bool gIsInch = false;
         public bool gIsScale = false;
 
-        public static double scaleMMx = 0, scaleMMy = 0, scaleMMz = 0;
+        public double newSizeMMx = 0, newSizeMMy = 0, newSizeMMz = 0;
 
         double gx = 0.0;
         double gy = 0.0;
@@ -34,35 +34,35 @@ namespace View3D.view
             string tx = gx.ToString("0.000");
             string ty = gy.ToString("0.000");
             string tz = gz.ToString("0.000");
-            double scalex = gx;
-            double scaley = gy;
-            double scalez = gz;
+            newSizeMMx = gx;
+            newSizeMMy = gy;
+            newSizeMMz = gz;
             double Max = Math.Max(Math.Max(gx, gy), gz);
             if ((gx == gy) && (gy == gz))
             {
-                scalex = 25.000;
-                scaley = 25.000;
-                scalez = 25.000;
+                newSizeMMx = 25.000;
+                newSizeMMy = 25.000;
+                newSizeMMz = 25.000;
             }
             else
             {
                 if (gx == Max)
                 {
-                    scalex = 25.000;
-                    scaley = 25.000 / gx * scaley;
-                    scalez = 25.000 / gx * scalez;
+                    newSizeMMx = 25.000;
+                    newSizeMMy = 25.000 / gx * newSizeMMy;
+                    newSizeMMz = 25.000 / gx * newSizeMMz;
                 }
                 else if (gy == Max)
                 {
-                    scalex = 25.000 / gy * scalex;
-                    scaley = 25.000;
-                    scalez = 25.000 / gy * scalez;
+                    newSizeMMx = 25.000 / gy * newSizeMMx;
+                    newSizeMMy = 25.000;
+                    newSizeMMz = 25.000 / gy * newSizeMMz;
                 }
                 else if (gz == Max)
                 {
-                    scalex = 25.000 / gz * scalex;
-                    scaley = 25.000 / gz * scaley;
-                    scalez = 25.000;
+                    newSizeMMx = 25.000 / gz * newSizeMMx;
+                    newSizeMMy = 25.000 / gz * newSizeMMy;
+                    newSizeMMz = 25.000;
                 }
             }
             txtOriginalSize.Text = txtOriginalSize.Text.Replace("§", " ");
@@ -70,14 +70,10 @@ namespace View3D.view
             txtAutoScale.Text = txtAutoScale.Text.Replace("§", " ");
             string tOriginalSize = tx.ToString() + " X " + ty.ToString() + " X " + tz.ToString() + " mm\u00B3";
             string tInchScale = gx.ToString("0.000") + " X " + gy.ToString("0.000") + " X " + gz.ToString("0.000") + " inch\u00B3";
-            string tAutoScale = scalex.ToString("0.000") + " X " + scaley.ToString("0.000") + " X " + scalez.ToString("0.000") + " mm\u00B3";
+            string tAutoScale = newSizeMMx.ToString("0.000") + " X " + newSizeMMy.ToString("0.000") + " X " + newSizeMMz.ToString("0.000") + " mm\u00B3";
             txtOriginalSize.Inlines.Add(new Run(tOriginalSize.ToString(CultureInfo.InvariantCulture)) { FontWeight = FontWeights.Bold });
             txtInchScale.Inlines.Add(new Run(tInchScale.ToString(CultureInfo.InvariantCulture)) { FontWeight = FontWeights.Bold });
             txtAutoScale.Inlines.Add(new Run(tAutoScale.ToString(CultureInfo.InvariantCulture)) { FontWeight = FontWeights.Bold });
-
-            scaleMMx = scalex; 
-            scaleMMy = scaley; 
-            scaleMMz = scalez;
         }
 
         private void translate()

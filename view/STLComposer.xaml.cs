@@ -250,7 +250,7 @@ namespace View3D.view
                 if (MainWindow.main.Visibility == Visibility.Visible)
                     dlg.Owner = MainWindow.main;
                 dlg.ShowDialog();
-                if      (dlg.gIsScale) DoInchOrScale(models[last], false);
+                if      (dlg.gIsScale) DoAutoScale(models[last], dlg.newSizeMMx, dlg.newSizeMMy, dlg.newSizeMMz);
                 else if (dlg.gIsInch)  DoInchScale(models[last]);
             }
             else if (models[last].BoundingBox.Size.x - 1e-4 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth)  ||
@@ -405,7 +405,7 @@ namespace View3D.view
                 if (MainWindow.main.Visibility == Visibility.Visible)
                     dlg.Owner = MainWindow.main;
                 dlg.ShowDialog();
-                if      (dlg.gIsScale) DoInchOrScale(model, false);
+                if      (dlg.gIsScale) DoAutoScale(model, dlg.newSizeMMx, dlg.newSizeMMy, dlg.newSizeMMz);
                 else if (dlg.gIsInch)  DoInchScale(model);
             }
         }
@@ -880,10 +880,7 @@ namespace View3D.view
             }
         }
 
-        // =====================================================================
-        //  Scale helpers (DoInchScale / DoInchOrScale / DoInchtomm / SetSliderBar)
-        //  Logic unchanged – only MessageBox calls converted to WPF API.
-        // =====================================================================
+
         public void DoInchScale(PrintModel stl)
         {
             try
@@ -939,11 +936,11 @@ namespace View3D.view
                                    MessageBoxImage.Warning) == MessageBoxResult.Yes;
         }
 
-        public void DoInchOrScale(PrintModel stl, bool pIsInch)
+        public void DoAutoScale(PrintModel stl, double newSizeMMx, double newSizeMMy, double newSizeMMz)
         {
             try
             {
-                var ui   = MainWindow.main.UI_resize_advance;
+                var ui = MainWindow.main.UI_resize_advance;
                 var bbox = stl.BoundingBox;
                 ui.chk_Uniform.IsChecked = true;
                 ui.bboxnow = bbox.Size.x / Convert.ToDouble(textScaleX.Text);
@@ -954,49 +951,62 @@ namespace View3D.view
                     (stl.BoundingBox.Size.x >= stl.BoundingBox.Size.y && stl.BoundingBox.Size.x >= stl.BoundingBox.Size.z) ? "x" :
                     (stl.BoundingBox.Size.y >= stl.BoundingBox.Size.x && stl.BoundingBox.Size.y >= stl.BoundingBox.Size.z) ? "y" : "z";
 
-                if (!pIsInch)
+       
+                ui.button_mmtoinch.IsEnabled = true;
+                ui.button_inchtomm.IsEnabled = false;
+                ui.gIsShow = true;
+                ui.dimX = 24; ui.updateTxt(Enums.Axis.X);
+                ui.dimY = 24; ui.updateTxt(Enums.Axis.Y);
+                ui.dimZ = 24; ui.updateTxt(Enums.Axis.Z);
+                ui.gIsShow = false;
+                switch (tDecision)
                 {
-                    ui.button_mmtoinch.IsEnabled = true;
-                    ui.button_inchtomm.IsEnabled = false;
-                    ui.gIsShow = true;
-                    ui.dimX    = 24; ui.updateTxt(Enums.Axis.X);
-                    ui.dimY    = 24; ui.updateTxt(Enums.Axis.Y);
-                    ui.dimZ    = 24; ui.updateTxt(Enums.Axis.Z);
-                    ui.gIsShow = false;
-                    switch (tDecision)
-                    {
-                        case "x": ui.dimX = ObjectResizeDialog.scaleMMx; ui.updateTxt(Enums.Axis.X); break;
-                        case "y": ui.dimY = ObjectResizeDialog.scaleMMy; ui.updateTxt(Enums.Axis.Y); break;
-                        case "z": ui.dimZ = ObjectResizeDialog.scaleMMz; ui.updateTxt(Enums.Axis.Z); break;
-                    }
-                    SetSliderBar(stl);
+                    case "x": ui.dimX = newSizeMMx; ui.updateTxt(Enums.Axis.X); break;
+                    case "y": ui.dimY = newSizeMMy; ui.updateTxt(Enums.Axis.Y); break;
+                    case "z": ui.dimZ = newSizeMMz; ui.updateTxt(Enums.Axis.Z); break;
                 }
-                else
+                SetSliderBar(stl);
+             
+             }
+            catch { }
+        }
+
+
+        public void DoMmToInch(PrintModel stl)
+        {
+            try
+            {
+                var ui   = MainWindow.main.UI_resize_advance;
+                var bbox = stl.BoundingBox;
+                ui.chk_Uniform.IsChecked = true;
+                ui.bboxnow = bbox.Size.x / Convert.ToDouble(textScaleX.Text);
+                ui.bboynow = bbox.Size.y / Convert.ToDouble(textScaleY.Text);
+                ui.bboznow = bbox.Size.z / Convert.ToDouble(textScaleZ.Text);
+
+                ui.chk_Uniform.IsChecked = true;
+                double tempX = bbox.Size.x * 25.4, tempY = bbox.Size.y * 25.4, tempZ = bbox.Size.z * 25.4;
+                if (tempX > MainWindow.main.threeDSettings.PrintAreaWidth || tempY > MainWindow.main.threeDSettings.PrintAreaDepth || tempZ > MainWindow.main.threeDSettings.PrintAreaHeight)
                 {
-                    ui.chk_Uniform.IsChecked = true;
-                    double tempX = bbox.Size.x * 25.4, tempY = bbox.Size.y * 25.4, tempZ = bbox.Size.z * 25.4;
-                    if (tempX > MainWindow.main.threeDSettings.PrintAreaWidth || tempY > MainWindow.main.threeDSettings.PrintAreaDepth || tempZ > MainWindow.main.threeDSettings.PrintAreaHeight)
+                    if (!AskUserToChangeUnit())
                     {
-                        if (!AskUserToChangeUnit())
-                        {
-                            ui.button_mmtoinch.IsEnabled = true;
-                            ui.button_inchtomm.IsEnabled = false;
-                            return;
-                        }
+                        ui.button_mmtoinch.IsEnabled = true;
+                        ui.button_inchtomm.IsEnabled = false;
+                        return;
                     }
-                    ui.gIsShow = true;
-                    ui.dimX    = bbox.Size.x; ui.updateTxt(Enums.Axis.X, false);
-                    ui.dimY    = bbox.Size.y; ui.updateTxt(Enums.Axis.Y, false);
-                    ui.dimZ    = bbox.Size.z; ui.updateTxt(Enums.Axis.Z, false);
-                    ui.chk_Uniform_Checked(null, null);
-                    ui.gIsShow = false;
-                    textScaleX.Text = (tempX / ui.bboxnow).ToString("0.000");
-                    textScaleY.Text = (tempY / ui.bboynow).ToString("0.000");
-                    textScaleZ.Text = (tempZ / ui.bboznow).ToString("0.000");
-                    UpdateOutOfBound();
-                    stl.Land();
-                    MainWindow.main.threeDControl.UpdateChanges();
                 }
+                ui.gIsShow = true;
+                ui.dimX    = bbox.Size.x; ui.updateTxt(Enums.Axis.X, false);
+                ui.dimY    = bbox.Size.y; ui.updateTxt(Enums.Axis.Y, false);
+                ui.dimZ    = bbox.Size.z; ui.updateTxt(Enums.Axis.Z, false);
+                ui.chk_Uniform_Checked(null, null);
+                ui.gIsShow = false;
+                textScaleX.Text = (tempX / ui.bboxnow).ToString("0.000");
+                textScaleY.Text = (tempY / ui.bboynow).ToString("0.000");
+                textScaleZ.Text = (tempZ / ui.bboznow).ToString("0.000");
+                UpdateOutOfBound();
+                stl.Land();
+                MainWindow.main.threeDControl.UpdateChanges();
+
             }
             catch { }
         }

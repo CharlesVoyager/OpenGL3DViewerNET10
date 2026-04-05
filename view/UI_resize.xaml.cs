@@ -162,7 +162,7 @@ namespace View3D.view
         {
             PrintModel model = MainWindow.main.stlComposer.SingleSelectedModel;
             if (model == null) return;
-            MainWindow.main.stlComposer.DoInchOrScale(model, true);
+            MainWindow.main.stlComposer.DoMmToInch(model);
         }
 
         private void button_inchtomm_Click(object sender, RoutedEventArgs e)

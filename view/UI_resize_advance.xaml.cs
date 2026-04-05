@@ -540,7 +540,7 @@ namespace View3D.view
             button_inchtomm.IsEnabled = true;
             PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
-            MainWindow.main.stlComposer.DoInchOrScale(stl, true);
+            MainWindow.main.stlComposer.DoMmToInch(stl);
         }
 
         private void button_inchtomm_Click(object sender, RoutedEventArgs e)
