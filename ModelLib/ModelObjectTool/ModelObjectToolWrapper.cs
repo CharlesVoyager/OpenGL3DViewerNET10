@@ -1,7 +1,12 @@
-﻿using View3D.Enumeration;
-
+﻿
 namespace View3D.ModelObjectTool
 {
+    public enum ModelObjectToolType
+    {
+        Normal,
+        SIMD
+    }
+
     public class ModelObjectToolWrapper
     {
         private static ModelObjectToolWrapper _Instance = new ModelObjectToolWrapper();
