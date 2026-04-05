@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using View3D.model;
 using View3D.model.geom;
 
 namespace View3D.view

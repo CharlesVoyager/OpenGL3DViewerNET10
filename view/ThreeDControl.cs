@@ -1,15 +1,12 @@
 using OpenGL3DViewerNET10.Draw;
 using OpenGL3DViewerNET10.ModelLib.model;
-using OpenGL3DViewerNET10.ModelLib.Utils;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;

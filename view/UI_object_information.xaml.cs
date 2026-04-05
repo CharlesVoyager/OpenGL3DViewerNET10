@@ -1,7 +1,4 @@
 ﻿using OpenGL3DViewerNET10.ModelLib.model;
-using System;
-using System.Windows;
-using System.Windows.Controls;
 using View3D.model.geom;
 
 namespace View3D.view

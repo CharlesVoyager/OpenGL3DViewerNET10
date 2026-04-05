@@ -1,8 +1,3 @@
-using OpenGL3DViewerNET10.ModelLib.model;
-using OpenGL3DViewerNET10.ModelLib.Utils;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -10,6 +5,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using View3D.model;
+using OpenGL3DViewerNET10.ModelLib.model;
+using OpenGL3DViewerNET10.ModelLib.Utils;
 
 namespace View3D.view
 {
