@@ -896,9 +896,9 @@ namespace View3D.view
                 ui.bboxnow = bbox.Size.x / Convert.ToDouble(textScaleX.Text);
                 ui.bboynow = bbox.Size.y / Convert.ToDouble(textScaleY.Text);
                 ui.bboznow = bbox.Size.z / Convert.ToDouble(textScaleZ.Text);
-                Double tempX = ObjectResizeDialog.scaleInchx;
-                Double tempY = ObjectResizeDialog.scaleInchy;
-                Double tempZ = ObjectResizeDialog.scaleInchz;
+                Double tempX = bbox.Size.x * 25.4;
+                Double tempY = bbox.Size.y * 25.4;
+                Double tempZ = bbox.Size.z * 25.4;
                 textScaleX.Text = (tempX / ui.bboxnow).ToString("0.000");
                 textScaleY.Text = (tempY / ui.bboynow).ToString("0.000");
                 textScaleZ.Text = (tempZ / ui.bboznow).ToString("0.000");
