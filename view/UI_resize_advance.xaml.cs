@@ -43,7 +43,6 @@ namespace View3D.view
             lbl_YUnits.Content = Trans.T("L_MM");
             lbl_ZUnits.Content = Trans.T("L_MM");
 
-            txt_Scale.Text = "";
             button_Reset.ToolTip = Trans.T("B_RESET");
             button_Reset.Content = Trans.T("B_RESET");
             lbl_Uniform.Content = Trans.T("L_UNIFORM");
@@ -541,6 +540,11 @@ namespace View3D.view
             PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             MainWindow.main.stlComposer.DoMmToInch(stl);
+            txt_Scale.Text = (Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text) * 100).ToString("0");
+
+            slider_resize.ValueChanged -= slider_resize_ValueChanged;
+            slider_resize.Value = Convert.ToDouble(txt_Scale.Text);
+            slider_resize.ValueChanged += slider_resize_ValueChanged;
         }
 
         private void button_inchtomm_Click(object sender, RoutedEventArgs e)
@@ -550,6 +554,11 @@ namespace View3D.view
             PrintModel model = MainWindow.main.stlComposer.SingleSelectedModel;
             if (model == null) return;
             MainWindow.main.stlComposer.DoInchtomm(model);
+            txt_Scale.Text = (Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text) * 100).ToString("0");
+            
+            slider_resize.ValueChanged -= slider_resize_ValueChanged;
+            slider_resize.Value = Convert.ToDouble(txt_Scale.Text);
+            slider_resize.ValueChanged += slider_resize_ValueChanged;
         }
 
         private void btn_Scale_Click(object sender, RoutedEventArgs e)
