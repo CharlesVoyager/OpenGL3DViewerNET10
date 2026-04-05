@@ -122,17 +122,9 @@ namespace View3D.MeshInOut
                 count++;
                 if (count % 5000 == 0)
                 {
-                    //TODO: check 2 stage loading
                     if (updateRate != null)
                         updateRate( (int)(((double)count / model.triangles.Count) * 100.0) );
-                    ////if (MainWindow.main.threedview.ui.BusyWindow.Visibility == System.Windows.Visibility.Visible &&
-                    ////    MainWindow.main.threedview.ui.BusyWindow.increment != 0.0)
-                    ////{
-                    ////    MainWindow.main.threedview.ui.BusyWindow.busyProgressbar.Value =
-                    ////            ((double)count / model.triangles.Count) * (100.0 - MainWindow.main.threedview.ui.BusyWindow.firstStagePercent) + MainWindow.main.threedview.ui.BusyWindow.firstStagePercent;
-                    ////}
-                    ////Application.DoEvents();
-                    //Fix_save_issue_160829
+
                     if (Command == COMMAND.Abort)
                     {
                         Command = COMMAND.None;

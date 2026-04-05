@@ -6,19 +6,7 @@ using View3D.model.geom;
 
 namespace View3D.MeshInOut
 {
-
     public enum FormatCode { UnKnown, Stl, Obj, _3ws };
-    public enum ErrorCode {
-        ERR_NONE = 0,
-        ERR_NOT_VALID_FILE = -1000,
-        ERR_NOT_SUPPORT_VER = -1001,
-    }
-
-    public class MeshFormat
-    {
-        public FormatCode Format { get; set; }
-        public string Extension;
-    }
 
     public class Setting : IMeshOutSetting
     {
