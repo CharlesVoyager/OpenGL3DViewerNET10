@@ -124,7 +124,7 @@ namespace View3D.view
 
                 tMultScale = tTempx / tbefore;
                 MainWindow.main.stlComposer.textScaleX.Text = tTempx.ToString("0.000");
-                if (chk_Uniform.IsChecked == true)// && gFlag == true)
+                if (chk_Uniform.IsChecked == true)
                 {
                     Double temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleY.Text) * tMultScale;
                     if (temp > 0)
@@ -206,7 +206,7 @@ namespace View3D.view
                 tMultScale = tTempy / tbefore;
 
                 MainWindow.main.stlComposer.textScaleY.Text = tTempy.ToString("0.000");
-                if (chk_Uniform.IsChecked == true)//&& gFlag==true)
+                if (chk_Uniform.IsChecked == true)
                 {
                     Double temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text) * tMultScale;
                     if (temp > 0)
@@ -296,7 +296,7 @@ namespace View3D.view
                 tMultScale = tTempz / tbefore;
 
                 MainWindow.main.stlComposer.textScaleZ.Text = tTempz.ToString("0.000");
-                if (chk_Uniform.IsChecked == true)//&& gFlag==true)
+                if (chk_Uniform.IsChecked == true)
                 {
                     Double temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text) * tMultScale;
                     if (temp > 0)
@@ -529,6 +529,8 @@ namespace View3D.view
             gIsShow = false;
             checkMin();
             MainWindow.main.stlComposer.check_stl_size_too_small();
+            button_mmtoinch.IsEnabled = true;
+            button_inchtomm.IsEnabled = false;
         }
 
         private void button_mmtoinch_Click(object sender, RoutedEventArgs e)
