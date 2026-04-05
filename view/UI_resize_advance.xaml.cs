@@ -14,9 +14,6 @@ namespace View3D.view
         Z
     }
 
-    /// <summary>
-    /// Interaction logic for UI_resize.xaml
-    /// </summary>
     public partial class UI_resize_advance : UserControl
     {
         public bool gIsShow = false;
