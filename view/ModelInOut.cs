@@ -27,7 +27,6 @@ namespace View3D.view
             fileMesh.LoadWOCatch(file, model, updateRateFunc);
             AbortTask -= fileMesh.TaskAbort;
         }
-        public void Save(string filename, TopoModel model, Setting outSetting) { }
 
         public void OnProcessUpdate(int rate)
         {
