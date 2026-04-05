@@ -955,7 +955,9 @@ namespace View3D.view
 
                 ui.chk_Uniform.IsChecked = true;
                 double tempX = bbox.Size.x * 25.4, tempY = bbox.Size.y * 25.4, tempZ = bbox.Size.z * 25.4;
-                if (tempX > MainWindow.main.threeDSettings.PrintAreaWidth || tempY > MainWindow.main.threeDSettings.PrintAreaDepth || tempZ > MainWindow.main.threeDSettings.PrintAreaHeight)
+                if (tempX > MainWindow.main.threeDSettings.PrintAreaWidth || 
+                    tempY > MainWindow.main.threeDSettings.PrintAreaDepth || 
+                    tempZ > MainWindow.main.threeDSettings.PrintAreaHeight)
                 {
                     if (!AskUserToChangeUnit())
                     {
@@ -973,10 +975,9 @@ namespace View3D.view
                 textScaleX.Text = (tempX / ui.bboxnow).ToString("0.000");
                 textScaleY.Text = (tempY / ui.bboynow).ToString("0.000");
                 textScaleZ.Text = (tempZ / ui.bboznow).ToString("0.000");
-         //       UpdateOutOfBound();
                 stl.Land();
+                UpdateOutOfBound();
                 MainWindow.main.threeDControl.UpdateChanges();
-
             }
             catch { }
         }

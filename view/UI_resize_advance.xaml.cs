@@ -89,8 +89,6 @@ namespace View3D.view
             }
 
             gIsShow = false;
-            button_mmtoinch.IsEnabled = true;
-            button_inchtomm.IsEnabled = false;
         }
 
         private void txtX_TextChanged(object sender, TextChangedEventArgs e)
