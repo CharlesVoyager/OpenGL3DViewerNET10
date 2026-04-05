@@ -28,6 +28,8 @@ namespace View3D.view
             InitializeComponent();
             try
             {
+                button_mmtoinch.IsEnabled = true;
+                button_inchtomm.IsEnabled = false;
                 slider_resize.Minimum = 1;  // NOTE: The value of resize cannot be zero; otherwise, exception happens.
                 if (MainWindow.main != null)
                     MainWindow.main.languageChanged += translate;
