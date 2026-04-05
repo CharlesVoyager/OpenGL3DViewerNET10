@@ -31,7 +31,6 @@ namespace View3D.view
 
         public void OnProcessUpdate(int rate)
         {
-
             MainWindow.main.Dispatcher.InvokeAsync(() =>
             {
                 if (MainWindow.main.BusyWindow.Visibility == System.Windows.Visibility.Visible)
