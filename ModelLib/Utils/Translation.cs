@@ -95,12 +95,6 @@ namespace OpenGL3DViewerNET10.ModelLib.Utils
             Trans.trans = this;
         }
 
-        public void selectLanguage(Translation t)
-        {
-            active = t;
-
-            RegMemory.SetString("lastLanguage", t.fileshort);
-        }
 
         public static string T(string id, bool forcedToEnglish = false)
         {
