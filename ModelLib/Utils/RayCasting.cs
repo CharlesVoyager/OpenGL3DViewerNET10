@@ -49,14 +49,8 @@ namespace OpenGL3DViewerNET10.ModelLib.Utils
             return new Ray(nearPos, Vector3.Normalize(farPos - nearPos));
         }
 
-        public static bool RaycastAABB(Ray ray, PrintModel md)
+        public static bool RaycastAABB(Ray ray, Vector3 aabbMinPoint3, Vector3 aabbMaxPoint3)
         {
-            if (md.BoundingBox.minPoint == null || md.BoundingBox.maxPoint == null)
-                return false;
-
-            Vector3 aabbMinPoint3 = new Vector3((float)md.BoundingBox.minPoint.x, (float)md.BoundingBox.minPoint.y, (float)md.BoundingBox.minPoint.z);
-            Vector3 aabbMaxPoint3 = new Vector3((float)md.BoundingBox.maxPoint.x, (float)md.BoundingBox.maxPoint.y, (float)md.BoundingBox.maxPoint.z);
-
             float t1 = (aabbMinPoint3.X - ray.Position.X) / ray.Normal.X;
             float t2 = (aabbMaxPoint3.X - ray.Position.X) / ray.Normal.X;
             float t3 = (aabbMinPoint3.Y - ray.Position.Y) / ray.Normal.Y;

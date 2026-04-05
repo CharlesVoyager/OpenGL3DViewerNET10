@@ -543,9 +543,22 @@ namespace View3D.view
             float[] rayNor = { ray.Normal.X, ray.Normal.Y, ray.Normal.Z };
             var tool = ModelObjectToolWrapper.Instance.Tool;
 
+            Vector3 aabbMinPoint3 = new Vector3();
+            Vector3 aabbMaxPoint3 = new Vector3();
             foreach (PrintModel model in stlComp.models)
             {
-                if (!RayCasting.RaycastAABB(ray, model)) continue;  // Check if it hit bounding box of a model.
+                if (model.BoundingBox.minPoint == null || model.BoundingBox.maxPoint == null)
+                    continue;
+
+                aabbMinPoint3.X = (float)model.BoundingBox.minPoint.x;
+                aabbMinPoint3.Y = (float)model.BoundingBox.minPoint.y;
+                aabbMinPoint3.Z = (float)model.BoundingBox.minPoint.z;
+
+                aabbMaxPoint3.X = (float)model.BoundingBox.maxPoint.x;
+                aabbMaxPoint3.Y = (float)model.BoundingBox.maxPoint.y;
+                aabbMaxPoint3.Z = (float)model.BoundingBox.maxPoint.z;
+
+                if (!RayCasting.RaycastAABB(ray, aabbMinPoint3, aabbMaxPoint3)) continue;  // Check if it hit bounding box of a model.
 
                 ModelMatrix mtx = ModelObjectToolHelper.ToModelMatrix(model.trans);
 
