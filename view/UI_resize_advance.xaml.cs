@@ -72,11 +72,9 @@ namespace View3D.view
 
             gIsShow = true;
             dimX = bbox.Size.x;
-            updateTxt(Axis.X);
             dimY = bbox.Size.y;
-            updateTxt(Axis.Y);
             dimZ = bbox.Size.z;
-            updateTxt(Axis.Z);
+            updateTxt();
 
             if (Convert.ToDouble(MainWindow.main.stlComposer.textRotX.Text) != 0 ||
                 Convert.ToDouble(MainWindow.main.stlComposer.textRotY.Text) != 0 ||
@@ -111,7 +109,7 @@ namespace View3D.view
                 if (dimX == 0)
                 {
                     dimX = 0.001;
-                    updateTxt(Axis.X);
+                    updateTxt();
                 }
                 else
                 {
@@ -160,17 +158,17 @@ namespace View3D.view
                     if (scaleKeyDown != "x")
                     {
                         dimX = stl.BoundingBox.Size.x;
-                        updateTxt(Axis.X);
+                        updateTxt();
                     }
                     if (scaleKeyDown != "y")
                     {
                         dimY = stl.BoundingBox.Size.y;
-                        updateTxt(Axis.Y);
+                        updateTxt();
                     }
                     if (scaleKeyDown != "z")
                     {
                         dimZ = stl.BoundingBox.Size.z;
-                        updateTxt(Axis.Z);
+                        updateTxt();
                     }
                     gIsShow = false;
                     IsScale = true;
@@ -192,7 +190,7 @@ namespace View3D.view
                 if (dimY == 0)
                 {
                     dimY = 0.001;
-                    updateTxt(Axis.Y);
+                    updateTxt();
                 }
                 else
                 {
@@ -243,17 +241,17 @@ namespace View3D.view
                     if (scaleKeyDown != "x")
                     {
                         dimX = stl.BoundingBox.Size.x;
-                        updateTxt(Axis.X);
+                        updateTxt();
                     }
                     if (scaleKeyDown != "y")
                     {
                         dimY = stl.BoundingBox.Size.y;
-                        updateTxt(Axis.Y);
+                        updateTxt();
                     }
                     if (scaleKeyDown != "z")
                     {
                         dimZ = stl.BoundingBox.Size.z;
-                        updateTxt(Axis.Z);
+                        updateTxt();
                     }
                     gIsShow = false;
                     IsScale = true;
@@ -282,7 +280,7 @@ namespace View3D.view
                 if (dimZ == 0)
                 {
                     dimZ = 0.001;
-                    updateTxt(Axis.Z);
+                    updateTxt();
                 }
                 else
                 {
@@ -333,17 +331,17 @@ namespace View3D.view
                     if (scaleKeyDown != "x")
                     {
                         dimX = stl.BoundingBox.Size.x;
-                        updateTxt(Axis.X);
+                        updateTxt();
                     }
                     if (scaleKeyDown != "y")
                     {
                         dimY = stl.BoundingBox.Size.y;
-                        updateTxt(Axis.Y);
+                        updateTxt();
                     }
                     if (scaleKeyDown != "z")
                     {
                         dimZ = stl.BoundingBox.Size.z;
-                        updateTxt(Axis.Z);
+                        updateTxt();
                     }
 
                     gIsShow = false;
@@ -430,21 +428,21 @@ namespace View3D.view
                     if (IsScale == true)
                     {
                         dimX = unit2MMTransform(slider_resize.Value);
-                        updateTxt(Axis.X);
+                        updateTxt();
                     }
                     break;
                 case "y":
                     if (IsScale == true)
                     {
                         dimY = unit2MMTransform(slider_resize.Value);
-                        updateTxt(Axis.Y);
+                        updateTxt();
                     }
                     break;
                 case "z":
                     if (IsScale == true)
                     {
                         dimZ = unit2MMTransform(slider_resize.Value);
-                        updateTxt(Axis.Z);
+                        updateTxt();
                     }
                     break;
             }
@@ -515,11 +513,9 @@ namespace View3D.view
 
             gIsShow = true;
             dimX = bbox.Size.x;
-            updateTxt(Axis.X);
             dimY = bbox.Size.y;
-            updateTxt(Axis.Y);
             dimZ = bbox.Size.z;
-            updateTxt(Axis.Z);
+            updateTxt();
             IsScale = false;
             if (xyzbind == "x")
             {
@@ -589,11 +585,9 @@ namespace View3D.view
                 MainWindow.main.stlComposer.textScaleZ.Text = tAddScaleZ.ToString("0.000");
                 gIsShow = true;
                 dimX = stl.BoundingBox.Size.x;
-                updateTxt(Axis.X);
                 dimY = stl.BoundingBox.Size.y;
-                updateTxt(Axis.Y);
                 dimZ = stl.BoundingBox.Size.z;
-                updateTxt(Axis.Z);
+                updateTxt();
                 gIsShow = false;
                 //checkMin();
                 IsScale = false;
@@ -622,11 +616,9 @@ namespace View3D.view
             try
             {
                 dimX = stl.BoundingBox.Size.x;
-                updateTxt(Axis.X);
                 dimY = stl.BoundingBox.Size.y;
-                updateTxt(Axis.Y);
                 dimZ = stl.BoundingBox.Size.z;
-                updateTxt(Axis.Z);
+                updateTxt();
 
                 scaleKeyDown = "";
             }
@@ -643,39 +635,11 @@ namespace View3D.view
                 scaleKeyDown = "z";
         }
 
-        public void updateTxt(Axis axis, bool doUnitTransform = true)
+        public void updateTxt()
         {
-            double dimForDisplay = 0.0;
-
-            switch (axis)
-            {
-                case Axis.X:
-                    dimForDisplay = dimX;
-                    if (doUnitTransform)
-                    {
-                        dimForDisplay = unit2InchTransform(dimForDisplay, (int)MainWindow.main.threeDSettings.PrintAreaWidth);
-                    }
-                    txtX.Text = dimForDisplay.ToString("0.000");
-                    break;
-
-                case Axis.Y:
-                    dimForDisplay = dimY;
-                    if (doUnitTransform)
-                    {
-                        dimForDisplay = unit2InchTransform(dimForDisplay, (int)MainWindow.main.threeDSettings.PrintAreaDepth);                      
-                    }
-                    txtY.Text = dimForDisplay.ToString("0.000");
-                    break;
-
-                case Axis.Z:
-                    dimForDisplay = dimZ;
-                    if (doUnitTransform)
-                    {
-                        dimForDisplay = unit2InchTransform(dimForDisplay, (int)MainWindow.main.threeDSettings.PrintAreaHeight);
-                    }
-                    txtZ.Text = dimForDisplay.ToString("0.000");
-                    break;
-            }        
+            txtX.Text = dimX.ToString("0.000");
+            txtY.Text = dimY.ToString("0.000");
+            txtZ.Text = dimZ.ToString("0.000");
         }
 
         public void updateSliderValue(Axis axis)
