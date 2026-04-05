@@ -15,7 +15,7 @@ namespace View3D.view
         public bool gIsInch = false;
         public bool gIsScale = false;
 
-        public static double scaleInchx = 0, scaleInchy = 0, scaleInchz = 0, scaleMMx = 0, scaleMMy = 0, scaleMMz = 0;
+        public static double scaleMMx = 0, scaleMMy = 0, scaleMMz = 0;
 
         double gx = 0.0;
         double gy = 0.0;
@@ -74,12 +74,10 @@ namespace View3D.view
             txtOriginalSize.Inlines.Add(new Run(tOriginalSize.ToString(CultureInfo.InvariantCulture)) { FontWeight = FontWeights.Bold });
             txtInchScale.Inlines.Add(new Run(tInchScale.ToString(CultureInfo.InvariantCulture)) { FontWeight = FontWeights.Bold });
             txtAutoScale.Inlines.Add(new Run(tAutoScale.ToString(CultureInfo.InvariantCulture)) { FontWeight = FontWeights.Bold });
-            
-            scaleInchx = gx * 25.4; 
-            scaleInchy = gy * 25.4; 
-            scaleInchz = gz * 25.4;
 
-            scaleMMx = scalex; scaleMMy = scaley; scaleMMz = scalez;
+            scaleMMx = scalex; 
+            scaleMMy = scaley; 
+            scaleMMz = scalez;
         }
 
         private void translate()
