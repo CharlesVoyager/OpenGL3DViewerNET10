@@ -89,7 +89,7 @@ namespace View3D.view
             txtInchScale.Text = Trans.T("M_INCH_SIZE");
             txtAutoScale.Text = Trans.T("M_AUTO_SCALE_SIZE");
             Button_No.Content = Trans.T("B_NO");
-            Button_Yes.Content = Trans.T("B_AUTO_SCALE");
+            Button_AutoScale.Content = Trans.T("B_AUTO_SCALE");
             Button_Inch.Content = Trans.T("B_IMPORT_INCH");
         }
 
@@ -105,7 +105,7 @@ namespace View3D.view
             this.Close();
         }
 
-        private void Button_Yes_Click(object sender, RoutedEventArgs e)
+        private void Button_AutoScale_Click(object sender, RoutedEventArgs e)
         {
             gIsScale = true;
             this.Close();

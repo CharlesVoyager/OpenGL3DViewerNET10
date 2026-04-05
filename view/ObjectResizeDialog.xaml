@@ -37,6 +37,6 @@
         <TextBlock x:Name="txtInchScale" Margin="10,0,10,0" Grid.ColumnSpan="3"  Grid.Row="4" VerticalAlignment="Center" Text="．Import in inches, will scale up to AA.AA X BB.BB X CC.CC mm³"></TextBlock>
         <Button x:Name="Button_No" Margin="5" Content="No" Grid.Row="5" VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Center" Width="75" Height="29" Click="Button_No_Click" />
         <Button x:Name="Button_Inch" Margin="5" Content="Import in inches" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="5" VerticalAlignment="Center" Height="29" Click="Button_Inch_Click" />
-        <Button x:Name="Button_Yes" Margin="0,0,5,0" Content="Auto Scale" Grid.Column="2" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="75" Grid.Row="5" Height="29" Background="#FF009AFF" Foreground="White" Click="Button_Yes_Click" />
+        <Button x:Name="Button_AutoScale" Margin="0,0,5,0" Content="Auto Scale" Grid.Column="2" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="75" Grid.Row="5" Height="29" Background="#FF009AFF" Foreground="White" Click="Button_AutoScale_Click" />
     </Grid>
 </Window>
