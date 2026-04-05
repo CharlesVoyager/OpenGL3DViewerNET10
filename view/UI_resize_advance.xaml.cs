@@ -1,9 +1,9 @@
-﻿using OpenGL3DViewerNET10.ModelLib.model;
-using OpenGL3DViewerNET10.ModelLib.Utils;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using View3D.model.geom;
+using OpenGL3DViewerNET10.ModelLib.model;
+using OpenGL3DViewerNET10.ModelLib.Utils;
 
 namespace View3D.view
 {
@@ -17,7 +17,7 @@ namespace View3D.view
     /// <summary>
     /// Interaction logic for UI_resize.xaml
     /// </summary>
-    public partial class UI_resize_advance : System.Windows.Controls.UserControl
+    public partial class UI_resize_advance : UserControl
     {
         public bool gIsShow = false;
         public double bboxnow;
