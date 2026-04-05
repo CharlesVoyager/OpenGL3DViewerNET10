@@ -3,10 +3,11 @@ using View3D.model.geom;
 
 namespace View3D.MeshInOut
 {
-    public class StlSetting : Setting
+    public class StlSetting : IMeshOutSetting
     {
         public bool Binary { get; set; }
         public bool RepairModel { get; set; }
+        public FormatCode Format { get; set; }
 
         public StlSetting()
         {

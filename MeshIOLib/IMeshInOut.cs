@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using View3D.model.geom;
 
 namespace View3D.MeshInOut

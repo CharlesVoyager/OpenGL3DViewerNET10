@@ -8,11 +8,6 @@ namespace View3D.MeshInOut
 {
     public enum FormatCode { UnKnown, Stl, Obj, _3ws };
 
-    public class Setting : IMeshOutSetting
-    {
-        public FormatCode Format { get; set; }
-    }
-
     public class MeshIOBase : IMeshInOut
     {
         protected NumberFormatInfo NumFormat { get; private set; }
