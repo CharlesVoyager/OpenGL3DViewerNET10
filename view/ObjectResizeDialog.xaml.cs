@@ -15,7 +15,7 @@ namespace View3D.view
         public bool gIsInch = false;
         public bool gIsScale = false;
 
-        public static double scaleInchx = 0, scaleInchy = 0, scaleInchz = 0,scaleMMx = 0, scaleMMy = 0, scaleMMz = 0;
+        public static double scaleInchx = 0, scaleInchy = 0, scaleInchz = 0, scaleMMx = 0, scaleMMy = 0, scaleMMz = 0;
 
         double gx = 0.0;
         double gy = 0.0;
@@ -72,8 +72,7 @@ namespace View3D.view
             txtInchScale.Text = txtInchScale.Text.Replace("§", " ");
             txtAutoScale.Text = txtAutoScale.Text.Replace("§", " ");
             string tOriginalSize = tx.ToString() + " X " + ty.ToString() + " X " + tz.ToString() + " mm\u00B3";
-            //string tInchScale = inchx.ToString("0.000") + " X " + inchy.ToString("0.000") + " X " + inchz.ToString("0.000") + " mm\u00B3";
-            string tInchScale = gx.ToString("0.000") + " X " + gy.ToString("0.000") + " X " + gz.ToString("0.000") + " inch\u00B3";     // According to DQA's suggestion, follow JetR's design
+            string tInchScale = gx.ToString("0.000") + " X " + gy.ToString("0.000") + " X " + gz.ToString("0.000") + " inch\u00B3";
             string tAutoScale = scalex.ToString("0.000") + " X " + scaley.ToString("0.000") + " X " + scalez.ToString("0.000") + " mm\u00B3";
             txtOriginalSize.Inlines.Add(new Run(tOriginalSize.ToString(CultureInfo.InvariantCulture)) { FontWeight = FontWeights.Bold });
             txtInchScale.Inlines.Add(new Run(tInchScale.ToString(CultureInfo.InvariantCulture)) { FontWeight = FontWeights.Bold });
