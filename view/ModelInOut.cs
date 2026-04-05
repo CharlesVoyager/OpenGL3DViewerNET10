@@ -1,8 +1,5 @@
-﻿using System;
-using System.IO;
-using View3D.model.geom;
+﻿using View3D.model.geom;
 using View3D.MeshInOut;
-using OpenGL3DViewerNET10.ModelLib.Utils;
 
 namespace View3D.view
 {
