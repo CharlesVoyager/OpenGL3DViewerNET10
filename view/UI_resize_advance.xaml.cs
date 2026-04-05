@@ -19,16 +19,15 @@ namespace View3D.view
     /// </summary>
     public partial class UI_resize_advance : System.Windows.Controls.UserControl
     {
-        public bool gTextChange = false;
-        public string xyzbind = "x";
-
         public bool gIsShow = false;
         public double bboxnow;
         public double bboynow;
         public double bboznow;
-        public bool IsScale = false;
-        private string scaleKeyDown = "";
         public double dimX = 0.0, dimY = 0.0, dimZ = 0.0;
+
+        bool IsScale = false;
+        string xyzbind = "x";
+        string scaleKeyDown = "";
 
         public UI_resize_advance()
         {
