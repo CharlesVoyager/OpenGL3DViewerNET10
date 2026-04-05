@@ -32,9 +32,9 @@
         <Border x:Name="bdrWindowContent" BorderBrush="DarkGray" BorderThickness="1,0,1,1" Grid.Row="1" Grid.RowSpan="5" Grid.ColumnSpan="3" CornerRadius="0,0,10,10" Background="White" Margin="0,0,-1,-28">
         </Border>
         <TextBlock x:Name="txtContent" Margin="5,0,5,0" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" TextWrapping="Wrap" Text="You are about to import a small object. Do you want to scale it up?" HorizontalAlignment="Left" Grid.ColumnSpan="3" FontSize="14" MaxWidth="360" FontFamily="Microsoft JhengHei"/>
-        <TextBlock x:Name="txtOriginalSize" Margin="10,0,10,0" Grid.ColumnSpan="3" Grid.Row="2" VerticalAlignment="Center" Text="．Original Object Size is A.AA X B.BB X C.CC mm³"></TextBlock>
-        <TextBlock x:Name="txtAutoScale" Margin="10,0,10,0" Grid.ColumnSpan="3"  Grid.Row="3"  VerticalAlignment="Center" Text="．Auto Scale, will scale up to AA.AA X BB.BB X CC.CC mm³"></TextBlock>
-        <TextBlock x:Name="txtInchScale" Margin="10,0,10,0" Grid.ColumnSpan="3"  Grid.Row="4" VerticalAlignment="Center" Text="．Import in inches, will scale up to AA.AA X BB.BB X CC.CC mm³"></TextBlock>
+        <TextBlock x:Name="txtOriginalSize" Margin="6,0,10,0" Grid.ColumnSpan="3" Grid.Row="2" VerticalAlignment="Center" Text="- Original Object Size is A.AA X B.BB X C.CC mm³"></TextBlock>
+        <TextBlock x:Name="txtAutoScale" Margin="6,0,10,0" Grid.ColumnSpan="3" Grid.Row="3" VerticalAlignment="Center" Text="- Auto Scale, will scale up to AA.AA X BB.BB X CC.CC mm³"></TextBlock>
+        <TextBlock x:Name="txtInchScale" Margin="6,0,10,0" Grid.ColumnSpan="3" Grid.Row="4" VerticalAlignment="Center" Text="- Import in inches, will scale up to AA.AA X BB.BB X CC.CC mm³"></TextBlock>
         <Button x:Name="Button_No" Margin="5" Content="No" Grid.Row="5" VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Center" Width="75" Height="29" Click="Button_No_Click" />
         <Button x:Name="Button_Inch" Margin="5" Content="Import in inches" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="5" VerticalAlignment="Center" Height="29" Click="Button_Inch_Click" />
         <Button x:Name="Button_AutoScale" Margin="0,0,5,0" Content="Auto Scale" Grid.Column="2" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="75" Grid.Row="5" Height="29" Background="#FF009AFF" Foreground="White" Click="Button_AutoScale_Click" />
