@@ -499,19 +499,18 @@ namespace View3D.view
             if (MainWindow.main == null) return;
             PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
-            model.geom.RHBoundingBox bbox = stl.BoundingBox;
             MainWindow.main.stlComposer.textScaleX.Text = "1";
             MainWindow.main.stlComposer.textScaleY.Text = "1";
             MainWindow.main.stlComposer.textScaleZ.Text = "1";
-            bboxnow = bbox.Size.x;
-            bboynow = bbox.Size.y;
-            bboznow = bbox.Size.z;
-            txt_Scale.Text = "";
+            bboxnow = stl.BoundingBox.Size.x;
+            bboynow = stl.BoundingBox.Size.y;
+            bboznow = stl.BoundingBox.Size.z;
+            txt_Scale.Text = "100";
 
             gIsShow = true;
-            dimX = bbox.Size.x;
-            dimY = bbox.Size.y;
-            dimZ = bbox.Size.z;
+            dimX = stl.BoundingBox.Size.x;
+            dimY = stl.BoundingBox.Size.y;
+            dimZ = stl.BoundingBox.Size.z;
             updateTxt();
             IsScale = false;
             if (xyzbind == "x")
@@ -544,6 +543,11 @@ namespace View3D.view
             slider_resize.ValueChanged -= slider_resize_ValueChanged;
             slider_resize.Value = Convert.ToDouble(txt_Scale.Text);
             slider_resize.ValueChanged += slider_resize_ValueChanged;
+
+            dimX = stl.BoundingBox.Size.x;
+            dimY = stl.BoundingBox.Size.y;
+            dimZ = stl.BoundingBox.Size.z;
+            updateTxt();
         }
 
         private void button_inchtomm_Click(object sender, RoutedEventArgs e)
