@@ -250,8 +250,8 @@ namespace View3D.view
                 if (MainWindow.main.Visibility == Visibility.Visible)
                     dlg.Owner = MainWindow.main;
                 dlg.ShowDialog();
-                if      (dlg.gIsScale) DoAutoScale(models[last], dlg.newSizeMMx, dlg.newSizeMMy, dlg.newSizeMMz);
-                else if (dlg.gIsInch)  DoInchScale(models[last]);
+                if (dlg.gIsScale) DoAutoScale(models[last], dlg.newSizeMMx, dlg.newSizeMMy, dlg.newSizeMMz);
+                else if (dlg.gIsInch) DoMmToInch(models[last]);
             }
             else if (models[last].BoundingBox.Size.x - 1e-4 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth)  ||
                      models[last].BoundingBox.Size.y - 1e-4 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth)  ||
@@ -405,8 +405,8 @@ namespace View3D.view
                 if (MainWindow.main.Visibility == Visibility.Visible)
                     dlg.Owner = MainWindow.main;
                 dlg.ShowDialog();
-                if      (dlg.gIsScale) DoAutoScale(model, dlg.newSizeMMx, dlg.newSizeMMy, dlg.newSizeMMz);
-                else if (dlg.gIsInch)  DoInchScale(model);
+                if (dlg.gIsScale) DoAutoScale(model, dlg.newSizeMMx, dlg.newSizeMMy, dlg.newSizeMMz);
+                else if (dlg.gIsInch) DoMmToInch(model);
             }
         }
 
@@ -880,52 +880,6 @@ namespace View3D.view
             }
         }
 
-
-        public void DoInchScale(PrintModel stl)
-        {
-            try
-            {
-                var ui = MainWindow.main.UI_resize_advance;
-                ui.button_mmtoinch.IsEnabled = false;
-                ui.button_inchtomm.IsEnabled = true;
-                ui.chk_Uniform.IsChecked     = true;
-                var bbox = stl.BoundingBox;
-                ui.bboxnow = bbox.Size.x / Convert.ToDouble(textScaleX.Text);
-                ui.bboynow = bbox.Size.y / Convert.ToDouble(textScaleY.Text);
-                ui.bboznow = bbox.Size.z / Convert.ToDouble(textScaleZ.Text);
-                Double tempX = bbox.Size.x * 25.4;
-                Double tempY = bbox.Size.y * 25.4;
-                Double tempZ = bbox.Size.z * 25.4;
-                textScaleX.Text = (tempX / ui.bboxnow).ToString("0.000");
-                textScaleY.Text = (tempY / ui.bboynow).ToString("0.000");
-                textScaleZ.Text = (tempZ / ui.bboznow).ToString("0.000");
-                ui.gIsShow = true;
-                ui.dimX    = bbox.Size.x; ui.updateTxt(Enums.Axis.X);
-                ui.dimY    = bbox.Size.y; ui.updateTxt(Enums.Axis.Y);
-                ui.dimZ    = bbox.Size.z; ui.updateTxt(Enums.Axis.Z);
-                ui.chk_Uniform_Checked(null, null);
-                ui.gIsShow = false;
-                UpdateOutOfBound();
-                stl.Land();
-                MainWindow.main.threeDControl.UpdateChanges();
-            }
-            catch { }
-        }
-
-        public void SetSliderBar(PrintModel stl)
-        {
-            try
-            {
-                var ui   = MainWindow.main.UI_resize_advance;
-                var bbox = stl.BoundingBox;
-                ui.bboxnow = bbox.Size.x / Convert.ToDouble(textScaleX.Text);
-                ui.bboynow = bbox.Size.y / Convert.ToDouble(textScaleY.Text);
-                ui.bboznow = bbox.Size.z / Convert.ToDouble(textScaleZ.Text);
-                ui.chk_Uniform_Checked(null, null);
-            }
-            catch { }
-        }
-
         private bool AskUserToChangeUnit()
         {
             var sb = new StringBuilder(Trans.T("M_RESIZE_MODEL_TOO_BIG")).AppendLine()
@@ -965,9 +919,23 @@ namespace View3D.view
                     case "y": ui.dimY = newSizeMMy; ui.updateTxt(Enums.Axis.Y); break;
                     case "z": ui.dimZ = newSizeMMz; ui.updateTxt(Enums.Axis.Z); break;
                 }
-                SetSliderBar(stl);
+                setSliderBar(stl);
              
              }
+            catch { }
+        }
+
+        void setSliderBar(PrintModel stl)
+        {
+            try
+            {
+                var ui = MainWindow.main.UI_resize_advance;
+                var bbox = stl.BoundingBox;
+                ui.bboxnow = bbox.Size.x / Convert.ToDouble(textScaleX.Text);
+                ui.bboynow = bbox.Size.y / Convert.ToDouble(textScaleY.Text);
+                ui.bboznow = bbox.Size.z / Convert.ToDouble(textScaleZ.Text);
+                ui.chk_Uniform_Checked(null, null);
+            }
             catch { }
         }
 
@@ -977,6 +945,8 @@ namespace View3D.view
             try
             {
                 var ui   = MainWindow.main.UI_resize_advance;
+                ui.button_mmtoinch.IsEnabled = false;
+                ui.button_inchtomm.IsEnabled = true;
                 var bbox = stl.BoundingBox;
                 ui.chk_Uniform.IsChecked = true;
                 ui.bboxnow = bbox.Size.x / Convert.ToDouble(textScaleX.Text);
@@ -1003,7 +973,7 @@ namespace View3D.view
                 textScaleX.Text = (tempX / ui.bboxnow).ToString("0.000");
                 textScaleY.Text = (tempY / ui.bboynow).ToString("0.000");
                 textScaleZ.Text = (tempZ / ui.bboznow).ToString("0.000");
-                UpdateOutOfBound();
+         //       UpdateOutOfBound();
                 stl.Land();
                 MainWindow.main.threeDControl.UpdateChanges();
 
