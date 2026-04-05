@@ -11,7 +11,7 @@ namespace View3D.view
     /// </summary>
     public partial class ObjectResizeDialog : Window
     {
-        public bool gIsNo =false;
+        public bool gIsNo = false;
         public bool gIsInch = false;
         public bool gIsScale = false;
 
@@ -21,7 +21,7 @@ namespace View3D.view
         double gy = 0.0;
         double gz = 0.0;
 
-        public ObjectResizeDialog(double px,double py, double pz)
+        public ObjectResizeDialog(double px, double py, double pz)
         {
             InitializeComponent();
 
@@ -34,9 +34,6 @@ namespace View3D.view
             string tx = gx.ToString("0.000");
             string ty = gy.ToString("0.000");
             string tz = gz.ToString("0.000");
-            double inchx = gx * 25.4;
-            double inchy = gy * 25.4;
-            double inchz = gz * 25.4;
             double scalex = gx;
             double scaley = gy;
             double scalez = gz;
@@ -77,7 +74,11 @@ namespace View3D.view
             txtOriginalSize.Inlines.Add(new Run(tOriginalSize.ToString(CultureInfo.InvariantCulture)) { FontWeight = FontWeights.Bold });
             txtInchScale.Inlines.Add(new Run(tInchScale.ToString(CultureInfo.InvariantCulture)) { FontWeight = FontWeights.Bold });
             txtAutoScale.Inlines.Add(new Run(tAutoScale.ToString(CultureInfo.InvariantCulture)) { FontWeight = FontWeights.Bold });
-            scaleInchx = inchx; scaleInchy = inchy; scaleInchz = inchz;
+            
+            scaleInchx = gx * 25.4; 
+            scaleInchy = gy * 25.4; 
+            scaleInchz = gz * 25.4;
+
             scaleMMx = scalex; scaleMMy = scaley; scaleMMz = scalez;
         }
 
