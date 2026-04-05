@@ -1,4 +1,5 @@
 ﻿using OpenTK.Mathematics;
+using View3D.Primitive;
 
 namespace View3D.ModelObjectTool
 {
@@ -128,5 +129,9 @@ namespace View3D.ModelObjectTool
             out int id, out float output);
         public abstract unsafe bool RayIntersectTriangle(ModelMatrix matrix, float[] vertices, float[] ray_Position, float[] ray_Normal,
             out int id, out float output);
+
+        public abstract Ray GenerateRay(int mouseX, int mouseY, Matrix4 view, Matrix4 projection, Vector2i windowSize, out Vector3 nearPos, out Vector3 farPos);
+
+        public abstract bool RaycastAABB(Ray ray, Vector3 aabbMinPoint3, Vector3 aabbMaxPoint3);
     }
 }

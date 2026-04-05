@@ -209,5 +209,54 @@ namespace View3D.ModelObjectTool
             t = -invDet * Vector3.Dot(caVec, qVec);
             return true;
         }
+
+        public override Ray GenerateRay(int mouseX, int mouseY, Matrix4 view, Matrix4 projection, Vector2i windowSize, out Vector3 nearPos, out Vector3 farPos)
+        {
+            // 1. Flip Y coordinate (Window top-left to OpenGL bottom-left)
+            float x = (2.0f * mouseX) / windowSize.X - 1.0f;
+            float y = 1.0f - (2.0f * mouseY) / windowSize.Y;
+
+            // 2. Create the View-Projection matrix and invert it
+            Matrix4 viewProjectionInv = Matrix4.Invert(view * projection);
+
+            // 3. Unproject the Near and Far points
+            // Near plane is Z = -1 in NDC, Far plane is Z = 1
+            Vector4 nearNDC = new Vector4(x, y, -1.0f, 1.0f);
+            Vector4 farNDC = new Vector4(x, y, 1.0f, 1.0f);
+
+            Vector4 nearWorld = nearNDC * viewProjectionInv;
+            Vector4 farWorld = farNDC * viewProjectionInv;
+
+            // 4. Perspective divide (W-divide)
+            nearPos = nearWorld.Xyz / nearWorld.W;
+            farPos = farWorld.Xyz / farWorld.W;
+
+            return new Ray(nearPos, Vector3.Normalize(farPos - nearPos));
+        }
+
+        public override bool RaycastAABB(Ray ray, Vector3 aabbMinPoint3, Vector3 aabbMaxPoint3)
+        {
+            float t1 = (aabbMinPoint3.X - ray.Position.X) / ray.Normal.X;
+            float t2 = (aabbMaxPoint3.X - ray.Position.X) / ray.Normal.X;
+            float t3 = (aabbMinPoint3.Y - ray.Position.Y) / ray.Normal.Y;
+            float t4 = (aabbMaxPoint3.Y - ray.Position.Y) / ray.Normal.Y;
+            float t5 = (aabbMinPoint3.Z - ray.Position.Z) / ray.Normal.Z;
+            float t6 = (aabbMaxPoint3.Z - ray.Position.Z) / ray.Normal.Z;
+
+            float tmin = Math.Max(Math.Max(Math.Min(t1, t2), Math.Min(t3, t4)), Math.Min(t5, t6));
+            float tmax = Math.Min(Math.Min(Math.Max(t1, t2), Math.Max(t3, t4)), Math.Max(t5, t6));
+
+            if (tmax < 0)
+            {
+                return false;
+            }
+
+            if (tmin > tmax)
+            {
+                return false;
+            }
+            return true;
+        }
+
     }
 }

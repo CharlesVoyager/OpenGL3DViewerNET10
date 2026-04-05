@@ -528,12 +528,14 @@ namespace View3D.view
         {
             Stopwatch sw = Stopwatch.StartNew();
 
+            var tool = ModelObjectToolWrapper.Instance.Tool;
+
             Matrix4 modelMatrix = Matrix4.Identity;
             Matrix4 view = Matrix4.Identity;
             Matrix4 proj = Matrix4.Identity;
             Vector2i windowSize = ClientSize;
             threeDCam.GetModelViewProj(ref modelMatrix, ref view, ref proj);
-            Ray ray = RayCasting.GenerateRay(x, y, view, proj, windowSize, out Vector3 near, out _);
+            Ray ray = tool.GenerateRay(x, y, view, proj, windowSize, out Vector3 near, out _);
 
             float length = float.MaxValue;
             ThreeDModel nearestModel = null;
@@ -541,8 +543,7 @@ namespace View3D.view
             // Cache these once outside the loop
             float[] rayPos = { ray.Position.X, ray.Position.Y, ray.Position.Z };
             float[] rayNor = { ray.Normal.X, ray.Normal.Y, ray.Normal.Z };
-            var tool = ModelObjectToolWrapper.Instance.Tool;
-
+ 
             Vector3 aabbMinPoint3 = new Vector3();
             Vector3 aabbMaxPoint3 = new Vector3();
             foreach (PrintModel model in stlComp.models)
@@ -558,7 +559,7 @@ namespace View3D.view
                 aabbMaxPoint3.Y = (float)model.BoundingBox.maxPoint.y;
                 aabbMaxPoint3.Z = (float)model.BoundingBox.maxPoint.z;
 
-                if (!RayCasting.RaycastAABB(ray, aabbMinPoint3, aabbMaxPoint3)) continue;  // Check if it hit bounding box of a model.
+                if (!tool.RaycastAABB(ray, aabbMinPoint3, aabbMaxPoint3)) continue;  // Check if it hit bounding box of a model.
 
                 ModelMatrix mtx = ModelObjectToolHelper.ToModelMatrix(model.trans);
 
