@@ -13,16 +13,13 @@ namespace View3D.view
 
             IMeshInOut fileMesh;
             Action<int> updateRateFunc;
+
             if (lname.EndsWith(".stl"))
-            {
                 fileMesh = new MeshIOStl();
-                updateRateFunc = OnProcessUpdate;
-            }
             else
-            {
                 fileMesh = new MeshIOBase();
-                updateRateFunc = OnProcessUpdate;
-            }
+
+            updateRateFunc = OnProcessUpdate;
             AbortTask += fileMesh.TaskAbort;
             fileMesh.LoadWOCatch(file, model, updateRateFunc);
             AbortTask -= fileMesh.TaskAbort;
