@@ -620,11 +620,11 @@ namespace View3D.view
 
         private void scaleTextBoxKeyBoardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            if ((System.Windows.Controls.TextBox)sender == txtX)
+            if ((TextBox)sender == txtX)
                 scaleKeyDown = "x";
-            else if ((System.Windows.Controls.TextBox)sender == txtY)
+            else if ((TextBox)sender == txtY)
                 scaleKeyDown = "y";
-            else if ((System.Windows.Controls.TextBox)sender == txtZ)
+            else if ((TextBox)sender == txtZ)
                 scaleKeyDown = "z";
         }
 
