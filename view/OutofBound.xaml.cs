@@ -1,5 +1,5 @@
-﻿using System.Windows.Controls;
-using View3D.model;
+﻿using OpenGL3DViewerNET10.ModelLib.Utils;
+using System.Windows.Controls;
 
 namespace View3D.view
 {

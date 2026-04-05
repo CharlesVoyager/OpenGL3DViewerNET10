@@ -1,5 +1,5 @@
-﻿using OpenTK.Mathematics;
-using View3D.model;
+﻿using OpenGL3DViewerNET10.ModelLib.model;
+using OpenTK.Mathematics;
 using View3D.model.geom;
 
 namespace View3D.view

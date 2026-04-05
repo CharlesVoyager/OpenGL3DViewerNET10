@@ -1,8 +1,8 @@
-﻿using System;
+﻿using OpenGL3DViewerNET10.ModelLib.Utils;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Documents;
-using View3D.model;
 
 namespace View3D.view
 {

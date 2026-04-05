@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace View3D.model
+namespace OpenGL3DViewerNET10.ModelLib.model
 {
     public class Geom3DVector
     {

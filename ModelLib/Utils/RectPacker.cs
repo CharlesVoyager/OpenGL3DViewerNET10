@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace View3D.model
+namespace OpenGL3DViewerNET10.ModelLib.Utils
 {
     public class PackerPos
     {

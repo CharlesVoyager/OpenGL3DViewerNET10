@@ -1,3 +1,5 @@
+using OpenGL3DViewerNET10.ModelLib.model;
+using OpenGL3DViewerNET10.ModelLib.Utils;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

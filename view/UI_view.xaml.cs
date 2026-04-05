@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using OpenGL3DViewerNET10.ModelLib.Utils;
+using System.Windows;
 using System.Windows.Controls;
-using View3D.model;
 
 namespace View3D.view
 {

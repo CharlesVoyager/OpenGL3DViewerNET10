@@ -1,7 +1,7 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using OpenGL3DViewerNET10.ModelLib.model;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using View3D;
-using View3D.model;
 
 namespace OpenGL3DViewerNET10.Draw
 {

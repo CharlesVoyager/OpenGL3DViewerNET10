@@ -1,9 +1,10 @@
-﻿using OpenTK.Mathematics;
+﻿using OpenGL3DViewerNET10.ModelLib.model;
+using OpenGL3DViewerNET10.ModelLib.Utils;
+using OpenTK.Mathematics;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using View3D.model;
 
 namespace View3D.view
 {

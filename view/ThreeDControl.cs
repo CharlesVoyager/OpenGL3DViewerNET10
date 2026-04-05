@@ -1,4 +1,5 @@
 using OpenGL3DViewerNET10.Draw;
+using OpenGL3DViewerNET10.ModelLib.model;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;

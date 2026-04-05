@@ -1,9 +1,10 @@
-﻿using System.Globalization;
+﻿using OpenGL3DViewerNET10.ModelLib.model;
+using OpenGL3DViewerNET10.ModelLib.Utils;
+using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using View3D.model;
 using View3D.model.geom;
 using View3D.view;
 

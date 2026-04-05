@@ -2,8 +2,8 @@
 using OpenTK.Graphics.OpenGL;
 using System;
 using View3D.Extensions;
-using View3D.model;
 using View3D.Primitive;
+using OpenGL3DViewerNET10.ModelLib.model;
 
 namespace View3D.view.utils
 {

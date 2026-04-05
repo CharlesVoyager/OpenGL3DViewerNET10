@@ -6,7 +6,7 @@ using System.Windows;
 using System.Xml;
 using View3D.view.utils;
 
-namespace View3D.model
+namespace OpenGL3DViewerNET10.ModelLib.Utils
 {
     public class Translation
     {
