@@ -5,14 +5,7 @@ namespace View3D.view
 {
     public class ModelInOut
     {
-        public bool TwoStageUpdateProcess { get; set; }
-        public event EventHandler AbortTask;
-        private int mergedCount, mergeCountTotal;
-
-        public ModelInOut()
-        {
-            TwoStageUpdateProcess = false;
-        }
+        event EventHandler AbortTask;
 
         public void LoadWOCatch(string file, TopoModel model)
         {
@@ -36,7 +29,6 @@ namespace View3D.view
         }
         public void Save(string filename, TopoModel model, Setting outSetting) { }
 
-        #region EvenHandler
         public void OnProcessUpdate(int rate)
         {
 
@@ -46,42 +38,5 @@ namespace View3D.view
                     MainWindow.main.BusyWindow.busyProgressbar.Value = rate;
             });
         }
-
-        public void OnProcessUpdate3wsLoadStageLoadStl(int rate)
-        {
-            if (MainWindow.main.BusyWindow.Visibility == System.Windows.Visibility.Visible)
-                MainWindow.main.BusyWindow.busyProgressbar.Value = rate / 2; 
-        }
-
-        public void OnProcessUpdateSaveStageMerge(double value)
-        {
-            if (MainWindow.main.BusyWindow.Visibility == System.Windows.Visibility.Visible &&
-                MainWindow.main.BusyWindow.increment != 0.0)
-            {
-                if (MainWindow.main.BusyWindow.busyProgressbar.Value < MainWindow.main.BusyWindow.firstStagePercent)
-                {
-                    MainWindow.main.BusyWindow.busyProgressbar.Value = ((value + mergedCount * 100) / mergeCountTotal) * MainWindow.main.BusyWindow.firstStagePercent / 100;
-                }
-            }
-        }
-
-        public void OnProcessUpdateSaveStage2nd(int rate)
-        {
-            if (MainWindow.main.BusyWindow.Visibility == System.Windows.Visibility.Visible &&
-                MainWindow.main.BusyWindow.increment != 0.0)
-            {
-                MainWindow.main.BusyWindow.busyProgressbar.Value =
-                        (rate) * (100.0 - MainWindow.main.BusyWindow.firstStagePercent)
-                        + MainWindow.main.BusyWindow.firstStagePercent;
-            }
-        }
-
-        public void OnUIAbort(object sender, EventArgs e)
-        {
-            if (AbortTask != null)
-                AbortTask(sender, e);
-        }
-        #endregion
-
     }
 }
