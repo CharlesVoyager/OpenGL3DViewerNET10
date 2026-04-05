@@ -40,22 +40,6 @@ namespace View3D.view
         public void Save(string filename, TopoModel model, Setting outSetting) { }
 
         #region EvenHandler
-        private void EnableBusyWindowNoCancleButton()
-        {
-            if (MainWindow.main == null) return;
-            if (MainWindow.main.threeDControl == null) return;
-
-            // BusyWindow start
-            MainWindow.main.BusyWindow.labelBusyMessage.Text = Trans.T("L_MODELING");
-            MainWindow.main.BusyWindow.killed = false;
-            MainWindow.main.BusyWindow.Visibility = System.Windows.Visibility.Visible;
-            MainWindow.main.BusyWindow.busyProgressbar.IsIndeterminate = false;
-            MainWindow.main.BusyWindow.busyProgressbar.Maximum = 100;
-            MainWindow.main.BusyWindow.busyProgressbar.Value = 0; 
-            MainWindow.main.BusyWindow.AbortTask += OnUIAbort;
-            MainWindow.main.BusyWindow.StartTimer();
-        }
-
         public void OnProcessUpdate(int rate)
         {
 
