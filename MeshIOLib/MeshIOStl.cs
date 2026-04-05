@@ -53,7 +53,7 @@ namespace View3D.MeshInOut
         /// <param name="filename">output filename</param>
         /// <param name="binary">output binary format</param>
         /// <param name="DomodelRepair">reduce the number of facet of object</param>
-        public void exportSTL(string filename, TopoModel model, Action<int> updateRate, bool binary, bool DomodelRepair)
+        void exportSTL(string filename, TopoModel model, Action<int> updateRate, bool binary, bool DomodelRepair)
         {
             FileStream fs = File.Open(filename, FileMode.Create);
 
@@ -82,7 +82,7 @@ namespace View3D.MeshInOut
 
         }
 
-        protected void exportSTL(FileStream fs, TopoModel model, Action<int> updateRate, bool binary)
+        void exportSTL(FileStream fs, TopoModel model, Action<int> updateRate, bool binary)
         {
             Status = STATUS.Busy;
 
@@ -100,7 +100,7 @@ namespace View3D.MeshInOut
 
         }
 
-        private void exportSTLBinary(FileStream fs, TopoModel model, Action<int> updateRate)
+        void exportSTLBinary(FileStream fs, TopoModel model, Action<int> updateRate)
         {
             int count = 0;
             BinaryWriter w = new BinaryWriter(fs);
@@ -138,7 +138,7 @@ namespace View3D.MeshInOut
             w.Flush(); //below .Net 4.5, not close stream for write support point
         }
 
-        private void exportSTLAscii(FileStream fs, TopoModel model, Action<int> updateRate)
+        void exportSTLAscii(FileStream fs, TopoModel model, Action<int> updateRate)
         {
             int count = 0;
             TextWriter w = new EnglishStreamWriter(fs);
@@ -201,7 +201,7 @@ namespace View3D.MeshInOut
             w.Flush(); //below .Net 4.5, not close stream for write support point
         }
 
-        private void ReadArray(Stream stream, byte[] data)
+        void ReadArray(Stream stream, byte[] data)
         {
             int offset = 0;
             int remaining = data.Length;
@@ -239,7 +239,7 @@ namespace View3D.MeshInOut
         ///     endfacet
         ///     endsolid name
         /// </remarks>
-        protected void importSTLAscii(string filename, TopoModel model, Action<int> updateRate)
+        void importSTLAscii(string filename, TopoModel model, Action<int> updateRate)
         {
             long fileSize = new System.IO.FileInfo(filename).Length;
             long bytesRead = 0;
@@ -296,7 +296,7 @@ namespace View3D.MeshInOut
         }
 
         // Replaces extractVector() — parses "x y z" starting at offset, no Substring allocation
-        private RHVector3 ParseVector(string line, int startIndex)
+        RHVector3 ParseVector(string line, int startIndex)
         {
             ReadOnlySpan<char> span = line.AsSpan(startIndex);
 
@@ -314,7 +314,7 @@ namespace View3D.MeshInOut
             return new RHVector3(x, y, z);
         }
 
-        private ReadOnlySpan<char> ParseDouble(ReadOnlySpan<char> span, out double value)
+        ReadOnlySpan<char> ParseDouble(ReadOnlySpan<char> span, out double value)
         {
             int end = span.IndexOf(' ');
             if (end < 0) end = span.Length;
@@ -359,7 +359,7 @@ namespace View3D.MeshInOut
         ///     vertex3(3 floats)
         ///     attribute byte count(2 bytes)
         /// </remarks>
-        protected void importSTLWOCatch(string filename, TopoModel model, Action<int> updateRate)
+        void importSTLWOCatch(string filename, TopoModel model, Action<int> updateRate)
         {
             Status = STATUS.Busy;
 
@@ -467,7 +467,7 @@ namespace View3D.MeshInOut
                 Status = STATUS.Done;
         }
 
-        protected void importSTL(string filename, TopoModel model, Action<int> updateRate)
+        void importSTL(string filename, TopoModel model, Action<int> updateRate)
         {
             Status = STATUS.Busy;
 
@@ -535,7 +535,7 @@ namespace View3D.MeshInOut
 
         }
 
-        public void importByteArray(ref byte[] stlArr, TopoModel model, Action<int> updateRate = null)
+        void importByteArray(ref byte[] stlArr, TopoModel model, Action<int> updateRate = null)
         {
             MemoryStream stream = new MemoryStream();
 
