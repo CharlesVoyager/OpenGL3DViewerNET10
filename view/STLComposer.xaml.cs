@@ -849,6 +849,9 @@ namespace View3D.view
         {
             foreach (var stl in ListObjects(true))
             {
+                float oldX = stl.Position.x;
+                float oldY = stl.Position.y;
+
                 if (stl.Position.x + dx < MainWindow.main.threeDSettings.PrintAreaWidth * 1.2f && stl.Position.x + dx > -MainWindow.main.threeDSettings.PrintAreaWidth * 0.2f) 
                     stl.Position.x += dx;
                 if (stl.Position.y + dy < MainWindow.main.threeDSettings.PrintAreaDepth * 1.2f && stl.Position.y + dy > -MainWindow.main.threeDSettings.PrintAreaDepth * 0.2f) 
@@ -861,7 +864,7 @@ namespace View3D.view
                     _suppressTextEvents = false;
                 }
                 stl.UpdateTransMatrix();
-                stl.UpdateBoundingBoxByShift(dx, dy, 0);
+                stl.UpdateBoundingBoxByShift(stl.Position.x - oldX, stl.Position.y - oldY, 0);
                 UpdateOutOfBound();
             }
             MainWindow.main.threeDControl.UpdateChanges();
