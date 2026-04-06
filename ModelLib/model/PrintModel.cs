@@ -22,8 +22,6 @@ namespace OpenGL3DViewerNET10.ModelLib.model
 
         public Matrix4 trans;
 
-        public double maxScaleVector = 0;
-        public double minScaleVector = 0;
         public double m = 0;
         public double b = 0;
 
