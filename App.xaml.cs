@@ -56,7 +56,7 @@ namespace OpenGL3DViewerNET10
             {
                 string file = args[i];
                 if (File.Exists(file))
-                    main.LoadGCodeOrSTL(file);
+                    main.stlComposer.OpenAndAddObject(file);
             }
         }
     }

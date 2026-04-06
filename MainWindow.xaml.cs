@@ -97,17 +97,8 @@ namespace View3D
             {
                 string[] files = (string[])e.Data.GetData(System.Windows.DataFormats.FileDrop);
                 foreach (string file in files)
-                    LoadGCodeOrSTL(file);
+                    stlComposer.OpenAndAddObject(file);
             }
-        }
-
-        public void LoadGCodeOrSTL(string file)
-        {
-            if (!File.Exists(file)) return;
-
-            string fileLow = file.ToLower();
-            if (fileLow.EndsWith(".stl") || fileLow.EndsWith(".glb"))
-                stlComposer.OpenAndAddObject(file);
         }
 
         public void Update3D()
