@@ -5,6 +5,7 @@ namespace View3D.model.geom
     {
         public TopoVertex[] vertices = new TopoVertex[3];
         public RHVector3 normal;
+        public float[] Color;
 
         public TopoTriangle(TopoTriangle t)
         {
@@ -28,7 +29,18 @@ namespace View3D.model.geom
             vertices[1] = v2;
             vertices[2] = v3;
             normal = n;
+            Color = new float[] { 1f, 1f, 1f, 1f }; // RGBA [0..1]
         }
+
+        public TopoTriangle(TopoVertex v1, TopoVertex v2, TopoVertex v3, RHVector3 n, float[] color)
+        {
+            vertices[0] = v1;
+            vertices[1] = v2;
+            vertices[2] = v3;
+            normal = n;
+            Color = color;
+        }
+
 
         public override bool Equals(object obj)
         {

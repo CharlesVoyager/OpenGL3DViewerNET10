@@ -42,7 +42,14 @@ namespace View3D.model.geom
 
         public void AddTriangle(RHVector3 p1, RHVector3 p2, RHVector3 p3, RHVector3 normal, float[] color)
         {
-            AddTriangle(p1, p2, p3, normal);
+            TopoVertex v1 = new TopoVertex(p1);
+            TopoVertex v2 = new TopoVertex(p2);
+            TopoVertex v3 = new TopoVertex(p3);
+
+            triangles.Add(new TopoTriangle(v1, v2, v3, normal, color));
+            boundingBox.Add(p1);
+            boundingBox.Add(p2);
+            boundingBox.Add(p3);
         }
 
 
