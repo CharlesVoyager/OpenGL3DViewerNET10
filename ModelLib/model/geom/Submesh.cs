@@ -88,31 +88,23 @@ namespace View3D.model.geom
         public const int MESHCOLOR_LIGHTPINK_WHITE = -13;
 
         public List<Vector3> vertices = new List<Vector3>();
-        public List<SubmeshEdge> edges = new List<SubmeshEdge>();
         public List<SubmeshTriangle> triangles = new List<SubmeshTriangle>();
-        public List<SubmeshTriangle> trianglesError = new List<SubmeshTriangle>();
         public bool selected = false;
 
         public float[] glVertices = null;
         public float[] glNormals = null;
         public int[] glColors = null;
-        public int[] glEdges = null;
         public int[] glTriangles = null;
-        public int[] glTrianglesError = null;
         public int[] glBuffer = null;
 
         public void Clear()
         {
             vertices.Clear();
-            edges.Clear();
             triangles.Clear();
-            trianglesError.Clear();
 
             glVertices = null;
             glColors = null;
-            glEdges = null;
             glTriangles = null;
-            glTrianglesError = null;
             glBuffer = null;
             glNormals = null;
         }
@@ -125,9 +117,7 @@ namespace View3D.model.geom
             glVertices = new float[3 * vertices.Count];
             glNormals = new float[3 * vertices.Count];
             glColors = new int[vertices.Count];
-            glEdges = new int[edges.Count * 2];
             glTriangles = new int[triangles.Count * 3];
-            glTrianglesError = new int[trianglesError.Count * 3];
             UpdateDrawLists();
             vertices.Clear();
         }
@@ -137,16 +127,12 @@ namespace View3D.model.geom
             newMesh.glVertices = new float[glVertices.Length];
             newMesh.glNormals = new float[glNormals.Length];
             newMesh.glColors = new int[glColors.Length];
-            newMesh.glEdges = new int[glEdges.Length];
             newMesh.glTriangles = new int[glTriangles.Length];
-            newMesh.glTrianglesError = new int[glTrianglesError.Length];
 
             Array.Copy(glVertices,          newMesh.glVertices,         glVertices.Length);
             Array.Copy(glNormals,           newMesh.glNormals,          glNormals.Length);
             Array.Copy(glColors,            newMesh.glColors,           glColors.Length);
-            Array.Copy(glEdges,             newMesh.glEdges,            glEdges.Length);
             Array.Copy(glTriangles,         newMesh.glTriangles,        glTriangles.Length);
-            Array.Copy(glTrianglesError,    newMesh.glTrianglesError,   glTrianglesError.Length);
         }
 
         public int VertexId(RHVector3 v)
@@ -163,17 +149,11 @@ namespace View3D.model.geom
             return pos;
         }
 
-        public void AddEdge(RHVector3 v1, RHVector3 v2, int color)
-        {
-            edges.Add(new SubmeshEdge(VertexId(v1), VertexId(v2), color));
-        }
+
 
         public void AddTriangle(RHVector3 v1, RHVector3 v2, RHVector3 v3, int color)
         {
-            if (color == MESHCOLOR_ERRORFACE)
-                trianglesError.Add(new SubmeshTriangle(VertexId(v1), VertexId(v2), VertexId(v3), color));
-            else
-                triangles.Add(new SubmeshTriangle(VertexId(v1), VertexId(v2), VertexId(v3), color));
+            triangles.Add(new SubmeshTriangle(VertexId(v1), VertexId(v2), VertexId(v3), color));
         }
 
         private void UpdateDrawLists()
@@ -203,51 +183,6 @@ namespace View3D.model.geom
                 glTriangles[idx++] = t.vertex1;
                 glTriangles[idx++] = t.vertex2;
                 glTriangles[idx++] = t.vertex3;
-            }
-            idx = 0;
-            foreach (SubmeshTriangle t in trianglesError)
-            {
-                int n1 = 3 * t.vertex1;
-                int n2 = 3 * t.vertex2;
-                int n3 = 3 * t.vertex3;
-                Vector3 v1 = vertices[t.vertex1];
-                Vector3 v2 = vertices[t.vertex2];
-                Vector3 v3 = vertices[t.vertex3];
-                t.Normal(this, out glNormals[n1], out glNormals[n1 + 1], out glNormals[n1 + 2]);
-                glNormals[n2] = glNormals[n3] = glNormals[n1];
-                glNormals[n2 + 1] = glNormals[n3 + 1] = glNormals[n1 + 1];
-                glNormals[n2 + 2] = glNormals[n3 + 2] = glNormals[n1 + 2];
-                glVertices[n1++] = v1.X;
-                glVertices[n1++] = v1.Y;
-                glVertices[n1] = v1.Z;
-                glVertices[n2++] = v2.X;
-                glVertices[n2++] = v2.Y;
-                glVertices[n2] = v2.Z;
-                glVertices[n3++] = v3.X;
-                glVertices[n3++] = v3.Y;
-                glVertices[n3] = v3.Z;
-                glTrianglesError[idx++] = t.vertex1;
-                glTrianglesError[idx++] = t.vertex2;
-                glTrianglesError[idx++] = t.vertex3;
-            }
-            idx = 0;
-            foreach (SubmeshEdge e in edges)
-            {
-                int n1 = 3 * e.vertex1;
-                int n2 = 3 * e.vertex2;
-                Vector3 v1 = vertices[e.vertex1];
-                Vector3 v2 = vertices[e.vertex2];
-                glNormals[n1] = glNormals[n2] = 0;
-                glNormals[n1 + 1] = glNormals[n2 + 1] = 0;
-                glNormals[n1 + 2] = glNormals[n2 + 2] = 1;
-                glVertices[n1++] = v1.X;
-                glVertices[n1++] = v1.Y;
-                glVertices[n1] = v1.Z;
-                glVertices[n2++] = v2.X;
-                glVertices[n2++] = v2.Y;
-                glVertices[n2] = v2.Z;
-                glEdges[idx++] = e.vertex1;
-                glEdges[idx++] = e.vertex2;
             }
         }
     }
