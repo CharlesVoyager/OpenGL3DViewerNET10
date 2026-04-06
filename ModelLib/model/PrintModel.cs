@@ -1,10 +1,7 @@
 ﻿using OpenGL3DViewerNET10.Draw;
 using OpenTK.Mathematics;
-using System.Diagnostics;
-using View3D.model;
 using View3D.model.geom;
 using View3D.ModelObjectTool;
-using View3D.Utils;
 
 namespace OpenGL3DViewerNET10.ModelLib.model
 {
@@ -205,7 +202,7 @@ namespace OpenGL3DViewerNET10.ModelLib.model
             {
                 if (0 == cnt % 50000)
                 {
-                    if (!RamTools.IsRamSizeValid())
+                    if (!Utils.RamTools.IsRamSizeValid())
                     {
                         throw new System.OutOfMemoryException();
                     }

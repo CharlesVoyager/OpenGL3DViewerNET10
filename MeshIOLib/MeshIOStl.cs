@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using View3D.model.geom;
 
-namespace View3D.MeshInOut
+namespace OpenGL3DViewerNET10.MeshIOLib
 {
     public class StlSetting : IMeshOutSetting
     {
@@ -433,7 +433,7 @@ namespace View3D.MeshInOut
                             Status = STATUS.UserAbort;
                             return;
                         }
-                        if (!Utils.RamTools.IsRamSizeValid())
+                        if (!ModelLib.Utils.RamTools.IsRamSizeValid())
                             throw new OutOfMemoryException();
                     }
 

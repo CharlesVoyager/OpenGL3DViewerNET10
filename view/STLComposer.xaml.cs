@@ -4,9 +4,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using View3D.model;
 using OpenGL3DViewerNET10.ModelLib.model;
 using OpenGL3DViewerNET10.ModelLib.Utils;
+using OpenGL3DViewerNET10.MeshIOLib;
 
 namespace View3D.view
 {
@@ -175,7 +175,7 @@ namespace View3D.view
             listObjects.SelectedItems.Clear();
             models.Add(new PrintModel());
             bool modelToLand    = true;
-            var  modelIO        = new ModelInOut();
+            var  modelIO        = new MeshIOWrapper();
             int last            = models.Count - 1;   
             MainWindow.main.BusyWindow.EnableBusyWindow();
             _stlModelDataReady.Reset();

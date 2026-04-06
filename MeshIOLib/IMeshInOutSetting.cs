@@ -1,4 +1,4 @@
-﻿namespace View3D.MeshInOut
+﻿namespace OpenGL3DViewerNET10.MeshIOLib
 {
     public interface IMeshOutSetting
     {

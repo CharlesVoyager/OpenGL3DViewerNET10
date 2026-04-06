@@ -1,6 +1,5 @@
-﻿using System.ComponentModel;
-
-namespace View3D
+﻿
+namespace OpenGL3DViewerNET10.ModelLib
 {
     public static class SWSetting
     {

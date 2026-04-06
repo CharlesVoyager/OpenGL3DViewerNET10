@@ -1,4 +1,4 @@
-﻿namespace View3D.model
+﻿namespace OpenGL3DViewerNET10.ModelLib.model
 {
     public class Coord3D
     {

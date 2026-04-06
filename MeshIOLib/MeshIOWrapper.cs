@@ -1,9 +1,9 @@
 ﻿using View3D.model.geom;
-using View3D.MeshInOut;
+using View3D;
 
-namespace View3D.view
+namespace OpenGL3DViewerNET10.MeshIOLib
 {
-    public class ModelInOut
+    public class MeshIOWrapper
     {
         event EventHandler AbortTask;
 

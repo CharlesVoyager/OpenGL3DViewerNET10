@@ -1,9 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
-using System.Threading;
 
-namespace View3D.MeshInOut
+namespace OpenGL3DViewerNET10.MeshIOLib
 {
     public class EnglishStreamWriter : StreamWriter
     {

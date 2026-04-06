@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using View3D.model.geom;
 
-namespace View3D.MeshInOut
+namespace OpenGL3DViewerNET10.MeshIOLib
 {
     public interface IMeshInOut
     {

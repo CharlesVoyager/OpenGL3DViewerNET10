@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace View3D.Utils
+namespace OpenGL3DViewerNET10.ModelLib.Utils
 {
     public static class RamTools
     {
