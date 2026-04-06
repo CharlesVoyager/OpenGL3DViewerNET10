@@ -122,7 +122,14 @@ namespace View3D.model.geom
         /// </summary>
         public void Compress()
         {
-            Compress(false, 0);
+            glVertices = new float[3 * vertices.Count];
+            glNormals = new float[3 * vertices.Count];
+            glColors = new int[vertices.Count];
+            glEdges = new int[edges.Count * 2];
+            glTriangles = new int[triangles.Count * 3];
+            glTrianglesError = new int[trianglesError.Count * 3];
+            UpdateDrawLists();
+            vertices.Clear();
         }
 
         public void CopyTo(Submesh newMesh)
@@ -140,18 +147,6 @@ namespace View3D.model.geom
             Array.Copy(glEdges,             newMesh.glEdges,            glEdges.Length);
             Array.Copy(glTriangles,         newMesh.glTriangles,        glTriangles.Length);
             Array.Copy(glTrianglesError,    newMesh.glTrianglesError,   glTrianglesError.Length);
-        }
-
-        private void Compress(bool override_color, int color)
-        {
-            glVertices = new float[3 * vertices.Count];
-            glNormals = new float[3 * vertices.Count];
-            glColors = new int[vertices.Count];
-            glEdges = new int[edges.Count * 2];
-            glTriangles = new int[triangles.Count * 3];
-            glTrianglesError = new int[trianglesError.Count * 3];
-            UpdateDrawLists();
-            vertices.Clear();
         }
 
         public int VertexId(RHVector3 v)
