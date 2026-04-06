@@ -136,8 +136,6 @@ namespace View3D.model.geom
             return pos;
         }
 
-
-
         public void AddTriangle(RHVector3 v1, RHVector3 v2, RHVector3 v3, int color)
         {
             triangles.Add(new SubmeshTriangle(VertexId(v1), VertexId(v2), VertexId(v3), color));
