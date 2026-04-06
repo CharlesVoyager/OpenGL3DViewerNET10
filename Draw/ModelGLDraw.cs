@@ -28,7 +28,7 @@ Render Loop (OpenGL draw calls)
         int stlVao;
         int stlVbo;
         int stlModelLoc, stlViewLoc, stlProjLoc;
-        List<float> stlVertices = new List<float>();
+        List<float> glVertices = new List<float>();
 
         // Add these fields
         int lightDirLoc, lightColorLoc, viewPosLoc;
@@ -132,16 +132,16 @@ Render Loop (OpenGL draw calls)
 
         private void uploadMeshToGPU()
         {
-            stlVertices.Clear();
+            glVertices.Clear();
 
             for (int i = 0; i < printModel.Mesh.glVertices.Length; i += 3)
             {   // [x y z nx ny nz]
-                stlVertices.Add(printModel.Mesh.glVertices[i]);
-                stlVertices.Add(printModel.Mesh.glVertices[i + 1]);
-                stlVertices.Add(printModel.Mesh.glVertices[i + 2]);
-                stlVertices.Add(printModel.Mesh.glNormals[i]);
-                stlVertices.Add(printModel.Mesh.glNormals[i + 1]);
-                stlVertices.Add(printModel.Mesh.glNormals[i + 2]);
+                glVertices.Add(printModel.Mesh.glVertices[i]);
+                glVertices.Add(printModel.Mesh.glVertices[i + 1]);
+                glVertices.Add(printModel.Mesh.glVertices[i + 2]);
+                glVertices.Add(printModel.Mesh.glNormals[i]);
+                glVertices.Add(printModel.Mesh.glNormals[i + 1]);
+                glVertices.Add(printModel.Mesh.glNormals[i + 2]);
             }
 
             stlVao = GL.GenVertexArray();
@@ -152,8 +152,8 @@ Render Loop (OpenGL draw calls)
 
             GL.BufferData(
                 BufferTarget.ArrayBuffer,
-                stlVertices.Count * sizeof(float),
-                stlVertices.ToArray(),
+                glVertices.Count * sizeof(float),
+                glVertices.ToArray(),
                 BufferUsageHint.StaticDraw);
 
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
@@ -202,7 +202,7 @@ Render Loop (OpenGL draw calls)
         }
         public void Draw()
         {
-            if (stlVertices.Count == 0) return;
+            if (glVertices.Count == 0) return;
 
             GL.Enable(EnableCap.DepthTest);
             GL.Disable(EnableCap.CullFace); // Draw both front and back faces
@@ -231,7 +231,7 @@ Render Loop (OpenGL draw calls)
 
             GL.UniformMatrix4(stlModelLoc, false, ref printModel.trans); // set model matrix once, here
             GL.BindVertexArray(stlVao);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, stlVertices.Count / 6);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, glVertices.Count / 6);
         }
 
         public Vector3 LightDirection

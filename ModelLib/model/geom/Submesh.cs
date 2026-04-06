@@ -94,12 +94,12 @@ namespace View3D.model.geom
         public bool selected = false;
 
         public float[] glVertices = null;
+        public float[] glNormals = null;
         public int[] glColors = null;
         public int[] glEdges = null;
         public int[] glTriangles = null;
         public int[] glTrianglesError = null;
         public int[] glBuffer = null;
-        public float[] glNormals = null;
 
         public void Clear()
         {
