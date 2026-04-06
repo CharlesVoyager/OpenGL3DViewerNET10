@@ -109,7 +109,7 @@ Render Loop (OpenGL draw calls)
             printModel = model;
         }
 
-        // Call once during load / whenever PrintAreaWidth or PrintAreaDepth changes
+        // Call once after a file is loaded and ready.
         public void Init()
         {
             shader = createShaderProgram();
