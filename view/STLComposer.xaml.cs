@@ -167,7 +167,7 @@ namespace View3D.view
             return list;
         }
 
-        public static readonly ManualResetEventSlim _stlModelDataReady = new ManualResetEventSlim(true);
+        public static readonly ManualResetEventSlim _meshDataReady = new ManualResetEventSlim(true);
         public async void OpenAndAddObject(string file)
         {
             if (MainWindow.main == null) return;
@@ -178,7 +178,7 @@ namespace View3D.view
             var  modelIO        = new MeshIOWrapper();
             int last            = models.Count - 1;   
             MainWindow.main.BusyWindow.EnableBusyWindow();
-            _stlModelDataReady.Reset();
+            _meshDataReady.Reset();
             // Offload heavy work to background thread — UI thread is free immediately
             await Task.Run(() =>
             {
@@ -204,13 +204,13 @@ namespace View3D.view
                 // 2. Current bounding box is for orignal STL data. 
                 models[last].CopyTopoModelBoundingBoxToPrintModel();
 
-                _stlModelDataReady.Set();
+                _meshDataReady.Set();
                 Console.WriteLine("LoadWOCatch Done.");
             });
             MainWindow.main.BusyWindow.DisableBusyWindow();
-            if (_stlModelDataReady.Wait(0) == false)// It means some expection happens when loading a STL file.
+            if (_meshDataReady.Wait(0) == false)// It means some expection happens when loading a STL file.
             {
-                _stlModelDataReady.Set();
+                _meshDataReady.Set();
                 return; 
             }
             models[models.Count - 1].Name = Path.GetFileName(file);

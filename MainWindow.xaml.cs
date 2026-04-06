@@ -341,7 +341,7 @@ namespace View3D
                 stlComposer.OpenAndAddObject(filePath);
                 threeDControl.InvokeGL(() =>
                 {
-                    STLComposer._stlModelDataReady.Wait();
+                    STLComposer._meshDataReady.Wait();
                     stlComposer.models[stlComposer.models.Count-1].Drawer.Init();
                 });
             }

@@ -40,7 +40,7 @@ namespace OpenGL3DViewerNET10
             });
 
             // Wait until STL model data is ready if import STL file through command line before starting rendering loop
-            STLComposer._stlModelDataReady.Wait();
+            STLComposer._meshDataReady.Wait();
 
             // Blocks main thread for lifetime of GL window — correct!
             mainWindow.threeDControl.Run();
