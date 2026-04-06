@@ -303,6 +303,11 @@ namespace View3D.view
                 models[i].Position.iniz = models[i].Position.z;
             }
 
+            MainWindow.main.threeDControl.InvokeGL(() =>
+            {
+                models[last].Drawer.Init();
+            });
+
             MainWindow.main.threeDControl.UpdateChanges();
         }
 

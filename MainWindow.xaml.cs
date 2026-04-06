@@ -336,15 +336,7 @@ namespace View3D
             bool? result = openFileDialog.ShowDialog();
 
             if (result == true)
-            {
-                string filePath = openFileDialog.FileName;
-                stlComposer.OpenAndAddObject(filePath);
-                threeDControl.InvokeGL(() =>
-                {
-                    STLComposer._meshDataReady.Wait();
-                    stlComposer.models[stlComposer.models.Count-1].Drawer.Init();
-                });
-            }
+                 stlComposer.OpenAndAddObject(openFileDialog.FileName);
         }
 
         private void about_button_Click(object sender, RoutedEventArgs e)
