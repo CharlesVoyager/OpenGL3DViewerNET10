@@ -217,8 +217,9 @@ namespace View3D.view
             boundingBoxDraw = new BoundingBoxDraw();
             boundingBoxDraw.Init();
 
-            // STL Model
-            foreach(var m in stlComp.models)
+            // Initial drawer if there are already loaded models (can be empty).
+            // NOTE: If the models are loaded by command line, initial drawer here.
+            foreach (var m in stlComp.models)
                 m.Drawer.Init();
 
             loaded = true;
