@@ -40,6 +40,11 @@ namespace View3D.model.geom
             boundingBox.Add(p3);
         }
 
+        public void AddTriangle(RHVector3 p1, RHVector3 p2, RHVector3 p3, RHVector3 normal, float[] color)
+        {
+            AddTriangle(p1, p2, p3, normal);
+        }
+
 
         private void removeTriangle(TopoTriangle triangle)
         {
