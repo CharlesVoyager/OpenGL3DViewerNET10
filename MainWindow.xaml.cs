@@ -106,7 +106,7 @@ namespace View3D
             if (!File.Exists(file)) return;
 
             string fileLow = file.ToLower();
-            if (fileLow.EndsWith(".stl"))
+            if (fileLow.EndsWith(".stl") || fileLow.EndsWith(".glb"))
                 stlComposer.OpenAndAddObject(file);
         }
 
@@ -331,24 +331,19 @@ namespace View3D
             Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
 
             openFileDialog.Title = "Select a File";
-            openFileDialog.Filter = "STL Files (*.stl)|*.stl";
+            openFileDialog.Filter = "STL Files (*.stl)|*.stl|GLB Files (*.glb)|*.glb";
 
             bool? result = openFileDialog.ShowDialog();
 
             if (result == true)
             {
                 string filePath = openFileDialog.FileName;
-
-                string fileLow = filePath.ToLower();
-                if (fileLow.EndsWith(".stl"))
+                stlComposer.OpenAndAddObject(filePath);
+                threeDControl.InvokeGL(() =>
                 {
-                    stlComposer.OpenAndAddObject(filePath);
-                    threeDControl.InvokeGL(() =>
-                    {
-                        STLComposer._stlModelDataReady.Wait();
-                        stlComposer.models[stlComposer.models.Count-1].Drawer.Init();
-                    });
-                }
+                    STLComposer._stlModelDataReady.Wait();
+                    stlComposer.models[stlComposer.models.Count-1].Drawer.Init();
+                });
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using View3D.model.geom;
+using View3D.model.geom;
 using View3D;
 
 namespace OpenGL3DViewerNET10.MeshIOLib
@@ -16,6 +16,8 @@ namespace OpenGL3DViewerNET10.MeshIOLib
 
             if (lname.EndsWith(".stl"))
                 fileMesh = new MeshIOStl();
+            else if (lname.EndsWith(".glb"))
+                fileMesh = new MeshIOGlb();
             else
                 fileMesh = new MeshIOBase();
 

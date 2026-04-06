@@ -1,11 +1,11 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using View3D.model.geom;
 
 namespace OpenGL3DViewerNET10.MeshIOLib
 {
-    public enum FormatCode { UnKnown, Stl, Obj, _3ws };
+    public enum FormatCode { UnKnown, Stl, Obj, _3ws, Glb };
 
     public class MeshIOBase : IMeshInOut
     {
