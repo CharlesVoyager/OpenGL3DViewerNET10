@@ -95,7 +95,6 @@ namespace View3D.model.geom
         public float[] glNormals = null;
         public int[] glColors = null;
         public int[] glTriangles = null;
-        public int[] glBuffer = null;
 
         public void Clear()
         {
@@ -103,10 +102,9 @@ namespace View3D.model.geom
             triangles.Clear();
 
             glVertices = null;
+            glNormals = null;
             glColors = null;
             glTriangles = null;
-            glBuffer = null;
-            glNormals = null;
         }
 
         /// <summary>
@@ -118,6 +116,7 @@ namespace View3D.model.geom
             glNormals = new float[3 * vertices.Count];
             glColors = new int[vertices.Count];
             glTriangles = new int[triangles.Count * 3];
+
             UpdateDrawLists();
             vertices.Clear();
         }
