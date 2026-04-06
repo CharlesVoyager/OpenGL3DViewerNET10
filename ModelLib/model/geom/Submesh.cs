@@ -12,11 +12,13 @@ namespace View3D.model.geom
 
         public float[] glColors = null;
 
-        int idx = 0;
+        int idxVertices = 0;
+        int idxColors = 0;
 
         public void EnsureCapacity(int triCount)
         {
             glVertices = new float[triCount * 3 * 6];
+            glColors = new float[triCount * 3];
         }
 
 
@@ -30,43 +32,57 @@ namespace View3D.model.geom
         public void CopyTo(Submesh newMesh)
         {
             newMesh.glVertices = new float[glVertices.Length];
-            newMesh.glColors = new float[glColors.Length];
-
             Array.Copy(glVertices,          newMesh.glVertices,         glVertices.Length);
-            Array.Copy(glColors,            newMesh.glColors,           glColors.Length);
+
+            if (glColors != null)
+            {
+                newMesh.glColors = new float[glColors.Length];
+                Array.Copy(glColors,            newMesh.glColors,           glColors.Length);
+            }
         }
 
 
         public void AddTriangle(RHVector3 v1, RHVector3 v2, RHVector3 v3, RHVector3 n, float[] color)
         {
-            if (idx + 18 > glVertices.Length)
+            if (idxVertices + 18 > glVertices.Length)
             {
                 throw new Exception("Too many triangles added to submesh");
             }
-            glVertices[idx++] = (float)v1.x;
-            glVertices[idx++] = (float)v1.y;
-            glVertices[idx++] = (float)v1.z;
+            glVertices[idxVertices++] = (float)v1.x;
+            glVertices[idxVertices++] = (float)v1.y;
+            glVertices[idxVertices++] = (float)v1.z;
 
-            glVertices[idx++] = (float)n.x;
-            glVertices[idx++] = (float)n.y;
-            glVertices[idx++] = (float)n.z;
+            glVertices[idxVertices++] = (float)n.x;
+            glVertices[idxVertices++] = (float)n.y;
+            glVertices[idxVertices++] = (float)n.z;
 
-            glVertices[idx++] = (float)v2.x;
-            glVertices[idx++] = (float)v2.y;
-            glVertices[idx++] = (float)v2.z;
+            glVertices[idxVertices++] = (float)v2.x;
+            glVertices[idxVertices++] = (float)v2.y;
+            glVertices[idxVertices++] = (float)v2.z;
 
-            glVertices[idx++] = (float)n.x;
-            glVertices[idx++] = (float)n.y;
-            glVertices[idx++] = (float)n.z;
+            glVertices[idxVertices++] = (float)n.x;
+            glVertices[idxVertices++] = (float)n.y;
+            glVertices[idxVertices++] = (float)n.z;
 
+            glVertices[idxVertices++] = (float)v3.x;
+            glVertices[idxVertices++] = (float)v3.y;
+            glVertices[idxVertices++] = (float)v3.z;
 
-            glVertices[idx++] = (float)v3.x;
-            glVertices[idx++] = (float)v3.y;
-            glVertices[idx++] = (float)v3.z;
+            glVertices[idxVertices++] = (float)n.x;
+            glVertices[idxVertices++] = (float)n.y;
+            glVertices[idxVertices++] = (float)n.z;
 
-            glVertices[idx++] = (float)n.x;
-            glVertices[idx++] = (float)n.y;
-            glVertices[idx++] = (float)n.z;
+            if (color != null)
+            {
+                if (idxColors + 3 > glColors.Length)
+                {
+                    throw new Exception("Too many triangles added to submesh");
+                }
+
+                glColors[idxColors++] = color[0];
+                glColors[idxColors++] = color[1];
+                glColors[idxColors++] = color[2];
+            }
         }
     }
 }

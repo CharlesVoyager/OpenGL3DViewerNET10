@@ -475,8 +475,8 @@ namespace View3D.view
                 boundingBoxDraw.Draw();
 
                 redBorderDraw.Draw();
-            
-                foreach(var m in stlComp.models)
+
+                foreach (var m in stlComp.models)
                     m.Drawer.Draw();
 
                 SwapBuffers();

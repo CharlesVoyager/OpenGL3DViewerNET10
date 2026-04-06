@@ -27,12 +27,14 @@ Render Loop (OpenGL draw calls)
         int shader;
         int stlVao;
         int stlVbo;
+        int stlColorVbo;                        // Separate VBO for per-vertex colors from glColors
         int stlModelLoc, stlViewLoc, stlProjLoc;
 
         // Add these fields
         int lightDirLoc, lightColorLoc, viewPosLoc;
         int objectColorLoc, ambientLoc, specularLoc, shininessLoc;
         int normalMatrixLoc;
+        int useVertexColorLoc;                  // Uniform: 1 = use glColors, 0 = use objectColor uniform
 
         // Vertex shader
         private const string VertSrc = @"
@@ -40,20 +42,23 @@ Render Loop (OpenGL draw calls)
 
                                 layout(location=0) in vec3 aPosition;
                                 layout(location=1) in vec3 aNormal;
+                                layout(location=2) in vec3 aColor;      // Per-vertex color from glColors
 
                                 uniform mat4 model;
                                 uniform mat4 view;
                                 uniform mat4 projection;
                                 uniform mat3 normalMatrix; 
 
-                                out vec3 FragPos;    // world-space position
-                                out vec3 Normal;     // world-space normal
+                                out vec3 FragPos;       // world-space position
+                                out vec3 Normal;        // world-space normal
+                                out vec3 VertexColor;   // passed through to fragment shader
 
                                 void main()
                                 {
                                     vec4 worldPos   = model * vec4(aPosition, 1.0);
                                     FragPos         = worldPos.xyz;
                                     Normal          = normalize(normalMatrix * aNormal);
+                                    VertexColor     = aColor;
                                     gl_Position     = projection * view * worldPos;
                                 }
 ";
@@ -64,6 +69,7 @@ Render Loop (OpenGL draw calls)
 
                                 in  vec3 FragPos;
                                 in  vec3 Normal;
+                                in  vec3 VertexColor;   // interpolated per-vertex color
                                 out vec4 FragColor;
 
                                 // Light properties
@@ -76,14 +82,20 @@ Render Loop (OpenGL draw calls)
                                 uniform float ambientStrength;
                                 uniform float specularStrength;
                                 uniform float shininess;
+
+                                // Color source switch: 1 = use per-vertex color, 0 = use objectColor uniform
+                                uniform int useVertexColor;
            
                                 void main()
                                 {
                                     // Flip normal for back faces so lighting computes correctly
                                     vec3 norm = gl_FrontFacing ? normalize(Normal) : -normalize(Normal);
 
+                                    // Select base color: per-vertex glColors or the uniform objectColor
+                                    vec3 baseColor = (useVertexColor == 1) ? VertexColor : objectColor;
+
                                     // Use a different color tint for inner (back) faces
-                                    vec3 matColor = gl_FrontFacing ? objectColor : objectColor * vec3(1.3, 0.7, 0.6);
+                                    vec3 matColor = gl_FrontFacing ? baseColor : baseColor * vec3(1.3, 0.7, 0.6);
 
                                     // Ambient
                                     vec3 ambient = ambientStrength * lightColor;
@@ -127,6 +139,7 @@ Render Loop (OpenGL draw calls)
             specularLoc = GL.GetUniformLocation(shader, "specularStrength");
             shininessLoc = GL.GetUniformLocation(shader, "shininess");
             lightDirLoc = GL.GetUniformLocation(shader, "lightDir");
+            useVertexColorLoc = GL.GetUniformLocation(shader, "useVertexColor");
         }
 
         private void uploadMeshToGPU()
@@ -135,19 +148,47 @@ Render Loop (OpenGL draw calls)
             stlVbo = GL.GenBuffer();
 
             GL.BindVertexArray(stlVao);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, stlVbo);
 
+            // --- VBO 0: positions + normals (layout location 0 and 1) ---
+            GL.BindBuffer(BufferTarget.ArrayBuffer, stlVbo);
             GL.BufferData(
                 BufferTarget.ArrayBuffer,
                 printModel.Mesh.glVertices.Length * sizeof(float),
                 printModel.Mesh.glVertices,
                 BufferUsageHint.StaticDraw);
 
+            // aPosition: location 0, 3 floats, stride 6 floats, offset 0
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
 
+            // aNormal: location 1, 3 floats, stride 6 floats, offset 3 floats
             GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
             GL.EnableVertexAttribArray(1);
+
+            // --- VBO 1: per-vertex colors from glColors (layout location 2) ---
+            // glColors is expected to be RGB floats: 3 floats per vertex, tightly packed.
+            // If glColors is null or empty we still bind a VBO but leave it empty;
+            // the useVertexColor uniform will be 0, so the GPU never reads it.
+            bool hasColors = printModel.Mesh.glColors != null && printModel.Mesh.glColors.Length > 0;
+            if (hasColors)
+            {            
+                stlColorVbo = GL.GenBuffer();
+                GL.BindBuffer(BufferTarget.ArrayBuffer, stlColorVbo);
+
+                GL.BufferData(
+                    BufferTarget.ArrayBuffer,
+                    printModel.Mesh.glColors.Length * sizeof(float),
+                    printModel.Mesh.glColors,
+                    BufferUsageHint.StaticDraw);
+
+
+                // aColor: location 2, 3 floats (RGB), tightly packed (stride 0 = tightly packed)
+                GL.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+                GL.EnableVertexAttribArray(2);
+            }
+
+            // Unbind VAO last to capture the state
+            GL.BindVertexArray(0);
         }
 
         int createShaderProgram()
@@ -187,6 +228,7 @@ Render Loop (OpenGL draw calls)
 
             return shaderProgram;
         }
+
         public void Draw()
         {
             if (printModel.Mesh.glVertices == null) return;
@@ -211,10 +253,14 @@ Render Loop (OpenGL draw calls)
             GL.Uniform3(lightColorLoc, LightColor); // Light Color
             GL.Uniform3(viewPosLoc, MainWindow.main.threeDCamera.CameraPosition); // camera pos
 
-            GL.Uniform3(objectColorLoc, ModelColor); // Model Color
+            GL.Uniform3(objectColorLoc, ModelColor); // Fallback uniform color when no glColors present
             GL.Uniform1(ambientLoc, MainWindow.main.threeDSettings.GetAmbientIntensity());      // Ambient intensity
             GL.Uniform1(specularLoc, MainWindow.main.threeDSettings.GetSpecularIntensity());    // Specular intensity
             GL.Uniform1(shininessLoc, MainWindow.main.threeDSettings.GetShininess());           // Shininess exponent
+
+            // Tell the shader whether to sample per-vertex colors or fall back to objectColor
+            bool hasColors = printModel.Mesh.glColors != null && printModel.Mesh.glColors.Length > 0;
+            GL.Uniform1(useVertexColorLoc, hasColors ? 1 : 0);
 
             GL.UniformMatrix4(stlModelLoc, false, ref printModel.trans); // set model matrix once, here
             GL.BindVertexArray(stlVao);
@@ -247,10 +293,12 @@ Render Loop (OpenGL draw calls)
                 return new Vector3(colors[0], colors[1], colors[2]);
             }
         }
+
         public void Dispose()
         {
             GL.DeleteVertexArray(stlVao);
             GL.DeleteBuffer(stlVbo);
+            GL.DeleteBuffer(stlColorVbo);   // Clean up the color VBO
             GL.DeleteProgram(shader);
         }
     }
