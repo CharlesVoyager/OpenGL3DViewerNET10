@@ -221,7 +221,6 @@ namespace View3D.view
                 models.RemoveAt(models.Count - 1);
                 return;
             }
-            AddObject(models[last]);
             models[last].Position.z = (float)(models[last].BoundingBox.Size.z / 2);
             if (modelToLand)
             {
@@ -235,9 +234,7 @@ namespace View3D.view
                 models[last].Position.y = (float)models[last].BoundingBox.Center.y;
                 models[last].UpdateBoundingBoxAndMatrix();
             }
-
-            UpdateOutOfBound();
-       
+            
             double xxx = models[last].BoundingBox.Size.x * models[last].BoundingBox.Size.y * models[last].BoundingBox.Size.z * 0.001;
 
             if (xxx < 0.1)  // the object is too small.
@@ -302,6 +299,9 @@ namespace View3D.view
                 models[i].Position.iniy = models[i].Position.y;
                 models[i].Position.iniz = models[i].Position.z;
             }
+
+            // Added object to the list and updated the TextBox controls.
+            AddObject(models[last]);
 
             MainWindow.main.threeDControl.InvokeGL(() =>
             {
@@ -511,7 +511,7 @@ namespace View3D.view
             outPacker.SetPlatformSize(maxW, maxH);
             bool autosizeFailed = false;
 
-            foreach (var stl in ListObjects(false))
+            foreach (var stl in models)
             {
                 if (typeof(PrintModel) != stl.GetType()) continue;
                 int w = 2 * border + (int)Math.Ceiling(stl.xMax - stl.xMin);
@@ -901,9 +901,9 @@ namespace View3D.view
                 var ui = MainWindow.main.UI_resize_advance;
                 var bbox = stl.BoundingBox;
                 ui.chk_Uniform.IsChecked = true;
-                ui.bboxnow = bbox.Size.x / Convert.ToDouble(textScaleX.Text);
-                ui.bboynow = bbox.Size.y / Convert.ToDouble(textScaleY.Text);
-                ui.bboznow = bbox.Size.z / Convert.ToDouble(textScaleZ.Text);
+                ui.bboxnow = bbox.Size.x / stl.Scale.x;
+                ui.bboynow = bbox.Size.y / stl.Scale.y;
+                ui.bboznow = bbox.Size.z / stl.Scale.z;
 
                 string tDecision =
                     (stl.BoundingBox.Size.x >= stl.BoundingBox.Size.y && stl.BoundingBox.Size.x >= stl.BoundingBox.Size.z) ? "x" :
@@ -911,38 +911,23 @@ namespace View3D.view
 
                 ui.button_mmtoinch.IsEnabled = true;
                 ui.button_inchtomm.IsEnabled = false;
-                ui.gIsShow = true;
-                ui.dimX = 24; 
-                ui.dimY = 24; 
-                ui.dimZ = 24;
-                ui.updateTxt();
-                ui.gIsShow = false;
+
                 switch (tDecision)
                 {
                     case "x": ui.dimX = newSizeMMx; ui.updateTxt(); break;
                     case "y": ui.dimY = newSizeMMy; ui.updateTxt(); break;
                     case "z": ui.dimZ = newSizeMMz; ui.updateTxt(); break;
                 }
-                setSliderBar(stl);
-             
-             }
-            catch { }
-        }
-
-        void setSliderBar(PrintModel stl)
-        {
-            try
-            {
-                var ui = MainWindow.main.UI_resize_advance;
-                var bbox = stl.BoundingBox;
-                ui.bboxnow = bbox.Size.x / Convert.ToDouble(textScaleX.Text);
-                ui.bboynow = bbox.Size.y / Convert.ToDouble(textScaleY.Text);
-                ui.bboznow = bbox.Size.z / Convert.ToDouble(textScaleZ.Text);
-                ui.chk_Uniform_Checked(null, null);
+                stl.Scale.x = (float)(newSizeMMx / ui.bboxnow);
+                stl.Scale.y = (float)(newSizeMMy / ui.bboynow);
+                stl.Scale.z = (float)(newSizeMMz / ui.bboznow);
+                stl.UpdateBoundingBoxAndMatrix();
+                stl.Land();
+                UpdateOutOfBound();
+                MainWindow.main.threeDControl.UpdateChanges();
             }
             catch { }
         }
-
 
         public void DoMmToInch(PrintModel stl)
         {
@@ -953,9 +938,9 @@ namespace View3D.view
                 ui.button_inchtomm.IsEnabled = true;
                 var bbox = stl.BoundingBox;
                 ui.chk_Uniform.IsChecked = true;
-                ui.bboxnow = bbox.Size.x / Convert.ToDouble(textScaleX.Text);
-                ui.bboynow = bbox.Size.y / Convert.ToDouble(textScaleY.Text);
-                ui.bboznow = bbox.Size.z / Convert.ToDouble(textScaleZ.Text);
+                ui.bboxnow = bbox.Size.x / stl.Scale.x;
+                ui.bboynow = bbox.Size.y / stl.Scale.y;
+                ui.bboznow = bbox.Size.z / stl.Scale.z;
 
                 ui.chk_Uniform.IsChecked = true;
                 double tempX = bbox.Size.x * 25.4, tempY = bbox.Size.y * 25.4, tempZ = bbox.Size.z * 25.4;
@@ -977,9 +962,10 @@ namespace View3D.view
                 ui.updateTxt();
                 ui.chk_Uniform_Checked(null, null);
                 ui.gIsShow = false;
-                textScaleX.Text = (tempX / ui.bboxnow).ToString("0.000");
-                textScaleY.Text = (tempY / ui.bboynow).ToString("0.000");
-                textScaleZ.Text = (tempZ / ui.bboznow).ToString("0.000");
+                stl.Scale.x = (float)(tempX / ui.bboxnow);
+                stl.Scale.y = (float)(tempY / ui.bboynow);
+                stl.Scale.z = (float)(tempZ / ui.bboznow);
+                stl.UpdateBoundingBoxAndMatrix();
                 stl.Land();
                 UpdateOutOfBound();
                 MainWindow.main.threeDControl.UpdateChanges();
