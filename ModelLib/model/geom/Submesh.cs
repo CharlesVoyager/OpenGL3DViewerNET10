@@ -21,7 +21,6 @@ namespace View3D.model.geom
             glColors = new float[triCount * 3];
         }
 
-
         public void Clear()
         {
             glVertices = null;

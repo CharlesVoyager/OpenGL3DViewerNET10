@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -39,6 +40,17 @@ namespace OpenGL3DViewerNET10.MeshIOLib
     /// </summary>
     public class MeshIOGlb : MeshIOBase
     {
+        // ========================= NEW TYPES =========================
+
+        record ImageInfo(int BufferViewIdx, string? MimeType);
+        record TextureInfo(int SourceImageIdx);
+
+        class MaterialInfo
+        {
+            public float[] BaseColorFactor = new float[] { 1, 1, 1, 1 };
+            public int? BaseColorTextureIndex = null;
+        }
+
         // ------------------------------------------------------------------ //
         //  Public Load overrides
         // ------------------------------------------------------------------ //
@@ -80,146 +92,99 @@ namespace OpenGL3DViewerNET10.MeshIOLib
 
         void ImportGlb(Stream stream, TopoModel model, Action<int> updateRate)
         {
-            Status = STATUS.Busy;
             model.Clear();
 
-            using var reader = new BinaryReader(stream, Encoding.UTF8, leaveOpen: true);
+            using var reader = new BinaryReader(stream, Encoding.UTF8, true);
 
-            // ── File header ────────────────────────────────────────────────
             uint magic = reader.ReadUInt32();
-            if (magic != 0x46546C67)
-                throw new InvalidDataException("Not a valid GLB file (bad magic number).");
+            if (magic != 0x46546C67) throw new InvalidDataException();
 
-            uint version = reader.ReadUInt32();
-            if (version != 2)
-                throw new NotSupportedException($"GLB version {version} is not supported (only version 2).");
+            reader.ReadUInt32(); // version
+            reader.ReadUInt32(); // length
 
-            reader.ReadUInt32(); // totalLength – unused
+            // JSON chunk
+            int jsonLength = reader.ReadInt32();
+            reader.ReadInt32();
+            var json = reader.ReadBytes(jsonLength);
 
-            // ── Chunk 0: JSON ──────────────────────────────────────────────
-            uint jsonChunkLength = reader.ReadUInt32();
-            uint jsonChunkType   = reader.ReadUInt32();
-            if (jsonChunkType != 0x4E4F534A)
-                throw new InvalidDataException("Expected JSON chunk (0x4E4F534A) as first GLB chunk.");
+            var root = JsonDocument.Parse(json).RootElement;
 
-            byte[] jsonBytes = reader.ReadBytes((int)jsonChunkLength);
-            using var jsonDoc = JsonDocument.Parse(jsonBytes);
-            var root = jsonDoc.RootElement;
-
-            // ── Chunk 1: BIN (optional) ────────────────────────────────────
-            byte[]? binBuffer = null;
+            // BIN chunk
+            byte[]? bin = null;
             if (stream.Position < stream.Length)
             {
-                uint binChunkLength = reader.ReadUInt32();
-                uint binChunkType   = reader.ReadUInt32();
-                if (binChunkType == 0x004E4942)
-                    binBuffer = reader.ReadBytes((int)binChunkLength);
+                int len = reader.ReadInt32();
+                reader.ReadInt32();
+                bin = reader.ReadBytes(len);
             }
 
-            // ── Collect all buffers (GLB BIN + external URIs skipped) ──────
-            // We only handle the embedded BIN chunk (buffer index 0 in GLB).
-            // External URI buffers are intentionally not supported.
-            var buffers = new List<byte[]?>();
-            if (root.TryGetProperty("buffers", out var buffersEl))
-            {
-                foreach (var _ in buffersEl.EnumerateArray())
-                    buffers.Add(null); // placeholder; replaced below for index 0
-                if (buffers.Count > 0)
-                    buffers[0] = binBuffer;
-            }
-            else if (binBuffer != null)
-            {
-                buffers.Add(binBuffer);
-            }
+            var buffers = new List<byte[]?> { bin };
 
-            // ── bufferViews & accessors ────────────────────────────────────
             var bufferViews = ParseBufferViews(root);
-            var accessors   = ParseAccessors(root);
+            var accessors = ParseAccessors(root);
 
-            // ── Material base colors (one per material index) ──────────────
-            var materialColors = ParseMaterialColors(root);
+            // ⭐ NEW
+            var materials = ParseMaterials(root);
+            var images = ParseImages(root);
+            var textures = ParseTextures(root);
 
-            // ── Build per-mesh primitive triangle lists ────────────────────
-            if (!root.TryGetProperty("meshes", out var meshesEl))
+            if (!root.TryGetProperty("meshes", out var meshesEl)) return;
+
+            foreach (var mesh in meshesEl.EnumerateArray())
             {
-                Status = STATUS.Done;
-                return;
-            }
-
-            // Collect node transforms so we can apply them per mesh
-            var nodeTransforms = BuildNodeTransforms(root);
-
-            // Count total primitives for progress reporting
-            int totalPrimitives     = CountTrianglePrimitives(meshesEl);
-            int processedPrimitives = 0;
-
-            // Walk every mesh
-            int meshIndex = 0;
-            foreach (var meshEl in meshesEl.EnumerateArray())
-            {
-                if (!meshEl.TryGetProperty("primitives", out var primitivesEl))
+                foreach (var prim in mesh.GetProperty("primitives").EnumerateArray())
                 {
-                    meshIndex++;
-                    continue;
-                }
+                    var attrib = prim.GetProperty("attributes");
 
-                // Find transform for this mesh (from first node referencing it)
-                float[]? transform = nodeTransforms.TryGetValue(meshIndex, out var t) ? t : null;
+                    var positions = ReadVec3Accessor(
+                        attrib.GetProperty("POSITION").GetInt32(),
+                        accessors, bufferViews, buffers);
 
-                foreach (var primitiveEl in primitivesEl.EnumerateArray())
-                {
-                    // mode 4 = TRIANGLES (default when omitted)
-                    int mode = primitiveEl.TryGetProperty("mode", out var modeEl) ? modeEl.GetInt32() : 4;
-                    if (mode != 4)
-                        continue;
-
-                    if (!primitiveEl.TryGetProperty("attributes", out var attribEl))
-                        continue;
-                    if (!attribEl.TryGetProperty("POSITION", out var posAccessorEl))
-                        continue;
-
-                    // ── Positions ──────────────────────────────────────────
-                    var positions = ReadVec3Accessor(posAccessorEl.GetInt32(), accessors, bufferViews, buffers);
-
-                    // ── Indices (optional) ─────────────────────────────────
                     int[]? indices = null;
-                    if (primitiveEl.TryGetProperty("indices", out var indicesEl))
-                        indices = ReadScalarAccessor(indicesEl.GetInt32(), accessors, bufferViews, buffers);
+                    if (prim.TryGetProperty("indices", out var idx))
+                        indices = ReadScalarAccessor(idx.GetInt32(), accessors, bufferViews, buffers);
 
-                    // ── Color priority 1: per-vertex COLOR_0 ───────────────
                     float[][]? vertexColors = null;
-                    if (attribEl.TryGetProperty("COLOR_0", out var colorAccessorEl))
-                        vertexColors = ReadColorAccessor(colorAccessorEl.GetInt32(), accessors, bufferViews, buffers);
+                    if (attrib.TryGetProperty("COLOR_0", out var col))
+                        vertexColors = ReadColorAccessor(col.GetInt32(), accessors, bufferViews, buffers);
 
-                    // ── Color priority 2: material baseColorFactor ─────────
                     float[]? flatColor = null;
-                    if (primitiveEl.TryGetProperty("material", out var matIdxEl))
+                    Bitmap? textureBitmap = null;
+
+                    // ⭐ UPDATED MATERIAL HANDLING
+                    if (prim.TryGetProperty("material", out var matIdxEl))
                     {
                         int matIdx = matIdxEl.GetInt32();
-                        if (matIdx < materialColors.Count)
-                            flatColor = materialColors[matIdx];
+                        if (matIdx < materials.Count)
+                        {
+                            var mat = materials[matIdx];
+                            flatColor = mat.BaseColorFactor;
+
+                            if (mat.BaseColorTextureIndex.HasValue)
+                            {
+                                int texIdx = mat.BaseColorTextureIndex.Value;
+                                if (texIdx < textures.Count)
+                                {
+                                    int imgIdx = textures[texIdx].SourceImageIdx;
+                                    if (imgIdx >= 0 && imgIdx < images.Count)
+                                    {
+                                        textureBitmap = LoadBitmapFromImage(
+                                            images[imgIdx], bufferViews, buffers);
+                                    }
+                                }
+                            }
+                        }
                     }
 
-                    // ── Build triangles ────────────────────────────────────
-                    AddPrimitiveToModel(positions, indices, vertexColors, flatColor,
-                                        transform, model,
-                                        ref processedPrimitives, totalPrimitives, updateRate);
-
-                    if (Command == COMMAND.Abort)
-                    {
-                        Command = COMMAND.None;
-                        Status  = STATUS.UserAbort;
-                        return;
-                    }
-
-                    processedPrimitives++;
+                    AddPrimitiveToModel(
+                        positions,
+                        indices,
+                        vertexColors,
+                        flatColor,
+                        textureBitmap,
+                        model);
                 }
-
-                meshIndex++;
             }
-
-            if (Status == STATUS.Busy)
-                Status = STATUS.Done;
         }
 
         // ------------------------------------------------------------------ //
@@ -228,77 +193,154 @@ namespace OpenGL3DViewerNET10.MeshIOLib
 
         static readonly float[] DefaultColor = new float[] { 1f, 1f, 1f, 1f };
 
-        /// <summary>
-        /// Converts one glTF primitive into TopoTriangles and appends them to the model.
-        /// Per-triangle color is resolved in this order:
-        ///   vertexColors (COLOR_0 averaged) → flatColor (material) → white
-        /// </summary>
+        // ========================= TRIANGLES =========================
+
         static void AddPrimitiveToModel(
-            RHVector3[]  positions,
-            int[]?       indices,
-            float[][]?   vertexColors,   // per-vertex RGBA [0..1], may be null
-            float[]?     flatColor,      // material RGBA fallback, may be null
-            float[]?     transform,
-            TopoModel    model,
-            ref int      processed,
-            int          total,
-            Action<int>  updateRate)
+            RHVector3[] positions,
+            int[]? indices,
+            float[][]? vertexColors,
+            float[]? flatColor,
+            Bitmap? texture,
+            TopoModel model)
         {
             int triCount = indices != null ? indices.Length / 3 : positions.Length / 3;
 
             for (int t = 0; t < triCount; t++)
             {
-                int i0, i1, i2;
-                if (indices != null)
-                {
-                    i0 = indices[t * 3];
-                    i1 = indices[t * 3 + 1];
-                    i2 = indices[t * 3 + 2];
-                }
-                else
-                {
-                    i0 = t * 3;
-                    i1 = t * 3 + 1;
-                    i2 = t * 3 + 2;
-                }
+                int i0 = indices != null ? indices[t * 3] : t * 3;
+                int i1 = indices != null ? indices[t * 3 + 1] : t * 3 + 1;
+                int i2 = indices != null ? indices[t * 3 + 2] : t * 3 + 2;
 
-                var p1 = ApplyTransform(positions[i0], transform);
-                var p2 = ApplyTransform(positions[i1], transform);
-                var p3 = ApplyTransform(positions[i2], transform);
+                var p1 = positions[i0];
+                var p2 = positions[i1];
+                var p3 = positions[i2];
 
-                var d1     = p2.Subtract(p1);
-                var d2     = p3.Subtract(p2);
-                var normal = d1.CrossProduct(d2);
+                var normal = p2.Subtract(p1).CrossProduct(p3.Subtract(p2));
                 normal.NormalizeSafe();
 
-                // ── Resolve triangle color ─────────────────────────────────
-                float[] triColor;
+                float[] color;
+
                 if (vertexColors != null)
                 {
-                    // Average the 3 vertex colors to produce a flat per-triangle color.
-                    // This matches the expectation of TopoTriangle.Color (one color per triangle).
                     var c0 = vertexColors[i0];
                     var c1 = vertexColors[i1];
                     var c2 = vertexColors[i2];
-                    triColor = new float[]
+
+                    color = new float[]
                     {
-                        (c0[0] + c1[0] + c2[0]) / 3f,
-                        (c0[1] + c1[1] + c2[1]) / 3f,
-                        (c0[2] + c1[2] + c2[2]) / 3f,
-                        (c0[3] + c1[3] + c2[3]) / 3f,
+                        (c0[0]+c1[0]+c2[0])/3f,
+                        (c0[1]+c1[1]+c2[1])/3f,
+                        (c0[2]+c1[2]+c2[2])/3f,
+                        (c0[3]+c1[3]+c2[3])/3f
+                    };
+                }
+                else if (texture != null)
+                {
+                    // ⭐ DEBUG: sample center pixel
+                    var px = texture.GetPixel(texture.Width / 2, texture.Height / 2);
+
+                    color = new float[]
+                    {
+                        px.R / 255f,
+                        px.G / 255f,
+                        px.B / 255f,
+                        px.A / 255f
                     };
                 }
                 else
                 {
-                    // Use the material flat color, or white if no material was defined.
-                    triColor = flatColor ?? DefaultColor;
+                    color = flatColor ?? new float[] { 1, 1, 1, 1 };
                 }
 
-                model.AddTriangle(p1, p2, p3, normal, triColor);
-
-                if (t > 0 && t % 5000 == 0 && total > 0)
-                    updateRate?.Invoke((int)((double)processed / total * 100.0));
+                model.AddTriangle(p1, p2, p3, normal, color);
             }
+        }
+
+        // ========================= MATERIAL =========================
+
+        static List<MaterialInfo> ParseMaterials(JsonElement root)
+        {
+            var list = new List<MaterialInfo>();
+
+            if (!root.TryGetProperty("materials", out var matsEl))
+                return list;
+
+            foreach (var mat in matsEl.EnumerateArray())
+            {
+                var m = new MaterialInfo();
+
+                if (mat.TryGetProperty("pbrMetallicRoughness", out var pbr))
+                {
+                    if (pbr.TryGetProperty("baseColorFactor", out var bcf))
+                    {
+                        var vals = bcf.EnumerateArray().Select(e => e.GetSingle()).ToArray();
+                        for (int i = 0; i < Math.Min(4, vals.Length); i++)
+                            m.BaseColorFactor[i] = vals[i];
+                    }
+
+                    if (pbr.TryGetProperty("baseColorTexture", out var tex))
+                    {
+                        if (tex.TryGetProperty("index", out var idx))
+                            m.BaseColorTextureIndex = idx.GetInt32();
+                    }
+                }
+
+                list.Add(m);
+            }
+
+            return list;
+        }
+
+        // ========================= IMAGE / TEXTURE =========================
+
+        static List<ImageInfo> ParseImages(JsonElement root)
+        {
+            var list = new List<ImageInfo>();
+            if (!root.TryGetProperty("images", out var el)) return list;
+
+            foreach (var img in el.EnumerateArray())
+            {
+                int bv = img.TryGetProperty("bufferView", out var b) ? b.GetInt32() : -1;
+                string? mime = img.TryGetProperty("mimeType", out var m) ? m.GetString() : null;
+                list.Add(new ImageInfo(bv, mime));
+            }
+            return list;
+        }
+
+        static List<TextureInfo> ParseTextures(JsonElement root)
+        {
+            var list = new List<TextureInfo>();
+            if (!root.TryGetProperty("textures", out var el)) return list;
+
+            foreach (var t in el.EnumerateArray())
+            {
+                int src = t.TryGetProperty("source", out var s) ? s.GetInt32() : -1;
+                list.Add(new TextureInfo(src));
+            }
+            return list;
+        }
+
+        static Bitmap LoadBitmapFromImage(
+            ImageInfo img,
+            List<BufferViewInfo> bufferViews,
+            List<byte[]?> buffers)
+        {
+            var bytes = GetImageBytes(img, bufferViews, buffers);
+            using var ms = new MemoryStream(bytes);
+            return new Bitmap(ms);
+        }
+
+        static byte[] GetImageBytes(
+            ImageInfo img,
+            List<BufferViewInfo> bufferViews,
+            List<byte[]?> buffers)
+        {
+            var bv = bufferViews[img.BufferViewIdx];
+            var buf = buffers[bv.BufferIdx]!;
+
+            var data = new byte[bv.ByteLength];
+            Array.Copy(buf, bv.ByteOffset, data, 0, bv.ByteLength);
+            return data;
         }
 
         // ------------------------------------------------------------------ //
