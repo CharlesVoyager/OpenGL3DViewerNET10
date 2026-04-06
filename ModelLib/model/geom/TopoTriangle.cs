@@ -27,7 +27,7 @@ namespace View3D.model.geom
             vertices[0] = v1;
             vertices[1] = v2;
             vertices[2] = v3;
-            normal = new RHVector3(n);
+            normal = n;
         }
 
         public override bool Equals(object obj)
