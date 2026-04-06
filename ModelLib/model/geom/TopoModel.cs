@@ -80,9 +80,9 @@ namespace View3D.model.geom
 
         public void getTriInWorld(Matrix4 trans, TopoTriangle tInObj, out TopoTriangle tInWorld)
         {
-            Vector4 ver1 = tInObj.vertices[0].pos.asVector4();
-            Vector4 ver2 = tInObj.vertices[1].pos.asVector4();
-            Vector4 ver3 = tInObj.vertices[2].pos.asVector4();
+            Vector4 ver1 = tInObj.Vertices[0].pos.asVector4();
+            Vector4 ver2 = tInObj.Vertices[1].pos.asVector4();
+            Vector4 ver3 = tInObj.Vertices[2].pos.asVector4();
 
 #if false   // OpeenTK 3.3.3.0
             ver1 = Vector4.Transform(ver1, trans);

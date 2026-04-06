@@ -109,14 +109,14 @@ namespace OpenGL3DViewerNET10.MeshIOLib
             w.Write(model.triangles.Count);
             foreach (TopoTriangle t in model.triangles)
             {
-                w.Write((float)t.normal.x);
-                w.Write((float)t.normal.y);
-                w.Write((float)t.normal.z);
+                w.Write((float)t.Normal.x);
+                w.Write((float)t.Normal.y);
+                w.Write((float)t.Normal.z);
                 for (i = 0; i < 3; i++)
                 {
-                    w.Write((float)t.vertices[i].pos.x);
-                    w.Write((float)t.vertices[i].pos.y);
-                    w.Write((float)t.vertices[i].pos.z);
+                    w.Write((float)t.Vertices[i].pos.x);
+                    w.Write((float)t.Vertices[i].pos.y);
+                    w.Write((float)t.Vertices[i].pos.z);
                 }
                 w.Write((short)0);
 
@@ -146,30 +146,30 @@ namespace OpenGL3DViewerNET10.MeshIOLib
             foreach (TopoTriangle t in model.triangles)
             {
                 w.Write("  facet normal ");
-                w.Write(t.normal.x);
+                w.Write(t.Normal.x);
                 w.Write(" ");
-                w.Write(t.normal.y);
+                w.Write(t.Normal.y);
                 w.Write(" ");
-                w.WriteLine(t.normal.z);
+                w.WriteLine(t.Normal.z);
                 w.WriteLine("    outer loop");
                 w.Write("      vertex ");
-                w.Write(t.vertices[0].pos.x);
+                w.Write(t.Vertices[0].pos.x);
                 w.Write(" ");
-                w.Write(t.vertices[0].pos.y);
+                w.Write(t.Vertices[0].pos.y);
                 w.Write(" ");
-                w.WriteLine(t.vertices[0].pos.z);
+                w.WriteLine(t.Vertices[0].pos.z);
                 w.Write("      vertex ");
-                w.Write(t.vertices[1].pos.x);
+                w.Write(t.Vertices[1].pos.x);
                 w.Write(" ");
-                w.Write(t.vertices[1].pos.y);
+                w.Write(t.Vertices[1].pos.y);
                 w.Write(" ");
-                w.WriteLine(t.vertices[1].pos.z);
+                w.WriteLine(t.Vertices[1].pos.z);
                 w.Write("      vertex ");
-                w.Write(t.vertices[2].pos.x);
+                w.Write(t.Vertices[2].pos.x);
                 w.Write(" ");
-                w.Write(t.vertices[2].pos.y);
+                w.Write(t.Vertices[2].pos.y);
                 w.Write(" ");
-                w.WriteLine(t.vertices[2].pos.z);
+                w.WriteLine(t.Vertices[2].pos.z);
                 w.WriteLine("    endloop");
                 w.WriteLine("  endfacet");
 

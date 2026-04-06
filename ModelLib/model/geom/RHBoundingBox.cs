@@ -52,7 +52,7 @@
 
         public bool containTri(TopoTriangle triangle)
         {
-            foreach(TopoVertex ver in triangle.vertices){
+            foreach(TopoVertex ver in triangle.Vertices){
                 if ( ContainsPoint(ver.pos) )
                     return true;
             }
@@ -71,25 +71,25 @@
                 new RHVector3(0,1,0),
                 new RHVector3(0,0,1)
             };
-            Project(triangle.vertices, boxNormals[0], out triangleMin, out triangleMax);
+            Project(triangle.Vertices, boxNormals[0], out triangleMin, out triangleMax);
             if (triangleMax < minPoint.x || triangleMin > maxPoint.x )
                 return false;
-            Project(triangle.vertices, boxNormals[1], out triangleMin, out triangleMax);
+            Project(triangle.Vertices, boxNormals[1], out triangleMin, out triangleMax);
             if (triangleMax < minPoint.y || triangleMin > maxPoint.y)
                 return false;
-            Project(triangle.vertices, boxNormals[2], out triangleMin, out triangleMax);
+            Project(triangle.Vertices, boxNormals[2], out triangleMin, out triangleMax);
             if (triangleMax < minPoint.z || triangleMin > maxPoint.z)
                 return false;
 
-            double triangleOffset = triangle.normal.ScalarProduct(triangle.vertices[0].pos);
-            Project(getVertices(), triangle.normal, out boxMin, out boxMax);
+            double triangleOffset = triangle.Normal.ScalarProduct(triangle.Vertices[0].pos);
+            Project(getVertices(), triangle.Normal, out boxMin, out boxMax);
             if (boxMax < triangleOffset || boxMin > triangleOffset)
                 return false; // No intersection possible.
 
             RHVector3[] triangleEdges = {
-                triangle.vertices[0].pos.Subtract(triangle.vertices[1].pos),
-                triangle.vertices[1].pos.Subtract(triangle.vertices[2].pos),
-                triangle.vertices[2].pos.Subtract(triangle.vertices[0].pos)
+                triangle.Vertices[0].pos.Subtract(triangle.Vertices[1].pos),
+                triangle.Vertices[1].pos.Subtract(triangle.Vertices[2].pos),
+                triangle.Vertices[2].pos.Subtract(triangle.Vertices[0].pos)
             };
 
             for (int i = 0; i < 3; i++)
@@ -97,7 +97,7 @@
                 {
                     RHVector3 axis = triangleEdges[i].CrossProduct(boxNormals[j]);
                     Project(getVertices(), axis, out boxMin, out boxMax);
-                    Project(triangle.vertices, axis, out triangleMin, out triangleMax);
+                    Project(triangle.Vertices, axis, out triangleMin, out triangleMax);
                     if (boxMax < triangleMin || boxMin > triangleMax)
                         return false; // No intersection possible
                 }

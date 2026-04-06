@@ -207,10 +207,10 @@ namespace OpenGL3DViewerNET10.ModelLib.model
                         throw new System.OutOfMemoryException();
                     }
                 }
-                Mesh.AddTriangle(   t.vertices[0].pos.Subtract(Model.boundingBox.Center),
-                                    t.vertices[1].pos.Subtract(Model.boundingBox.Center),
-                                    t.vertices[2].pos.Subtract(Model.boundingBox.Center),
-                                    t.normal,
+                Mesh.AddTriangle(   t.Vertices[0].pos.Subtract(Model.boundingBox.Center),
+                                    t.Vertices[1].pos.Subtract(Model.boundingBox.Center),
+                                    t.Vertices[2].pos.Subtract(Model.boundingBox.Center),
+                                    t.Normal,
                                     t.Color);
                 cnt++;
             }
