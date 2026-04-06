@@ -194,6 +194,8 @@ namespace OpenGL3DViewerNET10.ModelLib.model
 
             Mesh.Clear();
 
+            Mesh.EnsureCapacity(Model.triangles.Count);
+
             // Fill Mesh with checking RAM 
             int cnt = 0;
             foreach (TopoTriangle t in Model.triangles)
@@ -208,13 +210,14 @@ namespace OpenGL3DViewerNET10.ModelLib.model
                 Mesh.AddTriangle(   t.vertices[0].pos.Subtract(Model.boundingBox.Center),
                                     t.vertices[1].pos.Subtract(Model.boundingBox.Center),
                                     t.vertices[2].pos.Subtract(Model.boundingBox.Center),
-                                    Submesh.MESHCOLOR_FRONTBACK);
+                                    t.normal,
+                                    t.Color);
                 cnt++;
             }
             // <>
 
             Mesh.selected = Selected;
-            Mesh.Compress();
+
 
             //Debug.WriteLine("[PrintModel.Paint]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }
