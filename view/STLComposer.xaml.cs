@@ -106,7 +106,7 @@ namespace View3D.view
             if (model == null) return;
 
             labelVertices.Text             = (model.Model.triangles.Count * 3).ToString();
-            labelFaces.Text                = model.Model.triangles.Count.ToString();
+            labelTriangles.Text            = model.Model.triangles.Count.ToString();
 
             // Colour: black when zero, red when non-zero
             var red   = new SolidColorBrush(Colors.Red);

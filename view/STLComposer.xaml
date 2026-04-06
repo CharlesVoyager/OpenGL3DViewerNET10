@@ -209,10 +209,10 @@
                                    Grid.Row="4" Grid.Column="1"
                                    Text="0" VerticalAlignment="Center"/>
 
-                        <!-- Row 5 – Faces -->
+                        <!-- Row 5 – Triangles -->
                         <TextBlock Grid.Row="5" Grid.Column="0"
-                                   Text="Faces:" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="labelFaces"
+                                   Text="Triangles:" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="labelTriangles"
                                    Grid.Row="5" Grid.Column="1"
                                    Text="0" VerticalAlignment="Center"/>
 
