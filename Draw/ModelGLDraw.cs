@@ -181,7 +181,6 @@ Render Loop (OpenGL draw calls)
                     printModel.Mesh.glColors,
                     BufferUsageHint.StaticDraw);
 
-
                 // aColor: location 2, 3 floats (RGB), tightly packed (stride 0 = tightly packed)
                 GL.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
                 GL.EnableVertexAttribArray(2);
