@@ -25,10 +25,10 @@ Render Loop (OpenGL draw calls)
 
         // STL model
         int shader;
-        int stlVao;
-        int stlVbo;
-        int stlColorVbo;                        // Separate VBO for per-vertex colors from glColors
-        int stlModelLoc, stlViewLoc, stlProjLoc;
+        int vao;
+        int vbo;
+        int colorVbo;                        // Separate VBO for per-vertex colors from glColors
+        int modelLoc, viewLoc, projLoc;
 
         // Add these fields
         int lightDirLoc, lightColorLoc, viewPosLoc;
@@ -127,9 +127,9 @@ Render Loop (OpenGL draw calls)
 
             uploadMeshToGPU();
 
-            stlModelLoc = GL.GetUniformLocation(shader, "model");
-            stlViewLoc = GL.GetUniformLocation(shader, "view");
-            stlProjLoc = GL.GetUniformLocation(shader, "projection");
+            modelLoc = GL.GetUniformLocation(shader, "model");
+            viewLoc = GL.GetUniformLocation(shader, "view");
+            projLoc = GL.GetUniformLocation(shader, "projection");
 
             normalMatrixLoc = GL.GetUniformLocation(shader, "normalMatrix");
             lightColorLoc = GL.GetUniformLocation(shader, "lightColor");
@@ -144,13 +144,13 @@ Render Loop (OpenGL draw calls)
 
         private void uploadMeshToGPU()
         {
-            stlVao = GL.GenVertexArray();
-            stlVbo = GL.GenBuffer();
+            vao = GL.GenVertexArray();
+            vbo = GL.GenBuffer();
 
-            GL.BindVertexArray(stlVao);
+            GL.BindVertexArray(vao);
 
             // --- VBO 0: positions + normals (layout location 0 and 1) ---
-            GL.BindBuffer(BufferTarget.ArrayBuffer, stlVbo);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
             GL.BufferData(
                 BufferTarget.ArrayBuffer,
                 printModel.Mesh.glVertices.Length * sizeof(float),
@@ -172,8 +172,8 @@ Render Loop (OpenGL draw calls)
             bool hasColors = printModel.Mesh.glColors != null && printModel.Mesh.glColors.Length > 0;
             if (hasColors)
             {            
-                stlColorVbo = GL.GenBuffer();
-                GL.BindBuffer(BufferTarget.ArrayBuffer, stlColorVbo);
+                colorVbo = GL.GenBuffer();
+                GL.BindBuffer(BufferTarget.ArrayBuffer, colorVbo);
 
                 GL.BufferData(
                     BufferTarget.ArrayBuffer,
@@ -186,8 +186,10 @@ Render Loop (OpenGL draw calls)
                 GL.EnableVertexAttribArray(2);
             }
 
+#if false   // This causes black background... Temporarily disable to test if it fixes the black model issue. We can re-enable later and investigate why it causes problems.
             // Unbind VAO last to capture the state
             GL.BindVertexArray(0);
+#endif 
         }
 
         int createShaderProgram()
@@ -242,8 +244,8 @@ Render Loop (OpenGL draw calls)
 
             GL.UseProgram(shader);
 
-            GL.UniformMatrix4(stlViewLoc, false, ref view);
-            GL.UniformMatrix4(stlProjLoc, false, ref proj);
+            GL.UniformMatrix4(viewLoc, false, ref view);
+            GL.UniformMatrix4(projLoc, false, ref proj);
             GL.UniformMatrix3(normalMatrixLoc, false, ref normalMatrix);
 
             // --- Customizable light values ---
@@ -261,8 +263,8 @@ Render Loop (OpenGL draw calls)
             bool hasColors = printModel.Mesh.glColors != null && printModel.Mesh.glColors.Length > 0;
             GL.Uniform1(useVertexColorLoc, hasColors ? 1 : 0);
 
-            GL.UniformMatrix4(stlModelLoc, false, ref printModel.trans); // set model matrix once, here
-            GL.BindVertexArray(stlVao);
+            GL.UniformMatrix4(modelLoc, false, ref printModel.trans); // set model matrix once, here
+            GL.BindVertexArray(vao);
             GL.DrawArrays(PrimitiveType.Triangles, 0, printModel.Mesh.glVertices.Length / 6);
         }
 
@@ -295,9 +297,9 @@ Render Loop (OpenGL draw calls)
 
         public void Dispose()
         {
-            GL.DeleteVertexArray(stlVao);
-            GL.DeleteBuffer(stlVbo);
-            GL.DeleteBuffer(stlColorVbo);   // Clean up the color VBO
+            GL.DeleteVertexArray(vao);
+            GL.DeleteBuffer(vbo);
+            GL.DeleteBuffer(colorVbo);   // Clean up the color VBO
             GL.DeleteProgram(shader);
         }
     }
