@@ -185,11 +185,7 @@ Render Loop (OpenGL draw calls)
                 GL.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
                 GL.EnableVertexAttribArray(2);
             }
-
-#if false   // This causes black background... Temporarily disable to test if it fixes the black model issue. We can re-enable later and investigate why it causes problems.
-            // Unbind VAO last to capture the state
             GL.BindVertexArray(0);
-#endif 
         }
 
         int createShaderProgram()

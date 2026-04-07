@@ -8,7 +8,7 @@ namespace OpenGL3DViewerNET10.Draw
     internal class BackgroundDraw
     { 
         int shader;
-
+        int dummyVao;   // add this
         // Vertex shader
         private const string VertSrc = @"
                                 #version 330 core
@@ -51,6 +51,8 @@ namespace OpenGL3DViewerNET10.Draw
         {
             shader = createShaderProgram();
 
+            dummyVao = GL.GenVertexArray();  // add this
+
 #if false   // Mono background clear color was too dark; using shader gradient instead
             GL.ClearColor(0.2f, 0.3f, 0.4f, 1f);
 #endif
@@ -91,6 +93,9 @@ namespace OpenGL3DViewerNET10.Draw
             GL.Disable(EnableCap.DepthTest);
             GL.UseProgram(shader);
 
+            // bind empty VAO to satisfy Core Profile requirement
+            GL.BindVertexArray(dummyVao);
+
             Color color;
             color = MainWindow.main.threeDSettings.BackgroundTopBackgroundColor();
             Vector4 topColor = new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
@@ -101,11 +106,12 @@ namespace OpenGL3DViewerNET10.Draw
             GL.Uniform4(GL.GetUniformLocation(shader, "bottomColor"), bottomColor);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
+            GL.BindVertexArray(0);  // unbind after draw
         }
 
-        // Clean up when done
         public void Dispose()
         {
+            GL.DeleteVertexArray(dummyVao); 
             GL.DeleteProgram(shader);
         }
     }
