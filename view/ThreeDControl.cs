@@ -477,8 +477,11 @@ namespace View3D.view
 
                 redBorderDraw.Draw();
 
-                foreach (var m in stlComp.models)
-                    m.Drawer.Draw();
+                if (STLComposer._meshDataReady.Wait(0))
+                {
+                    foreach (var m in stlComp.models)
+                        m.Drawer.Draw();
+                }
 
                 SwapBuffers();
 
@@ -488,16 +491,6 @@ namespace View3D.view
             catch (Exception ex)
             {
                 Debug.WriteLine("[gl_Paint] Error during rendering: " + ex.ToString());
-
-#if false
-                foreach (var m in stlComp.models)
-                {
-                    System.Diagnostics.Debug.WriteLine("trans: " + m.trans.Row0.ToString());
-                    System.Diagnostics.Debug.WriteLine("       " + m.trans.Row1.ToString());
-                    System.Diagnostics.Debug.WriteLine("       " + m.trans.Row2.ToString());
-                    System.Diagnostics.Debug.WriteLine("       " + m.trans.Row3.ToString());
-                }
-#endif
             }
         }
 
