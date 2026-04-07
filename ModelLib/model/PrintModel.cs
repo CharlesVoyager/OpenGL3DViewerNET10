@@ -194,7 +194,7 @@ namespace OpenGL3DViewerNET10.ModelLib.model
 
             Mesh.Clear();
 
-            Mesh.EnsureCapacity(Model.triangles.Count);
+            Mesh.EnsureCapacity(Model.triangles.Count, Model.HasColor());
 
             // Fill Mesh with checking RAM 
             int cnt = 0;
@@ -217,7 +217,6 @@ namespace OpenGL3DViewerNET10.ModelLib.model
             // <>
 
             Mesh.selected = Selected;
-
 
             //Debug.WriteLine("[PrintModel.Paint]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }

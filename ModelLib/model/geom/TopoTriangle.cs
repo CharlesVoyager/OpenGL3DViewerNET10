@@ -5,7 +5,7 @@ namespace View3D.model.geom
     {
         public TopoVertex[] Vertices = new TopoVertex[3];
         public RHVector3 Normal;
-        public float[] Color;
+        public float[]? Color;
 
         public TopoTriangle(TopoTriangle t)
         {
@@ -21,6 +21,7 @@ namespace View3D.model.geom
             Vertices[1] = v2;
             Vertices[2] = v3;
             RecomputeNormal();
+            Color = null;
         }
 
         public TopoTriangle(TopoVertex v1, TopoVertex v2, TopoVertex v3, RHVector3 n)
@@ -29,7 +30,7 @@ namespace View3D.model.geom
             Vertices[1] = v2;
             Vertices[2] = v3;
             Normal = n;
-            Color = new float[] { 1f, 1f, 1f, 1f }; // RGBA [0..1]
+            Color = null;
         }
 
         public TopoTriangle(TopoVertex v1, TopoVertex v2, TopoVertex v3, RHVector3 n, float[] color)

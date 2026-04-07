@@ -15,10 +15,12 @@ namespace View3D.model.geom
         int idxVertices = 0;
         int idxColors = 0;
 
-        public void EnsureCapacity(int triCount)
+        public void EnsureCapacity(int triCount, bool hasColor)
         {
             glVertices = new float[triCount * 3 * 6];
-            glColors = new float[triCount * 3];
+            
+            if (hasColor)
+                glColors = new float[triCount * 3];
         }
 
         public void Clear()
@@ -31,12 +33,12 @@ namespace View3D.model.geom
         public void CopyTo(Submesh newMesh)
         {
             newMesh.glVertices = new float[glVertices.Length];
-            Array.Copy(glVertices,          newMesh.glVertices,         glVertices.Length);
+            Array.Copy(glVertices, newMesh.glVertices, glVertices.Length);
 
             if (glColors != null)
             {
                 newMesh.glColors = new float[glColors.Length];
-                Array.Copy(glColors,            newMesh.glColors,           glColors.Length);
+                Array.Copy(glColors, newMesh.glColors, glColors.Length);
             }
         }
 

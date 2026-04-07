@@ -99,5 +99,17 @@ namespace View3D.model.geom
             TopoVertex v3 = new TopoVertex(new RHVector3(ver3.X, ver3.Y, ver3.Z));
             tInWorld = new TopoTriangle(v1, v2, v3);
         }
+
+        public bool HasColor()
+        {
+            foreach (TopoTriangle t in triangles)
+            {
+                if (t.Color != null)
+                    return true;
+                else
+                    return false;
+            }
+            return false;
+        }
     }
 }
