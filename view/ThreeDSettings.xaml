@@ -219,7 +219,7 @@
 
                     <!-- Model Color, EX: 0.6f, 0.7f, 0.8f  / 154, 179,  205  -->
                     <TextBlock Grid.Row="6" Grid.Column="0" Text="Model Color:" VerticalAlignment="Center"/>
-                    <Border x:Name="modelColor" Grid.Row="6" Grid.Column="1" Background="#9AB3CD" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
+                    <Border x:Name="modelColor" Grid.Row="6" Grid.Column="1" Background="#6BA3C6" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
 
                     <!-- Ambient intensity -->
                     <TextBlock Grid.Row="7" Grid.Column="0" Text="Ambient intensity:" VerticalAlignment="Center"/>

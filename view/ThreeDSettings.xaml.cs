@@ -754,7 +754,7 @@ namespace View3D.view
             zdir1.Text = "2";
 
             lightColor.Background = Brushes.White;
-            var drawingColor = System.Drawing.ColorTranslator.FromHtml("#9AB3CD");
+            var drawingColor = System.Drawing.ColorTranslator.FromHtml("#6BA3C6");
             modelColor.Background = new SolidColorBrush(Color.FromArgb(drawingColor.A, drawingColor.R, drawingColor.G, drawingColor.B));
 
             sliderAmbient.Value = 0.3;

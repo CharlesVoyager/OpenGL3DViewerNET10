@@ -1,4 +1,4 @@
-﻿using OpenGL3DViewerNET10.ModelLib.model;
+using OpenGL3DViewerNET10.ModelLib.model;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using View3D;
@@ -30,89 +30,132 @@ Render Loop (OpenGL draw calls)
         int colorVbo;                        // Separate VBO for per-vertex colors from glColors
         int modelLoc, viewLoc, projLoc;
 
-        // Add these fields
-        int lightDirLoc, lightColorLoc, viewPosLoc;
-        int objectColorLoc, ambientLoc, specularLoc, shininessLoc;
+        // Lighting / material uniforms
+        int viewPosLoc;
+        int objectColorLoc;
         int normalMatrixLoc;
-        int useVertexColorLoc;                  // Uniform: 1 = use glColors, 0 = use objectColor uniform
+        int useVertexColorLoc;              // Uniform: 1 = use glColors, 0 = use objectColor uniform
 
+        // -------------------------------------------------------------------------
         // Vertex shader
+        // -------------------------------------------------------------------------
         private const string VertSrc = @"
-                                #version 330 core
+#version 330 core
 
-                                layout(location=0) in vec3 aPosition;
-                                layout(location=1) in vec3 aNormal;
-                                layout(location=2) in vec3 aColor;      // Per-vertex color from glColors
+layout(location=0) in vec3 aPosition;
+layout(location=1) in vec3 aNormal;
+layout(location=2) in vec3 aColor;      // Per-vertex color from glColors
 
-                                uniform mat4 model;
-                                uniform mat4 view;
-                                uniform mat4 projection;
-                                uniform mat3 normalMatrix; 
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+uniform mat3 normalMatrix;
 
-                                out vec3 FragPos;       // world-space position
-                                out vec3 Normal;        // world-space normal
-                                out vec3 VertexColor;   // passed through to fragment shader
+out vec3 FragPos;       // world-space position
+out vec3 Normal;        // world-space normal (already transformed)
+out vec3 VertexColor;   // passed through to fragment shader
 
-                                void main()
-                                {
-                                    vec4 worldPos   = model * vec4(aPosition, 1.0);
-                                    FragPos         = worldPos.xyz;
-                                    Normal          = normalize(normalMatrix * aNormal);
-                                    VertexColor     = aColor;
-                                    gl_Position     = projection * view * worldPos;
-                                }
+void main()
+{
+    vec4 worldPos = model * vec4(aPosition, 1.0);
+    FragPos       = worldPos.xyz;
+    Normal        = normalize(normalMatrix * aNormal);
+    VertexColor   = aColor;
+    gl_Position   = projection * view * worldPos;
+}
 ";
 
-        // Fragment shader
+        // -------------------------------------------------------------------------
+        // Fragment shader — 3dviewer.net studio lighting
+        //
+        // Reproduces the visual look of online3dviewer.net:
+        //   • Three-point directional rig  (key, fill, back/rim)
+        //   • Hemisphere ambient           (warm sky, cool ground)
+        //   • Blinn-Phong specular         (tight, low-intensity)
+        //   • Cool inner-face tint         (subtle, not the harsh red tint)
+        //   • sRGB gamma correction        (pow 1/2.2) at the very end
+        // -------------------------------------------------------------------------
         private const string FragSrc = @"
-                                #version 330 core
+#version 330 core
 
-                                in  vec3 FragPos;
-                                in  vec3 Normal;
-                                in  vec3 VertexColor;   // interpolated per-vertex color
-                                out vec4 FragColor;
+in  vec3 FragPos;
+in  vec3 Normal;
+in  vec3 VertexColor;
+out vec4 FragColor;
 
-                                // Light properties
-                                uniform vec3 lightDir;
-                                uniform vec3 lightColor;
-                                uniform vec3 viewPos;        // camera position for specular
+uniform vec3 viewPos;       // camera world position
+uniform vec3 objectColor;   // fallback color when no per-vertex colors
+uniform int  useVertexColor; // 1 = sample VertexColor, 0 = use objectColor
 
-                                // Material properties
-                                uniform vec3  objectColor;
-                                uniform float ambientStrength;
-                                uniform float specularStrength;
-                                uniform float shininess;
+// ---- Three-point studio rig (fixed, viewer-space directions) ----
+// Directions are given in world space.
+// Key light: upper-front-left
+const vec3 keyDir   = normalize(vec3(-0.6,  1.0,  0.8));
+const vec3 keyColor = vec3(1.00, 0.98, 0.95);   // warm white
+const float keyStr  = 0.75;
 
-                                // Color source switch: 1 = use per-vertex color, 0 = use objectColor uniform
-                                uniform int useVertexColor;
-           
-                                void main()
-                                {
-                                    // Flip normal for back faces so lighting computes correctly
-                                    vec3 norm = gl_FrontFacing ? normalize(Normal) : -normalize(Normal);
+// Fill light: lower-front-right (softer, slightly cool)
+const vec3 fillDir   = normalize(vec3( 0.8,  0.3,  0.5));
+const vec3 fillColor = vec3(0.80, 0.88, 1.00);  // cool tint
+const float fillStr  = 0.35;
 
-                                    // Select base color: per-vertex glColors or the uniform objectColor
-                                    vec3 baseColor = (useVertexColor == 1) ? VertexColor : objectColor;
+// Back / rim light: from behind-below (adds depth separation)
+const vec3 backDir   = normalize(vec3( 0.1, -0.5, -1.0));
+const vec3 backColor = vec3(0.90, 0.92, 1.00);
+const float backStr  = 0.25;
 
-                                    // Use a different color tint for inner (back) faces
-                                    vec3 matColor = gl_FrontFacing ? baseColor : baseColor * vec3(1.3, 0.7, 0.6);
+// ---- Hemisphere ambient ----
+const vec3 skyColor    = vec3(0.60, 0.70, 0.90);   // soft blue sky
+const vec3 groundColor = vec3(0.25, 0.20, 0.18);   // warm brown ground
+const float ambientStr = 0.30;
 
-                                    // Ambient
-                                    vec3 ambient = ambientStrength * lightColor;
+// ---- Specular ----
+const float specularStr = 0.10;
+const float shininess   = 64.0;
 
-                                    // Diffuse
-                                    float diff    = max(dot(norm, lightDir), 0.0);
-                                    vec3 diffuse  = diff * lightColor;
+// Compute a single Blinn-Phong directional light contribution.
+vec3 DirectionalLight(vec3 norm, vec3 viewDir,
+                      vec3 lightDir, vec3 lightColor, float strength)
+{
+    float diff   = max(dot(norm, lightDir), 0.0);
+    vec3 halfway = normalize(lightDir + viewDir);
+    float spec   = pow(max(dot(norm, halfway), 0.0), shininess);
 
-                                    // Specular (Blinn-Phong)
-                                    vec3 viewDir    = normalize(viewPos - FragPos);
-                                    vec3 halfwayDir = normalize(lightDir + viewDir);
-                                    float spec      = pow(max(dot(norm, halfwayDir), 0.0), shininess);
-                                    vec3 specular   = specularStrength * spec * lightColor;
+    vec3 diffuse  = diff  * lightColor * strength;
+    vec3 specular = spec  * lightColor * specularStr;
+    return diffuse + specular;
+}
 
-                                    vec3 result = (ambient + diffuse + specular) * matColor;
-                                    FragColor   = vec4(result, 1.0);
-                                }
+void main()
+{
+    // Flip normal for back faces so lighting works on both sides.
+    vec3 norm = gl_FrontFacing ? normalize(Normal) : -normalize(Normal);
+
+    // Base material color
+    vec3 baseColor = (useVertexColor == 1) ? VertexColor : objectColor;
+
+    // Slight tint for back faces
+    vec3 matColor = gl_FrontFacing ? baseColor : baseColor * vec3(0.60, 0.70, 0.80);
+
+    // Hemisphere ambient
+    float hemi    = 0.5 + 0.5 * norm.y;
+    vec3  ambient = mix(groundColor, skyColor, hemi) * ambientStr;
+
+    // Lighting
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 lighting = vec3(0.0);
+    lighting += DirectionalLight(norm, viewDir, keyDir,  keyColor,  keyStr);
+    lighting += DirectionalLight(norm, viewDir, fillDir, fillColor, fillStr);
+    lighting += DirectionalLight(norm, viewDir, backDir, backColor, backStr);
+
+    // Combine
+    vec3 linear = (ambient + lighting) * matColor;
+
+    // Gamma correction (linear -> sRGB)
+    vec3 gammaCorrected = pow(clamp(linear, 0.0, 1.0), vec3(1.0 / 2.2));
+
+    FragColor = vec4(gammaCorrected, 1.0);
+}
 ";
 
         public ModelGLDraw(PrintModel model)
@@ -128,17 +171,12 @@ Render Loop (OpenGL draw calls)
             uploadMeshToGPU();
 
             modelLoc = GL.GetUniformLocation(shader, "model");
-            viewLoc = GL.GetUniformLocation(shader, "view");
-            projLoc = GL.GetUniformLocation(shader, "projection");
+            viewLoc  = GL.GetUniformLocation(shader, "view");
+            projLoc  = GL.GetUniformLocation(shader, "projection");
 
-            normalMatrixLoc = GL.GetUniformLocation(shader, "normalMatrix");
-            lightColorLoc = GL.GetUniformLocation(shader, "lightColor");
-            viewPosLoc = GL.GetUniformLocation(shader, "viewPos");
-            objectColorLoc = GL.GetUniformLocation(shader, "objectColor");
-            ambientLoc = GL.GetUniformLocation(shader, "ambientStrength");
-            specularLoc = GL.GetUniformLocation(shader, "specularStrength");
-            shininessLoc = GL.GetUniformLocation(shader, "shininess");
-            lightDirLoc = GL.GetUniformLocation(shader, "lightDir");
+            normalMatrixLoc  = GL.GetUniformLocation(shader, "normalMatrix");
+            viewPosLoc       = GL.GetUniformLocation(shader, "viewPos");
+            objectColorLoc   = GL.GetUniformLocation(shader, "objectColor");
             useVertexColorLoc = GL.GetUniformLocation(shader, "useVertexColor");
         }
 
@@ -171,7 +209,7 @@ Render Loop (OpenGL draw calls)
             // the useVertexColor uniform will be 0, so the GPU never reads it.
             bool hasColors = printModel.Mesh.glColors != null && printModel.Mesh.glColors.Length > 0;
             if (hasColors)
-            {            
+            {
                 colorVbo = GL.GenBuffer();
                 GL.BindBuffer(BufferTarget.ArrayBuffer, colorVbo);
 
@@ -190,10 +228,8 @@ Render Loop (OpenGL draw calls)
 
         int createShaderProgram()
         {
-            // create the shader program
             int shaderProgram = GL.CreateProgram();
 
-            // create the vertex shader
             int vertexShader = GL.CreateShader(ShaderType.VertexShader);
             GL.ShaderSource(vertexShader, VertSrc);
             GL.CompileShader(vertexShader);
@@ -201,7 +237,6 @@ Render Loop (OpenGL draw calls)
             if (vsStatus == 0)
                 throw new Exception("Vertex shader compile error: " + GL.GetShaderInfoLog(vertexShader));
 
-            // Same as vertex shader
             int fragmentShader = GL.CreateShader(ShaderType.FragmentShader);
             GL.ShaderSource(fragmentShader, FragSrc);
             GL.CompileShader(fragmentShader);
@@ -209,17 +244,14 @@ Render Loop (OpenGL draw calls)
             if (fsStatus == 0)
                 throw new Exception("Fragment shader compile error: " + GL.GetShaderInfoLog(fragmentShader));
 
-            // Attach the shaders to the shader program
             GL.AttachShader(shaderProgram, vertexShader);
             GL.AttachShader(shaderProgram, fragmentShader);
 
-            // Link the program to OpenGL
             GL.LinkProgram(shaderProgram);
             GL.GetProgram(shaderProgram, GetProgramParameterName.LinkStatus, out int linkStatus);
             if (linkStatus == 0)
                 throw new Exception("Shader link error: " + GL.GetProgramInfoLog(shaderProgram));
 
-            // delete the shaders
             GL.DeleteShader(vertexShader);
             GL.DeleteShader(fragmentShader);
 
@@ -232,56 +264,39 @@ Render Loop (OpenGL draw calls)
 
             GL.Enable(EnableCap.DepthTest);
             GL.Disable(EnableCap.CullFace); // Draw both front and back faces
+
             Matrix4 model = Matrix4.Identity;
-            Matrix4 view = Matrix4.Identity;
-            Matrix4 proj = Matrix4.Identity;
+            Matrix4 view  = Matrix4.Identity;
+            Matrix4 proj  = Matrix4.Identity;
             MainWindow.main.threeDCamera.GetModelViewProj(ref model, ref view, ref proj);
+
+            // Normal matrix: inverse-transpose of the model matrix (handles non-uniform scale)
             Matrix3 normalMatrix = new Matrix3(Matrix4.Transpose(Matrix4.Invert(printModel.trans)));
 
             GL.UseProgram(shader);
 
-            GL.UniformMatrix4(viewLoc, false, ref view);
-            GL.UniformMatrix4(projLoc, false, ref proj);
+            GL.UniformMatrix4(viewLoc,  false, ref view);
+            GL.UniformMatrix4(projLoc,  false, ref proj);
             GL.UniformMatrix3(normalMatrixLoc, false, ref normalMatrix);
 
-            // --- Customizable light values ---
-            Vector3 dir = Vector3.Normalize(LightDirection); // direction, not position, so scale doesn't matter.
-            GL.Uniform3(lightDirLoc, dir);
-            GL.Uniform3(lightColorLoc, LightColor); // Light Color
-            GL.Uniform3(viewPosLoc, MainWindow.main.threeDCamera.CameraPosition); // camera pos
+            // Camera position (used for specular view vector)
+            GL.Uniform3(viewPosLoc, MainWindow.main.threeDCamera.CameraPosition);
 
-            GL.Uniform3(objectColorLoc, ModelColor); // Fallback uniform color when no glColors present
-            GL.Uniform1(ambientLoc, MainWindow.main.threeDSettings.GetAmbientIntensity());      // Ambient intensity
-            GL.Uniform1(specularLoc, MainWindow.main.threeDSettings.GetSpecularIntensity());    // Specular intensity
-            GL.Uniform1(shininessLoc, MainWindow.main.threeDSettings.GetShininess());           // Shininess exponent
+            // Material / object colour  (fallback when no per-vertex colours)
+            GL.Uniform3(objectColorLoc, ModelColor);
 
             // Tell the shader whether to sample per-vertex colors or fall back to objectColor
             bool hasColors = printModel.Mesh.glColors != null && printModel.Mesh.glColors.Length > 0;
             GL.Uniform1(useVertexColorLoc, hasColors ? 1 : 0);
 
-            GL.UniformMatrix4(modelLoc, false, ref printModel.trans); // set model matrix once, here
+            GL.UniformMatrix4(modelLoc, false, ref printModel.trans);
             GL.BindVertexArray(vao);
             GL.DrawArrays(PrimitiveType.Triangles, 0, printModel.Mesh.glVertices.Length / 6);
         }
 
-        public Vector3 LightDirection
-        {
-            get
-            {
-                float[] dir = MainWindow.main.threeDSettings.LightDirection();
-                Vector3 output = new Vector3(dir[0], dir[1], dir[2]);
-                // Guard against zero vector — normalize would produce NaN
-                return output.LengthSquared > 0f ? output : new Vector3(1f, 2f, 1f);
-            }
-        }
-        public Vector3 LightColor
-        {
-            get
-            {
-                float[] colors = MainWindow.main.threeDSettings.LightColor();
-                return new Vector3(colors[0], colors[1], colors[2]);
-            }
-        }
+        // ModelColor is still used as the base surface colour (e.g., the STL grey).
+        // The three-point rig and hemisphere ambient are baked into the shader constants,
+        // matching the fixed studio environment used by online3dviewer.net.
         public Vector3 ModelColor
         {
             get
@@ -295,7 +310,7 @@ Render Loop (OpenGL draw calls)
         {
             GL.DeleteVertexArray(vao);
             GL.DeleteBuffer(vbo);
-            GL.DeleteBuffer(colorVbo);   // Clean up the color VBO
+            GL.DeleteBuffer(colorVbo);
             GL.DeleteProgram(shader);
         }
     }
