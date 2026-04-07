@@ -329,7 +329,6 @@ namespace View3D.view
             MainWindow.main.threeDControl.InvokeGL(() =>
             {
                 newModel.Drawer.Init();
-                MainWindow.main.threeDControl.UpdateChanges();
             });
 
             return true;

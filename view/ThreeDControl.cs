@@ -290,8 +290,14 @@ namespace View3D.view
         {
             base.OnRenderFrame(e);
 
+            bool hadActions = false;
             while (glActions.TryDequeue(out Action action))
+            {
                 action();
+                hadActions = true;
+            }
+            // If we just ran GL init actions (e.g. Drawer.Init), force a repaint
+            if (hadActions) _isDirty = true;
 
             if (!_isDirty) return;
             _isDirty = false;
@@ -484,7 +490,20 @@ namespace View3D.view
                 fpsTimer.Stop();
                 double fps = 1.0 / fpsTimer.Elapsed.TotalSeconds;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("[gl_Paint] Error during rendering: " + ex.ToString());
+
+#if false
+                foreach (var m in stlComp.models)
+                {
+                    System.Diagnostics.Debug.WriteLine("trans: " + m.trans.Row0.ToString());
+                    System.Diagnostics.Debug.WriteLine("       " + m.trans.Row1.ToString());
+                    System.Diagnostics.Debug.WriteLine("       " + m.trans.Row2.ToString());
+                    System.Diagnostics.Debug.WriteLine("       " + m.trans.Row3.ToString());
+                }
+#endif
+            }
         }
 
 
