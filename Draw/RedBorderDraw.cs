@@ -34,7 +34,9 @@ namespace OpenGL3DViewerNET10.Draw
 
         // Call once during load / whenever PrintAreaWidth or PrintAreaDepth changes
         public void Init()
-        {
+        {            
+            shader = createShaderProgram();
+
             int pad = 2, tri = 10;
             float w = MainWindow.main.threeDSettings.PrintAreaWidth, d = MainWindow.main.threeDSettings.PrintAreaDepth;
 
@@ -65,11 +67,9 @@ namespace OpenGL3DViewerNET10.Draw
                           BufferUsageHint.StaticDraw);
 
             // position attribute  (location = 0, 3 floats, no offset)
-            GL.EnableVertexAttribArray(0);
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
-
-            // Build shader program
-            shader = createShaderProgram();
+            GL.EnableVertexAttribArray(0);
+            GL.BindVertexArray(0);
         }
 
         int createShaderProgram()

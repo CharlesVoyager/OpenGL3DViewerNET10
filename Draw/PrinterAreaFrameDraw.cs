@@ -101,7 +101,6 @@ namespace OpenGL3DViewerNET10.Draw
 
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
-
             GL.BindVertexArray(0);
         }
 

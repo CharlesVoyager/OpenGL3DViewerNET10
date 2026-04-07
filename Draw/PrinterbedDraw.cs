@@ -107,6 +107,7 @@ namespace OpenGL3DViewerNET10.Draw
                 0);
             GL.EnableVertexAttribArray(0);
             GL.Enable(EnableCap.DepthTest);
+            GL.BindVertexArray(0);
         }
 
         int createShaderProgram()
