@@ -7,9 +7,9 @@ namespace OpenGL3DViewerNET10.Draw
     internal class RedBorderDraw
     {
         // Red border around print area
-        int redBorderVao;
-        int redBorderVbo;
-        int redBorderShader;
+        int vao;
+        int vbo;
+        int shader;
         int redBorderVertexCount;
 
         // Vertex shader
@@ -53,12 +53,12 @@ namespace OpenGL3DViewerNET10.Draw
             redBorderVertexCount = verts.Length / 3;
 
             // VAO
-            redBorderVao = GL.GenVertexArray();
-            GL.BindVertexArray(redBorderVao);
+            vao = GL.GenVertexArray();
+            GL.BindVertexArray(vao);
 
             // VBO
-            redBorderVbo = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, redBorderVbo);
+            vbo = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
             GL.BufferData(BufferTarget.ArrayBuffer,
                           verts.Length * sizeof(float),
                           verts,
@@ -69,7 +69,7 @@ namespace OpenGL3DViewerNET10.Draw
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
 
             // Build shader program
-            redBorderShader = createShaderProgram();
+            shader = createShaderProgram();
         }
 
         int createShaderProgram()
@@ -111,24 +111,24 @@ namespace OpenGL3DViewerNET10.Draw
             MainWindow.main.threeDCamera.GetModelViewProj(ref model, ref view, ref proj);
             Matrix4 mvp = model * view * proj;
 
-            GL.UseProgram(redBorderShader);
+            GL.UseProgram(shader);
 
             // Pass the combined MVP matrix
-            int mvpLoc = GL.GetUniformLocation(redBorderShader, "uMVP");
-            int colorLoc = GL.GetUniformLocation(redBorderShader, "uColor");
+            int mvpLoc = GL.GetUniformLocation(shader, "uMVP");
+            int colorLoc = GL.GetUniformLocation(shader, "uColor");
             GL.UniformMatrix4(mvpLoc, false, ref mvp);
             GL.Uniform4(colorLoc, 1f, 0f, 0f, 0f); // Red.
 
-            GL.BindVertexArray(redBorderVao);
+            GL.BindVertexArray(vao);
             GL.DrawArrays(PrimitiveType.LineStrip, 0, redBorderVertexCount);
         }
 
         // Clean up when done
         public void Dispose()
         {
-            GL.DeleteVertexArray(redBorderVao);
-            GL.DeleteBuffer(redBorderVbo);
-            GL.DeleteProgram(redBorderShader);
+            GL.DeleteVertexArray(vao);
+            GL.DeleteBuffer(vbo);
+            GL.DeleteProgram(shader);
         }
     }
 }
