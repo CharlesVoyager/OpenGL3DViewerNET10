@@ -106,7 +106,7 @@ namespace OpenGL3DViewerNET10.Draw
         // Clean up when done
         public void Dispose()
         {
+            GL.DeleteProgram(shader);
         }
     }
-
 }
