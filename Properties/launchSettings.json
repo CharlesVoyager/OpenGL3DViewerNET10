@@ -2,7 +2,7 @@
   "profiles": {
     "OpenGL3DViewerNET10": {
       "commandName": "Project",
-      "commandLineArgs": "..\\..\\..\\Testfiles\\bowser.stl\r\n..\\..\\..\\Testfiles\\DamagedHelmet.gl"
+      "commandLineArgs": "..\\..\\..\\Testfiles\\bowser.st\r\n..\\..\\..\\Testfiles\\DamagedHelmet.gl"
     }
   }
 }

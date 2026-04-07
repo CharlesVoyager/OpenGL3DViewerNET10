@@ -306,9 +306,8 @@ namespace View3D.view
             MainWindow.main.threeDControl.InvokeGL(() =>
             {
                 models[last].Drawer.Init();
+                MainWindow.main.threeDControl.UpdateChanges();
             });
-
-            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         // =====================================================================
@@ -318,11 +317,6 @@ namespace View3D.view
         {
             PrintModel newModel = (PrintModel)model.cloneWithModel();
 
-            MainWindow.main.threeDControl.InvokeGL(() =>
-            {
-                newModel.Drawer.Init();
-            });
-
             newModel.UpdateBoundingBoxAndMatrix();
             models.Add(newModel);
 
@@ -331,6 +325,13 @@ namespace View3D.view
             SetObjectSelected(newModel, true);
             Autoposition();
             UpdateOutOfBound();
+
+            MainWindow.main.threeDControl.InvokeGL(() =>
+            {
+                newModel.Drawer.Init();
+                MainWindow.main.threeDControl.UpdateChanges();
+            });
+
             return true;
         }
 
