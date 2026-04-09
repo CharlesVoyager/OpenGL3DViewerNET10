@@ -148,6 +148,10 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                     if (attrib.TryGetProperty("COLOR_0", out var col))
                         vertexColors = ReadColorAccessor(col.GetInt32(), accessors, bufferViews, buffers);
 
+                    float[][]? texcoords = null;
+                    if (attrib.TryGetProperty("TEXCOORD_0", out var uv))
+                        texcoords = ReadVec2Accessor(uv.GetInt32(), accessors, bufferViews, buffers);
+
                     float[]? flatColor = null;
                     Bitmap? textureBitmap = null;
 
@@ -177,12 +181,13 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                     }
 
                     AddPrimitiveToModel(
-                        positions,
-                        indices,
-                        vertexColors,
-                        flatColor,
-                        textureBitmap,
-                        model);
+                     positions,
+                     indices,
+                     vertexColors,
+                     texcoords,   // ⭐ NEW
+                     flatColor,
+                     textureBitmap,
+                     model);
                 }
             }
         }
@@ -194,14 +199,14 @@ namespace OpenGL3DViewerNET10.MeshIOLib
         static readonly float[] DefaultColor = new float[] { 1f, 1f, 1f, 1f };
 
         // ========================= TRIANGLES =========================
-
         static void AddPrimitiveToModel(
-            RHVector3[] positions,
-            int[]? indices,
-            float[][]? vertexColors,
-            float[]? flatColor,
-            Bitmap? texture,
-            TopoModel model)
+                    RHVector3[] positions,
+                    int[]? indices,
+                    float[][]? vertexColors,
+                    float[][]? texcoords,   // ⭐ NEW
+                    float[]? flatColor,
+                    Bitmap? texture,
+                    TopoModel model)
         {
             int triCount = indices != null ? indices.Length / 3 : positions.Length / 3;
 
@@ -220,6 +225,7 @@ namespace OpenGL3DViewerNET10.MeshIOLib
 
                 float[] color;
 
+                // ✅ Priority 1: Vertex color
                 if (vertexColors != null)
                 {
                     var c0 = vertexColors[i0];
@@ -228,32 +234,80 @@ namespace OpenGL3DViewerNET10.MeshIOLib
 
                     color = new float[]
                     {
-                        (c0[0]+c1[0]+c2[0])/3f,
-                        (c0[1]+c1[1]+c2[1])/3f,
-                        (c0[2]+c1[2]+c2[2])/3f,
-                        (c0[3]+c1[3]+c2[3])/3f
+                (c0[0]+c1[0]+c2[0])/3f,
+                (c0[1]+c1[1]+c2[1])/3f,
+                (c0[2]+c1[2]+c2[2])/3f,
+                (c0[3]+c1[3]+c2[3])/3f
                     };
                 }
-                else if (texture != null)
+                // ✅ Priority 2: Texture (FIXED)
+                else if (texture != null && texcoords != null)
                 {
-                    // ⭐ DEBUG: sample center pixel
-                    var px = texture.GetPixel(texture.Width / 2, texture.Height / 2);
+                    var uv0 = texcoords[i0];
+                    var uv1 = texcoords[i1];
+                    var uv2 = texcoords[i2];
+
+                    // Average UV (simple approximation)
+                    float u = (uv0[0] + uv1[0] + uv2[0]) / 3f;
+                    float v = (uv0[1] + uv1[1] + uv2[1]) / 3f;
+
+                    // glTF: V is flipped
+                    v = 1.0f - v;
+
+                    int x = (int)(u * (texture.Width - 1));
+                    int y = (int)(v * (texture.Height - 1));
+
+                    // Clamp (safety)
+                    x = Math.Clamp(x, 0, texture.Width - 1);
+                    y = Math.Clamp(y, 0, texture.Height - 1);
+
+                    var px = texture.GetPixel(x, y);
 
                     color = new float[]
                     {
-                        px.R / 255f,
-                        px.G / 255f,
-                        px.B / 255f,
-                        px.A / 255f
+                px.R / 255f,
+                px.G / 255f,
+                px.B / 255f,
+                px.A / 255f
                     };
                 }
+                // ✅ Priority 3: Flat color
                 else
                 {
-                    color = flatColor ?? new float[] { 1, 1, 1, 1 };
+                    color = flatColor ?? DefaultColor;
                 }
 
                 model.AddTriangle(p1, p2, p3, normal, color);
             }
+        }
+        static float[][] ReadVec2Accessor(  int accessorIdx,
+                                            List<AccessorInfo> accessors,
+                                            List<BufferViewInfo> bufferViews,
+                                            List<byte[]?> buffers)
+        {
+            var acc = accessors[accessorIdx];
+
+            if (acc.Type != "VEC2")
+                throw new InvalidDataException($"Expected VEC2 accessor, got {acc.Type}.");
+
+            if (acc.ComponentType != 5126)
+                throw new NotSupportedException("Only FLOAT (5126) is supported for TEXCOORD_0.");
+
+            var (data, stride) = GetAccessorBytes(acc, bufferViews, buffers, 8);
+
+            var result = new float[acc.Count][];
+
+            for (int i = 0; i < acc.Count; i++)
+            {
+                int offset = acc.ByteOffset + i * stride;
+
+                float u = BitConverter.ToSingle(data, offset);
+                float v = BitConverter.ToSingle(data, offset + 4);
+
+                result[i] = new float[] { u, v };
+            }
+
+            return result;
         }
 
         // ========================= MATERIAL =========================
