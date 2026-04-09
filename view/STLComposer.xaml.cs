@@ -173,10 +173,9 @@ namespace View3D.view
             if (MainWindow.main == null) return;
 
             listObjects.SelectedItems.Clear();
-            models.Add(new PrintModel());
+            PrintModel newModel = new PrintModel();
             bool modelToLand    = true;
             var  modelIO        = new MeshIOWrapper();
-            int last            = models.Count - 1;   
             MainWindow.main.BusyWindow.EnableBusyWindow();
             _meshDataReady.Reset();
             // Offload heavy work to background thread — UI thread is free immediately
@@ -184,12 +183,10 @@ namespace View3D.view
             {
                 try
                 {
-                    modelIO.LoadWOCatch(file, models[last].Model);
+                    modelIO.LoadWOCatch(file, newModel.Model);
                 }
                 catch (Exception)
                 {
-                    models[models.Count - 1].Clear();
-                    models.RemoveAt(models.Count - 1);
                     MessageBox.Show("Error: " + Trans.T("M_LOAD_FILE_FAIL"));
                     return;
                 }
@@ -197,12 +194,12 @@ namespace View3D.view
                 // NOTES:
                 // 1. Model (TopoModel): Original STL file triangles data.
                 // 2. Mesh (Submesh): Centerized triangles data. 
-                models[last].ModelToMesh();
+                newModel.ModelToMesh();
 
                 // NOTES:
                 // 1. Auto position needs bounding box information.
                 // 2. Current bounding box is for orignal STL data. 
-                models[last].CopyTopoModelBoundingBoxToPrintModel();
+                newModel.CopyTopoModelBoundingBoxToPrintModel();
 
                 _meshDataReady.Set();
                 Console.WriteLine("LoadWOCatch Done.");
@@ -213,57 +210,55 @@ namespace View3D.view
                 _meshDataReady.Set();
                 return; 
             }
-            models[models.Count - 1].Name = Path.GetFileName(file);
+            newModel.Name = Path.GetFileName(file);
 
-            if (MainWindow.main.BusyWindow.killed || models[last].Model.triangles.Count == 0)
+            if (MainWindow.main.BusyWindow.killed || newModel.Model.triangles.Count == 0)
             {
-                models[models.Count - 1].Clear();
-                models.RemoveAt(models.Count - 1);
                 return;
             }
-            models[last].Position.z = (float)(models[last].BoundingBox.Size.z / 2);
+            newModel.Position.z = (float)(newModel.BoundingBox.Size.z / 2);
             if (modelToLand)
             {
                 // NOTE: Autoposition needs xMin and yMin data. Therefore, centering BoundingBox first to avoid some STL files with large xMin/yMin values being placed outside the printer bed.
-                models[last].BoundingBox.Centerized();
-                Autoposition();
+                newModel.BoundingBox.Centerized();
+                Autoposition(newModel);
             }
             else
             {
-                models[last].Position.x = (float)models[last].BoundingBox.Center.x;
-                models[last].Position.y = (float)models[last].BoundingBox.Center.y;
-                models[last].UpdateBoundingBoxAndMatrix();
+                newModel.Position.x = (float)newModel.BoundingBox.Center.x;
+                newModel.Position.y = (float)newModel.BoundingBox.Center.y;
+                newModel.UpdateBoundingBoxAndMatrix();
             }
             
-            double xxx = models[last].BoundingBox.Size.x * models[last].BoundingBox.Size.y * models[last].BoundingBox.Size.z * 0.001;
+            double xxx = newModel.BoundingBox.Size.x * newModel.BoundingBox.Size.y * newModel.BoundingBox.Size.z * 0.001;
 
             if (xxx < 0.1)  // the object is too small.
             {
                 var dlg = new ObjectResizeDialog(
-                    models[last].BoundingBox.Size.x,
-                    models[last].BoundingBox.Size.y,
-                    models[last].BoundingBox.Size.z);
+                    newModel.BoundingBox.Size.x,
+                    newModel.BoundingBox.Size.y,
+                    newModel.BoundingBox.Size.z);
                 if (MainWindow.main.Visibility == Visibility.Visible)
                     dlg.Owner = MainWindow.main;
                 dlg.ShowDialog();
-                if (dlg.gIsScale) DoAutoScale(models[last], dlg.newSizeMMx, dlg.newSizeMMy, dlg.newSizeMMz);
-                else if (dlg.gIsInch) DoMmToInch(models[last]);
+                if (dlg.gIsScale) DoAutoScale(newModel, dlg.newSizeMMx, dlg.newSizeMMy, dlg.newSizeMMz);
+                else if (dlg.gIsInch) DoMmToInch(newModel);
             }
-            else if (models[last].BoundingBox.Size.x - 1e-4 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth)  ||
-                     models[last].BoundingBox.Size.y - 1e-4 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth)  ||
-                     Math.Floor(models[last].BoundingBox.Size.z * 1000) / 1000 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight))  // the object is too big.
+            else if (newModel.BoundingBox.Size.x - 1e-4 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth)  ||
+                     newModel.BoundingBox.Size.y - 1e-4 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth)  ||
+                     Math.Floor(newModel.BoundingBox.Size.z * 1000) / 1000 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight))  // the object is too big.
             {
-                double tXBound = models[last].BoundingBox.Size.x / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth);
-                double tYBound = models[last].BoundingBox.Size.y / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth);
-                double tZBound = models[last].BoundingBox.Size.z / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight);
+                double tXBound = newModel.BoundingBox.Size.x / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth);
+                double tYBound = newModel.BoundingBox.Size.y / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth);
+                double tZBound = newModel.BoundingBox.Size.z / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight);
                 double tMax    = Math.Max(Math.Max(tXBound, tYBound), Math.Max(tYBound, tZBound));
                 float  scaleValue = 0;
 
-                if      (tMax == tXBound) scaleValue = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth)  / models[last].BoundingBox.Size.x) * 100;
-                else if (tMax == tYBound) scaleValue = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth)  / models[last].BoundingBox.Size.y) * 100;
-                else if (tMax == tZBound) scaleValue = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight) / models[last].BoundingBox.Size.z) * 100;
+                if      (tMax == tXBound) scaleValue = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth) / newModel.BoundingBox.Size.x) * 100;
+                else if (tMax == tYBound) scaleValue = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth) / newModel.BoundingBox.Size.y) * 100;
+                else if (tMax == tZBound) scaleValue = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight) / newModel.BoundingBox.Size.z) * 100;
 
-                var result = System.Windows.MessageBox.Show(
+                var result = MessageBox.Show(
                     Trans.T("M_OBJ_SCALE_DOWN") + " " + (int)scaleValue + "%",
                     Trans.T("W_OBJ_TOO_LARGE"),
                     MessageBoxButton.YesNo,
@@ -273,39 +268,44 @@ namespace View3D.view
                 {
                     try
                     {
-                        tXBound = models[last].BoundingBox.Size.x / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth);
-                        tYBound = models[last].BoundingBox.Size.y / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth);
-                        tZBound = models[last].BoundingBox.Size.z / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight);
+                        tXBound = newModel.BoundingBox.Size.x / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth);
+                        tYBound = newModel.BoundingBox.Size.y / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth);
+                        tZBound = newModel.BoundingBox.Size.z / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight);
                         tMax    = Math.Max(Math.Max(tXBound, tYBound), Math.Max(tYBound, tZBound));
 
                         if      (tMax == tXBound)
-                        { models[last].Scale.x = models[last].Scale.y = models[last].Scale.z = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth)  / models[last].BoundingBox.Size.x); }
+                        { newModel.Scale.x = newModel.Scale.y = newModel.Scale.z = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth) / newModel.BoundingBox.Size.x); }
                         else if (tMax == tYBound)
-                        { models[last].Scale.y = models[last].Scale.x = models[last].Scale.z = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth)  / models[last].BoundingBox.Size.y); }
+                        { newModel.Scale.y = newModel.Scale.x = newModel.Scale.z = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth) / newModel.BoundingBox.Size.y); }
                         else if (tMax == tZBound)
-                        { models[last].Scale.z = models[last].Scale.x = models[last].Scale.y = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight) / models[last].BoundingBox.Size.z); }
+                        { newModel.Scale.z = newModel.Scale.x = newModel.Scale.y = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight) / newModel.BoundingBox.Size.z); }
 
                         MainWindow.main.UI_move.button_land_Click(null, null);
-                        Autoposition();
+                        Autoposition(newModel);
                     }
                     catch { }
                 }
             }
 
             // Remember initial positions for all models after Autoposition.
-            for (int i = 0; i < models.Count; i++)
+            foreach (var m in models)
             {
-                models[i].Position.inix = models[i].Position.x;
-                models[i].Position.iniy = models[i].Position.y;
-                models[i].Position.iniz = models[i].Position.z;
+                m.Position.inix = m.Position.x;
+                m.Position.iniy = m.Position.y;
+                m.Position.iniz = m.Position.z;
             }
 
+            newModel.Position.inix = newModel.Position.x;
+            newModel.Position.iniy = newModel.Position.y;
+            newModel.Position.iniz = newModel.Position.z;
+
             // Added object to the list and updated the TextBox controls.
-            AddObject(models[last]);
+            AddObject(newModel);
 
             MainWindow.main.threeDControl.InvokeGL(() =>
             {
-                models[last].Drawer.Init();
+                newModel.Drawer.Init();
+                models.Add(newModel);
                 MainWindow.main.threeDControl.UpdateChanges();
             });
         }
@@ -316,21 +316,18 @@ namespace View3D.view
         private bool CloneObject(PrintModel model)
         {
             PrintModel newModel = (PrintModel)model.cloneWithModel();
-
-            newModel.UpdateBoundingBoxAndMatrix();
-            models.Add(newModel);
+            Autoposition(newModel);
 
             listObjects.Items.Add(BuildRow(newModel));
             listObjects.SelectedItems.Clear();
             SetObjectSelected(newModel, true);
-            Autoposition();
             UpdateOutOfBound();
 
             MainWindow.main.threeDControl.InvokeGL(() =>
             {
                 newModel.Drawer.Init();
+                models.Add(newModel);
             });
-
             return true;
         }
 
@@ -489,11 +486,17 @@ namespace View3D.view
         // =====================================================================
         //  Autoposition
         // =====================================================================
-        public bool Autoposition()
+        bool Autoposition(PrintModel newModel)
         {
-            if (models.Count == 1)
+            List<PrintModel> allModels = new List<PrintModel>();
+            foreach (var m in models)
+                allModels.Add(m);
+
+            allModels.Add(newModel);
+
+            if (allModels.Count == 1)
             {
-                var model = models[0];
+                var model = allModels[0];
                 float x = MainWindow.main.threeDSettings.PrintAreaWidth / 2;
                 float y = MainWindow.main.threeDSettings.PrintAreaDepth / 2;
 
@@ -511,7 +514,7 @@ namespace View3D.view
             outPacker.SetPlatformSize(maxW, maxH);
             bool autosizeFailed = false;
 
-            foreach (var stl in models)
+            foreach (var stl in allModels)
             {
                 if (typeof(PrintModel) != stl.GetType()) continue;
                 int w = 2 * border + (int)Math.Ceiling(stl.xMax - stl.xMin);

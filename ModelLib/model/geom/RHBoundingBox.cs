@@ -6,6 +6,13 @@
         public RHVector3 minPoint = null;
         public RHVector3 maxPoint = null;
 
+        public void CopyTo(RHBoundingBox box)
+        {
+            if (box == null) return;
+            box.minPoint = new RHVector3(minPoint);
+            box.maxPoint = new RHVector3(maxPoint);
+        }
+
         public TopoTriangle[] getBoundingTri()
         {
             TopoTriangle[] triangles = new TopoTriangle[12];

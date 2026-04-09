@@ -477,11 +477,8 @@ namespace View3D.view
 
                 redBorderDraw.Draw();
 
-                if (STLComposer._meshDataReady.Wait(0))
-                {
-                    foreach (var m in stlComp.models)
-                        m.Drawer.Draw();
-                }
+                foreach (var m in stlComp.models)
+                    m.Drawer.Draw();
 
                 SwapBuffers();
 

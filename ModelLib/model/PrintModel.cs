@@ -38,6 +38,7 @@ namespace OpenGL3DViewerNET10.ModelLib.model
             PrintModel stl = new PrintModel();
             Model.CopyTo(stl.Model);   // NOTE: Just clone Model is enough. Drawer/BoundingBox do not need to clone.
             Mesh.CopyTo(stl.Mesh);
+            BoundingBox.CopyTo(stl.BoundingBox);
             stl.Name = Name;
             stl.Position.x = Position.x;
             stl.Position.y = Position.y;
