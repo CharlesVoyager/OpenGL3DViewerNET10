@@ -926,7 +926,12 @@ namespace View3D.view
                 }
                 stl.Scale.x = (float)(newSizeMMx / ui.bboxnow);
                 stl.Scale.y = (float)(newSizeMMy / ui.bboynow);
-                stl.Scale.z = (float)(newSizeMMz / ui.bboznow);
+
+                if (ui.bboznow == 0)
+                    stl.Scale.z = 1;    // Consider the model is 2D without z hight.
+                else
+                    stl.Scale.z = (float)(newSizeMMz / ui.bboznow);
+
                 stl.UpdateBoundingBoxAndMatrix();
                 stl.Land();
                 UpdateOutOfBound();
@@ -970,7 +975,12 @@ namespace View3D.view
                 ui.gIsShow = false;
                 stl.Scale.x = (float)(tempX / ui.bboxnow);
                 stl.Scale.y = (float)(tempY / ui.bboynow);
-                stl.Scale.z = (float)(tempZ / ui.bboznow);
+
+                if (ui.bboznow == 0)
+                    stl.Scale.z = 1;    // Consider the model is 2D without z hight.
+                else
+                    stl.Scale.z = (float)(tempZ / ui.bboznow);
+
                 stl.UpdateBoundingBoxAndMatrix();
                 stl.Land();
                 UpdateOutOfBound();
