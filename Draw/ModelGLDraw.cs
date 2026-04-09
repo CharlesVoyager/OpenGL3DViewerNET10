@@ -93,25 +93,25 @@ uniform int  useVertexColor; // 1 = sample VertexColor, 0 = use objectColor
 // Key light: upper-front-left
 const vec3 keyDir   = normalize(vec3(-0.6,  1.0,  0.8));
 const vec3 keyColor = vec3(1.00, 0.98, 0.95);   // warm white
-const float keyStr  = 0.75;
+const float keyStr  = 0.35;
 
 // Fill light: lower-front-right (softer, slightly cool)
 const vec3 fillDir   = normalize(vec3( 0.8,  0.3,  0.5));
 const vec3 fillColor = vec3(0.80, 0.88, 1.00);  // cool tint
-const float fillStr  = 0.35;
+const float fillStr  = 0.25;
 
 // Back / rim light: from behind-below (adds depth separation)
 const vec3 backDir   = normalize(vec3( 0.1, -0.5, -1.0));
 const vec3 backColor = vec3(0.90, 0.92, 1.00);
-const float backStr  = 0.25;
+const float backStr  = 0.18;
 
 // ---- Hemisphere ambient ----
 const vec3 skyColor    = vec3(0.60, 0.70, 0.90);   // soft blue sky
 const vec3 groundColor = vec3(0.25, 0.20, 0.18);   // warm brown ground
-const float ambientStr = 0.30;
+const float ambientStr = 0.22;
 
 // ---- Specular ----
-const float specularStr = 0.10;
+const float specularStr = 0.06;
 const float shininess   = 64.0;
 
 // Compute a single Blinn-Phong directional light contribution.

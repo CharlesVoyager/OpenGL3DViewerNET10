@@ -2,7 +2,7 @@
   "profiles": {
     "OpenGL3DViewerNET10": {
       "commandName": "Project",
-      "commandLineArgs": "..\\..\\..\\..\\Stl\\rectangle.glb\r\n..\\..\\..\\..\\Stl\\10_10_10.st\r\n..\\..\\..\\..\\Stl\\colored_cube_100m.gl"
+      "commandLineArgs": "..\\..\\..\\..\\Stl\\bowser.stl\r\n..\\..\\..\\..\\Stl\\colored_cube_100m.gl"
     }
   }
 }
