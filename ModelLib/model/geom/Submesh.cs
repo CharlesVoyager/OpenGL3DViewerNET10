@@ -7,18 +7,18 @@ namespace View3D.model.geom
     {
         public bool selected = false;
 
-        // [x y z nx ny nz]
-        public float[] glVertices = null;
-
+        public float[] glVertices = null; // [x y z]
+        public float[] glNormals = null;  // [nx ny nz]
         public float[] glColors = null;
 
         int idxVertices = 0;
+        int idxNormals = 0;
         int idxColors = 0;
 
         public void EnsureCapacity(int triCount, bool hasColor)
         {
-            glVertices = new float[triCount * 6 * 3];   // 6 = 3 for vertex + 3 for normal, every vertex has 3 floats.
-
+            glVertices = new float[triCount * 3 * 3];  // Triangle has 3 vertices, every vertex has 3 floats for position.
+            glNormals = new float[triCount * 3 * 3];   // Triangle has 3 vertices, every vertex has 3 floats for normal.
             if (hasColor)
                 glColors = new float[triCount * 3 * 3]; // a triangle has 3 vertices, every vertex has 3 floats for color.
         }
@@ -26,7 +26,7 @@ namespace View3D.model.geom
         public void Clear()
         {
             glVertices = null;
-
+            glNormals = null;
             glColors = null;
         }
 
@@ -42,40 +42,41 @@ namespace View3D.model.geom
             }
         }
 
-
         public void AddTriangle(RHVector3 v1, RHVector3 v2, RHVector3 v3, RHVector3 n, float[] color)
         {
-            if (idxVertices + 18 > glVertices.Length)
-            {
-                throw new Exception("Too many triangles added to submesh");
-            }
+            if (idxVertices + 9 > glVertices.Length)
+                throw new Exception("Too many triangles added to submesh vertices.");
+
+            if (idxNormals + 9 > glNormals.Length)
+                throw new Exception("Too many triangles added to submesh normals.");
+
             glVertices[idxVertices++] = (float)v1.x;
             glVertices[idxVertices++] = (float)v1.y;
             glVertices[idxVertices++] = (float)v1.z;
 
-            glVertices[idxVertices++] = (float)n.x;
-            glVertices[idxVertices++] = (float)n.y;
-            glVertices[idxVertices++] = (float)n.z;
+            glNormals[idxNormals++] = (float)n.x;
+            glNormals[idxNormals++] = (float)n.y;
+            glNormals[idxNormals++] = (float)n.z;
 
             glVertices[idxVertices++] = (float)v2.x;
             glVertices[idxVertices++] = (float)v2.y;
             glVertices[idxVertices++] = (float)v2.z;
 
-            glVertices[idxVertices++] = (float)n.x;
-            glVertices[idxVertices++] = (float)n.y;
-            glVertices[idxVertices++] = (float)n.z;
+            glNormals[idxNormals++] = (float)n.x;
+            glNormals[idxNormals++] = (float)n.y;
+            glNormals[idxNormals++] = (float)n.z;
 
             glVertices[idxVertices++] = (float)v3.x;
             glVertices[idxVertices++] = (float)v3.y;
             glVertices[idxVertices++] = (float)v3.z;
 
-            glVertices[idxVertices++] = (float)n.x;
-            glVertices[idxVertices++] = (float)n.y;
-            glVertices[idxVertices++] = (float)n.z;
+            glNormals[idxNormals++] = (float)n.x;
+            glNormals[idxNormals++] = (float)n.y;
+            glNormals[idxNormals++] = (float)n.z;
 
             if (color != null)
             {
-                if (idxColors + 3 > glColors.Length)
+                if (idxColors + 9 > glColors.Length)
                 {
                     throw new Exception("Too many triangles added to submesh");
                 }

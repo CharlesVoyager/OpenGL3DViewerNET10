@@ -27,6 +27,7 @@ Render Loop (OpenGL draw calls)
         int shader;
         int vao;
         int vbo;
+        int normalVbo;                       // Separate VBO for normals (layout location 1)    
         int colorVbo;                        // Separate VBO for per-vertex colors from glColors
         int modelLoc, viewLoc, projLoc;
 
@@ -183,11 +184,10 @@ void main()
         private void uploadMeshToGPU()
         {
             vao = GL.GenVertexArray();
-            vbo = GL.GenBuffer();
-
             GL.BindVertexArray(vao);
 
-            // --- VBO 0: positions + normals (layout location 0 and 1) ---
+            // --- VBO 0: positions (layout location 0 ---
+            vbo = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
             GL.BufferData(
                 BufferTarget.ArrayBuffer,
@@ -195,15 +195,24 @@ void main()
                 printModel.Mesh.glVertices,
                 BufferUsageHint.StaticDraw);
 
-            // aPosition: location 0, 3 floats, stride 6 floats, offset 0
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
+            // aPosition: location 0, 3 floats, stride 3 floats, offset 0
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
 
-            // aNormal: location 1, 3 floats, stride 6 floats, offset 3 floats
-            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
+            // --- VBO 1: normals ---
+            normalVbo = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, normalVbo);
+            GL.BufferData(
+             BufferTarget.ArrayBuffer,
+             printModel.Mesh.glNormals.Length * sizeof(float),
+             printModel.Mesh.glNormals,
+             BufferUsageHint.StaticDraw);
+
+            // aNormal: location 1, 3 floats, stride 3 floats, offset 0
+            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.EnableVertexAttribArray(1);
 
-            // --- VBO 1: per-vertex colors from glColors (layout location 2) ---
+            // --- VBO 2: per-vertex colors from glColors (layout location 2) ---
             // glColors is expected to be RGB floats: 3 floats per vertex, tightly packed.
             // If glColors is null or empty we still bind a VBO but leave it empty;
             // the useVertexColor uniform will be 0, so the GPU never reads it.
@@ -212,7 +221,6 @@ void main()
             {
                 colorVbo = GL.GenBuffer();
                 GL.BindBuffer(BufferTarget.ArrayBuffer, colorVbo);
-
                 GL.BufferData(
                     BufferTarget.ArrayBuffer,
                     printModel.Mesh.glColors.Length * sizeof(float),
@@ -291,7 +299,7 @@ void main()
 
             GL.UniformMatrix4(modelLoc, false, ref printModel.trans);
             GL.BindVertexArray(vao);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, printModel.Mesh.glVertices.Length / 6);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, printModel.Mesh.glVertices.Length / 3);
         }
 
         // ModelColor is still used as the base surface colour (e.g., the STL grey).
@@ -310,6 +318,7 @@ void main()
         {
             GL.DeleteVertexArray(vao);
             GL.DeleteBuffer(vbo);
+            GL.DeleteBuffer(normalVbo);
             GL.DeleteBuffer(colorVbo);
             GL.DeleteProgram(shader);
         }
