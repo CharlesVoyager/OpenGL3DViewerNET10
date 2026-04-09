@@ -411,6 +411,7 @@ void main()
             GL.DeleteBuffer(vbo);
             GL.DeleteBuffer(normalVbo);
             GL.DeleteBuffer(colorVbo);
+            GL.DeleteBuffer(texCoordVbo);
             GL.DeleteProgram(shader);
         }
     }
