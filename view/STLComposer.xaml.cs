@@ -230,7 +230,7 @@ namespace View3D.view
                 newModel.UpdateBoundingBoxAndMatrix();
             }
             
-            double xxx = newModel.BoundingBox.Size.x * newModel.BoundingBox.Size.y * newModel.BoundingBox.Size.z * 0.001;
+            double xxx = newModel.BoundingBox.Size.x * newModel.BoundingBox.Size.y * 0.001; // Don't use z size here because some STL files may have very small z size but large x/y size, and they should not be considered as "too small".
 
             if (xxx < 0.1)  // the object is too small.
             {
