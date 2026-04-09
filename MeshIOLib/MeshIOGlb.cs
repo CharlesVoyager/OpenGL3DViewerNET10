@@ -180,6 +180,9 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                         }
                     }
 
+                    if (textureBitmap != null)
+                        model.textures.Add(textureBitmap);
+
                     AddPrimitiveToModel(
                      positions,
                      indices,
@@ -234,11 +237,12 @@ namespace OpenGL3DViewerNET10.MeshIOLib
 
                     color = new float[]
                     {
-                (c0[0]+c1[0]+c2[0])/3f,
-                (c0[1]+c1[1]+c2[1])/3f,
-                (c0[2]+c1[2]+c2[2])/3f,
-                (c0[3]+c1[3]+c2[3])/3f
+                        (c0[0]+c1[0]+c2[0])/3f,
+                        (c0[1]+c1[1]+c2[1])/3f,
+                        (c0[2]+c1[2]+c2[2])/3f,
+                        (c0[3]+c1[3]+c2[3])/3f
                     };
+                    model.AddTriangle(p1, p2, p3, normal, color);
                 }
                 // ✅ Priority 2: Texture (FIXED)
                 else if (texture != null && texcoords != null)
@@ -270,14 +274,16 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                         px.B / 255f,
                         px.A / 255f
                     };
+
+                    //model.AddTriangle(p1, p2, p3, normal, color);
+                    model.AddTriangle(p1, p2, p3, normal, uv0, uv1, uv2);
                 }
                 // ✅ Priority 3: Flat color
                 else
                 {
                     color = flatColor ?? DefaultColor;
+                    model.AddTriangle(p1, p2, p3, normal, color);
                 }
-
-                model.AddTriangle(p1, p2, p3, normal, color);
             }
         }
         static float[][] ReadVec2Accessor(  int accessorIdx,

@@ -1,4 +1,5 @@
 ﻿using OpenTK.Mathematics;
+using System.Drawing;
 
 namespace View3D.model.geom
 {
@@ -9,10 +10,12 @@ namespace View3D.model.geom
 
         public RHBoundingBox boundingBox = new RHBoundingBox();
 
+        public List<Bitmap> textures = new List<Bitmap>();
+        public List<float> texCoords = new List<float>();  // 2 floats per vertex (u, v)
+
         public void Clear()
         {
             triangles.Clear();
-
             boundingBox.Clear();
         }
         
@@ -50,6 +53,28 @@ namespace View3D.model.geom
             boundingBox.Add(p1);
             boundingBox.Add(p2);
             boundingBox.Add(p3);
+        }
+
+        public void AddTriangle(RHVector3 p1, RHVector3 p2, RHVector3 p3, RHVector3 normal, float[] uv0, float[] uv1, float[] uv2)
+        {
+            TopoVertex v1 = new TopoVertex(p1);
+            TopoVertex v2 = new TopoVertex(p2);
+            TopoVertex v3 = new TopoVertex(p3);
+
+            triangles.Add(new TopoTriangle(v1, v2, v3, normal));
+            boundingBox.Add(p1);
+            boundingBox.Add(p2);
+            boundingBox.Add(p3);
+
+            if (uv0 != null && uv1 != null && uv2 !=null)
+            {
+                texCoords.Add(uv0[0]);
+                texCoords.Add(uv0[1]);
+                texCoords.Add(uv1[0]);
+                texCoords.Add(uv1[1]);
+                texCoords.Add(uv2[0]);
+                texCoords.Add(uv2[1]);
+            }
         }
 
 

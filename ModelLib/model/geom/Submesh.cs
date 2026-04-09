@@ -11,9 +11,6 @@ namespace View3D.model.geom
         public float[] glNormals = null;  // [nx ny nz]
         public float[] glColors = null;
 
-        public float[] glTexCoords = null;  // 2 floats per vertex (u, v)
-        public int textureId;               // OpenGL texture handle
-
         int idxVertices = 0;
         int idxNormals = 0;
         int idxColors = 0;

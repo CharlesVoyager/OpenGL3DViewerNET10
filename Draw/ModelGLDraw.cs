@@ -35,6 +35,7 @@ Render Loop (OpenGL draw calls)
         int texCoordVbo;
         int textureLoc;
         int useTextureLoc;
+        int textureId = 0;
 
         // Lighting / material uniforms
         int viewPosLoc;
@@ -261,19 +262,21 @@ void main()
                 GL.EnableVertexAttribArray(2);
             }
 
-            bool hasUV = printModel.Mesh.glTexCoords != null && printModel.Mesh.glTexCoords.Length > 0;
+            bool hasUV = printModel.Model.texCoords.Count > 0;
             if (hasUV)
             {
                 texCoordVbo = GL.GenBuffer();
                 GL.BindBuffer(BufferTarget.ArrayBuffer, texCoordVbo);
                 GL.BufferData(
                     BufferTarget.ArrayBuffer,
-                    printModel.Mesh.glTexCoords.Length * sizeof(float),
-                    printModel.Mesh.glTexCoords,
+                    printModel.Model.texCoords.ToArray().Length * sizeof(float),
+                    printModel.Model.texCoords.ToArray(),
                     BufferUsageHint.StaticDraw);
 
                 GL.VertexAttribPointer(3, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
                 GL.EnableVertexAttribArray(3);
+
+                textureId = LoadTexture(printModel.Model.textures[0]);
             }
 
             GL.BindVertexArray(0);
@@ -343,12 +346,12 @@ void main()
             GL.Uniform1(useVertexColorLoc, hasColors ? 1 : 0);
 
             // Bind Texture in Draw()
-            bool hasTexture = printModel.Mesh.textureId != 0;
+            bool hasTexture = textureId != 0;
             GL.Uniform1(useTextureLoc, hasTexture ? 1 : 0);
             if (hasTexture)
             {
                 GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(TextureTarget.Texture2D, printModel.Mesh.textureId);
+                GL.BindTexture(TextureTarget.Texture2D, textureId);
                 GL.Uniform1(textureLoc, 0);
             }
             // <>
