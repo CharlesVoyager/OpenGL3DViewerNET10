@@ -35,6 +35,9 @@ namespace View3D.model.geom
             newMesh.glVertices = new float[glVertices.Length];
             Array.Copy(glVertices, newMesh.glVertices, glVertices.Length);
 
+            newMesh.glNormals = new float[glNormals.Length];
+            Array.Copy(glNormals, newMesh.glNormals, glNormals.Length);
+
             if (glColors != null)
             {
                 newMesh.glColors = new float[glColors.Length];
