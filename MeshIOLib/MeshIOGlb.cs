@@ -265,10 +265,10 @@ namespace OpenGL3DViewerNET10.MeshIOLib
 
                     color = new float[]
                     {
-                px.R / 255f,
-                px.G / 255f,
-                px.B / 255f,
-                px.A / 255f
+                        px.R / 255f,
+                        px.G / 255f,
+                        px.B / 255f,
+                        px.A / 255f
                     };
                 }
                 // ✅ Priority 3: Flat color
