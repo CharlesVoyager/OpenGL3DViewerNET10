@@ -17,10 +17,10 @@ namespace View3D.model.geom
 
         public void EnsureCapacity(int triCount, bool hasColor)
         {
-            glVertices = new float[triCount * 3 * 6];
-            
+            glVertices = new float[triCount * 6 * 3];   // 6 = 3 for vertex + 3 for normal, every vertex has 3 floats.
+
             if (hasColor)
-                glColors = new float[triCount * 3];
+                glColors = new float[triCount * 3 * 3]; // a triangle has 3 vertices, every vertex has 3 floats for color.
         }
 
         public void Clear()
@@ -79,6 +79,14 @@ namespace View3D.model.geom
                 {
                     throw new Exception("Too many triangles added to submesh");
                 }
+
+                glColors[idxColors++] = color[0];
+                glColors[idxColors++] = color[1];
+                glColors[idxColors++] = color[2];
+
+                glColors[idxColors++] = color[0];
+                glColors[idxColors++] = color[1];
+                glColors[idxColors++] = color[2];
 
                 glColors[idxColors++] = color[0];
                 glColors[idxColors++] = color[1];
