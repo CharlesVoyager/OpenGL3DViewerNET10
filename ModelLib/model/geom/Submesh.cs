@@ -11,16 +11,19 @@ namespace View3D.model.geom
         public float[] glNormals = null;  // [nx ny nz]
         public float[] glColors = null;
 
+        public float[] glTexCoords = null;  // 2 floats per vertex (u, v)
+        public int textureId;               // OpenGL texture handle
+
         int idxVertices = 0;
         int idxNormals = 0;
         int idxColors = 0;
 
         public void EnsureCapacity(int triCount, bool hasColor)
         {
-            glVertices = new float[triCount * 3 * 3];  // Triangle has 3 vertices, every vertex has 3 floats for position.
-            glNormals = new float[triCount * 3 * 3];   // Triangle has 3 vertices, every vertex has 3 floats for normal.
+            glVertices = new float[triCount * 3 * 3];   // Triangle has 3 vertices, every vertex has 3 floats for position.
+            glNormals = new float[triCount * 3 * 3];    // Triangle has 3 vertices, every vertex has 3 floats for normal.
             if (hasColor)
-                glColors = new float[triCount * 3 * 3]; // a triangle has 3 vertices, every vertex has 3 floats for color.
+                glColors = new float[triCount * 3 * 3]; // Triangle has 3 vertices, every vertex has 3 floats for color.
         }
 
         public void Clear()

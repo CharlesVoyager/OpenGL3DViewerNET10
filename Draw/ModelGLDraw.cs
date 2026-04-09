@@ -1,6 +1,7 @@
 using OpenGL3DViewerNET10.ModelLib.model;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using System.Drawing;
 using View3D;
 
 namespace OpenGL3DViewerNET10.Draw
@@ -31,6 +32,10 @@ Render Loop (OpenGL draw calls)
         int colorVbo;                        // Separate VBO for per-vertex colors from glColors
         int modelLoc, viewLoc, projLoc;
 
+        int texCoordVbo;
+        int textureLoc;
+        int useTextureLoc;
+
         // Lighting / material uniforms
         int viewPosLoc;
         int objectColorLoc;
@@ -46,6 +51,7 @@ Render Loop (OpenGL draw calls)
 layout(location=0) in vec3 aPosition;
 layout(location=1) in vec3 aNormal;
 layout(location=2) in vec3 aColor;      // Per-vertex color from glColors
+layout(location=3) in vec2 aTexCoord;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -55,6 +61,7 @@ uniform mat3 normalMatrix;
 out vec3 FragPos;       // world-space position
 out vec3 Normal;        // world-space normal (already transformed)
 out vec3 VertexColor;   // passed through to fragment shader
+out vec2 TexCoord;
 
 void main()
 {
@@ -62,6 +69,7 @@ void main()
     FragPos       = worldPos.xyz;
     Normal        = normalize(normalMatrix * aNormal);
     VertexColor   = aColor;
+    TexCoord      = aTexCoord; 
     gl_Position   = projection * view * worldPos;
 }
 ";
@@ -87,6 +95,12 @@ out vec4 FragColor;
 uniform vec3 viewPos;       // camera world position
 uniform vec3 objectColor;   // fallback color when no per-vertex colors
 uniform int  useVertexColor; // 1 = sample VertexColor, 0 = use objectColor
+
+uniform sampler2D baseColorTexture;
+uniform int useTexture;
+
+in vec2 TexCoord;
+
 
 // ---- Three-point studio rig (fixed, viewer-space directions) ----
 // Directions are given in world space.
@@ -132,8 +146,20 @@ void main()
     // Flip normal for back faces so lighting works on both sides.
     vec3 norm = gl_FrontFacing ? normalize(Normal) : -normalize(Normal);
 
-    // Base material color
-    vec3 baseColor = (useVertexColor == 1) ? VertexColor : objectColor;
+    
+    vec3 baseColor;
+    if (useTexture == 1)
+    {
+        baseColor = texture(baseColorTexture, TexCoord).rgb;
+    }
+    else if (useVertexColor == 1)
+    {
+        baseColor = VertexColor;
+    }
+    else
+    {
+        baseColor = objectColor;
+    }
 
     // Slight tint for back faces
     vec3 matColor = gl_FrontFacing ? baseColor : baseColor * vec3(0.60, 0.70, 0.80);
@@ -179,6 +205,9 @@ void main()
             viewPosLoc       = GL.GetUniformLocation(shader, "viewPos");
             objectColorLoc   = GL.GetUniformLocation(shader, "objectColor");
             useVertexColorLoc = GL.GetUniformLocation(shader, "useVertexColor");
+
+            textureLoc = GL.GetUniformLocation(shader, "baseColorTexture");
+            useTextureLoc = GL.GetUniformLocation(shader, "useTexture");
         }
 
         private void uploadMeshToGPU()
@@ -231,6 +260,22 @@ void main()
                 GL.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
                 GL.EnableVertexAttribArray(2);
             }
+
+            bool hasUV = printModel.Mesh.glTexCoords != null && printModel.Mesh.glTexCoords.Length > 0;
+            if (hasUV)
+            {
+                texCoordVbo = GL.GenBuffer();
+                GL.BindBuffer(BufferTarget.ArrayBuffer, texCoordVbo);
+                GL.BufferData(
+                    BufferTarget.ArrayBuffer,
+                    printModel.Mesh.glTexCoords.Length * sizeof(float),
+                    printModel.Mesh.glTexCoords,
+                    BufferUsageHint.StaticDraw);
+
+                GL.VertexAttribPointer(3, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
+                GL.EnableVertexAttribArray(3);
+            }
+
             GL.BindVertexArray(0);
         }
 
@@ -297,6 +342,17 @@ void main()
             bool hasColors = printModel.Mesh.glColors != null && printModel.Mesh.glColors.Length > 0;
             GL.Uniform1(useVertexColorLoc, hasColors ? 1 : 0);
 
+            // Bind Texture in Draw()
+            bool hasTexture = printModel.Mesh.textureId != 0;
+            GL.Uniform1(useTextureLoc, hasTexture ? 1 : 0);
+            if (hasTexture)
+            {
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.Texture2D, printModel.Mesh.textureId);
+                GL.Uniform1(textureLoc, 0);
+            }
+            // <>
+
             GL.UniformMatrix4(modelLoc, false, ref printModel.trans);
             GL.BindVertexArray(vao);
             GL.DrawArrays(PrimitiveType.Triangles, 0, printModel.Mesh.glVertices.Length / 3);
@@ -312,6 +368,37 @@ void main()
                 float[] colors = MainWindow.main.threeDSettings.ModelColor();
                 return new Vector3(colors[0], colors[1], colors[2]);
             }
+        }
+
+        int LoadTexture(Bitmap bitmap)
+        {
+            int tex = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2D, tex);
+
+            var data = bitmap.LockBits(
+                new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                System.Drawing.Imaging.ImageLockMode.ReadOnly,
+                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+            GL.TexImage2D(
+                TextureTarget.Texture2D,
+                0,
+                PixelInternalFormat.Rgba,
+                bitmap.Width,
+                bitmap.Height,
+                0,
+                PixelFormat.Bgra,
+                PixelType.UnsignedByte,
+                data.Scan0);
+
+            bitmap.UnlockBits(data);
+
+            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+
+            return tex;
         }
 
         public void Dispose()
