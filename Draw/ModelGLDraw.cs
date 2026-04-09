@@ -276,7 +276,8 @@ void main()
                 GL.VertexAttribPointer(3, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
                 GL.EnableVertexAttribArray(3);
 
-                textureId = LoadTexture(printModel.Model.textures[0]);
+                if (printModel.Model.textures.Count > 0)
+                    textureId = LoadTexture(printModel.Model.textures[0]);
             }
 
             GL.BindVertexArray(0);
