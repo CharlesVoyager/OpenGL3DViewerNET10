@@ -176,18 +176,9 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                 count++;
                 if (count % 5000 == 0)
                 {
-                    //TODO: check 2 stage loading
-                    ////if (MainWindow.main.threedview.ui.BusyWindow.Visibility == System.Windows.Visibility.Visible &&
-                    ////    MainWindow.main.threedview.ui.BusyWindow.increment != 0.0)
-                    ////{
-                    ////    MainWindow.main.threedview.ui.BusyWindow.busyProgressbar.Value =
-                    ////    ((double)count / model.triangles.Count) * (100.0 - MainWindow.main.threedview.ui.BusyWindow.firstStagePercent) + MainWindow.main.threedview.ui.BusyWindow.firstStagePercent;
-                    ////    Application.DoEvents();
-                    ////}
                     if (updateRate != null)
                         updateRate( (int)(((double)count / model.triangles.Count) * 100.0) );
-                    ////if (model.IsActionStopped()) return;
-                    ////if (MainWindow.main.threedview.ui.BusyWindow.killed) return;
+
                     if (Command == COMMAND.Abort)
                     {
                         Command = COMMAND.None;
@@ -490,15 +481,11 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                 {
                     for (int i = 0; i < nTri; i++)
                     {
-                        //--- MODEL_SLA	// milton
                         if (i > 0 && i % 4000 == 0)
                         {
-                            ////MainWindow.main.threedview.ui.BusyWindow.busyProgressbar.Value = ((double)i / nTri) * 100.0;
-                            ////Application.DoEvents();
                             if (updateRate != null)
                                 updateRate((int)(((double)i / nTri) * 100.0));
-                            ////if (model.IsActionStopped()) return;
-                            ////if (MainWindow.main.threedview.ui.BusyWindow.killed) return;
+
                             if (Command == COMMAND.Abort)
                             {
                                 Command = COMMAND.None;
@@ -506,22 +493,17 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                                 return;
                             }
                         }
-                        //---
 
-                        //timer.Start();
                         RHVector3 normal = new RHVector3(r.ReadSingle(), r.ReadSingle(), r.ReadSingle());
                         RHVector3 p1 = new RHVector3(r.ReadSingle(), r.ReadSingle(), r.ReadSingle());
                         RHVector3 p2 = new RHVector3(r.ReadSingle(), r.ReadSingle(), r.ReadSingle());
                         RHVector3 p3 = new RHVector3(r.ReadSingle(), r.ReadSingle(), r.ReadSingle());
                         normal.NormalizeSafe();
                         model.AddTriangle(p1, p2, p3, normal);
-                        //timer.Stop();
                         r.ReadUInt16();
                     }
                     r.Close();
                     f.Close();
-                    //showTime("addTriangle(p1, p2, p3, normal)");
-                    //stopWatch.Reset();
                 }
             }
             catch
@@ -551,15 +533,6 @@ namespace OpenGL3DViewerNET10.MeshIOLib
             {
                 for (int i = 0; i < nTri; i++)
                 {
-                    ////if (i>0 && i % 4000 == 0)
-                    ////{
-                    ////    MainWindow.main.threedview.ui.BusyWindow.busyProgressbar.Value = ((double)i / nTri) * 100.0;
-                    ////    Application.DoEvents();
-                    ////    ////if(model.IsActionStopped()) return;
-                    ////    if (MainWindow.main.threedview.ui.BusyWindow.killed) return;
-                    ////}
-                    //timer.Start();
-                    
                     if (Command == COMMAND.Abort)
                     {
                         Command = COMMAND.None;

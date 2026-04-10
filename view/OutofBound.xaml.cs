@@ -4,7 +4,7 @@ using System.Windows.Controls;
 namespace View3D.view
 {
     /// <summary>
-    /// Interaction logic for BusyWindow.xaml
+    /// Interaction logic for OutofBound.xaml
     /// </summary>
     public partial class OutofBound : System.Windows.Controls.UserControl
     {
