@@ -176,11 +176,11 @@ namespace OpenGL3DViewerNET10.Draw
             uniform vec4  baseColorFactor;
 
             // --- Three-point studio rig ---
-            const vec3  keyDir   = normalize(vec3(-0.6,  1.0,  0.8));
+            const vec3  keyDir   = normalize(vec3(-0.6, 1.0, 0.8));
             const vec3  keyColor = vec3(1.00, 0.98, 0.95);
             const float keyStr   = 1.8;
 
-            const vec3  fillDir   = normalize(vec3( 0.8,  0.3,  0.5));
+            const vec3  fillDir   = normalize(vec3( 0.8, 0.3, 0.5));
             const vec3  fillColor = vec3(0.80, 0.88, 1.00);
             const float fillStr   = 1.2;
 
