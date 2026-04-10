@@ -416,7 +416,7 @@ namespace View3D.view
                 if (MainWindow.main.Visibility == Visibility.Visible)
                     dlg.Owner = MainWindow.main;
                 dlg.ShowDialog();
-                if (dlg.gIsScale) DoAutoScale(model, dlg.newSizeMMx, dlg.newSizeMMy, dlg.newSizeMMz);
+                if (dlg.gIsScale) DoAutoScale(model);
                 else if (dlg.gIsInch) DoMmToInch(model);
             }
         }
@@ -908,46 +908,6 @@ namespace View3D.view
                                    Trans.T("M_RESIZE_SCALE_UP_TITLE"),
                                    MessageBoxButton.YesNo,
                                    MessageBoxImage.Warning) == MessageBoxResult.Yes;
-        }
-
-        public void DoAutoScale(PrintModel stl, double newSizeMMx, double newSizeMMy, double newSizeMMz)
-        {
-            try
-            {
-                var ui = MainWindow.main.UI_resize_advance;
-                var bbox = stl.BoundingBox;
-                ui.chk_Uniform.IsChecked = true;
-                ui.bboxnow = bbox.Size.x / stl.Scale.x;
-                ui.bboynow = bbox.Size.y / stl.Scale.y;
-                ui.bboznow = bbox.Size.z / stl.Scale.z;
-
-                string tDecision =
-                    (stl.BoundingBox.Size.x >= stl.BoundingBox.Size.y && stl.BoundingBox.Size.x >= stl.BoundingBox.Size.z) ? "x" :
-                    (stl.BoundingBox.Size.y >= stl.BoundingBox.Size.x && stl.BoundingBox.Size.y >= stl.BoundingBox.Size.z) ? "y" : "z";
-
-                ui.button_mmtoinch.IsEnabled = true;
-                ui.button_inchtomm.IsEnabled = false;
-
-                switch (tDecision)
-                {
-                    case "x": ui.dimX = newSizeMMx; ui.updateTxt(); break;
-                    case "y": ui.dimY = newSizeMMy; ui.updateTxt(); break;
-                    case "z": ui.dimZ = newSizeMMz; ui.updateTxt(); break;
-                }
-                stl.Scale.x = (float)(newSizeMMx / ui.bboxnow);
-                stl.Scale.y = (float)(newSizeMMy / ui.bboynow);
-
-                if (ui.bboznow == 0)
-                    stl.Scale.z = 1;    // Consider the model is 2D without z hight.
-                else
-                    stl.Scale.z = (float)(newSizeMMz / ui.bboznow);
-
-                stl.UpdateBoundingBoxAndMatrix();
-                stl.Land();
-                UpdateOutOfBound();
-                MainWindow.main.threeDControl.UpdateChanges();
-            }
-            catch { }
         }
 
         // Auto scale the model to fit the half printer bed in X axis on the largest dimension.
