@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.IO;
+using System.Numerics;
 using System.Text;
 using System.Text.Json;
 using View3D.model.geom;
@@ -181,6 +182,10 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                     float[][]? tangents = null;
                     if (attrib.TryGetProperty("TANGENT", out var tanEl))
                         tangents = ReadVec4Accessor(tanEl.GetInt32(), accessors, bufferViews, buffers);
+
+                    // After reading positions, normals, UVs, indices — and when tangents == null:
+                    if (tangents == null && texcoords != null)
+                        tangents = ComputeTangents(positions, texcoords, indices, positions.Length);
 
                     // ---- Material ----
                     float[]?    flatColor   = null;
@@ -834,5 +839,46 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                 }
             return c;
         }
+
+        static float[][] ComputeTangents(RHVector3[] positions, float[][] texcoords, int[]? indices, int vertCount)
+        {
+            var tangentAccum = new Vector3[vertCount];
+            var bitangentAccum = new Vector3[vertCount];
+            int triCount = indices != null ? indices.Length / 3 : vertCount / 3;
+
+            for (int t = 0; t < triCount; t++)
+            {
+                int i0 = indices != null ? indices[t * 3] : t * 3;
+                int i1 = indices != null ? indices[t * 3 + 1] : t * 3 + 1;
+                int i2 = indices != null ? indices[t * 3 + 2] : t * 3 + 2;
+
+                var p0 = positions[i0]; var p1 = positions[i1]; var p2 = positions[i2];
+                float[] uv0 = texcoords[i0], uv1 = texcoords[i1], uv2 = texcoords[i2];
+
+                var edge1 = new Vector3((float)(p1.x - p0.x), (float)(p1.y - p0.y), (float)(p1.z - p0.z));
+                var edge2 = new Vector3((float)(p2.x - p0.x), (float)(p2.y - p0.y), (float)(p2.z - p0.z));
+                float du1 = uv1[0] - uv0[0], dv1 = uv1[1] - uv0[1];
+                float du2 = uv2[0] - uv0[0], dv2 = uv2[1] - uv0[1];
+                float r = 1f / (du1 * dv2 - du2 * dv1 + 1e-8f);
+
+                var T = (edge1 * dv2 - edge2 * dv1) * r;
+                var B = (edge2 * du1 - edge1 * du2) * r;
+
+                tangentAccum[i0] += T; tangentAccum[i1] += T; tangentAccum[i2] += T;
+                bitangentAccum[i0] += B; bitangentAccum[i1] += B; bitangentAccum[i2] += B;
+            }
+
+            var result = new float[vertCount][];
+            for (int i = 0; i < vertCount; i++)
+            {
+                // Gram-Schmidt orthogonalize against the vertex normal (requires normals array)
+                var t = Vector3.Normalize(tangentAccum[i]);
+                var b = bitangentAccum[i];
+                float w = Vector3.Dot(Vector3.Cross(t, b), /* normal[i] */ Vector3.UnitZ) < 0 ? -1f : 1f;
+                result[i] = new float[] { t.X, t.Y, t.Z, w };
+            }
+            return result;
+        }
+
     }
 }

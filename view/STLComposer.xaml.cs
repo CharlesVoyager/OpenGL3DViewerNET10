@@ -234,15 +234,22 @@ namespace View3D.view
 
             if (xxx < 0.1)  // the object is too small.
             {
-                var dlg = new ObjectResizeDialog(
-                    newModel.BoundingBox.Size.x,
-                    newModel.BoundingBox.Size.y,
-                    newModel.BoundingBox.Size.z);
-                if (MainWindow.main.Visibility == Visibility.Visible)
-                    dlg.Owner = MainWindow.main;
-                dlg.ShowDialog();
-                if (dlg.gIsScale) DoAutoScale(newModel, dlg.newSizeMMx, dlg.newSizeMMy, dlg.newSizeMMz);
-                else if (dlg.gIsInch) DoMmToInch(newModel);
+                if (newModel.Name.Contains(".glb"))
+                {
+                    DoMmToInch(newModel);
+                }
+                else
+                {
+                    var dlg = new ObjectResizeDialog(
+                        newModel.BoundingBox.Size.x,
+                        newModel.BoundingBox.Size.y,
+                        newModel.BoundingBox.Size.z);
+                    if (MainWindow.main.Visibility == Visibility.Visible)
+                        dlg.Owner = MainWindow.main;
+                    dlg.ShowDialog();
+                    if (dlg.gIsScale) DoAutoScale(newModel, dlg.newSizeMMx, dlg.newSizeMMy, dlg.newSizeMMz);
+                    else if (dlg.gIsInch) DoMmToInch(newModel);
+                }
             }
             else if (newModel.BoundingBox.Size.x - 1e-4 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth)  ||
                      newModel.BoundingBox.Size.y - 1e-4 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth)  ||
