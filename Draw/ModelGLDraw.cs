@@ -81,42 +81,42 @@ namespace OpenGL3DViewerNET10.Draw
         //   TBN       — tangent-space → world-space matrix (for normal mapping)
         // =========================================================================
         private const string VertSrc = @"
-#version 330 core
+            #version 330 core
 
-layout(location=0) in vec3 aPosition;
-layout(location=1) in vec3 aNormal;
-layout(location=2) in vec3 aColor;
-layout(location=3) in vec2 aTexCoord;
-layout(location=4) in vec4 aTangent;   // xyz = tangent direction, w = handedness (±1)
+            layout(location=0) in vec3 aPosition;
+            layout(location=1) in vec3 aNormal;
+            layout(location=2) in vec3 aColor;
+            layout(location=3) in vec2 aTexCoord;
+            layout(location=4) in vec4 aTangent;   // xyz = tangent direction, w = handedness (±1)
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
-uniform mat3 normalMatrix;
+            uniform mat4 model;
+            uniform mat4 view;
+            uniform mat4 projection;
+            uniform mat3 normalMatrix;
 
-out vec3 FragPos;
-out vec3 Normal;
-out vec3 VertexColor;
-out vec2 TexCoord;
-out mat3 TBN;
+            out vec3 FragPos;
+            out vec3 Normal;
+            out vec3 VertexColor;
+            out vec2 TexCoord;
+            out mat3 TBN;
 
-void main()
-{
-    vec4 worldPos = model * vec4(aPosition, 1.0);
-    FragPos       = worldPos.xyz;
-    Normal        = normalize(normalMatrix * aNormal);
-    VertexColor   = aColor;
-    TexCoord      = aTexCoord;
+            void main()
+            {
+                vec4 worldPos = model * vec4(aPosition, 1.0);
+                FragPos       = worldPos.xyz;
+                Normal        = normalize(normalMatrix * aNormal);
+                VertexColor   = aColor;
+                TexCoord      = aTexCoord;
 
-    // Build TBN matrix for tangent-space normal mapping
-    vec3 T = normalize(normalMatrix * aTangent.xyz);
-    vec3 N = Normal;
-    T = normalize(T - dot(T, N) * N);          // re-orthogonalize (Gram-Schmidt)
-    vec3 B = cross(N, T) * aTangent.w;          // w = handedness
-    TBN = mat3(T, B, N);
+                // Build TBN matrix for tangent-space normal mapping
+                vec3 T = normalize(normalMatrix * aTangent.xyz);
+                vec3 N = Normal;
+                T = normalize(T - dot(T, N) * N);          // re-orthogonalize (Gram-Schmidt)
+                vec3 B = cross(N, T) * aTangent.w;          // w = handedness
+                TBN = mat3(T, B, N);
 
-    gl_Position = projection * view * worldPos;
-}
+                gl_Position = projection * view * worldPos;
+            }
 ";
 
         // =========================================================================
@@ -138,213 +138,213 @@ void main()
         // Output is gamma-corrected (linear -> sRGB, pow 1/2.2).
         // =========================================================================
         private const string FragSrc = @"
-#version 330 core
+            #version 330 core
 
-in vec3 FragPos;
-in vec3 Normal;
-in vec3 VertexColor;
-in vec2 TexCoord;
-in mat3 TBN;
+            in vec3 FragPos;
+            in vec3 Normal;
+            in vec3 VertexColor;
+            in vec2 TexCoord;
+            in mat3 TBN;
 
-out vec4 FragColor;
+            out vec4 FragColor;
 
-// --- Camera ---
-uniform vec3 viewPos;
+            // --- Camera ---
+            uniform vec3 viewPos;
 
-// --- Fallback / non-PBR path ---
-uniform vec3  objectColor;
-uniform int   useVertexColor;   // 1 = VertexColor, 0 = objectColor
+            // --- Fallback / non-PBR path ---
+            uniform vec3  objectColor;
+            uniform int   useVertexColor;   // 1 = VertexColor, 0 = objectColor
 
-// --- PBR texture samplers ---
-uniform sampler2D baseColorTexture;
-uniform sampler2D metallicRoughnessTexture;
-uniform sampler2D normalMap;
-uniform sampler2D occlusionTexture;
-uniform sampler2D emissiveTexture;
+            // --- PBR texture samplers ---
+            uniform sampler2D baseColorTexture;
+            uniform sampler2D metallicRoughnessTexture;
+            uniform sampler2D normalMap;
+            uniform sampler2D occlusionTexture;
+            uniform sampler2D emissiveTexture;
 
-// --- PBR texture enable flags ---
-uniform int useBaseColorTex;
-uniform int useMetallicRoughnessTex;
-uniform int useNormalMap;
-uniform int useOcclusionTex;
-uniform int useEmissiveTex;
+            // --- PBR texture enable flags ---
+            uniform int useBaseColorTex;
+            uniform int useMetallicRoughnessTex;
+            uniform int useNormalMap;
+            uniform int useOcclusionTex;
+            uniform int useEmissiveTex;
 
-// --- PBR scalar factors ---
-uniform float metallicFactor;
-uniform float roughnessFactor;
-uniform vec3  emissiveFactor;
-uniform vec4  baseColorFactor;
+            // --- PBR scalar factors ---
+            uniform float metallicFactor;
+            uniform float roughnessFactor;
+            uniform vec3  emissiveFactor;
+            uniform vec4  baseColorFactor;
 
-// --- Three-point studio rig ---
-const vec3  keyDir   = normalize(vec3(-0.6,  1.0,  0.8));
-const vec3  keyColor = vec3(1.00, 0.98, 0.95);
-const float keyStr   = 1.8;
+            // --- Three-point studio rig ---
+            const vec3  keyDir   = normalize(vec3(-0.6,  1.0,  0.8));
+            const vec3  keyColor = vec3(1.00, 0.98, 0.95);
+            const float keyStr   = 1.8;
 
-const vec3  fillDir   = normalize(vec3( 0.8,  0.3,  0.5));
-const vec3  fillColor = vec3(0.80, 0.88, 1.00);
-const float fillStr   = 1.2;
+            const vec3  fillDir   = normalize(vec3( 0.8,  0.3,  0.5));
+            const vec3  fillColor = vec3(0.80, 0.88, 1.00);
+            const float fillStr   = 1.2;
 
-const vec3  backDir   = normalize(vec3( 0.1, -0.5, -1.0));
-const vec3  backColor = vec3(0.90, 0.92, 1.00);
-const float backStr   = 0.9;
+            const vec3  backDir   = normalize(vec3( 0.1, -0.5, -1.0));
+            const vec3  backColor = vec3(0.90, 0.92, 1.00);
+            const float backStr   = 0.9;
 
-// --- Hemisphere ambient ---
-const vec3  skyColor    = vec3(0.60, 0.70, 0.90);
-const vec3  groundColor = vec3(0.25, 0.20, 0.18);
-const float ambientStr  = 0.22;
+            // --- Hemisphere ambient ---
+            const vec3  skyColor    = vec3(0.60, 0.70, 0.90);
+            const vec3  groundColor = vec3(0.25, 0.20, 0.18);
+            const float ambientStr  = 0.22;
 
-const float PI = 3.14159265358979;
+            const float PI = 3.14159265358979;
 
-// --- GGX Distribution (Trowbridge-Reitz) ---
-float DistributionGGX(vec3 N, vec3 H, float roughness)
-{
-    float a  = roughness * roughness;
-    float a2 = a * a;
-    float d  = max(dot(N, H), 0.0);
-    float d2 = d * d;
-    float denom = d2 * (a2 - 1.0) + 1.0;
-    return a2 / (PI * denom * denom);
-}
+            // --- GGX Distribution (Trowbridge-Reitz) ---
+            float DistributionGGX(vec3 N, vec3 H, float roughness)
+            {
+                float a  = roughness * roughness;
+                float a2 = a * a;
+                float d  = max(dot(N, H), 0.0);
+                float d2 = d * d;
+                float denom = d2 * (a2 - 1.0) + 1.0;
+                return a2 / (PI * denom * denom);
+            }
 
-// --- Schlick-GGX Geometry sub-term ---
-float GeometrySchlickGGX(float NdotV, float roughness)
-{
-    float r = roughness + 1.0;
-    float k = (r * r) / 8.0;
-    return NdotV / (NdotV * (1.0 - k) + k);
-}
+            // --- Schlick-GGX Geometry sub-term ---
+            float GeometrySchlickGGX(float NdotV, float roughness)
+            {
+                float r = roughness + 1.0;
+                float k = (r * r) / 8.0;
+                return NdotV / (NdotV * (1.0 - k) + k);
+            }
 
-// --- Smith combined geometry term ---
-float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
-{
-    float NdotV = max(dot(N, V), 0.0);
-    float NdotL = max(dot(N, L), 0.0);
-    return GeometrySchlickGGX(NdotV, roughness) * GeometrySchlickGGX(NdotL, roughness);
-}
+            // --- Smith combined geometry term ---
+            float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
+            {
+                float NdotV = max(dot(N, V), 0.0);
+                float NdotL = max(dot(N, L), 0.0);
+                return GeometrySchlickGGX(NdotV, roughness) * GeometrySchlickGGX(NdotL, roughness);
+            }
 
-// --- Fresnel-Schlick approximation ---
-vec3 FresnelSchlick(float cosTheta, vec3 F0)
-{
-    return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
-}
+            // --- Fresnel-Schlick approximation ---
+            vec3 FresnelSchlick(float cosTheta, vec3 F0)
+            {
+                return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
+            }
 
-// --- Cook-Torrance BRDF for one directional light ---
-vec3 PbrDirectionalLight(
-    vec3 N, vec3 V,
-    vec3 lightDir, vec3 lightColor, float lightStrength,
-    vec3 albedo, float metallic, float roughness, vec3 F0)
-{
-    vec3  L      = normalize(lightDir);
-    vec3  H      = normalize(V + L);
-    float NdotL  = max(dot(N, L), 0.0);
-    if (NdotL <= 0.0) return vec3(0.0);
+            // --- Cook-Torrance BRDF for one directional light ---
+            vec3 PbrDirectionalLight(
+                vec3 N, vec3 V,
+                vec3 lightDir, vec3 lightColor, float lightStrength,
+                vec3 albedo, float metallic, float roughness, vec3 F0)
+            {
+                vec3  L      = normalize(lightDir);
+                vec3  H      = normalize(V + L);
+                float NdotL  = max(dot(N, L), 0.0);
+                if (NdotL <= 0.0) return vec3(0.0);
 
-    float radiance = lightStrength;
+                float radiance = lightStrength;
 
-    // Specular BRDF
-    float D  = DistributionGGX(N, H, roughness);
-    float G  = GeometrySmith(N, V, L, roughness);
-    vec3  F  = FresnelSchlick(max(dot(H, V), 0.0), F0);
+                // Specular BRDF
+                float D  = DistributionGGX(N, H, roughness);
+                float G  = GeometrySmith(N, V, L, roughness);
+                vec3  F  = FresnelSchlick(max(dot(H, V), 0.0), F0);
 
-    vec3 numerator   = D * G * F;
-    float denominator = 4.0 * max(dot(N, V), 0.0) * NdotL + 0.0001;
-    vec3 specular    = numerator / denominator;
+                vec3 numerator   = D * G * F;
+                float denominator = 4.0 * max(dot(N, V), 0.0) * NdotL + 0.0001;
+                vec3 specular    = numerator / denominator;
 
-    // Diffuse (energy-conserving: metals have no diffuse)
-    vec3 kS = F;
-    vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
-    vec3 diffuse = kD * albedo / PI;
+                // Diffuse (energy-conserving: metals have no diffuse)
+                vec3 kS = F;
+                vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
+                vec3 diffuse = kD * albedo / PI;
 
-    return (diffuse + specular) * lightColor * radiance * NdotL;
-}
+                return (diffuse + specular) * lightColor * radiance * NdotL;
+            }
 
-void main()
-{
-    // --- Normal ---
-    vec3 N;
-    if (useNormalMap == 1)
-    {
-        vec3 tn = texture(normalMap, TexCoord).rgb * 2.0 - 1.0;
-        N = normalize(TBN * tn);
-    }
-    else
-    {
-        N = gl_FrontFacing ? normalize(Normal) : -normalize(Normal);
-    }
+            void main()
+            {
+                // --- Normal ---
+                vec3 N;
+                if (useNormalMap == 1)
+                {
+                    vec3 tn = texture(normalMap, TexCoord).rgb * 2.0 - 1.0;
+                    N = normalize(TBN * tn);
+                }
+                else
+                {
+                    N = gl_FrontFacing ? normalize(Normal) : -normalize(Normal);
+                }
 
-    // --- Albedo (base color) ---
-    vec3 albedo;
-    if (useBaseColorTex == 1)
-    {
-        // sRGB texture -> linear
-        vec3 srgb = texture(baseColorTexture, TexCoord).rgb;
-        albedo = pow(srgb, vec3(2.2)) * baseColorFactor.rgb;
-    }
-    else if (useVertexColor == 1)
-    {
-        albedo = VertexColor;
-    }
-    else
-    {
-        albedo = objectColor * baseColorFactor.rgb;
-    }
+                // --- Albedo (base color) ---
+                vec3 albedo;
+                if (useBaseColorTex == 1)
+                {
+                    // sRGB texture -> linear
+                    vec3 srgb = texture(baseColorTexture, TexCoord).rgb;
+                    albedo = pow(srgb, vec3(2.2)) * baseColorFactor.rgb;
+                }
+                else if (useVertexColor == 1)
+                {
+                    albedo = VertexColor;
+                }
+                else
+                {
+                    albedo = objectColor * baseColorFactor.rgb;
+                }
 
-    // --- Metallic & Roughness ---
-    float metallic, roughness;
-    if (useMetallicRoughnessTex == 1)
-    {
-        vec2 mr = texture(metallicRoughnessTexture, TexCoord).bg; // B=metallic, G=roughness
-        metallic  = mr.x * metallicFactor;
-        roughness = mr.y * roughnessFactor;
-    }
-    else
-    {
-        metallic  = metallicFactor;
-        roughness = roughnessFactor;
-    }
-    roughness = clamp(roughness, 0.04, 1.0);
-    metallic  = clamp(metallic,  0.0,  1.0);
+                // --- Metallic & Roughness ---
+                float metallic, roughness;
+                if (useMetallicRoughnessTex == 1)
+                {
+                    vec2 mr = texture(metallicRoughnessTexture, TexCoord).bg; // B=metallic, G=roughness
+                    metallic  = mr.x * metallicFactor;
+                    roughness = mr.y * roughnessFactor;
+                }
+                else
+                {
+                    metallic  = metallicFactor;
+                    roughness = roughnessFactor;
+                }
+                roughness = clamp(roughness, 0.04, 1.0);
+                metallic  = clamp(metallic,  0.0,  1.0);
 
-    // --- Ambient Occlusion ---
-    float ao = 1.0;
-    if (useOcclusionTex == 1)
-        ao = texture(occlusionTexture, TexCoord).r;
+                // --- Ambient Occlusion ---
+                float ao = 1.0;
+                if (useOcclusionTex == 1)
+                    ao = texture(occlusionTexture, TexCoord).r;
 
-    // --- Emissive ---
-    vec3 emissive = vec3(0.0);
-    if (useEmissiveTex == 1)
-        emissive = pow(texture(emissiveTexture, TexCoord).rgb, vec3(2.2)) * emissiveFactor;
-    else
-        emissive = emissiveFactor;
+                // --- Emissive ---
+                vec3 emissive = vec3(0.0);
+                if (useEmissiveTex == 1)
+                    emissive = pow(texture(emissiveTexture, TexCoord).rgb, vec3(2.2)) * emissiveFactor;
+                else
+                    emissive = emissiveFactor;
 
-    // F0: surface reflectance at zero incidence 
-    // Dielectrics: ~0.04; metals: tinted by albedo
-    vec3 F0 = mix(vec3(0.04), albedo, metallic);
+                // F0: surface reflectance at zero incidence 
+                // Dielectrics: ~0.04; metals: tinted by albedo
+                vec3 F0 = mix(vec3(0.04), albedo, metallic);
 
-    vec3 V = normalize(viewPos - FragPos);
+                vec3 V = normalize(viewPos - FragPos);
 
-    // --- Three-point PBR lighting ---
-    vec3 Lo = vec3(0.0);
-    Lo += PbrDirectionalLight(N, V, keyDir,  keyColor,  keyStr,  albedo, metallic, roughness, F0);
-    Lo += PbrDirectionalLight(N, V, fillDir, fillColor, fillStr, albedo, metallic, roughness, F0);
-    Lo += PbrDirectionalLight(N, V, backDir, backColor, backStr, albedo, metallic, roughness, F0);
+                // --- Three-point PBR lighting ---
+                vec3 Lo = vec3(0.0);
+                Lo += PbrDirectionalLight(N, V, keyDir,  keyColor,  keyStr,  albedo, metallic, roughness, F0);
+                Lo += PbrDirectionalLight(N, V, fillDir, fillColor, fillStr, albedo, metallic, roughness, F0);
+                Lo += PbrDirectionalLight(N, V, backDir, backColor, backStr, albedo, metallic, roughness, F0);
 
-    // --- Hemisphere ambient (approximates image-based lighting) ---
-    float hemi    = 0.5 + 0.5 * N.y;
-    vec3  ambient = mix(groundColor, skyColor, hemi) * ambientStr * albedo * ao;
+                // --- Hemisphere ambient (approximates image-based lighting) ---
+                float hemi    = 0.5 + 0.5 * N.y;
+                vec3  ambient = mix(groundColor, skyColor, hemi) * ambientStr * albedo * ao;
 
-    // --- Back-face tint (kept subtle) ---
-    if (!gl_FrontFacing)
-        ambient *= vec3(0.60, 0.70, 0.80);
+                // --- Back-face tint (kept subtle) ---
+                if (!gl_FrontFacing)
+                    ambient *= vec3(0.60, 0.70, 0.80);
 
-    // --- Combine ---
-    vec3 color = ambient + Lo + emissive;
+                // --- Combine ---
+                vec3 color = ambient + Lo + emissive;
 
-    // --- Gamma correction (linear -> sRGB) ---
-    color = pow(clamp(color, 0.0, 1.0), vec3(1.0 / 2.2));
+                // --- Gamma correction (linear -> sRGB) ---
+                color = pow(clamp(color, 0.0, 1.0), vec3(1.0 / 2.2));
 
-    FragColor = vec4(color, 1.0);
-}
+                FragColor = vec4(color, 1.0);
+            }
 ";
 
         public ModelGLDraw(PrintModel model)
