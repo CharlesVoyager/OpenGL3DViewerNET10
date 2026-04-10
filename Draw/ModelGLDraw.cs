@@ -3,7 +3,6 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using System.Drawing;
 using View3D;
-using View3D.model.geom;
 
 namespace OpenGL3DViewerNET10.Draw
 {
@@ -28,7 +27,7 @@ namespace OpenGL3DViewerNET10.Draw
         // ---- GPU object handles ----
         int shader;
         int vao;
-        int vbo;                // location 0: positions
+        int posVbo;             // location 0: positions
         int normalVbo;          // location 1: normals
         int colorVbo;           // location 2: per-vertex colors (glColors)
         int texCoordVbo;        // location 3: UV coords
@@ -403,8 +402,8 @@ void main()
             GL.BindVertexArray(vao);
 
             // --- VBO 0: positions (location 0) ---
-            vbo = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+            posVbo = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, posVbo);
             GL.BufferData(BufferTarget.ArrayBuffer,
                 printModel.Mesh.glVertices.Length * sizeof(float),
                 printModel.Mesh.glVertices,
@@ -647,7 +646,7 @@ void main()
         public void Dispose()
         {
             GL.DeleteVertexArray(vao);
-            GL.DeleteBuffer(vbo);
+            GL.DeleteBuffer(posVbo);
             GL.DeleteBuffer(normalVbo);
             if (colorVbo    != 0) GL.DeleteBuffer(colorVbo);
             if (texCoordVbo != 0) GL.DeleteBuffer(texCoordVbo);
