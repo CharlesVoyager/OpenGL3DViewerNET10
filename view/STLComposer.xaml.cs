@@ -213,12 +213,13 @@ namespace View3D.view
                 _meshDataReady.Set();
                 return; 
             }
-            newModel.Name = Path.GetFileName(file);
-
             if (MainWindow.main.BusyWindow.killed || newModel.Model.triangles.Count == 0)
             {
+                newModel.Model.Clear();
                 return;
             }
+            newModel.Name = Path.GetFileName(file);
+
             newModel.Position.z = (float)(newModel.BoundingBox.Size.z / 2);
             if (modelToLand)
             {
