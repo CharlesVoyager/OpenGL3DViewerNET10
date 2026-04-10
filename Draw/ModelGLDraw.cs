@@ -3,66 +3,103 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using System.Drawing;
 using View3D;
+using View3D.model.geom;
 
 namespace OpenGL3DViewerNET10.Draw
 {
     /*
-Load STL File (CPU)
-↓
-Parse Geometry (vertices, normals)
-↓
-center the model
-↓
-Fill Mesh (Submesh)
-↓
-Upload to GPU (VBO / VAO)
-↓
-Render Loop (OpenGL draw calls)
-     */
+    Load GLB File (CPU)
+    ↓
+    Parse Geometry + PBR Materials (vertices, normals, UVs, tangents, 5 texture maps)
+    ↓
+    Center the model
+    ↓
+    Fill Mesh (Submesh)
+    ↓
+    Upload to GPU (VBO / VAO — 5 separate VBOs at locations 0-4)
+    ↓
+    Render Loop — Cook-Torrance GGX PBR fragment shader
+    */
 
     public class ModelGLDraw
     {
         PrintModel printModel;
 
-        // STL model
+        // ---- GPU object handles ----
         int shader;
         int vao;
-        int vbo;
-        int normalVbo;                       // Separate VBO for normals (layout location 1)    
-        int colorVbo;                        // Separate VBO for per-vertex colors from glColors
+        int vbo;                // location 0: positions
+        int normalVbo;          // location 1: normals
+        int colorVbo;           // location 2: per-vertex colors (glColors)
+        int texCoordVbo;        // location 3: UV coords
+        int tangentVbo;         // location 4: tangent vectors (vec4, w = handedness)
+
+        // ---- Uniform locations ----
         int modelLoc, viewLoc, projLoc;
-
-        int texCoordVbo;
-        int textureLoc;
-        int useTextureLoc;
-        int textureId = 0;
-
-        // Lighting / material uniforms
+        int normalMatrixLoc;
         int viewPosLoc;
         int objectColorLoc;
-        int normalMatrixLoc;
-        int useVertexColorLoc;              // Uniform: 1 = use glColors, 0 = use objectColor uniform
+        int useVertexColorLoc;
 
-        // -------------------------------------------------------------------------
+        // PBR texture samplers
+        int baseColorTexLoc;
+        int metallicRoughnessTexLoc;
+        int normalMapLoc;
+        int occlusionTexLoc;
+        int emissiveTexLoc;
+
+        // PBR scalar / flag uniforms
+        int useBaseColorTexLoc;
+        int useMetallicRoughnessTexLoc;
+        int useNormalMapLoc;
+        int useOcclusionTexLoc;
+        int useEmissiveTexLoc;
+        int metallicFactorLoc;
+        int roughnessFactorLoc;
+        int emissiveFactorLoc;
+        int baseColorFactorLoc;
+
+        // ---- OpenGL texture IDs (0 = not loaded) ----
+        int baseColorTexId           = 0;
+        int metallicRoughnessTexId   = 0;
+        int normalMapId              = 0;
+        int occlusionTexId           = 0;
+        int emissiveTexId            = 0;
+
+        // ---- PBR scalar factors (fallback when textures absent) ----
+        float   metallicFactor       = 1f;
+        float   roughnessFactor      = 1f;
+        float[] emissiveFactor       = { 0f, 0f, 0f };
+        float[] baseColorFactor      = { 1f, 1f, 1f, 1f };
+
+        // =========================================================================
         // Vertex shader
-        // -------------------------------------------------------------------------
+        // Outputs:
+        //   FragPos   — world-space position
+        //   Normal    — world-space geometric normal
+        //   VertexColor
+        //   TexCoord
+        //   TBN       — tangent-space → world-space matrix (for normal mapping)
+        // =========================================================================
         private const string VertSrc = @"
 #version 330 core
 
 layout(location=0) in vec3 aPosition;
 layout(location=1) in vec3 aNormal;
-layout(location=2) in vec3 aColor;      // Per-vertex color from glColors
+layout(location=2) in vec3 aColor;
 layout(location=3) in vec2 aTexCoord;
+layout(location=4) in vec4 aTangent;   // xyz = tangent direction, w = handedness (±1)
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 uniform mat3 normalMatrix;
 
-out vec3 FragPos;       // world-space position
-out vec3 Normal;        // world-space normal (already transformed)
-out vec3 VertexColor;   // passed through to fragment shader
+out vec3 FragPos;
+out vec3 Normal;
+out vec3 VertexColor;
 out vec2 TexCoord;
+out mat3 TBN;
 
 void main()
 {
@@ -70,119 +107,244 @@ void main()
     FragPos       = worldPos.xyz;
     Normal        = normalize(normalMatrix * aNormal);
     VertexColor   = aColor;
-    TexCoord      = aTexCoord; 
-    gl_Position   = projection * view * worldPos;
+    TexCoord      = aTexCoord;
+
+    // Build TBN matrix for tangent-space normal mapping
+    vec3 T = normalize(normalMatrix * aTangent.xyz);
+    vec3 N = Normal;
+    T = normalize(T - dot(T, N) * N);          // re-orthogonalize (Gram-Schmidt)
+    vec3 B = cross(N, T) * aTangent.w;          // w = handedness
+    TBN = mat3(T, B, N);
+
+    gl_Position = projection * view * worldPos;
 }
 ";
 
-        // -------------------------------------------------------------------------
-        // Fragment shader — 3dviewer.net studio lighting
+        // =========================================================================
+        // Fragment shader — Cook-Torrance GGX PBR
         //
-        // Reproduces the visual look of online3dviewer.net:
-        //   • Three-point directional rig  (key, fill, back/rim)
-        //   • Hemisphere ambient           (warm sky, cool ground)
-        //   • Blinn-Phong specular         (tight, low-intensity)
-        //   • Cool inner-face tint         (subtle, not the harsh red tint)
-        //   • sRGB gamma correction        (pow 1/2.2) at the very end
-        // -------------------------------------------------------------------------
+        // Lighting rig (same three-point world-space directions as before):
+        //   Key  : upper-front-left,  warm white
+        //   Fill : lower-front-right, cool tint
+        //   Back : behind-below,      rim
+        //   + hemisphere ambient + optional ambient occlusion
+        //
+        // PBR maps (all optional — scalar factors are used as fallback):
+        //   Texture0  baseColorTexture          (sRGB)
+        //   Texture1  metallicRoughnessTexture  (linear: G=roughness, B=metallic)
+        //   Texture2  normalMap                 (tangent-space, linear)
+        //   Texture3  occlusionTexture          (linear: R=occlusion)
+        //   Texture4  emissiveTexture           (sRGB)
+        //
+        // Output is gamma-corrected (linear -> sRGB, pow 1/2.2).
+        // =========================================================================
         private const string FragSrc = @"
 #version 330 core
 
-in  vec3 FragPos;
-in  vec3 Normal;
-in  vec3 VertexColor;
+in vec3 FragPos;
+in vec3 Normal;
+in vec3 VertexColor;
+in vec2 TexCoord;
+in mat3 TBN;
+
 out vec4 FragColor;
 
-uniform vec3 viewPos;       // camera world position
-uniform vec3 objectColor;   // fallback color when no per-vertex colors
-uniform int  useVertexColor; // 1 = sample VertexColor, 0 = use objectColor
+// --- Camera ---
+uniform vec3 viewPos;
 
+// --- Fallback / non-PBR path ---
+uniform vec3  objectColor;
+uniform int   useVertexColor;   // 1 = VertexColor, 0 = objectColor
+
+// --- PBR texture samplers ---
 uniform sampler2D baseColorTexture;
-uniform int useTexture;
+uniform sampler2D metallicRoughnessTexture;
+uniform sampler2D normalMap;
+uniform sampler2D occlusionTexture;
+uniform sampler2D emissiveTexture;
 
-in vec2 TexCoord;
+// --- PBR texture enable flags ---
+uniform int useBaseColorTex;
+uniform int useMetallicRoughnessTex;
+uniform int useNormalMap;
+uniform int useOcclusionTex;
+uniform int useEmissiveTex;
 
+// --- PBR scalar factors ---
+uniform float metallicFactor;
+uniform float roughnessFactor;
+uniform vec3  emissiveFactor;
+uniform vec4  baseColorFactor;
 
-// ---- Three-point studio rig (fixed, viewer-space directions) ----
-// Directions are given in world space.
-// Key light: upper-front-left
-const vec3 keyDir   = normalize(vec3(-0.6,  1.0,  0.8));
-const vec3 keyColor = vec3(1.00, 0.98, 0.95);   // warm white
-const float keyStr  = 0.35;
+// --- Three-point studio rig ---
+const vec3  keyDir   = normalize(vec3(-0.6,  1.0,  0.8));
+const vec3  keyColor = vec3(1.00, 0.98, 0.95);
+const float keyStr   = 1.8;
 
-// Fill light: lower-front-right (softer, slightly cool)
-const vec3 fillDir   = normalize(vec3( 0.8,  0.3,  0.5));
-const vec3 fillColor = vec3(0.80, 0.88, 1.00);  // cool tint
-const float fillStr  = 0.25;
+const vec3  fillDir   = normalize(vec3( 0.8,  0.3,  0.5));
+const vec3  fillColor = vec3(0.80, 0.88, 1.00);
+const float fillStr   = 1.2;
 
-// Back / rim light: from behind-below (adds depth separation)
-const vec3 backDir   = normalize(vec3( 0.1, -0.5, -1.0));
-const vec3 backColor = vec3(0.90, 0.92, 1.00);
-const float backStr  = 0.18;
+const vec3  backDir   = normalize(vec3( 0.1, -0.5, -1.0));
+const vec3  backColor = vec3(0.90, 0.92, 1.00);
+const float backStr   = 0.9;
 
-// ---- Hemisphere ambient ----
-const vec3 skyColor    = vec3(0.60, 0.70, 0.90);   // soft blue sky
-const vec3 groundColor = vec3(0.25, 0.20, 0.18);   // warm brown ground
-const float ambientStr = 0.22;
+// --- Hemisphere ambient ---
+const vec3  skyColor    = vec3(0.60, 0.70, 0.90);
+const vec3  groundColor = vec3(0.25, 0.20, 0.18);
+const float ambientStr  = 0.22;
 
-// ---- Specular ----
-const float specularStr = 0.06;
-const float shininess   = 64.0;
+const float PI = 3.14159265358979;
 
-// Compute a single Blinn-Phong directional light contribution.
-vec3 DirectionalLight(vec3 norm, vec3 viewDir,
-                      vec3 lightDir, vec3 lightColor, float strength)
+// --- GGX Distribution (Trowbridge-Reitz) ---
+float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
-    float diff   = max(dot(norm, lightDir), 0.0);
-    vec3 halfway = normalize(lightDir + viewDir);
-    float spec   = pow(max(dot(norm, halfway), 0.0), shininess);
+    float a  = roughness * roughness;
+    float a2 = a * a;
+    float d  = max(dot(N, H), 0.0);
+    float d2 = d * d;
+    float denom = d2 * (a2 - 1.0) + 1.0;
+    return a2 / (PI * denom * denom);
+}
 
-    vec3 diffuse  = diff  * lightColor * strength;
-    vec3 specular = spec  * lightColor * specularStr;
-    return diffuse + specular;
+// --- Schlick-GGX Geometry sub-term ---
+float GeometrySchlickGGX(float NdotV, float roughness)
+{
+    float r = roughness + 1.0;
+    float k = (r * r) / 8.0;
+    return NdotV / (NdotV * (1.0 - k) + k);
+}
+
+// --- Smith combined geometry term ---
+float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
+{
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    return GeometrySchlickGGX(NdotV, roughness) * GeometrySchlickGGX(NdotL, roughness);
+}
+
+// --- Fresnel-Schlick approximation ---
+vec3 FresnelSchlick(float cosTheta, vec3 F0)
+{
+    return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
+}
+
+// --- Cook-Torrance BRDF for one directional light ---
+vec3 PbrDirectionalLight(
+    vec3 N, vec3 V,
+    vec3 lightDir, vec3 lightColor, float lightStrength,
+    vec3 albedo, float metallic, float roughness, vec3 F0)
+{
+    vec3  L      = normalize(lightDir);
+    vec3  H      = normalize(V + L);
+    float NdotL  = max(dot(N, L), 0.0);
+    if (NdotL <= 0.0) return vec3(0.0);
+
+    float radiance = lightStrength;
+
+    // Specular BRDF
+    float D  = DistributionGGX(N, H, roughness);
+    float G  = GeometrySmith(N, V, L, roughness);
+    vec3  F  = FresnelSchlick(max(dot(H, V), 0.0), F0);
+
+    vec3 numerator   = D * G * F;
+    float denominator = 4.0 * max(dot(N, V), 0.0) * NdotL + 0.0001;
+    vec3 specular    = numerator / denominator;
+
+    // Diffuse (energy-conserving: metals have no diffuse)
+    vec3 kS = F;
+    vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
+    vec3 diffuse = kD * albedo / PI;
+
+    return (diffuse + specular) * lightColor * radiance * NdotL;
 }
 
 void main()
 {
-    // Flip normal for back faces so lighting works on both sides.
-    vec3 norm = gl_FrontFacing ? normalize(Normal) : -normalize(Normal);
-
-    
-    vec3 baseColor;
-    if (useTexture == 1)
+    // --- Normal ---
+    vec3 N;
+    if (useNormalMap == 1)
     {
-        baseColor = texture(baseColorTexture, TexCoord).rgb;
-    }
-    else if (useVertexColor == 1)
-    {
-        baseColor = VertexColor;
+        vec3 tn = texture(normalMap, TexCoord).rgb * 2.0 - 1.0;
+        N = normalize(TBN * tn);
     }
     else
     {
-        baseColor = objectColor;
+        N = gl_FrontFacing ? normalize(Normal) : -normalize(Normal);
     }
 
-    // Slight tint for back faces
-    vec3 matColor = gl_FrontFacing ? baseColor : baseColor * vec3(0.60, 0.70, 0.80);
+    // --- Albedo (base color) ---
+    vec3 albedo;
+    if (useBaseColorTex == 1)
+    {
+        // sRGB texture -> linear
+        vec3 srgb = texture(baseColorTexture, TexCoord).rgb;
+        albedo = pow(srgb, vec3(2.2)) * baseColorFactor.rgb;
+    }
+    else if (useVertexColor == 1)
+    {
+        albedo = VertexColor;
+    }
+    else
+    {
+        albedo = objectColor * baseColorFactor.rgb;
+    }
 
-    // Hemisphere ambient
-    float hemi    = 0.5 + 0.5 * norm.y;
-    vec3  ambient = mix(groundColor, skyColor, hemi) * ambientStr;
+    // --- Metallic & Roughness ---
+    float metallic, roughness;
+    if (useMetallicRoughnessTex == 1)
+    {
+        vec2 mr = texture(metallicRoughnessTexture, TexCoord).bg; // B=metallic, G=roughness
+        metallic  = mr.x * metallicFactor;
+        roughness = mr.y * roughnessFactor;
+    }
+    else
+    {
+        metallic  = metallicFactor;
+        roughness = roughnessFactor;
+    }
+    roughness = clamp(roughness, 0.04, 1.0);
+    metallic  = clamp(metallic,  0.0,  1.0);
 
-    // Lighting
-    vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 lighting = vec3(0.0);
-    lighting += DirectionalLight(norm, viewDir, keyDir,  keyColor,  keyStr);
-    lighting += DirectionalLight(norm, viewDir, fillDir, fillColor, fillStr);
-    lighting += DirectionalLight(norm, viewDir, backDir, backColor, backStr);
+    // --- Ambient Occlusion ---
+    float ao = 1.0;
+    if (useOcclusionTex == 1)
+        ao = texture(occlusionTexture, TexCoord).r;
 
-    // Combine
-    vec3 linear = (ambient + lighting) * matColor;
+    // --- Emissive ---
+    vec3 emissive = vec3(0.0);
+    if (useEmissiveTex == 1)
+        emissive = pow(texture(emissiveTexture, TexCoord).rgb, vec3(2.2)) * emissiveFactor;
+    else
+        emissive = emissiveFactor;
 
-    // Gamma correction (linear -> sRGB)
-    vec3 gammaCorrected = pow(clamp(linear, 0.0, 1.0), vec3(1.0 / 2.2));
+    // F0: surface reflectance at zero incidence 
+    // Dielectrics: ~0.04; metals: tinted by albedo
+    vec3 F0 = mix(vec3(0.04), albedo, metallic);
 
-    FragColor = vec4(gammaCorrected, 1.0);
+    vec3 V = normalize(viewPos - FragPos);
+
+    // --- Three-point PBR lighting ---
+    vec3 Lo = vec3(0.0);
+    Lo += PbrDirectionalLight(N, V, keyDir,  keyColor,  keyStr,  albedo, metallic, roughness, F0);
+    Lo += PbrDirectionalLight(N, V, fillDir, fillColor, fillStr, albedo, metallic, roughness, F0);
+    Lo += PbrDirectionalLight(N, V, backDir, backColor, backStr, albedo, metallic, roughness, F0);
+
+    // --- Hemisphere ambient (approximates image-based lighting) ---
+    float hemi    = 0.5 + 0.5 * N.y;
+    vec3  ambient = mix(groundColor, skyColor, hemi) * ambientStr * albedo * ao;
+
+    // --- Back-face tint (kept subtle) ---
+    if (!gl_FrontFacing)
+        ambient *= vec3(0.60, 0.70, 0.80);
+
+    // --- Combine ---
+    vec3 color = ambient + Lo + emissive;
+
+    // --- Gamma correction (linear -> sRGB) ---
+    color = pow(clamp(color, 0.0, 1.0), vec3(1.0 / 2.2));
+
+    FragColor = vec4(color, 1.0);
 }
 ";
 
@@ -191,191 +353,236 @@ void main()
             printModel = model;
         }
 
-        // Call once after a file is loaded and ready.
+        // -------------------------------------------------------------------------
+        // Init — call once after the file is loaded and the GL context is current.
+        // -------------------------------------------------------------------------
         public void Init()
         {
-            shader = createShaderProgram();
-
-            uploadMeshToGPU();
-
-            modelLoc = GL.GetUniformLocation(shader, "model");
-            viewLoc  = GL.GetUniformLocation(shader, "view");
-            projLoc  = GL.GetUniformLocation(shader, "projection");
-
-            normalMatrixLoc  = GL.GetUniformLocation(shader, "normalMatrix");
-            viewPosLoc       = GL.GetUniformLocation(shader, "viewPos");
-            objectColorLoc   = GL.GetUniformLocation(shader, "objectColor");
-            useVertexColorLoc = GL.GetUniformLocation(shader, "useVertexColor");
-
-            textureLoc = GL.GetUniformLocation(shader, "baseColorTexture");
-            useTextureLoc = GL.GetUniformLocation(shader, "useTexture");
+            shader = CreateShaderProgram();
+            UploadMeshToGPU();
+            CacheUniformLocations();
         }
 
-        private void uploadMeshToGPU()
+        private void CacheUniformLocations()
+        {
+            modelLoc        = GL.GetUniformLocation(shader, "model");
+            viewLoc         = GL.GetUniformLocation(shader, "view");
+            projLoc         = GL.GetUniformLocation(shader, "projection");
+            normalMatrixLoc = GL.GetUniformLocation(shader, "normalMatrix");
+            viewPosLoc      = GL.GetUniformLocation(shader, "viewPos");
+            objectColorLoc  = GL.GetUniformLocation(shader, "objectColor");
+            useVertexColorLoc = GL.GetUniformLocation(shader, "useVertexColor");
+
+            // PBR sampler slots
+            baseColorTexLoc          = GL.GetUniformLocation(shader, "baseColorTexture");
+            metallicRoughnessTexLoc  = GL.GetUniformLocation(shader, "metallicRoughnessTexture");
+            normalMapLoc             = GL.GetUniformLocation(shader, "normalMap");
+            occlusionTexLoc          = GL.GetUniformLocation(shader, "occlusionTexture");
+            emissiveTexLoc           = GL.GetUniformLocation(shader, "emissiveTexture");
+
+            // PBR enable flags
+            useBaseColorTexLoc          = GL.GetUniformLocation(shader, "useBaseColorTex");
+            useMetallicRoughnessTexLoc  = GL.GetUniformLocation(shader, "useMetallicRoughnessTex");
+            useNormalMapLoc             = GL.GetUniformLocation(shader, "useNormalMap");
+            useOcclusionTexLoc          = GL.GetUniformLocation(shader, "useOcclusionTex");
+            useEmissiveTexLoc           = GL.GetUniformLocation(shader, "useEmissiveTex");
+
+            // PBR scalar uniforms
+            metallicFactorLoc   = GL.GetUniformLocation(shader, "metallicFactor");
+            roughnessFactorLoc  = GL.GetUniformLocation(shader, "roughnessFactor");
+            emissiveFactorLoc   = GL.GetUniformLocation(shader, "emissiveFactor");
+            baseColorFactorLoc  = GL.GetUniformLocation(shader, "baseColorFactor");
+        }
+
+        // -------------------------------------------------------------------------
+        // Upload all vertex data and PBR textures to the GPU.
+        // -------------------------------------------------------------------------
+        private void UploadMeshToGPU()
         {
             vao = GL.GenVertexArray();
             GL.BindVertexArray(vao);
 
-            // --- VBO 0: positions (layout location 0 ---
+            // --- VBO 0: positions (location 0) ---
             vbo = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-            GL.BufferData(
-                BufferTarget.ArrayBuffer,
+            GL.BufferData(BufferTarget.ArrayBuffer,
                 printModel.Mesh.glVertices.Length * sizeof(float),
                 printModel.Mesh.glVertices,
                 BufferUsageHint.StaticDraw);
-
-            // aPosition: location 0, 3 floats, stride 3 floats, offset 0
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
 
-            // --- VBO 1: normals ---
+            // --- VBO 1: normals (location 1) ---
             normalVbo = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, normalVbo);
-            GL.BufferData(
-             BufferTarget.ArrayBuffer,
-             printModel.Mesh.glNormals.Length * sizeof(float),
-             printModel.Mesh.glNormals,
-             BufferUsageHint.StaticDraw);
-
-            // aNormal: location 1, 3 floats, stride 3 floats, offset 0
+            GL.BufferData(BufferTarget.ArrayBuffer,
+                printModel.Mesh.glNormals.Length * sizeof(float),
+                printModel.Mesh.glNormals,
+                BufferUsageHint.StaticDraw);
             GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.EnableVertexAttribArray(1);
 
-            // --- VBO 2: per-vertex colors from glColors (layout location 2) ---
-            // glColors is expected to be RGB floats: 3 floats per vertex, tightly packed.
-            // If glColors is null or empty we still bind a VBO but leave it empty;
-            // the useVertexColor uniform will be 0, so the GPU never reads it.
+            // --- VBO 2: per-vertex colors (location 2, optional) ---
             bool hasColors = printModel.Mesh.glColors != null && printModel.Mesh.glColors.Length > 0;
             if (hasColors)
             {
                 colorVbo = GL.GenBuffer();
                 GL.BindBuffer(BufferTarget.ArrayBuffer, colorVbo);
-                GL.BufferData(
-                    BufferTarget.ArrayBuffer,
+                GL.BufferData(BufferTarget.ArrayBuffer,
                     printModel.Mesh.glColors.Length * sizeof(float),
                     printModel.Mesh.glColors,
                     BufferUsageHint.StaticDraw);
-
-                // aColor: location 2, 3 floats (RGB), tightly packed (stride 0 = tightly packed)
                 GL.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
                 GL.EnableVertexAttribArray(2);
             }
 
+            // --- VBO 3: UV texture coordinates (location 3, optional) ---
             bool hasUV = printModel.Model.texCoords.Count > 0;
             if (hasUV)
             {
+                float[] uvArray = printModel.Model.texCoords.ToArray();
                 texCoordVbo = GL.GenBuffer();
                 GL.BindBuffer(BufferTarget.ArrayBuffer, texCoordVbo);
-                GL.BufferData(
-                    BufferTarget.ArrayBuffer,
-                    printModel.Model.texCoords.ToArray().Length * sizeof(float),
-                    printModel.Model.texCoords.ToArray(),
+                GL.BufferData(BufferTarget.ArrayBuffer,
+                    uvArray.Length * sizeof(float),
+                    uvArray,
                     BufferUsageHint.StaticDraw);
-
                 GL.VertexAttribPointer(3, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
                 GL.EnableVertexAttribArray(3);
+            }
 
-                if (printModel.Model.textures.Count > 0)
-                    textureId = LoadTexture(printModel.Model.textures[0]);
+            // --- VBO 4: tangents (location 4, optional — vec4, w = handedness) ---
+            bool hasTangents = printModel.Model.tangents.Count > 0;
+            if (hasTangents)
+            {
+                float[] tanArray = printModel.Model.tangents.ToArray();
+                tangentVbo = GL.GenBuffer();
+                GL.BindBuffer(BufferTarget.ArrayBuffer, tangentVbo);
+                GL.BufferData(BufferTarget.ArrayBuffer,
+                    tanArray.Length * sizeof(float),
+                    tanArray,
+                    BufferUsageHint.StaticDraw);
+                GL.VertexAttribPointer(4, 4, VertexAttribPointerType.Float, false, 4 * sizeof(float), 0);
+                GL.EnableVertexAttribArray(4);
             }
 
             GL.BindVertexArray(0);
+
+            // --- Load PBR textures and scalar factors from the first material ---
+            if (printModel.Model.materials.Count > 0)
+            {
+                var mat = printModel.Model.materials[0];
+
+                baseColorTexId          = LoadTexture(mat.BaseColorTexture);
+                metallicRoughnessTexId  = LoadTexture(mat.MetallicRoughnessTexture);
+                normalMapId             = LoadTexture(mat.NormalTexture);
+                occlusionTexId          = LoadTexture(mat.OcclusionTexture);
+                emissiveTexId           = LoadTexture(mat.EmissiveTexture);
+
+                metallicFactor   = mat.MetallicFactor;
+                roughnessFactor  = mat.RoughnessFactor;
+                emissiveFactor   = mat.EmissiveFactor;
+                baseColorFactor  = mat.BaseColorFactor;
+            }
         }
 
-        int createShaderProgram()
-        {
-            int shaderProgram = GL.CreateProgram();
-
-            int vertexShader = GL.CreateShader(ShaderType.VertexShader);
-            GL.ShaderSource(vertexShader, VertSrc);
-            GL.CompileShader(vertexShader);
-            GL.GetShader(vertexShader, ShaderParameter.CompileStatus, out int vsStatus);
-            if (vsStatus == 0)
-                throw new Exception("Vertex shader compile error: " + GL.GetShaderInfoLog(vertexShader));
-
-            int fragmentShader = GL.CreateShader(ShaderType.FragmentShader);
-            GL.ShaderSource(fragmentShader, FragSrc);
-            GL.CompileShader(fragmentShader);
-            GL.GetShader(fragmentShader, ShaderParameter.CompileStatus, out int fsStatus);
-            if (fsStatus == 0)
-                throw new Exception("Fragment shader compile error: " + GL.GetShaderInfoLog(fragmentShader));
-
-            GL.AttachShader(shaderProgram, vertexShader);
-            GL.AttachShader(shaderProgram, fragmentShader);
-
-            GL.LinkProgram(shaderProgram);
-            GL.GetProgram(shaderProgram, GetProgramParameterName.LinkStatus, out int linkStatus);
-            if (linkStatus == 0)
-                throw new Exception("Shader link error: " + GL.GetProgramInfoLog(shaderProgram));
-
-            GL.DeleteShader(vertexShader);
-            GL.DeleteShader(fragmentShader);
-
-            return shaderProgram;
-        }
-
+        // -------------------------------------------------------------------------
+        // Draw
+        // -------------------------------------------------------------------------
         public void Draw()
         {
             if (printModel.Mesh.glVertices == null) return;
 
             GL.Enable(EnableCap.DepthTest);
-            GL.Disable(EnableCap.CullFace); // Draw both front and back faces
+            GL.Disable(EnableCap.CullFace); // render both faces
 
             Matrix4 model = Matrix4.Identity;
             Matrix4 view  = Matrix4.Identity;
             Matrix4 proj  = Matrix4.Identity;
             MainWindow.main.threeDCamera.GetModelViewProj(ref model, ref view, ref proj);
 
-            // Normal matrix: inverse-transpose of the model matrix (handles non-uniform scale)
             Matrix3 normalMatrix = new Matrix3(Matrix4.Transpose(Matrix4.Invert(printModel.trans)));
 
             GL.UseProgram(shader);
 
-            GL.UniformMatrix4(viewLoc,  false, ref view);
-            GL.UniformMatrix4(projLoc,  false, ref proj);
+            // ---- Transforms ----
+            GL.UniformMatrix4(viewLoc,         false, ref view);
+            GL.UniformMatrix4(projLoc,         false, ref proj);
+            GL.UniformMatrix4(modelLoc,        false, ref printModel.trans);
             GL.UniformMatrix3(normalMatrixLoc, false, ref normalMatrix);
 
-            // Camera position (used for specular view vector)
+            // ---- Camera ----
             GL.Uniform3(viewPosLoc, MainWindow.main.threeDCamera.CameraPosition);
 
-            // Material / object colour  (fallback when no per-vertex colours)
+            // ---- Fallback color (STL grey or user setting) ----
             GL.Uniform3(objectColorLoc, ModelColor);
 
-            // Tell the shader whether to sample per-vertex colors or fall back to objectColor
+            // ---- Vertex color flag ----
             bool hasColors = printModel.Mesh.glColors != null && printModel.Mesh.glColors.Length > 0;
             GL.Uniform1(useVertexColorLoc, hasColors ? 1 : 0);
 
-            // Bind Texture in Draw()
-            bool hasTexture = textureId != 0;
-            GL.Uniform1(useTextureLoc, hasTexture ? 1 : 0);
-            if (hasTexture)
-            {
-                GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(TextureTarget.Texture2D, textureId);
-                GL.Uniform1(textureLoc, 0);
-            }
-            // <>
+            // ---- PBR scalar factors ----
+            GL.Uniform1(metallicFactorLoc,  metallicFactor);
+            GL.Uniform1(roughnessFactorLoc, roughnessFactor);
+            GL.Uniform3(emissiveFactorLoc,  emissiveFactor[0], emissiveFactor[1], emissiveFactor[2]);
+            GL.Uniform4(baseColorFactorLoc, baseColorFactor[0], baseColorFactor[1],
+                                            baseColorFactor[2], baseColorFactor[3]);
 
-            GL.UniformMatrix4(modelLoc, false, ref printModel.trans);
+            // ---- Bind all 5 PBR texture units ----
+            BindTexture(TextureUnit.Texture0, baseColorTexId,         baseColorTexLoc,         useBaseColorTexLoc);
+            BindTexture(TextureUnit.Texture1, metallicRoughnessTexId, metallicRoughnessTexLoc, useMetallicRoughnessTexLoc);
+            BindTexture(TextureUnit.Texture2, normalMapId,            normalMapLoc,            useNormalMapLoc);
+            BindTexture(TextureUnit.Texture3, occlusionTexId,         occlusionTexLoc,         useOcclusionTexLoc);
+            BindTexture(TextureUnit.Texture4, emissiveTexId,          emissiveTexLoc,          useEmissiveTexLoc);
+
+            // ---- Draw ----
             GL.BindVertexArray(vao);
             GL.DrawArrays(PrimitiveType.Triangles, 0, printModel.Mesh.glVertices.Length / 3);
         }
 
-        // ModelColor is still used as the base surface colour (e.g., the STL grey).
-        // The three-point rig and hemisphere ambient are baked into the shader constants,
-        // matching the fixed studio environment used by online3dviewer.net.
+        /// <summary>
+        /// Activates <paramref name="unit"/>, binds the texture, and sets the
+        /// sampler uniform + enable-flag uniform in one call.
+        /// When texId == 0 the flag is set to 0 so the shader uses scalar fallbacks.
+        /// </summary>
+        private void BindTexture(TextureUnit unit, int texId, int samplerLoc, int enableFlagLoc)
+        {
+            GL.ActiveTexture(unit);
+            int unitIndex = unit - TextureUnit.Texture0;
+
+            if (texId != 0)
+            {
+                GL.BindTexture(TextureTarget.Texture2D, texId);
+                GL.Uniform1(samplerLoc,    unitIndex);
+                GL.Uniform1(enableFlagLoc, 1);
+            }
+            else
+            {
+                GL.BindTexture(TextureTarget.Texture2D, 0);
+                GL.Uniform1(enableFlagLoc, 0);
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // Fallback model color (used when no PBR base-color texture is present)
+        // -------------------------------------------------------------------------
         public Vector3 ModelColor
         {
             get
             {
-                float[] colors = MainWindow.main.threeDSettings.ModelColor();
-                return new Vector3(colors[0], colors[1], colors[2]);
+                float[] c = MainWindow.main.threeDSettings.ModelColor();
+                return new Vector3(c[0], c[1], c[2]);
             }
         }
 
-        int LoadTexture(Bitmap bitmap)
+        // -------------------------------------------------------------------------
+        // Upload one Bitmap to an OpenGL texture.
+        // Returns 0 if bitmap is null (caller can safely pass null for absent maps).
+        // -------------------------------------------------------------------------
+        private int LoadTexture(Bitmap? bitmap)
         {
+            if (bitmap == null) return 0;
+
             int tex = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, tex);
 
@@ -385,34 +592,79 @@ void main()
                 System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             GL.TexImage2D(
-                TextureTarget.Texture2D,
-                0,
+                TextureTarget.Texture2D, 0,
                 PixelInternalFormat.Rgba,
-                bitmap.Width,
-                bitmap.Height,
-                0,
-                PixelFormat.Bgra,
-                PixelType.UnsignedByte,
+                bitmap.Width, bitmap.Height, 0,
+                PixelFormat.Bgra, PixelType.UnsignedByte,
                 data.Scan0);
 
             bitmap.UnlockBits(data);
 
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS,     (int)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT,     (int)TextureWrapMode.Repeat);
 
             return tex;
         }
 
+        // -------------------------------------------------------------------------
+        // Shader compilation
+        // -------------------------------------------------------------------------
+        private int CreateShaderProgram()
+        {
+            int vs = CompileShader(ShaderType.VertexShader,   VertSrc);
+            int fs = CompileShader(ShaderType.FragmentShader, FragSrc);
+
+            int prog = GL.CreateProgram();
+            GL.AttachShader(prog, vs);
+            GL.AttachShader(prog, fs);
+            GL.LinkProgram(prog);
+            GL.GetProgram(prog, GetProgramParameterName.LinkStatus, out int linkStatus);
+            if (linkStatus == 0)
+                throw new Exception("Shader link error: " + GL.GetProgramInfoLog(prog));
+
+            GL.DeleteShader(vs);
+            GL.DeleteShader(fs);
+            return prog;
+        }
+
+        private static int CompileShader(ShaderType type, string src)
+        {
+            int s = GL.CreateShader(type);
+            GL.ShaderSource(s, src);
+            GL.CompileShader(s);
+            GL.GetShader(s, ShaderParameter.CompileStatus, out int status);
+            if (status == 0)
+                throw new Exception($"{type} compile error: " + GL.GetShaderInfoLog(s));
+            return s;
+        }
+
+        // -------------------------------------------------------------------------
+        // Dispose — release every GPU resource (no leaks)
+        // -------------------------------------------------------------------------
         public void Dispose()
         {
             GL.DeleteVertexArray(vao);
             GL.DeleteBuffer(vbo);
             GL.DeleteBuffer(normalVbo);
-            GL.DeleteBuffer(colorVbo);
-            GL.DeleteBuffer(texCoordVbo);
+            if (colorVbo    != 0) GL.DeleteBuffer(colorVbo);
+            if (texCoordVbo != 0) GL.DeleteBuffer(texCoordVbo);
+            if (tangentVbo  != 0) GL.DeleteBuffer(tangentVbo);
+
+            DeleteTexture(baseColorTexId);
+            DeleteTexture(metallicRoughnessTexId);
+            DeleteTexture(normalMapId);
+            DeleteTexture(occlusionTexId);
+            DeleteTexture(emissiveTexId);
+
             GL.DeleteProgram(shader);
+        }
+
+        private static void DeleteTexture(int texId)
+        {
+            if (texId != 0) GL.DeleteTexture(texId);
         }
     }
 }

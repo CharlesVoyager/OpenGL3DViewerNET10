@@ -24,47 +24,68 @@ namespace OpenGL3DViewerNET10.MeshIOLib
     ///
     /// Only triangle primitives (mode 4) are imported.
     ///
-    /// Color resolution priority (per primitive):
-    ///   1. COLOR_0 vertex attribute  – per-vertex RGBA, averaged across the 3 triangle vertices
-    ///   2. material.pbrMetallicRoughness.baseColorFactor – flat RGBA for the whole primitive
-    ///   3. Default white [1, 1, 1, 1]
+    /// Color / texture resolution priority (per primitive):
+    ///   1. COLOR_0 vertex attribute — per-vertex RGBA
+    ///   2. PBR base-color texture   — UV-mapped from TEXCOORD_0
+    ///   3. material.pbrMetallicRoughness.baseColorFactor — flat RGBA
+    ///   4. Default white [1, 1, 1, 1]
     ///
-    /// The resolved RGBA float[4] is stored on each TopoTriangle via
-    /// model.AddTriangle(p1, p2, p3, normal, color).
+    /// Full PBR maps extracted per material into <see cref="PbrMaterial"/>:
+    ///   • baseColorTexture
+    ///   • metallicRoughnessTexture  (G = roughness, B = metallic)
+    ///   • normalTexture             (tangent-space XYZ)
+    ///   • occlusionTexture          (R channel)
+    ///   • emissiveTexture           (sRGB RGB)
+    ///
+    /// Tangent vectors (TANGENT accessor, VEC4) are read when present and stored
+    /// in <see cref="TopoModel.tangents"/> alongside UVs.
     ///
     /// Supported accessor component types:
-    ///   Positions : FLOAT (5126)
+    ///   Positions / Normals / Tangents : FLOAT (5126)
     ///   Indices   : UNSIGNED_BYTE (5121), UNSIGNED_SHORT (5123), UNSIGNED_INT (5125)
     ///   Colors    : FLOAT (5126), UNSIGNED_BYTE normalized (5121), UNSIGNED_SHORT normalized (5123)
     ///               in either VEC3 (RGB) or VEC4 (RGBA) layout
+    ///   TexCoords : FLOAT (5126) VEC2
     /// </summary>
     public class MeshIOGlb : MeshIOBase
     {
-        // ========================= NEW TYPES =========================
+        // -----------------------------------------------------------------------
+        //  Internal DTOs
+        // -----------------------------------------------------------------------
 
         record ImageInfo(int BufferViewIdx, string? MimeType);
         record TextureInfo(int SourceImageIdx);
 
         class MaterialInfo
         {
-            public float[] BaseColorFactor = new float[] { 1, 1, 1, 1 };
-            public int? BaseColorTextureIndex = null;
+            // Base color
+            public float[] BaseColorFactor         = { 1f, 1f, 1f, 1f };
+            public int?    BaseColorTextureIndex   = null;
+
+            // Metallic-roughness
+            public float   MetallicFactor          = 1f;
+            public float   RoughnessFactor         = 1f;
+            public int?    MetallicRoughnessTexIdx = null;
+
+            // Normal map
+            public int?    NormalTextureIdx        = null;
+
+            // Occlusion
+            public int?    OcclusionTextureIdx     = null;
+
+            // Emissive
+            public float[] EmissiveFactor          = { 0f, 0f, 0f };
+            public int?    EmissiveTextureIdx      = null;
         }
 
-        // ------------------------------------------------------------------ //
+        // -----------------------------------------------------------------------
         //  Public Load overrides
-        // ------------------------------------------------------------------ //
+        // -----------------------------------------------------------------------
 
         public override int Load(string filename, TopoModel model, Action<int> updateRate)
         {
-            try
-            {
-                ImportGlb(filename, model, updateRate);
-            }
-            catch
-            {
-                throw;
-            }
+            try   { ImportGlb(filename, model, updateRate); }
+            catch { throw; }
             return 0;
         }
 
@@ -80,13 +101,14 @@ namespace OpenGL3DViewerNET10.MeshIOLib
             return 0;
         }
 
-        // ------------------------------------------------------------------ //
+        // -----------------------------------------------------------------------
         //  Core parser
-        // ------------------------------------------------------------------ //
+        // -----------------------------------------------------------------------
 
         void ImportGlb(string filename, TopoModel model, Action<int> updateRate)
         {
-            using var fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 1 << 16);
+            using var fs = new FileStream(filename, FileMode.Open, FileAccess.Read,
+                                          FileShare.Read, 1 << 16);
             ImportGlb(fs, model, updateRate);
         }
 
@@ -96,37 +118,33 @@ namespace OpenGL3DViewerNET10.MeshIOLib
 
             using var reader = new BinaryReader(stream, Encoding.UTF8, true);
 
+            // ---- File header ----
             uint magic = reader.ReadUInt32();
-            if (magic != 0x46546C67) throw new InvalidDataException();
-
+            if (magic != 0x46546C67) throw new InvalidDataException("Not a GLB file.");
             reader.ReadUInt32(); // version
-            reader.ReadUInt32(); // length
+            reader.ReadUInt32(); // totalLength
 
-            // JSON chunk
+            // ---- JSON chunk ----
             int jsonLength = reader.ReadInt32();
-            reader.ReadInt32();
+            reader.ReadInt32(); // chunkType (JSON)
             var json = reader.ReadBytes(jsonLength);
-
             var root = JsonDocument.Parse(json).RootElement;
 
-            // BIN chunk
+            // ---- BIN chunk (optional) ----
             byte[]? bin = null;
             if (stream.Position < stream.Length)
             {
                 int len = reader.ReadInt32();
-                reader.ReadInt32();
+                reader.ReadInt32(); // chunkType (BIN)
                 bin = reader.ReadBytes(len);
             }
 
-            var buffers = new List<byte[]?> { bin };
-
+            var buffers     = new List<byte[]?> { bin };
             var bufferViews = ParseBufferViews(root);
-            var accessors = ParseAccessors(root);
-
-            // ⭐ NEW
-            var materials = ParseMaterials(root);
-            var images = ParseImages(root);
-            var textures = ParseTextures(root);
+            var accessors   = ParseAccessors(root);
+            var materials   = ParseMaterials(root);
+            var images      = ParseImages(root);
+            var textures    = ParseTextures(root);
 
             if (!root.TryGetProperty("meshes", out var meshesEl)) return;
 
@@ -134,88 +152,101 @@ namespace OpenGL3DViewerNET10.MeshIOLib
             {
                 foreach (var prim in mesh.GetProperty("primitives").EnumerateArray())
                 {
+                    int mode = prim.TryGetProperty("mode", out var modeEl) ? modeEl.GetInt32() : 4;
+                    if (mode != 4) continue; // triangles only
+
                     var attrib = prim.GetProperty("attributes");
 
+                    // ---- Required: positions ----
                     var positions = ReadVec3Accessor(
                         attrib.GetProperty("POSITION").GetInt32(),
                         accessors, bufferViews, buffers);
 
+                    // ---- Optional: indices ----
                     int[]? indices = null;
-                    if (prim.TryGetProperty("indices", out var idx))
-                        indices = ReadScalarAccessor(idx.GetInt32(), accessors, bufferViews, buffers);
+                    if (prim.TryGetProperty("indices", out var idxEl))
+                        indices = ReadScalarAccessor(idxEl.GetInt32(), accessors, bufferViews, buffers);
 
+                    // ---- Optional: per-vertex colors ----
                     float[][]? vertexColors = null;
-                    if (attrib.TryGetProperty("COLOR_0", out var col))
-                        vertexColors = ReadColorAccessor(col.GetInt32(), accessors, bufferViews, buffers);
+                    if (attrib.TryGetProperty("COLOR_0", out var colEl))
+                        vertexColors = ReadColorAccessor(colEl.GetInt32(), accessors, bufferViews, buffers);
 
+                    // ---- Optional: UV coordinates ----
                     float[][]? texcoords = null;
-                    if (attrib.TryGetProperty("TEXCOORD_0", out var uv))
-                        texcoords = ReadVec2Accessor(uv.GetInt32(), accessors, bufferViews, buffers);
+                    if (attrib.TryGetProperty("TEXCOORD_0", out var uvEl))
+                        texcoords = ReadVec2Accessor(uvEl.GetInt32(), accessors, bufferViews, buffers);
 
-                    float[]? flatColor = null;
-                    Bitmap? textureBitmap = null;
+                    // ---- Optional: tangents (VEC4 FLOAT, w = handedness) ----
+                    float[][]? tangents = null;
+                    if (attrib.TryGetProperty("TANGENT", out var tanEl))
+                        tangents = ReadVec4Accessor(tanEl.GetInt32(), accessors, bufferViews, buffers);
 
-                    // ⭐ UPDATED MATERIAL HANDLING
+                    // ---- Material ----
+                    float[]?    flatColor   = null;
+                    PbrMaterial pbrMaterial = new PbrMaterial();
+
                     if (prim.TryGetProperty("material", out var matIdxEl))
                     {
                         int matIdx = matIdxEl.GetInt32();
-                        if (matIdx < materials.Count)
+                        if (matIdx >= 0 && matIdx < materials.Count)
                         {
                             var mat = materials[matIdx];
                             flatColor = mat.BaseColorFactor;
 
-                            if (mat.BaseColorTextureIndex.HasValue)
+                            // Build PbrMaterial — all maps resolved through texture → image chain
+                            pbrMaterial = new PbrMaterial
                             {
-                                int texIdx = mat.BaseColorTextureIndex.Value;
-                                if (texIdx < textures.Count)
-                                {
-                                    int imgIdx = textures[texIdx].SourceImageIdx;
-                                    if (imgIdx >= 0 && imgIdx < images.Count)
-                                    {
-                                        textureBitmap = LoadBitmapFromImage(
-                                            images[imgIdx], bufferViews, buffers);
-                                    }
-                                }
-                            }
+                                BaseColorFactor          = mat.BaseColorFactor,
+                                MetallicFactor           = mat.MetallicFactor,
+                                RoughnessFactor          = mat.RoughnessFactor,
+                                EmissiveFactor           = mat.EmissiveFactor,
+
+                                BaseColorTexture         = LoadBitmapIfValid(mat.BaseColorTextureIndex,   textures, images, bufferViews, buffers),
+                                MetallicRoughnessTexture = LoadBitmapIfValid(mat.MetallicRoughnessTexIdx, textures, images, bufferViews, buffers),
+                                NormalTexture            = LoadBitmapIfValid(mat.NormalTextureIdx,         textures, images, bufferViews, buffers),
+                                OcclusionTexture         = LoadBitmapIfValid(mat.OcclusionTextureIdx,      textures, images, bufferViews, buffers),
+                                EmissiveTexture          = LoadBitmapIfValid(mat.EmissiveTextureIdx,       textures, images, bufferViews, buffers),
+                            };
                         }
                     }
 
-                    if (textureBitmap != null)
-                        model.textures.Add(textureBitmap);
+                    model.materials.Add(pbrMaterial);
 
                     AddPrimitiveToModel(
-                     positions,
-                     indices,
-                     vertexColors,
-                     texcoords,   // ⭐ NEW
-                     flatColor,
-                     textureBitmap,
-                     model);
+                        positions,
+                        indices,
+                        vertexColors,
+                        texcoords,
+                        tangents,
+                        flatColor,
+                        pbrMaterial,
+                        model);
                 }
             }
         }
 
-        // ------------------------------------------------------------------ //
-        //  Build triangles from one primitive and add to model
-        // ------------------------------------------------------------------ //
+        // -----------------------------------------------------------------------
+        //  Build triangles from one primitive
+        // -----------------------------------------------------------------------
 
-        static readonly float[] DefaultColor = new float[] { 1f, 1f, 1f, 1f };
+        static readonly float[] DefaultColor = { 1f, 1f, 1f, 1f };
 
-        // ========================= TRIANGLES =========================
         static void AddPrimitiveToModel(
-                    RHVector3[] positions,
-                    int[]? indices,
-                    float[][]? vertexColors,
-                    float[][]? texcoords,   // ⭐ NEW
-                    float[]? flatColor,
-                    Bitmap? texture,
-                    TopoModel model)
+            RHVector3[]  positions,
+            int[]?       indices,
+            float[][]?   vertexColors,
+            float[][]?   texcoords,
+            float[][]?   tangents,
+            float[]?     flatColor,
+            PbrMaterial  material,
+            TopoModel    model)
         {
             int triCount = indices != null ? indices.Length / 3 : positions.Length / 3;
 
             for (int t = 0; t < triCount; t++)
             {
-                int i0 = indices != null ? indices[t * 3] : t * 3;
+                int i0 = indices != null ? indices[t * 3]     : t * 3;
                 int i1 = indices != null ? indices[t * 3 + 1] : t * 3 + 1;
                 int i2 = indices != null ? indices[t * 3 + 2] : t * 3 + 2;
 
@@ -226,111 +257,59 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                 var normal = p2.Subtract(p1).CrossProduct(p3.Subtract(p2));
                 normal.NormalizeSafe();
 
-                float[] color;
-
-                // ✅ Priority 1: Vertex color
+                // ---- Priority 1: per-vertex colors ----
                 if (vertexColors != null)
                 {
                     var c0 = vertexColors[i0];
                     var c1 = vertexColors[i1];
                     var c2 = vertexColors[i2];
-
-                    color = new float[]
+                    float[] color =
                     {
-                        (c0[0]+c1[0]+c2[0])/3f,
-                        (c0[1]+c1[1]+c2[1])/3f,
-                        (c0[2]+c1[2]+c2[2])/3f,
-                        (c0[3]+c1[3]+c2[3])/3f
+                        (c0[0]+c1[0]+c2[0]) / 3f,
+                        (c0[1]+c1[1]+c2[1]) / 3f,
+                        (c0[2]+c1[2]+c2[2]) / 3f,
+                        (c0[3]+c1[3]+c2[3]) / 3f,
                     };
                     model.AddTriangle(p1, p2, p3, normal, color);
                 }
-                // ✅ Priority 2: Texture (FIXED)
-                else if (texture != null && texcoords != null)
+                // ---- Priority 2: UV-mapped texture (base color or PBR) ----
+                else if (texcoords != null && material.BaseColorTexture != null)
                 {
-                    var uv0 = texcoords[i0];
-                    var uv1 = texcoords[i1];
-                    var uv2 = texcoords[i2];
+                    float[]  uv0  = texcoords[i0];
+                    float[]  uv1  = texcoords[i1];
+                    float[]  uv2  = texcoords[i2];
+                    float[]? tan0 = tangents?[i0];
+                    float[]? tan1 = tangents?[i1];
+                    float[]? tan2 = tangents?[i2];
 
-                    // Average UV (simple approximation)
-                    float u = (uv0[0] + uv1[0] + uv2[0]) / 3f;
-                    float v = (uv0[1] + uv1[1] + uv2[1]) / 3f;
-
-                    // glTF: V is flipped
-                    v = 1.0f - v;
-
-                    int x = (int)(u * (texture.Width - 1));
-                    int y = (int)(v * (texture.Height - 1));
-
-                    // Clamp (safety)
-                    x = Math.Clamp(x, 0, texture.Width - 1);
-                    y = Math.Clamp(y, 0, texture.Height - 1);
-
-                    var px = texture.GetPixel(x, y);
-
-                    color = new float[]
-                    {
-                        px.R / 255f,
-                        px.G / 255f,
-                        px.B / 255f,
-                        px.A / 255f
-                    };
-
-                    //model.AddTriangle(p1, p2, p3, normal, color);
-                    model.AddTriangle(p1, p2, p3, normal, uv0, uv1, uv2);
+                    model.AddTriangle(p1, p2, p3, normal, uv0, uv1, uv2, tan0, tan1, tan2);
                 }
-                // ✅ Priority 3: Flat color
+                // ---- Priority 3: flat material color ----
                 else
                 {
-                    color = flatColor ?? DefaultColor;
+                    float[] color = flatColor ?? DefaultColor;
                     model.AddTriangle(p1, p2, p3, normal, color);
                 }
             }
         }
-        static float[][] ReadVec2Accessor(  int accessorIdx,
-                                            List<AccessorInfo> accessors,
-                                            List<BufferViewInfo> bufferViews,
-                                            List<byte[]?> buffers)
-        {
-            var acc = accessors[accessorIdx];
 
-            if (acc.Type != "VEC2")
-                throw new InvalidDataException($"Expected VEC2 accessor, got {acc.Type}.");
-
-            if (acc.ComponentType != 5126)
-                throw new NotSupportedException("Only FLOAT (5126) is supported for TEXCOORD_0.");
-
-            var (data, stride) = GetAccessorBytes(acc, bufferViews, buffers, 8);
-
-            var result = new float[acc.Count][];
-
-            for (int i = 0; i < acc.Count; i++)
-            {
-                int offset = acc.ByteOffset + i * stride;
-
-                float u = BitConverter.ToSingle(data, offset);
-                float v = BitConverter.ToSingle(data, offset + 4);
-
-                result[i] = new float[] { u, v };
-            }
-
-            return result;
-        }
-
-        // ========================= MATERIAL =========================
+        // -----------------------------------------------------------------------
+        //  Material parser — full PBR fields
+        // -----------------------------------------------------------------------
 
         static List<MaterialInfo> ParseMaterials(JsonElement root)
         {
             var list = new List<MaterialInfo>();
-
-            if (!root.TryGetProperty("materials", out var matsEl))
-                return list;
+            if (!root.TryGetProperty("materials", out var matsEl)) return list;
 
             foreach (var mat in matsEl.EnumerateArray())
             {
                 var m = new MaterialInfo();
 
+                // pbrMetallicRoughness block
                 if (mat.TryGetProperty("pbrMetallicRoughness", out var pbr))
                 {
+                    // baseColorFactor
                     if (pbr.TryGetProperty("baseColorFactor", out var bcf))
                     {
                         var vals = bcf.EnumerateArray().Select(e => e.GetSingle()).ToArray();
@@ -338,12 +317,43 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                             m.BaseColorFactor[i] = vals[i];
                     }
 
-                    if (pbr.TryGetProperty("baseColorTexture", out var tex))
-                    {
-                        if (tex.TryGetProperty("index", out var idx))
-                            m.BaseColorTextureIndex = idx.GetInt32();
-                    }
+                    // baseColorTexture
+                    if (pbr.TryGetProperty("baseColorTexture", out var bct))
+                        if (bct.TryGetProperty("index", out var i))
+                            m.BaseColorTextureIndex = i.GetInt32();
+
+                    // metallicFactor / roughnessFactor
+                    if (pbr.TryGetProperty("metallicFactor",  out var mf)) m.MetallicFactor  = mf.GetSingle();
+                    if (pbr.TryGetProperty("roughnessFactor", out var rf)) m.RoughnessFactor = rf.GetSingle();
+
+                    // metallicRoughnessTexture
+                    if (pbr.TryGetProperty("metallicRoughnessTexture", out var mrt))
+                        if (mrt.TryGetProperty("index", out var i))
+                            m.MetallicRoughnessTexIdx = i.GetInt32();
                 }
+
+                // normalTexture
+                if (mat.TryGetProperty("normalTexture", out var nt))
+                    if (nt.TryGetProperty("index", out var i))
+                        m.NormalTextureIdx = i.GetInt32();
+
+                // occlusionTexture
+                if (mat.TryGetProperty("occlusionTexture", out var ot))
+                    if (ot.TryGetProperty("index", out var i))
+                        m.OcclusionTextureIdx = i.GetInt32();
+
+                // emissiveFactor
+                if (mat.TryGetProperty("emissiveFactor", out var ef))
+                {
+                    var vals = ef.EnumerateArray().Select(e => e.GetSingle()).ToArray();
+                    for (int i = 0; i < Math.Min(3, vals.Length); i++)
+                        m.EmissiveFactor[i] = vals[i];
+                }
+
+                // emissiveTexture
+                if (mat.TryGetProperty("emissiveTexture", out var et))
+                    if (et.TryGetProperty("index", out var i))
+                        m.EmissiveTextureIdx = i.GetInt32();
 
                 list.Add(m);
             }
@@ -351,7 +361,9 @@ namespace OpenGL3DViewerNET10.MeshIOLib
             return list;
         }
 
-        // ========================= IMAGE / TEXTURE =========================
+        // -----------------------------------------------------------------------
+        //  Image / texture catalogue parsers
+        // -----------------------------------------------------------------------
 
         static List<ImageInfo> ParseImages(JsonElement root)
         {
@@ -360,8 +372,8 @@ namespace OpenGL3DViewerNET10.MeshIOLib
 
             foreach (var img in el.EnumerateArray())
             {
-                int bv = img.TryGetProperty("bufferView", out var b) ? b.GetInt32() : -1;
-                string? mime = img.TryGetProperty("mimeType", out var m) ? m.GetString() : null;
+                int    bv   = img.TryGetProperty("bufferView", out var b) ? b.GetInt32() : -1;
+                string? mime = img.TryGetProperty("mimeType",  out var m) ? m.GetString() : null;
                 list.Add(new ImageInfo(bv, mime));
             }
             return list;
@@ -380,10 +392,56 @@ namespace OpenGL3DViewerNET10.MeshIOLib
             return list;
         }
 
-        static Bitmap LoadBitmapFromImage(
-            ImageInfo img,
+        // -----------------------------------------------------------------------
+        //  Bitmap loading helpers
+        // -----------------------------------------------------------------------
+
+        /// <summary>
+        /// Resolves a glTF texture index to a Bitmap, returning null when:
+        ///   • textureIndex is null (map not used by this material)
+        ///   • the texture or image index is out of range
+        ///   • the image has no embedded bufferView (external URIs not supported)
+        ///   • the image bytes cannot be decoded
+        /// </summary>
+        static Bitmap? LoadBitmapIfValid(
+            int?                 textureIndex,
+            List<TextureInfo>    textures,
+            List<ImageInfo>      images,
             List<BufferViewInfo> bufferViews,
-            List<byte[]?> buffers)
+            List<byte[]?>        buffers)
+        {
+            if (!textureIndex.HasValue)
+                return null;
+
+            int texIdx = textureIndex.Value;
+            if (texIdx < 0 || texIdx >= textures.Count)
+                return null;
+
+            int imgIdx = textures[texIdx].SourceImageIdx;
+            if (imgIdx < 0 || imgIdx >= images.Count)
+                return null;
+
+            var img = images[imgIdx];
+
+            // External URI images (bufferView == -1) are not supported
+            if (img.BufferViewIdx < 0 || img.BufferViewIdx >= bufferViews.Count)
+                return null;
+
+            try
+            {
+                return LoadBitmapFromImage(img, bufferViews, buffers);
+            }
+            catch
+            {
+                // Corrupt or unsupported image format — skip silently
+                return null;
+            }
+        }
+
+        static Bitmap LoadBitmapFromImage(
+            ImageInfo            img,
+            List<BufferViewInfo> bufferViews,
+            List<byte[]?>        buffers)
         {
             var bytes = GetImageBytes(img, bufferViews, buffers);
             using var ms = new MemoryStream(bytes);
@@ -391,96 +449,155 @@ namespace OpenGL3DViewerNET10.MeshIOLib
         }
 
         static byte[] GetImageBytes(
-            ImageInfo img,
+            ImageInfo            img,
             List<BufferViewInfo> bufferViews,
-            List<byte[]?> buffers)
+            List<byte[]?>        buffers)
         {
-            var bv = bufferViews[img.BufferViewIdx];
+            var bv  = bufferViews[img.BufferViewIdx];
             var buf = buffers[bv.BufferIdx]!;
-
             var data = new byte[bv.ByteLength];
             Array.Copy(buf, bv.ByteOffset, data, 0, bv.ByteLength);
             return data;
         }
 
-        // ------------------------------------------------------------------ //
-        //  Material color parser
-        // ------------------------------------------------------------------ //
+        // -----------------------------------------------------------------------
+        //  Accessor readers
+        // -----------------------------------------------------------------------
 
-        /// <summary>
-        /// Parses materials[] and returns one RGBA float[4] per material.
-        /// Falls back to opaque white [1,1,1,1] for any missing fields.
-        /// </summary>
-        static List<float[]> ParseMaterialColors(JsonElement root)
+        /// <summary>Reads a VEC3 FLOAT accessor → RHVector3[].</summary>
+        static RHVector3[] ReadVec3Accessor(
+            int accessorIdx, List<AccessorInfo> accessors,
+            List<BufferViewInfo> bufferViews, List<byte[]?> buffers)
         {
-            var list = new List<float[]>();
+            var acc = accessors[accessorIdx];
+            if (acc.Type != "VEC3")       throw new InvalidDataException($"Expected VEC3, got {acc.Type}.");
+            if (acc.ComponentType != 5126) throw new NotSupportedException("Only FLOAT (5126) is supported for VEC3.");
 
-            if (!root.TryGetProperty("materials", out var matsEl))
-                return list;
+            var (data, stride) = GetAccessorBytes(acc, bufferViews, buffers, 12);
+            var result         = new RHVector3[acc.Count];
 
-            foreach (var mat in matsEl.EnumerateArray())
+            for (int i = 0; i < acc.Count; i++)
             {
-                float[] rgba = new float[] { 1f, 1f, 1f, 1f }; // default: opaque white
-
-                if (mat.TryGetProperty("pbrMetallicRoughness", out var pbr) &&
-                    pbr.TryGetProperty("baseColorFactor", out var bcf))
-                {
-                    var vals = bcf.EnumerateArray().Select(e => e.GetSingle()).ToArray();
-                    if (vals.Length >= 3)
-                    {
-                        rgba[0] = vals[0];
-                        rgba[1] = vals[1];
-                        rgba[2] = vals[2];
-                        rgba[3] = vals.Length >= 4 ? vals[3] : 1f;
-                    }
-                }
-
-                list.Add(rgba);
+                int o = acc.ByteOffset + i * stride;
+                result[i] = new RHVector3(
+                    BitConverter.ToSingle(data, o),
+                    BitConverter.ToSingle(data, o + 4),
+                    BitConverter.ToSingle(data, o + 8));
             }
-
-            return list;
+            return result;
         }
 
-        // ------------------------------------------------------------------ //
-        //  Color accessor reader
-        // ------------------------------------------------------------------ //
+        /// <summary>Reads a VEC2 FLOAT accessor → float[][2] (u,v per vertex).</summary>
+        static float[][] ReadVec2Accessor(
+            int accessorIdx, List<AccessorInfo> accessors,
+            List<BufferViewInfo> bufferViews, List<byte[]?> buffers)
+        {
+            var acc = accessors[accessorIdx];
+            if (acc.Type != "VEC2")       throw new InvalidDataException($"Expected VEC2, got {acc.Type}.");
+            if (acc.ComponentType != 5126) throw new NotSupportedException("Only FLOAT (5126) is supported for TEXCOORD_0.");
+
+            var (data, stride) = GetAccessorBytes(acc, bufferViews, buffers, 8);
+            var result         = new float[acc.Count][];
+
+            for (int i = 0; i < acc.Count; i++)
+            {
+                int o = acc.ByteOffset + i * stride;
+                result[i] = new float[]
+                {
+                    BitConverter.ToSingle(data, o),
+                    BitConverter.ToSingle(data, o + 4)
+                };
+            }
+            return result;
+        }
 
         /// <summary>
-        /// Reads a COLOR_0 accessor and returns one RGBA float[4] per vertex, all in [0..1].
-        ///
-        /// Supported layouts:
-        ///   Type          : VEC3 (RGB) or VEC4 (RGBA)
-        ///   ComponentType : FLOAT (5126)
-        ///                   UNSIGNED_BYTE  normalized (5121) → divide by 255
-        ///                   UNSIGNED_SHORT normalized (5123) → divide by 65535
-        ///
-        /// If the accessor is VEC3, the alpha channel is set to 1.0.
+        /// Reads a VEC4 FLOAT accessor → float[][4].
+        /// Used for TANGENT (x,y,z,w) where w = handedness (±1).
         /// </summary>
-        static float[][] ReadColorAccessor(
-            int                  accessorIdx,
-            List<AccessorInfo>   accessors,
-            List<BufferViewInfo> bufferViews,
-            List<byte[]?>        buffers)
+        static float[][] ReadVec4Accessor(
+            int accessorIdx, List<AccessorInfo> accessors,
+            List<BufferViewInfo> bufferViews, List<byte[]?> buffers)
         {
-            var acc     = accessors[accessorIdx];
-            bool isVec4 = acc.Type == "VEC4"; // VEC3 = RGB, VEC4 = RGBA
+            var acc = accessors[accessorIdx];
+            if (acc.Type != "VEC4")       throw new InvalidDataException($"Expected VEC4, got {acc.Type}.");
+            if (acc.ComponentType != 5126) throw new NotSupportedException("Only FLOAT (5126) is supported for TANGENT.");
+
+            var (data, stride) = GetAccessorBytes(acc, bufferViews, buffers, 16);
+            var result         = new float[acc.Count][];
+
+            for (int i = 0; i < acc.Count; i++)
+            {
+                int o = acc.ByteOffset + i * stride;
+                result[i] = new float[]
+                {
+                    BitConverter.ToSingle(data, o),
+                    BitConverter.ToSingle(data, o + 4),
+                    BitConverter.ToSingle(data, o + 8),
+                    BitConverter.ToSingle(data, o + 12)
+                };
+            }
+            return result;
+        }
+
+        /// <summary>Reads a SCALAR accessor (indices) → int[].</summary>
+        static int[] ReadScalarAccessor(
+            int accessorIdx, List<AccessorInfo> accessors,
+            List<BufferViewInfo> bufferViews, List<byte[]?> buffers)
+        {
+            var acc = accessors[accessorIdx];
+            if (acc.Type != "SCALAR") throw new InvalidDataException($"Expected SCALAR, got {acc.Type}.");
 
             int elementSize = acc.ComponentType switch
             {
-                5126 => isVec4 ? 16 : 12, // FLOAT          (4 bytes × 3 or 4)
-                5121 => isVec4 ?  4 :  3, // UNSIGNED_BYTE  (1 byte  × 3 or 4)
-                5123 => isVec4 ?  8 :  6, // UNSIGNED_SHORT (2 bytes × 3 or 4)
-                _ => throw new NotSupportedException(
-                    $"Unsupported COLOR_0 component type {acc.ComponentType}.")
+                5121 => 1, // UNSIGNED_BYTE
+                5123 => 2, // UNSIGNED_SHORT
+                5125 => 4, // UNSIGNED_INT
+                _    => throw new NotSupportedException($"Unsupported index component type {acc.ComponentType}.")
+            };
+
+            var (data, stride) = GetAccessorBytes(acc, bufferViews, buffers, elementSize);
+            var result         = new int[acc.Count];
+
+            for (int i = 0; i < acc.Count; i++)
+            {
+                int o = acc.ByteOffset + i * stride;
+                result[i] = acc.ComponentType switch
+                {
+                    5121 => data[o],
+                    5123 => BitConverter.ToUInt16(data, o),
+                    5125 => (int)BitConverter.ToUInt32(data, o),
+                    _    => 0
+                };
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Reads a COLOR_0 accessor → float[][4] RGBA in [0,1].
+        /// Supports VEC3/VEC4 × FLOAT/UNSIGNED_BYTE/UNSIGNED_SHORT.
+        /// </summary>
+        static float[][] ReadColorAccessor(
+            int accessorIdx, List<AccessorInfo> accessors,
+            List<BufferViewInfo> bufferViews, List<byte[]?> buffers)
+        {
+            var  acc    = accessors[accessorIdx];
+            bool isVec4 = acc.Type == "VEC4";
+
+            int elementSize = acc.ComponentType switch
+            {
+                5126 => isVec4 ? 16 : 12,
+                5121 => isVec4 ?  4 :  3,
+                5123 => isVec4 ?  8 :  6,
+                _    => throw new NotSupportedException($"Unsupported COLOR_0 component type {acc.ComponentType}.")
             };
 
             var (data, stride) = GetAccessorBytes(acc, bufferViews, buffers, elementSize);
             var result         = new float[acc.Count][];
-            int baseOffset     = acc.ByteOffset;
 
             for (int i = 0; i < acc.Count; i++)
             {
-                int   o = baseOffset + i * stride;
+                int   o = acc.ByteOffset + i * stride;
                 float r, g, b, a = 1f;
 
                 switch (acc.ComponentType)
@@ -491,21 +608,18 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                         b = BitConverter.ToSingle(data, o + 8);
                         if (isVec4) a = BitConverter.ToSingle(data, o + 12);
                         break;
-
                     case 5121: // UNSIGNED_BYTE normalized
                         r = data[o]     / 255f;
                         g = data[o + 1] / 255f;
                         b = data[o + 2] / 255f;
                         if (isVec4) a = data[o + 3] / 255f;
                         break;
-
                     case 5123: // UNSIGNED_SHORT normalized
                         r = BitConverter.ToUInt16(data, o)     / 65535f;
                         g = BitConverter.ToUInt16(data, o + 2) / 65535f;
                         b = BitConverter.ToUInt16(data, o + 4) / 65535f;
                         if (isVec4) a = BitConverter.ToUInt16(data, o + 6) / 65535f;
                         break;
-
                     default:
                         r = g = b = 1f;
                         break;
@@ -513,90 +627,114 @@ namespace OpenGL3DViewerNET10.MeshIOLib
 
                 result[i] = new float[] { r, g, b, a };
             }
-
             return result;
         }
 
-        // ------------------------------------------------------------------ //
-        //  Transform helpers
-        // ------------------------------------------------------------------ //
+        // -----------------------------------------------------------------------
+        //  Buffer/accessor utilities
+        // -----------------------------------------------------------------------
 
         /// <summary>
-        /// Applies a column-major 4×4 matrix stored as float[16] to a position vector.
-        /// If no transform is provided the vector is returned unchanged.
+        /// Returns (bufferSlice, elementStride) for an accessor.
+        /// The returned slice starts at the bufferView's byteOffset.
+        /// The accessor's own byteOffset is NOT baked in — callers apply it as a base.
         /// </summary>
-        static RHVector3 ApplyTransform(RHVector3 v, float[]? m)
+        static (byte[] data, int stride) GetAccessorBytes(
+            AccessorInfo         acc,
+            List<BufferViewInfo> bufferViews,
+            List<byte[]?>        buffers,
+            int                  elementSize)
         {
-            if (m == null) return v;
+            if (acc.BufferViewIdx < 0)
+                throw new NotSupportedException("Sparse accessors without a bufferView are not supported.");
 
-            // glTF column-major layout:
-            //   [ m[0]  m[4]  m[8]  m[12] ]
-            //   [ m[1]  m[5]  m[9]  m[13] ]
-            //   [ m[2]  m[6]  m[10] m[14] ]
-            //   [ m[3]  m[7]  m[11] m[15] ]
-            double x = m[0] * v.x + m[4] * v.y + m[8]  * v.z + m[12];
-            double y = m[1] * v.x + m[5] * v.y + m[9]  * v.z + m[13];
-            double z = m[2] * v.x + m[6] * v.y + m[10] * v.z + m[14];
-            return new RHVector3(x, y, z);
+            var bv  = bufferViews[acc.BufferViewIdx];
+            var buf = buffers[bv.BufferIdx]
+                      ?? throw new InvalidDataException(
+                          $"Buffer {bv.BufferIdx} is missing (external URIs are not supported).");
+
+            var slice = new byte[bv.ByteLength];
+            Array.Copy(buf, bv.ByteOffset, slice, 0, bv.ByteLength);
+
+            int stride = bv.ByteStride > 0 ? bv.ByteStride : elementSize;
+            return (slice, stride);
         }
 
-        /// <summary>Builds a column-major 4×4 matrix from glTF TRS components.</summary>
-        static float[] TrsToMatrix(float[] t, float[] r, float[] s)
+        // -----------------------------------------------------------------------
+        //  JSON structure parsers
+        // -----------------------------------------------------------------------
+
+        record BufferViewInfo(int BufferIdx, int ByteOffset, int ByteLength, int ByteStride);
+        record AccessorInfo(int BufferViewIdx, int ByteOffset, int ComponentType, int Count, string Type);
+
+        static List<BufferViewInfo> ParseBufferViews(JsonElement root)
         {
-            // r = quaternion [x, y, z, w]
-            float qx = r[0], qy = r[1], qz = r[2], qw = r[3];
+            var list = new List<BufferViewInfo>();
+            if (!root.TryGetProperty("bufferViews", out var el)) return list;
 
-            float x2 = qx + qx, y2 = qy + qy, z2 = qz + qz;
-            float xx = qx * x2, xy = qx * y2, xz = qx * z2;
-            float yy = qy * y2, yz = qy * z2, zz = qz * z2;
-            float wx = qw * x2, wy = qw * y2, wz = qw * z2;
-
-            float sx = s[0], sy = s[1], sz = s[2];
-
-            return new float[16]
+            foreach (var bv in el.EnumerateArray())
             {
-                (1 - (yy + zz)) * sx,  (xy + wz)       * sx,  (xz - wy)       * sx,  0,
-                (xy - wz)       * sy,  (1 - (xx + zz)) * sy,  (yz + wx)       * sy,  0,
-                (xz + wy)       * sz,  (yz - wx)       * sz,  (1 - (xx + yy)) * sz,  0,
-                t[0],                  t[1],                  t[2],                   1
-            };
+                int bufIdx     = bv.GetProperty("buffer").GetInt32();
+                int byteOffset = bv.TryGetProperty("byteOffset", out var bo) ? bo.GetInt32() : 0;
+                int byteLen    = bv.GetProperty("byteLength").GetInt32();
+                int byteStride = bv.TryGetProperty("byteStride", out var bs) ? bs.GetInt32() : 0;
+                list.Add(new BufferViewInfo(bufIdx, byteOffset, byteLen, byteStride));
+            }
+            return list;
         }
 
-        /// <summary>Multiplies two column-major 4×4 matrices: result = a × b.</summary>
-        static float[] MultiplyMatrix(float[] a, float[] b)
+        static List<AccessorInfo> ParseAccessors(JsonElement root)
         {
-            var c = new float[16];
-            for (int col = 0; col < 4; col++)
-                for (int row = 0; row < 4; row++)
-                {
-                    float sum = 0;
-                    for (int k = 0; k < 4; k++)
-                        sum += a[row + k * 4] * b[k + col * 4];
-                    c[row + col * 4] = sum;
-                }
-            return c;
+            var list = new List<AccessorInfo>();
+            if (!root.TryGetProperty("accessors", out var el)) return list;
+
+            foreach (var ac in el.EnumerateArray())
+            {
+                int    bvIdx         = ac.TryGetProperty("bufferView", out var bv) ? bv.GetInt32() : -1;
+                int    byteOffset    = ac.TryGetProperty("byteOffset", out var bo) ? bo.GetInt32() : 0;
+                int    componentType = ac.GetProperty("componentType").GetInt32();
+                int    count         = ac.GetProperty("count").GetInt32();
+                string type          = ac.GetProperty("type").GetString()!;
+                list.Add(new AccessorInfo(bvIdx, byteOffset, componentType, count, type));
+            }
+            return list;
         }
 
-        // ------------------------------------------------------------------ //
-        //  Node hierarchy → per-mesh world transform
-        // ------------------------------------------------------------------ //
+        // -----------------------------------------------------------------------
+        //  Utility: count triangle primitives (for progress reporting)
+        // -----------------------------------------------------------------------
+
+        static int CountTrianglePrimitives(JsonElement meshesEl)
+        {
+            int count = 0;
+            foreach (var m in meshesEl.EnumerateArray())
+                if (m.TryGetProperty("primitives", out var prims))
+                    foreach (var p in prims.EnumerateArray())
+                    {
+                        int mode = p.TryGetProperty("mode", out var mEl) ? mEl.GetInt32() : 4;
+                        if (mode == 4) count++;
+                    }
+            return count;
+        }
+
+        // -----------------------------------------------------------------------
+        //  Transform helpers (node hierarchy → per-mesh world matrix)
+        // -----------------------------------------------------------------------
 
         /// <summary>
         /// Walks the node tree and produces a dictionary mapping mesh index →
-        /// world-space column-major 4×4 transform matrix (float[16]).
+        /// world-space column-major 4×4 float[16] transform.
         /// Only the first node referencing each mesh is recorded.
         /// </summary>
         static Dictionary<int, float[]> BuildNodeTransforms(JsonElement root)
         {
             var result = new Dictionary<int, float[]>();
 
-            if (!root.TryGetProperty("nodes", out var nodesEl))
-                return result;
+            if (!root.TryGetProperty("nodes", out var nodesEl)) return result;
 
             var nodeArray = nodesEl.EnumerateArray().ToArray();
             int nodeCount = nodeArray.Length;
 
-            // parent[i] = index of parent node (-1 for roots)
             var parentIdx = new int[nodeCount];
             Array.Fill(parentIdx, -1);
 
@@ -610,6 +748,7 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                 localMatrices[ni] = NodeLocalMatrix(nodeArray[ni]);
 
             var worldMatrices = new float[nodeCount][];
+
             float[] GetWorldMatrix(int idx)
             {
                 if (worldMatrices[idx] != null) return worldMatrices[idx];
@@ -652,154 +791,48 @@ namespace OpenGL3DViewerNET10.MeshIOLib
             return TrsToMatrix(t, r, s);
         }
 
-        // ------------------------------------------------------------------ //
-        //  JSON structure parsing (bufferViews, accessors)
-        // ------------------------------------------------------------------ //
-
-        record BufferViewInfo(int BufferIdx, int ByteOffset, int ByteLength, int ByteStride);
-        record AccessorInfo(int BufferViewIdx, int ByteOffset, int ComponentType, int Count, string Type);
-
-        static List<BufferViewInfo> ParseBufferViews(JsonElement root)
+        /// <summary>Applies a column-major 4×4 matrix (float[16]) to a position vector.</summary>
+        static RHVector3 ApplyTransform(RHVector3 v, float[]? m)
         {
-            var list = new List<BufferViewInfo>();
-            if (!root.TryGetProperty("bufferViews", out var bvEl)) return list;
-            foreach (var bv in bvEl.EnumerateArray())
-            {
-                int bufIdx     = bv.GetProperty("buffer").GetInt32();
-                int byteOffset = bv.TryGetProperty("byteOffset", out var bo) ? bo.GetInt32() : 0;
-                int byteLen    = bv.GetProperty("byteLength").GetInt32();
-                int byteStride = bv.TryGetProperty("byteStride", out var bs) ? bs.GetInt32() : 0;
-                list.Add(new BufferViewInfo(bufIdx, byteOffset, byteLen, byteStride));
-            }
-            return list;
+            if (m == null) return v;
+            double x = m[0]*v.x + m[4]*v.y + m[8] *v.z + m[12];
+            double y = m[1]*v.x + m[5]*v.y + m[9] *v.z + m[13];
+            double z = m[2]*v.x + m[6]*v.y + m[10]*v.z + m[14];
+            return new RHVector3(x, y, z);
         }
 
-        static List<AccessorInfo> ParseAccessors(JsonElement root)
+        /// <summary>Builds a column-major 4×4 matrix from glTF TRS components.</summary>
+        static float[] TrsToMatrix(float[] t, float[] r, float[] s)
         {
-            var list = new List<AccessorInfo>();
-            if (!root.TryGetProperty("accessors", out var acEl)) return list;
-            foreach (var ac in acEl.EnumerateArray())
+            float qx = r[0], qy = r[1], qz = r[2], qw = r[3];
+            float x2 = qx+qx, y2 = qy+qy, z2 = qz+qz;
+            float xx = qx*x2, xy = qx*y2, xz = qx*z2;
+            float yy = qy*y2, yz = qy*z2, zz = qz*z2;
+            float wx = qw*x2, wy = qw*y2, wz = qw*z2;
+            float sx = s[0],  sy = s[1],  sz = s[2];
+
+            return new float[16]
             {
-                int    bvIdx         = ac.TryGetProperty("bufferView", out var bv) ? bv.GetInt32() : -1;
-                int    byteOffset    = ac.TryGetProperty("byteOffset", out var bo) ? bo.GetInt32() : 0;
-                int    componentType = ac.GetProperty("componentType").GetInt32();
-                int    count         = ac.GetProperty("count").GetInt32();
-                string type          = ac.GetProperty("type").GetString()!;
-                list.Add(new AccessorInfo(bvIdx, byteOffset, componentType, count, type));
-            }
-            return list;
-        }
-
-        // ------------------------------------------------------------------ //
-        //  Accessor data readers
-        // ------------------------------------------------------------------ //
-
-        /// <summary>Reads a VEC3 FLOAT accessor → array of RHVector3.</summary>
-        static RHVector3[] ReadVec3Accessor(
-            int                  accessorIdx,
-            List<AccessorInfo>   accessors,
-            List<BufferViewInfo> bufferViews,
-            List<byte[]?>        buffers)
-        {
-            var acc = accessors[accessorIdx];
-            if (acc.Type != "VEC3")
-                throw new InvalidDataException($"Expected VEC3 accessor, got {acc.Type}.");
-            if (acc.ComponentType != 5126)
-                throw new NotSupportedException("Only FLOAT (5126) component type is supported for positions.");
-
-            var (data, stride) = GetAccessorBytes(acc, bufferViews, buffers, elementSize: 12);
-            var result         = new RHVector3[acc.Count];
-            int baseOffset     = acc.ByteOffset;
-
-            for (int i = 0; i < acc.Count; i++)
-            {
-                int offset = baseOffset + i * stride;
-                float x = BitConverter.ToSingle(data, offset);
-                float y = BitConverter.ToSingle(data, offset + 4);
-                float z = BitConverter.ToSingle(data, offset + 8);
-                result[i] = new RHVector3(x, y, z);
-            }
-            return result;
-        }
-
-        /// <summary>Reads a SCALAR accessor (indices) → int array.</summary>
-        static int[] ReadScalarAccessor(
-            int                  accessorIdx,
-            List<AccessorInfo>   accessors,
-            List<BufferViewInfo> bufferViews,
-            List<byte[]?>        buffers)
-        {
-            var acc = accessors[accessorIdx];
-            if (acc.Type != "SCALAR")
-                throw new InvalidDataException($"Expected SCALAR accessor, got {acc.Type}.");
-
-            int elementSize = acc.ComponentType switch
-            {
-                5121 => 1, // UNSIGNED_BYTE
-                5123 => 2, // UNSIGNED_SHORT
-                5125 => 4, // UNSIGNED_INT
-                _    => throw new NotSupportedException($"Unsupported index component type {acc.ComponentType}.")
+                (1-(yy+zz))*sx, (xy+wz)*sx,    (xz-wy)*sx,    0,
+                (xy-wz)*sy,    (1-(xx+zz))*sy, (yz+wx)*sy,    0,
+                (xz+wy)*sz,    (yz-wx)*sz,     (1-(xx+yy))*sz,0,
+                t[0],           t[1],           t[2],          1
             };
+        }
 
-            var (data, stride) = GetAccessorBytes(acc, bufferViews, buffers, elementSize);
-            var result         = new int[acc.Count];
-            int baseOffset     = acc.ByteOffset;
-
-            for (int i = 0; i < acc.Count; i++)
-            {
-                int offset = baseOffset + i * stride;
-                result[i] = acc.ComponentType switch
+        /// <summary>Multiplies two column-major 4×4 matrices: result = a × b.</summary>
+        static float[] MultiplyMatrix(float[] a, float[] b)
+        {
+            var c = new float[16];
+            for (int col = 0; col < 4; col++)
+                for (int row = 0; row < 4; row++)
                 {
-                    5121 => data[offset],
-                    5123 => BitConverter.ToUInt16(data, offset),
-                    5125 => (int)BitConverter.ToUInt32(data, offset),
-                    _    => 0
-                };
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Returns (bufferData, elementStride) for an accessor.
-        /// The returned slice starts at the bufferView's byteOffset.
-        /// The accessor's own byteOffset is NOT baked in — callers apply it as baseOffset.
-        /// </summary>
-        static (byte[] data, int stride) GetAccessorBytes(
-            AccessorInfo         acc,
-            List<BufferViewInfo> bufferViews,
-            List<byte[]?>        buffers,
-            int                  elementSize)
-        {
-            if (acc.BufferViewIdx < 0)
-                throw new NotSupportedException("Sparse accessors without a bufferView are not supported.");
-
-            var bv  = bufferViews[acc.BufferViewIdx];
-            var buf = buffers[bv.BufferIdx]
-                      ?? throw new InvalidDataException(
-                          $"Buffer {bv.BufferIdx} data is missing (external URIs are not supported).");
-
-            var slice = new byte[bv.ByteLength];
-            Array.Copy(buf, bv.ByteOffset, slice, 0, bv.ByteLength);
-
-            int stride = bv.ByteStride > 0 ? bv.ByteStride : elementSize;
-            return (slice, stride);
-        }
-
-        // ------------------------------------------------------------------ //
-        //  Utility
-        // ------------------------------------------------------------------ //
-
-        static int CountTrianglePrimitives(JsonElement meshesEl)
-        {
-            int count = 0;
-            foreach (var m in meshesEl.EnumerateArray())
-                if (m.TryGetProperty("primitives", out var prims))
-                    foreach (var p in prims.EnumerateArray())
-                    {
-                        int mode = p.TryGetProperty("mode", out var mEl) ? mEl.GetInt32() : 4;
-                        if (mode == 4) count++;
-                    }
-            return count;
+                    float sum = 0;
+                    for (int k = 0; k < 4; k++)
+                        sum += a[row + k*4] * b[k + col*4];
+                    c[row + col*4] = sum;
+                }
+            return c;
         }
     }
 }
