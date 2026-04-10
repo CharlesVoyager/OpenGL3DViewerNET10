@@ -5,8 +5,6 @@ namespace OpenGL3DViewerNET10.MeshIOLib
 {
     public class MeshIOWrapper
     {
-        event EventHandler AbortTask;
-
         public void LoadWOCatch(string file, TopoModel model)
         {
             string lname = file.ToLower();
@@ -22,9 +20,11 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                 fileMesh = new MeshIOBase();
 
             updateRateFunc = OnProcessUpdate;
-            AbortTask += fileMesh.TaskAbort;
+            MainWindow.main.BusyWindow.AbortTask += fileMesh.TaskAbort;
+
             fileMesh.LoadWOCatch(file, model, updateRateFunc);
-            AbortTask -= fileMesh.TaskAbort;
+
+            MainWindow.main.BusyWindow.AbortTask -= fileMesh.TaskAbort;
         }
 
         public void OnProcessUpdate(int rate)
