@@ -236,7 +236,7 @@ namespace View3D.view
             {
                 if (newModel.Name.Contains(".glb"))
                 {
-                    DoMmToInch(newModel);
+                    DoAutoScale(newModel);
                 }
                 else
                 {
@@ -938,6 +938,29 @@ namespace View3D.view
                     stl.Scale.z = 1;    // Consider the model is 2D without z hight.
                 else
                     stl.Scale.z = (float)(newSizeMMz / ui.bboznow);
+
+                stl.UpdateBoundingBoxAndMatrix();
+                stl.Land();
+                UpdateOutOfBound();
+                MainWindow.main.threeDControl.UpdateChanges();
+            }
+            catch { }
+        }
+
+        // Auto scale the model to fit the half printer bed in X axis on the largest dimension.
+        public void DoAutoScale(PrintModel stl)
+        {
+            try
+            {
+                var bbox = stl.BoundingBox;
+
+                // Find the largest dimension of the model.
+                double maxDim = Math.Max(Math.Max(bbox.Size.x, bbox.Size.y), bbox.Size.z);
+                double scaleFactor = (MainWindow.main.threeDSettings.PrintAreaWidth / 2) / maxDim;
+
+                stl.Scale.x = (float)scaleFactor;
+                stl.Scale.y = (float)scaleFactor;
+                stl.Scale.z = (float)scaleFactor;
 
                 stl.UpdateBoundingBoxAndMatrix();
                 stl.Land();
