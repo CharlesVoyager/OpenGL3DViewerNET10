@@ -159,7 +159,7 @@
                 <GroupBox Header="Object Analysis" Margin="4,2" Background="White" x:Name="groupBoxObjectAnalysis">
                     <Grid Margin="4">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="65*"/>
+                            <ColumnDefinition Width="45*"/>
                             <ColumnDefinition Width="35*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -172,13 +172,13 @@
                             <RowDefinition Height="24"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Row 0 – Intersecting triangles -->
+                        <!-- Row 0 – Original Model Size -->
                         <TextBlock Grid.Row="0" Grid.Column="0"
-                                   Text="Intersecting triangles:"
+                                   Text="Original Model Size (X, Y, Z):"
                                    VerticalAlignment="Center"/>
-                        <TextBlock x:Name="labelIntersectingTriangles"
+                        <TextBlock x:Name="txtOriginalModelSize"
                                    Grid.Row="0" Grid.Column="1"
-                                   Text="0" VerticalAlignment="Center"/>
+                                   Text="(0, 0, 0)" VerticalAlignment="Center"/>
 
                         <!-- Row 1 – Loop edges -->
                         <TextBlock Grid.Row="1" Grid.Column="0"
@@ -212,7 +212,7 @@
                         <!-- Row 5 – Triangles -->
                         <TextBlock Grid.Row="5" Grid.Column="0"
                                    Text="Triangles:" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="labelTriangles"
+                        <TextBlock x:Name="txtTriangles"
                                    Grid.Row="5" Grid.Column="1"
                                    Text="0" VerticalAlignment="Center"/>
 

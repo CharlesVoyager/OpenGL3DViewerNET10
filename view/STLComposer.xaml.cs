@@ -100,13 +100,16 @@ namespace View3D.view
             }
         }
 
-        public void UpdateAnalyserData()
+        void updateAnalyserData()
         {
             PrintModel model = SingleSelectedModel;
             if (model == null) return;
 
+            txtOriginalModelSize.Text = "(" + model.Model.boundingBox.Size.x.ToString("0.000") + ", " +
+                                              model.Model.boundingBox.Size.y.ToString("0.000") + "," +
+                                              model.Model.boundingBox.Size.z.ToString("0.000") + ")";
             labelVertices.Text             = "(To be implemented)";
-            labelTriangles.Text            = model.Model.triangles.Count.ToString();
+            txtTriangles.Text            = model.Model.triangles.Count.ToString();
 
             // Colour: black when zero, red when non-zero
             var red   = new SolidColorBrush(Colors.Red);
@@ -247,7 +250,7 @@ namespace View3D.view
                     if (MainWindow.main.Visibility == Visibility.Visible)
                         dlg.Owner = MainWindow.main;
                     dlg.ShowDialog();
-                    if (dlg.gIsScale) DoAutoScale(newModel, dlg.newSizeMMx, dlg.newSizeMMy, dlg.newSizeMMz);
+                    if (dlg.gIsScale) DoAutoScale(newModel);
                     else if (dlg.gIsInch) DoMmToInch(newModel);
                 }
             }
@@ -486,7 +489,7 @@ namespace View3D.view
                 MainWindow.main.setbuttonVisable(listObjects.SelectedItems.Count == 1);
 
                 panelAnalysis.Visibility = Visibility.Visible;
-                UpdateAnalyserData();
+                updateAnalyserData();
             }
         }
 
