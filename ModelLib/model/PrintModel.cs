@@ -130,7 +130,7 @@ namespace OpenGL3DViewerNET10.ModelLib.model
             ModelMatrix mtx = ModelObjectToolHelper.ToModelMatrix(trans);
             fixed (float* ptr = &Mesh.glVertices[0])
             {
-                BoundingBox3 box3 = ModelObjectToolWrapper.Instance.Tool.GetBoundingBox(mtx, ptr, Mesh.glVertices.Length / 3);
+                BoundingBox3 box3 = ModelObjectToolWrapper.Instance.Tool.GetBoundingBox(mtx, ptr, Mesh.glVertices.Length);
                 BoundingBox.Add(box3.MaxX, box3.MaxY, box3.MaxZ);
                 BoundingBox.Add(box3.MinX, box3.MinY, box3.MinZ);
             }

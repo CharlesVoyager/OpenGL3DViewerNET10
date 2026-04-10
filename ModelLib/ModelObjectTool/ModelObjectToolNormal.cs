@@ -17,7 +17,7 @@ namespace View3D.ModelObjectTool
             float nowX = 0;
             float nowY = 0;
             float nowZ = 0;
-            int arrayCount = vertexCount * 3;
+            int arrayCount = vertexCount;
             for (int n = 0; n < arrayCount; n += 3)
             {
                 float x = *vertexArray++;
