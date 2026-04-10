@@ -15,60 +15,61 @@ namespace View3D.view
         public bool gIsInch = false;
         public bool gIsScale = false;
 
-        public double newSizeMMx = 0, newSizeMMy = 0, newSizeMMz = 0;
-
-        double gx = 0.0;
-        double gy = 0.0;
-        double gz = 0.0;
-
-        public ObjectResizeDialog(double px, double py, double pz)
+        public ObjectResizeDialog(double originalSizeX, double originalSizeY, double originalSizeZ)
         {
             InitializeComponent();
 
             MainWindow.main.languageChanged += translate;
-  
-            gx = px;
-            gy = py;
-            gz = pz;
 
-            string tx = gx.ToString("0.000");
-            string ty = gy.ToString("0.000");
-            string tz = gz.ToString("0.000");
+            double newSizeMMx = 0, newSizeMMy = 0, newSizeMMz = 0;
+
+            double gx = 0.0;
+            double gy = 0.0;
+            double gz = 0.0;
+  
+            gx = originalSizeX;
+            gy = originalSizeY;
+            gz = originalSizeZ;
+
+            double targetLargestSize = MainWindow.main.threeDSettings.PrintAreaWidth / 2;
+
             newSizeMMx = gx;
             newSizeMMy = gy;
             newSizeMMz = gz;
+
             double Max = Math.Max(Math.Max(gx, gy), gz);
+
             if ((gx == gy) && (gy == gz))
             {
-                newSizeMMx = 25.000;
-                newSizeMMy = 25.000;
-                newSizeMMz = 25.000;
+                newSizeMMx = targetLargestSize;
+                newSizeMMy = targetLargestSize;
+                newSizeMMz = targetLargestSize;
             }
             else
             {
                 if (gx == Max)
                 {
-                    newSizeMMx = 25.000;
-                    newSizeMMy = 25.000 / gx * newSizeMMy;
-                    newSizeMMz = 25.000 / gx * newSizeMMz;
+                    newSizeMMx = targetLargestSize;
+                    newSizeMMy = targetLargestSize / gx * newSizeMMy;
+                    newSizeMMz = targetLargestSize / gx * newSizeMMz;
                 }
                 else if (gy == Max)
                 {
-                    newSizeMMx = 25.000 / gy * newSizeMMx;
-                    newSizeMMy = 25.000;
-                    newSizeMMz = 25.000 / gy * newSizeMMz;
+                    newSizeMMx = targetLargestSize / gy * newSizeMMx;
+                    newSizeMMy = targetLargestSize;
+                    newSizeMMz = targetLargestSize / gy * newSizeMMz;
                 }
                 else if (gz == Max)
                 {
-                    newSizeMMx = 25.000 / gz * newSizeMMx;
-                    newSizeMMy = 25.000 / gz * newSizeMMy;
-                    newSizeMMz = 25.000;
+                    newSizeMMx = targetLargestSize / gz * newSizeMMx;
+                    newSizeMMy = targetLargestSize / gz * newSizeMMy;
+                    newSizeMMz = targetLargestSize;
                 }
             }
             txtOriginalSize.Text = txtOriginalSize.Text.Replace("§", " ");
             txtInchScale.Text = txtInchScale.Text.Replace("§", " ");
             txtAutoScale.Text = txtAutoScale.Text.Replace("§", " ");
-            string tOriginalSize = tx.ToString() + " X " + ty.ToString() + " X " + tz.ToString() + " mm\u00B3";
+            string tOriginalSize = gx.ToString("0.000") + " X " + gy.ToString("0.000") + " X " + gz.ToString("0.000") + " mm\u00B3";
             string tInchScale = gx.ToString("0.000") + " X " + gy.ToString("0.000") + " X " + gz.ToString("0.000") + " inch\u00B3";
             string tAutoScale = newSizeMMx.ToString("0.000") + " X " + newSizeMMy.ToString("0.000") + " X " + newSizeMMz.ToString("0.000") + " mm\u00B3";
             txtOriginalSize.Inlines.Add(new Run(tOriginalSize.ToString(CultureInfo.InvariantCulture)) { FontWeight = FontWeights.Bold });

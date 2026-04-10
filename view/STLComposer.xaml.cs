@@ -937,7 +937,7 @@ namespace View3D.view
         {
             try
             {
-                var ui   = MainWindow.main.UI_resize_advance;
+                var ui = MainWindow.main.UI_resize_advance;
                 ui.button_mmtoinch.IsEnabled = false;
                 ui.button_inchtomm.IsEnabled = true;
                 var bbox = stl.BoundingBox;
