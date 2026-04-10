@@ -3,7 +3,7 @@
 A high-performance, lightweight 3D model viewer developed in C# using OpenTK. This project demonstrates the integration of OpenGL within the .NET ecosystem to render and interact with STL geometry.
 
 Features
-- STL Support: Efficiently parse and render Binary and ASCII STL files.
+- 3D Model File Format Support: STL and GLB.
 - Real-time Interaction: Smooth camera rotation, panning, and zooming.
 - Optimized Rendering: Utilizes OpenGL Buffer Objects (VBOs) for hardware-accelerated performance.
 - Clean Architecture: Implemented with a focus on SOLID principles and maintainable C# patterns.

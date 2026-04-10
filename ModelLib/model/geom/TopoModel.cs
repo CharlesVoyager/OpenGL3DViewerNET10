@@ -68,6 +68,29 @@ namespace View3D.model.geom
         {
             foreach (TopoTriangle t in triangles)
                 newModel.triangles.Add(new TopoTriangle(t));
+
+            boundingBox.CopyTo(newModel.boundingBox);
+
+            foreach (PbrMaterial m in materials)
+            {
+                PbrMaterial newMat = new PbrMaterial
+                {
+                    BaseColorTexture = m.BaseColorTexture,
+                    BaseColorFactor = (float[])m.BaseColorFactor.Clone(),
+                    MetallicRoughnessTexture = m.MetallicRoughnessTexture,
+                    MetallicFactor = m.MetallicFactor,
+                    RoughnessFactor = m.RoughnessFactor,
+                    NormalTexture = m.NormalTexture,
+                    OcclusionTexture = m.OcclusionTexture,
+                    EmissiveTexture = m.EmissiveTexture,
+                    EmissiveFactor = (float[])m.EmissiveFactor.Clone()
+                };
+                newModel.materials.Add(newMat);
+            }
+
+            newModel.texCoords.AddRange(texCoords);
+
+            newModel.tangents.AddRange(tangents);
         }
 
         // ------------------------------------------------------------------

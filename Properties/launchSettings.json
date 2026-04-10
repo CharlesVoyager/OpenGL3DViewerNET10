@@ -1,8 +1,7 @@
 {
   "profiles": {
     "OpenGL3DViewerNET10": {
-      "commandName": "Project",
-      "commandLineArgs": "..\\..\\..\\..\\Stl\\DamagedHelmet.glb"
+      "commandName": "Project"
     }
   }
 }

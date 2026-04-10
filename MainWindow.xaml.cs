@@ -322,8 +322,9 @@ namespace View3D
             Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
 
             openFileDialog.Title = "Select a File";
-            openFileDialog.Filter = "STL Files (*.stl)|*.stl|GLB Files (*.glb)|*.glb";
-
+            openFileDialog.Filter = "3D Files (*.stl;*.glb)|*.stl;*.glb|" +
+                                        "STL Files (*.stl)|*.stl|" +
+                                        "GLB Files (*.glb)|*.glb";
             bool? result = openFileDialog.ShowDialog();
 
             if (result == true)
