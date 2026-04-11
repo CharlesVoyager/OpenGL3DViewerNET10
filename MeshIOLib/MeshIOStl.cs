@@ -442,7 +442,7 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                     // attribute bytes at o+48..o+49 skipped
 
                     RHVector3 d1 = p2.Subtract(p1);
-                    RHVector3 d2 = p3.Subtract(p2);
+                    RHVector3 d2 = p3.Subtract(p1);
                     RHVector3 normal = d1.CrossProduct(d2);
                     normal.NormalizeSafe();
 

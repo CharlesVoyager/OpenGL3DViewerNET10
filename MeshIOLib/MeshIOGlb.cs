@@ -259,7 +259,7 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                 var p2 = positions[i1];
                 var p3 = positions[i2];
 
-                var normal = p2.Subtract(p1).CrossProduct(p3.Subtract(p2));
+                var normal = p2.Subtract(p1).CrossProduct(p3.Subtract(p1));
                 normal.NormalizeSafe();
 
                 // ---- Priority 1: per-vertex colors ----
