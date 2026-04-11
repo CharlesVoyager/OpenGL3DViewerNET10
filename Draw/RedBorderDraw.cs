@@ -104,6 +104,8 @@ namespace OpenGL3DViewerNET10.Draw
         // Call each frame in place of the original GL.Begin/End block
         public void Draw()
         {
+            if (MainWindow.main.threeDSettings.IsPrintbed() != true) return;
+
             Matrix4 model = Matrix4.Identity;
             Matrix4 view = Matrix4.Identity;
             Matrix4 proj = Matrix4.Identity;
