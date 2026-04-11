@@ -356,6 +356,11 @@ namespace View3D.view
                 hexBox.Text = $"#{(byte)sliderA.Value:X2}{(byte)sliderR.Value:X2}" +
                               $"{(byte)sliderG.Value:X2}{(byte)sliderB.Value:X2}";
                 updating = false;
+
+                // Allow live preview of changes without needing to click OK.
+                border.Background = new SolidColorBrush(selectedColor);
+                MainWindow.main.Update3D();
+                // <END>
             };
 
             void BindSliderBox(Slider slider, TextBox box)
@@ -760,6 +765,8 @@ namespace View3D.view
             sliderAmbient.Value = 0.3;
             sliderSpecular.Value = 0.3;
             sliderShininess.Value = 16;
+
+            MainWindow.main.Update3D();
         }
 
         private void ThreeDSettings_Closed(object sender, EventArgs e)
@@ -773,6 +780,7 @@ namespace View3D.view
         {
             settingsService.Reset();
             loadSettings();
+            MainWindow.main.Update3D();
         }
 
         private void PrintAreaWidth_TextChanged(object sender, TextChangedEventArgs e)
