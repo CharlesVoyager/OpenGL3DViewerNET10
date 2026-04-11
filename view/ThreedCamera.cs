@@ -12,8 +12,8 @@ namespace View3D.view
         public double theta = 0;
         public double phi = 0;
         public double angle = 15.0 * Math.PI / 180;
-        public Vector3 viewCenterStart = new Vector3();
-        public double startTheta, startPhi, startDistance;
+        Vector3 viewCenterStart = new Vector3();
+        double startTheta, startPhi, startDistance;
 
         public ThreeDCamera() { }
 
