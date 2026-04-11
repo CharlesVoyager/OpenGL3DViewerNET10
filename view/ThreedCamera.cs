@@ -178,20 +178,6 @@ namespace View3D.view
                 phi = 1e-5;
         }
 
-        public void RotateDegrees(double rotX, double rotZ)
-        {
-            theta += rotX*Math.PI/180.0;
-            phi += rotZ * Math.PI / 180.0;
-            while (theta > Math.PI)
-                theta -= 2 * Math.PI;
-            while (theta < -Math.PI)
-                theta += 2 * Math.PI;
-            while (phi > Math.PI)
-                phi = Math.PI - 1e-5;
-            while (phi < 0)
-                phi = 1e-5;
-        }
-
         public void Pan(double leftRight, double upDown,double dist)
         {
             if (dist < 0) dist = distance;
