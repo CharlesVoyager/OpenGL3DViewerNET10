@@ -12,6 +12,7 @@ namespace View3D.view
         public double theta = 0;
         public double phi = 0;
         public double angle = 15.0 * Math.PI / 180;
+
         Vector3 viewCenterStart = new Vector3();
         double startTheta, startPhi, startDistance;
 
@@ -178,7 +179,7 @@ namespace View3D.view
                 phi = 1e-5;
         }
 
-        public void Pan(double leftRight, double upDown,double dist)
+        public void Pan(double leftRight, double upDown, double dist)
         {
             if (dist < 0) dist = distance;
             leftRight *= Math.Max(1,dist) * Math.Tan(angle)*2.0;
