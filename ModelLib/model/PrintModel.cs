@@ -16,12 +16,9 @@ namespace OpenGL3DViewerNET10.ModelLib.model
         public RHBoundingBox BoundingBox;
 
         public string Name = "Unknown";
+
         public bool outside = false;
-
         public Matrix4 trans;
-
-        public double m = 0;
-        public double b = 0;
 
         public PrintModel()
         {            
