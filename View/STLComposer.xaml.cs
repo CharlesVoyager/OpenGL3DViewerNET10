@@ -248,14 +248,14 @@ namespace View3D.view
                 double tYBound = newModel.BoundingBox.Size.y / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth);
                 double tZBound = newModel.BoundingBox.Size.z / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight);
                 double tMax    = Math.Max(Math.Max(tXBound, tYBound), Math.Max(tYBound, tZBound));
-                float  scaleValue = 0;
+                double scaleValue = 0;
 
-                if      (tMax == tXBound) scaleValue = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth) / newModel.BoundingBox.Size.x) * 100;
-                else if (tMax == tYBound) scaleValue = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth) / newModel.BoundingBox.Size.y) * 100;
-                else if (tMax == tZBound) scaleValue = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight) / newModel.BoundingBox.Size.z) * 100;
+                if      (tMax == tXBound) scaleValue = MainWindow.main.threeDSettings.PrintAreaWidth / newModel.BoundingBox.Size.x;
+                else if (tMax == tYBound) scaleValue = MainWindow.main.threeDSettings.PrintAreaDepth / newModel.BoundingBox.Size.y;
+                else if (tMax == tZBound) scaleValue = MainWindow.main.threeDSettings.PrintAreaHeight / newModel.BoundingBox.Size.z;
 
                 var result = MessageBox.Show(
-                    Trans.T("M_OBJ_SCALE_DOWN") + " " + (int)scaleValue + "%",
+                    Trans.T("M_OBJ_SCALE_DOWN") + " " + (int)(scaleValue * 100) + "%",
                     Trans.T("W_OBJ_TOO_LARGE"),
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question);
@@ -264,19 +264,9 @@ namespace View3D.view
                 {
                     try
                     {
-                        tXBound = newModel.BoundingBox.Size.x / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth);
-                        tYBound = newModel.BoundingBox.Size.y / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth);
-                        tZBound = newModel.BoundingBox.Size.z / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight);
-                        tMax    = Math.Max(Math.Max(tXBound, tYBound), Math.Max(tYBound, tZBound));
-
-                        if      (tMax == tXBound)
-                        { newModel.Scale.x = newModel.Scale.y = newModel.Scale.z = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth) / newModel.BoundingBox.Size.x); }
-                        else if (tMax == tYBound)
-                        { newModel.Scale.y = newModel.Scale.x = newModel.Scale.z = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth) / newModel.BoundingBox.Size.y); }
-                        else if (tMax == tZBound)
-                        { newModel.Scale.z = newModel.Scale.x = newModel.Scale.y = (float)(Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight) / newModel.BoundingBox.Size.z); }
-
-                        MainWindow.main.UI_move.button_land_Click(null, null);
+                        newModel.Scale.x = newModel.Scale.y = newModel.Scale.z = scaleValue;
+                        newModel.UpdateBoundingBoxAndMatrix();
+                        newModel.Land();
                     }
                     catch { }
                 }
