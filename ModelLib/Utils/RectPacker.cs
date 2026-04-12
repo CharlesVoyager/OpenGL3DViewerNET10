@@ -309,6 +309,7 @@ namespace OpenGL3DViewerNET10.ModelLib.Utils
             return true;
         }
     }
+  
     public class OutRectPacker : RectPacker
     {
         private int _Offset = 1000;

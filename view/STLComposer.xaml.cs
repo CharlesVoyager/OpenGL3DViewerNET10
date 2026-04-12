@@ -220,22 +220,7 @@ namespace View3D.view
             }
             newModel.Name = Path.GetFileName(file);
 
-            newModel.Position.z = (float)(newModel.BoundingBox.Size.z / 2);
-            if (modelToLand)
-            {
-                // NOTE: Autoposition needs xMin and yMin data. Therefore, centering BoundingBox first to avoid some STL files with large xMin/yMin values being placed outside the printer bed.
-                newModel.BoundingBox.Centerized();
-                Autoposition(newModel);
-            }
-            else
-            {
-                newModel.Position.x = (float)newModel.BoundingBox.Center.x;
-                newModel.Position.y = (float)newModel.BoundingBox.Center.y;
-                newModel.UpdateBoundingBoxAndMatrix();
-            }
-            
             double xxx = newModel.BoundingBox.Size.x * newModel.BoundingBox.Size.y * 0.001; // Don't use z size here because some STL files may have very small z size but large x/y size, and they should not be considered as "too small".
-
             if (xxx < 0.1)  // the object is too small.
             {
                 if (newModel.Name.Contains(".glb"))
@@ -296,6 +281,20 @@ namespace View3D.view
                     }
                     catch { }
                 }
+            }
+
+            newModel.Position.z = (float)(newModel.BoundingBox.Size.z / 2);
+            if (modelToLand)
+            {
+                // NOTE: Autoposition needs xMin and yMin data. Therefore, centering BoundingBox first to avoid some STL files with large xMin/yMin values being placed outside the printer bed.
+                newModel.BoundingBox.Centerized();
+                Autoposition(newModel);
+            }
+            else
+            {
+                newModel.Position.x = (float)newModel.BoundingBox.Center.x;
+                newModel.Position.y = (float)newModel.BoundingBox.Center.y;
+                newModel.UpdateBoundingBoxAndMatrix();
             }
 
             // Remember initial positions for all models after Autoposition.
