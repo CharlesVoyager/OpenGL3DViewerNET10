@@ -496,7 +496,7 @@
             <Rectangle Name="rectangle0" Grid.RowSpan="3" Fill="#C8F7931E" />
             <Label Content="OpenTK 3D Viewer" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" FontFamily="Arial" FontSize="14"/>
             <TextBlock Grid.Row="1" Margin="6,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Opacity="0.8" Foreground="White" TextWrapping="Wrap" FontFamily="Arial" FontSize="14">
-                A high-performance, lightweight 3D model viewer developed in C# using OpenTK. This project demonstrates the integration of OpenGL within the .NET ecosystem to render and interact with STL geometry.
+                A high-performance, lightweight 3D model viewer developed in C# using OpenTK. This project demonstrates the integration of OpenGL within the .NET ecosystem to render and interact with STL or GLB geometry.
             </TextBlock>
             <TextBlock Grid.Row="2" Margin="6,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Opacity="0.8" Foreground="White" TextWrapping="Wrap" FontFamily="Arial" FontSize="14">
                 This program was created by Charles Chang (charles.chang@live.com) as a personal project.
