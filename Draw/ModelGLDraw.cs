@@ -191,7 +191,7 @@ namespace OpenGL3DViewerNET10.Draw
             // --- Hemisphere ambient ---
             const vec3  skyColor    = vec3(0.60, 0.70, 0.90);
             const vec3  groundColor = vec3(0.25, 0.20, 0.18);
-            const float ambientStr  = 0.22;
+            const float ambientStr  = 1.2;
 
             const float PI = 3.14159265358979;
 
