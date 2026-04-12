@@ -80,9 +80,7 @@ namespace View3D.model.geom
             if (color != null)
             {
                 if (idxColors + 9 > glColors.Length)
-                {
                     throw new Exception("Too many triangles added to submesh");
-                }
 
                 glColors[idxColors++] = color[0];
                 glColors[idxColors++] = color[1];
