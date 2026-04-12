@@ -13,6 +13,7 @@ namespace View3D.model.geom
             y = (float)_y;
             z = (float)_z;
         }
+
         public RHVector3(float _x, float _y, float _z)
         {
             x = _x;
@@ -45,7 +46,7 @@ namespace View3D.model.geom
 
         public RHVector3(Vector4 orig)
         {
-            x = orig.X/orig.W;
+            x = orig.X / orig.W;
             y = orig.Y / orig.W;
             z = orig.Z / orig.W;
         }
