@@ -1,49 +1,35 @@
-﻿namespace OpenGL3DViewerNET10.ModelLib.model
+﻿using View3D.model.geom;
+
+namespace OpenGL3DViewerNET10.ModelLib.model
 {
-    public class Coord3D
-    {
-        public float x = 0, y = 0, z = 0;
-
-        public float inix = 0, iniy = 0, iniz = 0;  // remember initial position for reset
-
-        public Coord3D() { }
-        public Coord3D(float _x, float _y, float _z)
-        {
-            x = _x;
-            y = _y;
-            z = _z;
-        }
-
-        public override string ToString()
-        {
-            return x.ToString("0") + " " + y.ToString("0") + " " + z.ToString("0");
-        }
-    }
     public abstract class ThreeDModel
     {
         private bool selected = false;
-        private Coord3D position = new Coord3D();      // shift position
-        private Coord3D rotation = new Coord3D();      // rotate vector
-        private Coord3D scale = new Coord3D(1, 1, 1);  // scaler magnitude
+        private RHVector3 position = new RHVector3(0, 0, 0);   
+        private RHVector3 rotation = new RHVector3(0, 0, 0);    
+        private RHVector3 scale = new RHVector3(1, 1, 1);
+
+
+        public RHVector3 InitialPosition = new RHVector3(0, 0, 0);
 
         public bool Selected
         {
             get { return selected; }
             set { selected = value; }
         }
-        public Coord3D Position
+        public RHVector3 Position
         {
             get { return position; }
             set { position = value; }
         }
 
-        public Coord3D Rotation
+        public RHVector3 Rotation
         {
             get { return rotation; }
             set { rotation = value; }
         }
 
-        public Coord3D Scale
+        public RHVector3 Scale
         {
             get { return scale; }
             set { scale = value; }

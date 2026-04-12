@@ -164,9 +164,9 @@ namespace View3D.view
             PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
-            slider_moveX.Value = stl.Position.inix;
-            slider_moveY.Value = stl.Position.iniy;
-            slider_moveZ.Value = stl.Position.iniz;
+            slider_moveX.Value = stl.InitialPosition.x;
+            slider_moveY.Value = stl.InitialPosition.y;
+            slider_moveZ.Value = stl.InitialPosition.z;
 
             stl.Land();
 

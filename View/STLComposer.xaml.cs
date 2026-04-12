@@ -300,14 +300,14 @@ namespace View3D.view
             // Remember initial positions for all models after Autoposition.
             foreach (var m in models)
             {
-                m.Position.inix = m.Position.x;
-                m.Position.iniy = m.Position.y;
-                m.Position.iniz = m.Position.z;
+                m.InitialPosition.x = m.Position.x;
+                m.InitialPosition.y = m.Position.y;
+                m.InitialPosition.z = m.Position.z;
             }
 
-            newModel.Position.inix = newModel.Position.x;
-            newModel.Position.iniy = newModel.Position.y;
-            newModel.Position.iniz = newModel.Position.z;
+            newModel.InitialPosition.x = newModel.Position.x;
+            newModel.InitialPosition.y = newModel.Position.y;
+            newModel.InitialPosition.z = newModel.Position.z;
 
             // Added object to the list and updated the TextBox controls.
             AddObject(newModel);
@@ -727,8 +727,8 @@ namespace View3D.view
             if (_suppressTextEvents) return;
             var stl = SingleSelectedModel;
             if (stl == null) return;
-            float old = stl.Position.x;
-            float.TryParse(textTransX.Text, out stl.Position.x);
+            double old = stl.Position.x;
+            double.TryParse(textTransX.Text, out stl.Position.x);
             if (Math.Abs(old - stl.Position.x) < 0.001f) return;
             stl.UpdateTransMatrix();
             stl.UpdateBoundingBoxByShift(stl.Position.x - old, 0, 0);
@@ -741,8 +741,8 @@ namespace View3D.view
             if (_suppressTextEvents) return;
             var stl = SingleSelectedModel;
             if (stl == null) return;
-            float old = stl.Position.y;
-            float.TryParse(textTransY.Text, out stl.Position.y);
+            double old = stl.Position.y;
+            double.TryParse(textTransY.Text, out stl.Position.y);
             if (Math.Abs(old - stl.Position.y) < 0.001f) return;
             stl.UpdateTransMatrix();
             stl.UpdateBoundingBoxByShift(0, stl.Position.y - old, 0);
@@ -755,8 +755,8 @@ namespace View3D.view
             if (_suppressTextEvents) return;
             var stl = SingleSelectedModel;
             if (stl == null) return;
-            float old = stl.Position.z;
-            float.TryParse(textTransZ.Text, out stl.Position.z);
+            double old = stl.Position.z;
+            double.TryParse(textTransZ.Text, out stl.Position.z);
             if (Math.Abs(old - stl.Position.z) < 0.001f) return;
             stl.UpdateTransMatrix();
             stl.UpdateBoundingBoxByShift(0, 0, stl.Position.z - old);
@@ -769,7 +769,7 @@ namespace View3D.view
             if (_suppressTextEvents) return;
             var stl = SingleSelectedModel;
             if (stl == null) return;
-            float.TryParse(textScaleX.Text, out stl.Scale.x);
+            double.TryParse(textScaleX.Text, out stl.Scale.x);
             stl.UpdateBoundingBoxAndMatrix();
             UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
@@ -780,7 +780,7 @@ namespace View3D.view
             if (_suppressTextEvents) return;
             var stl = SingleSelectedModel;
             if (stl == null) return;
-            float.TryParse(textScaleY.Text, out stl.Scale.y);
+            double.TryParse(textScaleY.Text, out stl.Scale.y);
             stl.UpdateBoundingBoxAndMatrix();
             UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
@@ -791,8 +791,8 @@ namespace View3D.view
             if (_suppressTextEvents) return;
             var stl = SingleSelectedModel;
             if (stl == null) return;
-            float old = stl.Scale.z;
-            float.TryParse(textScaleZ.Text, out stl.Scale.z);
+            double old = stl.Scale.z;
+            double.TryParse(textScaleZ.Text, out stl.Scale.z);
             if (old != stl.Scale.z) stl.Land();
             stl.UpdateBoundingBoxAndMatrix();
             UpdateOutOfBound();
@@ -805,8 +805,8 @@ namespace View3D.view
             var stl = SingleSelectedModel;
             if (stl == null) return;
             float oriZmin = stl.zMin;
-            float old = stl.Rotation.x;
-            float.TryParse(textRotX.Text, out stl.Rotation.x);
+            double old = stl.Rotation.x;
+            double.TryParse(textRotX.Text, out stl.Rotation.x);
             if (Math.Abs(old - stl.Rotation.x) < 0.001f) return;
             stl.UpdateBoundingBoxAndMatrix();
             stl.LandToMinZ(oriZmin);
@@ -820,8 +820,8 @@ namespace View3D.view
             var stl = SingleSelectedModel;
             if (stl == null) return;
             float oriZmin = stl.zMin;
-            float old = stl.Rotation.y;
-            float.TryParse(textRotY.Text, out stl.Rotation.y);
+            double old = stl.Rotation.y;
+            double.TryParse(textRotY.Text, out stl.Rotation.y);
             if (Math.Abs(old - stl.Rotation.y) < 0.001f) return;
             stl.UpdateBoundingBoxAndMatrix();
             stl.LandToMinZ(oriZmin);
@@ -835,8 +835,8 @@ namespace View3D.view
             var stl = SingleSelectedModel;
             if (stl == null) return;
             float oriZmin = stl.zMin;
-            float old = stl.Rotation.z;
-            float.TryParse(textRotZ.Text, out stl.Rotation.z);
+            double old = stl.Rotation.z;
+            double.TryParse(textRotZ.Text, out stl.Rotation.z);
             if (Math.Abs(old - stl.Rotation.z) < 0.001f) return;
             stl.UpdateBoundingBoxAndMatrix();
             stl.LandToMinZ(oriZmin);
@@ -862,8 +862,8 @@ namespace View3D.view
         {
             foreach (var stl in ListObjects(true))
             {
-                float oldX = stl.Position.x;
-                float oldY = stl.Position.y;
+                double oldX = stl.Position.x;
+                double oldY = stl.Position.y;
 
                 if (stl.Position.x + dx < MainWindow.main.threeDSettings.PrintAreaWidth * 1.2f && stl.Position.x + dx > -MainWindow.main.threeDSettings.PrintAreaWidth * 0.2f) 
                     stl.Position.x += dx;

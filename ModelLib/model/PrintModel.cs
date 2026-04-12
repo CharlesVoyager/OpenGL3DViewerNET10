@@ -93,21 +93,17 @@ namespace OpenGL3DViewerNET10.ModelLib.model
         // Scale → Rotate → Translate (applied right-to-left in matrix multiplication):
         public void UpdateTransMatrix()
         {
-            float x = Rotation.x;
-            float y = Rotation.y;
-            float z = Rotation.z;
-
             Matrix4 scale = Matrix4.CreateScale(
-                     Scale.x != 0 ? Scale.x : 1,
-                     Scale.y != 0 ? Scale.y : 1,
-                     Scale.z != 0 ? Scale.z : 1
+                     (float)(Scale.x != 0 ? Scale.x : 1),
+                     (float)(Scale.y != 0 ? Scale.y : 1),
+                     (float)(Scale.z != 0 ? Scale.z : 1)
             );
 
-            Matrix4 rotX = Matrix4.CreateRotationX(x * (float)Math.PI / 180.0f);
-            Matrix4 rotY = Matrix4.CreateRotationY(y * (float)Math.PI / 180.0f);
-            Matrix4 rotZ = Matrix4.CreateRotationZ(z * (float)Math.PI / 180.0f);
+            Matrix4 rotX = Matrix4.CreateRotationX((float)(Rotation.x * Math.PI / 180.0));
+            Matrix4 rotY = Matrix4.CreateRotationY((float)(Rotation.y * Math.PI / 180.0));
+            Matrix4 rotZ = Matrix4.CreateRotationZ((float)(Rotation.z * Math.PI / 180.0));
 
-            Matrix4 transl = Matrix4.CreateTranslation(Position.x, Position.y, Position.z);
+            Matrix4 transl = Matrix4.CreateTranslation((float)Position.x, (float)Position.y, (float)Position.z);
 
             // Combine: Scale → RotX → RotY → RotZ → Translate
             trans = scale * rotX * rotY * rotZ * transl;
@@ -147,7 +143,7 @@ namespace OpenGL3DViewerNET10.ModelLib.model
         // This function is used when moving the object for saving bounding box compuation.
         // NOTE NOTE NOTE: If the model is rotated, the bounding box can not be obtained just through trans matrix but compute all vertices in regular way.
         // Import Test Case: Rotate the model 40 degress -> Move the object to check if the bounding box is align correctly.
-        public void UpdateBoundingBoxByShift(float shiftX, float shiftY, float shiftZ)
+        public void UpdateBoundingBoxByShift(double shiftX, double shiftY, double shiftZ)
         {
             BoundingBox.MaxPoint.x += shiftX;
             BoundingBox.MinPoint.x += shiftX;
