@@ -7,7 +7,7 @@ namespace OpenGL3DViewerNET10.ModelLib.model
 {
     public partial class PrintModel : ThreeDModel
     {
-        public TopoModel Model;         // Original STL file triangles data.
+        public TopoModel Model;         // Original triangles data from 3D Model file (Stl or Glb).
 
         public Submesh Mesh;            // Centerized triangles data.
 
