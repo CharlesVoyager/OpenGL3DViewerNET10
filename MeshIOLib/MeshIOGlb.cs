@@ -487,7 +487,7 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                 result[i] = new RHVector3(
                     BitConverter.ToSingle(data, o),
                     BitConverter.ToSingle(data, o + 4),
-                    BitConverter.ToSingle(data, o + 8));
+                    BitConverter.ToSingle(data, o + 8) * (-1)); // GLTF's +Y up → our +Z up. But, why flip the Z???
             }
             return result;
         }
