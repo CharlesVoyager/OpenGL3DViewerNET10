@@ -75,7 +75,7 @@ namespace View3D.view
 
         public void Initial()
         {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
             slider_moveX.Maximum = 1000;
@@ -161,7 +161,7 @@ namespace View3D.view
 
         public void button_move_reset_Click(object sender, RoutedEventArgs e)
         {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
             slider_moveX.Value = stl.InitialPosition.x;
@@ -176,7 +176,7 @@ namespace View3D.view
 
         public void button_land_Click(object sender, RoutedEventArgs e)
         {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
             stl.Land();
@@ -222,7 +222,7 @@ namespace View3D.view
             {
                 if (Math.Abs(e.OldValue - e.NewValue) > 0.01)
                 {
-                    PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+                    ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     MainWindow.main.stlComposer.textTransX.Text = slider_moveX.Value.ToString("0.000");
                 }
@@ -236,7 +236,7 @@ namespace View3D.view
             {
                 if (Math.Abs(e.OldValue - e.NewValue) > 0.01)
                 {
-                    PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+                    ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     MainWindow.main.stlComposer.textTransY.Text = slider_moveY.Value.ToString("0.000");
                 }
@@ -250,7 +250,7 @@ namespace View3D.view
             {
                 if (Math.Abs(e.OldValue - e.NewValue) > 0.0001)
                 {
-                    PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+                    ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     MainWindow.main.stlComposer.textTransZ.Text = slider_moveZ.Value.ToString("0.000");
                 }
@@ -264,7 +264,7 @@ namespace View3D.view
             {
                 try
                 {
-                    PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+                    ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     slider_moveX.Value = Convert.ToDouble(moveX_textbox.Text);
                 }
@@ -278,7 +278,7 @@ namespace View3D.view
             {
                 try
                 {
-                    PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+                    ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     slider_moveY.Value = Convert.ToDouble(moveY_textbox.Text);
                 }
@@ -292,7 +292,7 @@ namespace View3D.view
             {
                 try
                 {
-                    PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+                    ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                     if (stl == null) return;
                     slider_moveZ.Value = Convert.ToDouble(moveZ_textbox.Text);
                 }

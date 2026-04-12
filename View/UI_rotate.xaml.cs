@@ -52,7 +52,7 @@ namespace View3D.view
             labelX.Visibility = Visibility.Visible;
             if (e.LeftButton == MouseButtonState.Pressed && textboxX.IsMouseDirectlyOver == false)
             {
-                PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+                ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
                 sliderX.Value = ConvertPositionAngel(new Point(stackpanelX.Width / 2, stackpanelX.Height / 2), e.GetPosition(stackpanelX));
             }
@@ -70,7 +70,7 @@ namespace View3D.view
             labelY.Visibility = Visibility.Visible;
             if (e.LeftButton == MouseButtonState.Pressed && textboxY.IsMouseDirectlyOver == false)
             {
-                PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+                ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
                 sliderY.Value = ConvertPositionAngel(new Point(stackpanelY.Width / 2, stackpanelY.Height / 2), e.GetPosition(stackpanelY));
             }
@@ -88,7 +88,7 @@ namespace View3D.view
             labelZ.Visibility = Visibility.Visible;
             if (e.LeftButton == MouseButtonState.Pressed && textboxZ.IsMouseDirectlyOver == false)
             {
-                PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+                ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
                 sliderZ.Value = ConvertPositionAngel(new Point(stackpanelZ.Width / 2, stackpanelZ.Height / 2), e.GetPosition(stackpanelZ));
             }
@@ -96,7 +96,7 @@ namespace View3D.view
 
         public void button_rotate_reset_Click(object sender, RoutedEventArgs e)
         {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
 
@@ -149,7 +149,7 @@ namespace View3D.view
 
         private void orangeX_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             if (e.Delta > 0)
                 sliderX.Value++;
@@ -160,7 +160,7 @@ namespace View3D.view
 
         private void orangeY_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             if (e.Delta > 0)
                 sliderY.Value++;
@@ -171,7 +171,7 @@ namespace View3D.view
 
         private void orangeZ_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             if (e.Delta > 0)
                 sliderZ.Value++;
@@ -203,7 +203,7 @@ namespace View3D.view
 
         private void textboxZ_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             if (e.Key == Key.Up)
             {
@@ -220,7 +220,7 @@ namespace View3D.view
 
         private void textboxY_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             if (e.Key == Key.Up)
             {
@@ -237,7 +237,7 @@ namespace View3D.view
 
         private void textboxX_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             if (e.Key == Key.Up)
             {
@@ -300,7 +300,7 @@ namespace View3D.view
             try
             {
                 limitRotateAngle(textboxX);
-                PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+                ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
                 sliderX.Value = Convert.ToDouble(textboxX.Text);
                 MainWindow.main.stlComposer.textRotX.Text = textboxX.Text;
@@ -313,7 +313,7 @@ namespace View3D.view
             try
             {
                 limitRotateAngle(textboxY);
-                PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+                ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
                 sliderY.Value = Convert.ToDouble(textboxY.Text);
                 MainWindow.main.stlComposer.textRotY.Text = textboxY.Text;
@@ -326,7 +326,7 @@ namespace View3D.view
             try
             {
                 limitRotateAngle(textboxZ);
-                PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+                ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 sliderZ.Value = Convert.ToDouble(textboxZ.Text);
                 MainWindow.main.stlComposer.textRotZ.Text = textboxZ.Text;
             }

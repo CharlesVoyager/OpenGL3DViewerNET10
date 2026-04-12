@@ -24,7 +24,7 @@ namespace View3D.view
         {
         }
 
-        public void Analyse(PrintModel pm)
+        public void Analyse(ThreeDModel pm)
         {
             double volume = 0;
             foreach (TopoTriangle t in pm.Model.triangles)

@@ -58,7 +58,7 @@ namespace View3D.view
         public void Init()
         {
             if (MainWindow.main == null) return; // At design time MainWindow.main is null. Add null guards to prevent NullReferenceException.
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             MainWindow.main.UI_move.slider_moveZ.Maximum = 1000;
 
@@ -99,7 +99,7 @@ namespace View3D.view
             if (gIsShow == true)
                 return;
 
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             try
             {
@@ -180,7 +180,7 @@ namespace View3D.view
             if (gIsShow == true)
                 return;
 
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             try
             {
@@ -261,7 +261,7 @@ namespace View3D.view
         {
             if (MainWindow.main == null) return; // At design time MainWindow.main is null. Add null guards to prevent NullReferenceException.
 
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
          
             if (stl == null) return;
 
@@ -354,7 +354,7 @@ namespace View3D.view
         public void chk_Uniform_Checked(object sender, RoutedEventArgs e)
         {
             if (MainWindow.main == null) return; // At design time MainWindow.main is null. Add null guards to prevent NullReferenceException.
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             try
             {
@@ -403,7 +403,7 @@ namespace View3D.view
         private void slider_resize_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (MainWindow.main == null) return;
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
             if (e.Delta > 0)
@@ -416,7 +416,7 @@ namespace View3D.view
         private void slider_resize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (MainWindow.main == null) return;
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
             switch (xyzbind)
@@ -497,7 +497,7 @@ namespace View3D.view
         public void button_Reset_Click(object sender, RoutedEventArgs e)
         {
             if (MainWindow.main == null) return;
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             MainWindow.main.stlComposer.textScaleX.Text = "1";
             MainWindow.main.stlComposer.textScaleY.Text = "1";
@@ -537,7 +537,7 @@ namespace View3D.view
         {
             button_mmtoinch.IsEnabled = false;
             button_inchtomm.IsEnabled = true;
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             MainWindow.main.stlComposer.DoMmToInch(stl);
             txt_Scale.Text = (Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text) * 100).ToString("0");
@@ -556,7 +556,7 @@ namespace View3D.view
         {
             button_mmtoinch.IsEnabled = true;
             button_inchtomm.IsEnabled = false;
-            PrintModel model = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel model = MainWindow.main.stlComposer.SingleSelectedModel;
             if (model == null) return;
             MainWindow.main.stlComposer.DoInchtomm(model);
             txt_Scale.Text = (Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text) * 100).ToString("0");
@@ -568,7 +568,7 @@ namespace View3D.view
 
         private void btn_Scale_Click(object sender, RoutedEventArgs e)
         {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
             model.geom.RHBoundingBox bbox = stl.BoundingBox;
@@ -613,7 +613,7 @@ namespace View3D.view
 
         private void scaleLostFocus(object sender, RoutedEventArgs e)
         {
-            PrintModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
             try

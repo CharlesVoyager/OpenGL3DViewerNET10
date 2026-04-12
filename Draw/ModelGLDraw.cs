@@ -22,7 +22,7 @@ namespace OpenGL3DViewerNET10.Draw
 
     public class ModelGLDraw
     {
-        PrintModel printModel;
+        ThreeDModel printModel;
 
         // ---- GPU object handles ----
         int shader;
@@ -347,7 +347,7 @@ namespace OpenGL3DViewerNET10.Draw
             }
 ";
 
-        public ModelGLDraw(PrintModel model)
+        public ModelGLDraw(ThreeDModel model)
         {
             printModel = model;
         }

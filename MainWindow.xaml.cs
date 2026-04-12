@@ -215,13 +215,13 @@ namespace View3D
 
         private void OnMmToInch() 
         {
-            PrintModel m = stlComposer.SingleSelectedModel;
+            ThreeDModel m = stlComposer.SingleSelectedModel;
             if (m != null) stlComposer.DoMmToInch(m);
         }
 
         private void OnInchToMm()
         {
-            PrintModel m = stlComposer.SingleSelectedModel;
+            ThreeDModel m = stlComposer.SingleSelectedModel;
             if (m != null) stlComposer.DoInchtomm(m);
         }
 

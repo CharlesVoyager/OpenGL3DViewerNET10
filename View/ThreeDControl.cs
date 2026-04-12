@@ -548,7 +548,7 @@ namespace View3D.view
  
             Vector3 aabbMinPoint3 = new Vector3();
             Vector3 aabbMaxPoint3 = new Vector3();
-            foreach (PrintModel model in stlComp.models)
+            foreach (ThreeDModel model in stlComp.models)
             {
                 if (model.BoundingBox.minPoint == null || model.BoundingBox.maxPoint == null)
                     continue;

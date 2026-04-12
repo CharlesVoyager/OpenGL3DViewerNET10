@@ -16,17 +16,17 @@ namespace View3D.view
     public class ListViewItemModel
     {
         public string         Name              { get; set; }
-        public PrintModel     Model             { get; set; }
+        public ThreeDModel    Model             { get; set; }
         public ImageSource    MeshStatusImage   { get; set; }
         public ImageSource    CollisionStatusImage { get; set; }
     }
 
     public partial class STLComposer : Window
     {
-        public List<PrintModel> models     = new List<PrintModel>();
+        public List<ThreeDModel> models     = new List<ThreeDModel>();
 
         // ── Private fields ────────────────────────────────────────────────────
-        private List<PrintModel> cloneModels = new List<PrintModel>();
+        private List<ThreeDModel> cloneModels = new List<ThreeDModel>();
 
         // Image sources replacing WinForms ImageList (index → meaning):
         //   0 = unlock16   1 = lock16   2 = ok16   3 = bad16   4 = trash16
@@ -59,18 +59,18 @@ namespace View3D.view
         private IEnumerable<ListViewItemModel> SelectedRows()
             => listObjects.SelectedItems.Cast<ListViewItemModel>();
 
-        private ListViewItemModel RowForModel(PrintModel model)
+        private ListViewItemModel RowForModel(ThreeDModel model)
             => AllRows().FirstOrDefault(r => r.Model == model);
 
         // ── Add / remove rows ─────────────────────────────────────────────────
-        private void AddObject(PrintModel model)
+        private void AddObject(ThreeDModel model)
         {
             var row = BuildRow(model);
             listObjects.Items.Add(row);
             SetObjectSelected(model, true);
         }
 
-        private ListViewItemModel BuildRow(PrintModel model)
+        private ListViewItemModel BuildRow(ThreeDModel model)
         {
             return new ListViewItemModel
             {
@@ -81,9 +81,9 @@ namespace View3D.view
             };
         }
 
-        public LinkedList<PrintModel> ListObjects(bool selected)
+        public LinkedList<ThreeDModel> ListObjects(bool selected)
         {
-            var list = new LinkedList<PrintModel>();
+            var list = new LinkedList<ThreeDModel>();
             if (selected)
                 foreach (var row in SelectedRows()) list.AddLast(row.Model);
             else
@@ -91,7 +91,7 @@ namespace View3D.view
             return list;
         }
 
-        public PrintModel SingleSelectedModel
+        public ThreeDModel SingleSelectedModel
         {
             get
             {
@@ -102,7 +102,7 @@ namespace View3D.view
 
         void updateAnalyserData()
         {
-            PrintModel model = SingleSelectedModel;
+            ThreeDModel model = SingleSelectedModel;
             if (model == null) return;
 
             txtOriginalModelSize.Text = "(" + model.Model.boundingBox.Size.x.ToString("0.000") + ", " +
@@ -116,7 +116,7 @@ namespace View3D.view
             var black = new SolidColorBrush(Colors.Black);
         }
 
-        public void SetObjectSelected(PrintModel model, bool select)
+        public void SetObjectSelected(ThreeDModel model, bool select)
         {
             var row = RowForModel(model);
             if (row == null) return;
@@ -134,7 +134,7 @@ namespace View3D.view
         public void RemoveAllObject()
         {
             foreach (var row in AllRows().ToList())
-                if (row.Model.GetType() == typeof(PrintModel))
+                if (row.Model.GetType() == typeof(ThreeDModel))
                     SetObjectSelected(row.Model, true);
             buttonRemoveSTL_Click(null, null);
         }
@@ -145,7 +145,7 @@ namespace View3D.view
             int idx = models.Count - 1;
             while (idx >= 0)
             {
-                if (typeof(PrintModel) == models[idx].GetType() && null != models[idx].Model)
+                if (typeof(ThreeDModel) == models[idx].GetType() && null != models[idx].Model)
                 {
                     RemoveModel(models[idx]);
                     return;
@@ -154,17 +154,17 @@ namespace View3D.view
             }
         }
 
-        public List<PrintModel> GetAllPrintModels()
+        public List<ThreeDModel> GetAllPrintModels()
         {
-            var list = new List<PrintModel>();
+            var list = new List<ThreeDModel>();
             foreach (var m in models)
                 if (IsValidPrintModel(m)) list.Add(m);
             return list;
         }
 
-        public List<PrintModel> GetSelectedPrintModels()
+        public List<ThreeDModel> GetSelectedPrintModels()
         {
-            var list = new List<PrintModel>();
+            var list = new List<ThreeDModel>();
             foreach (var m in models)
                 if (IsValidPrintModel(m) && m.Selected) list.Add(m);
             return list;
@@ -176,7 +176,7 @@ namespace View3D.view
             if (MainWindow.main == null) return;
 
             listObjects.SelectedItems.Clear();
-            PrintModel newModel = new PrintModel();
+            ThreeDModel newModel = new ThreeDModel();
             bool modelToLand    = true;
             var  modelIO        = new MeshIOWrapper();
             MainWindow.main.BusyWindow.EnableBusyWindow();
@@ -323,9 +323,9 @@ namespace View3D.view
         // =====================================================================
         //  CloneObject
         // =====================================================================
-        private bool CloneObject(PrintModel model)
+        private bool CloneObject(ThreeDModel model)
         {
-            PrintModel newModel = (PrintModel)model.cloneWithModel();
+            ThreeDModel newModel = (ThreeDModel)model.cloneWithModel();
             Autoposition(newModel);
 
             listObjects.Items.Add(BuildRow(newModel));
@@ -403,7 +403,7 @@ namespace View3D.view
 
         public void check_stl_size_too_small()
         {
-            PrintModel model = SingleSelectedModel;
+            ThreeDModel model = SingleSelectedModel;
             if (model == null) return;
             double xxx = model.BoundingBox.Size.x * model.BoundingBox.Size.y
                        * model.BoundingBox.Size.z * 0.001;
@@ -424,12 +424,12 @@ namespace View3D.view
         // =====================================================================
         //  RemoveModel / RemoveAllSelectedModels
         // =====================================================================
-        private void RemoveModel(PrintModel model)
+        private void RemoveModel(ThreeDModel model)
         {
             var row = RowForModel(model);
             if (row != null) listObjects.Items.Remove(row);
 
-            // PrintModel
+            // ThreeDModel
             for (int i = 0; i < models.Count; i++)
                 if (models[i] == model) { models.RemoveAt(i); break; }
 
@@ -447,9 +447,9 @@ namespace View3D.view
 
         public void buttonRemoveSTL_Click(object sender, EventArgs e) => RemoveAllSelectedModels();
 
-        private bool IsValidPrintModel(PrintModel model)
+        private bool IsValidPrintModel(ThreeDModel model)
             => model.Name != "Unknown" &&
-               typeof(PrintModel) == model.GetType() &&
+               typeof(ThreeDModel) == model.GetType() &&
                model.Model != null;
 
         // =====================================================================
@@ -496,9 +496,9 @@ namespace View3D.view
         // =====================================================================
         //  Autoposition
         // =====================================================================
-        bool Autoposition(PrintModel newModel)
+        bool Autoposition(ThreeDModel newModel)
         {
-            List<PrintModel> allModels = new List<PrintModel>();
+            List<ThreeDModel> allModels = new List<ThreeDModel>();
             foreach (var m in models)
                 allModels.Add(m);
 
@@ -526,7 +526,7 @@ namespace View3D.view
 
             foreach (var stl in allModels)
             {
-                if (typeof(PrintModel) != stl.GetType()) continue;
+                if (typeof(ThreeDModel) != stl.GetType()) continue;
                 int w = 2 * border + (int)Math.Ceiling(stl.xMax - stl.xMin);
                 int h = 2 * border + (int)Math.Ceiling(stl.yMax - stl.yMin);
                 if (!packer.addAtEmptySpotAutoGrow(new PackerRect(0, 0, w, h, stl), (int)maxW, (int)maxH))
@@ -544,7 +544,7 @@ namespace View3D.view
                 float yOrigPos  = yOff + yCenter + outPacker.vRects[0].y + border - 1000;
                 for (int i = 1; i < outPacker.vRects.Count; i++)
                 {
-                    var s = (PrintModel)outPacker.vRects[i].obj;
+                    var s = (ThreeDModel)outPacker.vRects[i].obj;
                     s.Position.x += xOff + xCenter + outPacker.vRects[i].x + border - 1000 - xOrigPos - s.xMin;
                     s.Position.y += yOff + yCenter + outPacker.vRects[i].y + border - 1000 - yOrigPos - s.yMin;
                     s.UpdateBoundingBoxAndMatrix();
@@ -560,7 +560,7 @@ namespace View3D.view
             float yAdd = (maxH - packer.h) / 2f;
             foreach (PackerRect rect in packer.vRects)
             {
-                var s = (PrintModel)rect.obj;
+                var s = (ThreeDModel)rect.obj;
                 s.Position.x += xOff + xAdd + rect.x + border - s.xMin;
                 s.Position.y += yOff + yAdd + rect.y + border - s.yMin;
                 s.UpdateBoundingBoxAndMatrix();
@@ -576,7 +576,7 @@ namespace View3D.view
             updateEnabled();
             var list = ListObjects(false);
             var sellist = ListObjects(true);
-            PrintModel stl = sellist.Count == 1 ? sellist.First.Value : null;
+            ThreeDModel stl = sellist.Count == 1 ? sellist.First.Value : null;
             foreach (var s in list)
                 s.Selected = sellist.Contains(s);
 
@@ -850,7 +850,7 @@ namespace View3D.view
         private void buttonRemoveObject_Click(object sender, RoutedEventArgs e)
         {
             var btn   = (System.Windows.Controls.Button)sender;
-            var model = (PrintModel)btn.Tag;
+            var model = (ThreeDModel)btn.Tag;
             RemoveModel(model);
             MainWindow.main.threeDControl.UpdateChanges();
         }
@@ -887,16 +887,16 @@ namespace View3D.view
         {
             if (Keyboard.Modifiers == ModifierKeys.Shift)
             {
-                if (!sel.Selected) SetObjectSelected((PrintModel)sel, true);
+                if (!sel.Selected) SetObjectSelected((ThreeDModel)sel, true);
             }
             else if (Keyboard.Modifiers == ModifierKeys.Control)
             {
-                SetObjectSelected((PrintModel)sel, !sel.Selected);
+                SetObjectSelected((ThreeDModel)sel, !sel.Selected);
             }
             else
             {
                 listObjects.SelectedItems.Clear();
-                SetObjectSelected((PrintModel)sel, true);
+                SetObjectSelected((ThreeDModel)sel, true);
             }
         }
 
@@ -911,7 +911,7 @@ namespace View3D.view
         }
 
         // Auto scale the model to fit the half printer bed in X axis on the largest dimension.
-        public void DoAutoScale(PrintModel stl)
+        public void DoAutoScale(ThreeDModel stl)
         {
             try
             {
@@ -933,7 +933,7 @@ namespace View3D.view
             catch { }
         }
 
-        public void DoMmToInch(PrintModel stl)
+        public void DoMmToInch(ThreeDModel stl)
         {
             try
             {
@@ -982,7 +982,7 @@ namespace View3D.view
             catch { }
         }
 
-        public void DoInchtomm(PrintModel stl)
+        public void DoInchtomm(ThreeDModel stl)
         {
             try
             {
