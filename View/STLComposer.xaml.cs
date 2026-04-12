@@ -326,7 +326,8 @@ namespace View3D.view
         // =====================================================================
         private bool CloneObject(ThreeDModel model)
         {
-            ThreeDModel newModel = (ThreeDModel)model.cloneWithModel();
+            ThreeDModel newModel = new ThreeDModel();
+            model.CopyTo(newModel); 
             Autoposition(newModel);
 
             listObjects.Items.Add(BuildRow(newModel));

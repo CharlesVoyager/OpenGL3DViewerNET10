@@ -85,9 +85,8 @@ namespace OpenGL3DViewerNET10.ModelLib.model
             BoundingBox = new RHBoundingBox();
         }
 
-        public object cloneWithModel()
+        public void CopyTo(ThreeDModel stl)
         {
-            ThreeDModel stl = new ThreeDModel();
             Model.CopyTo(stl.Model);   // NOTE: Just clone Model is enough. Drawer/BoundingBox do not need to clone.
             Mesh.CopyTo(stl.Mesh);
             stl.Name = Name;
@@ -103,8 +102,6 @@ namespace OpenGL3DViewerNET10.ModelLib.model
             stl.trans = trans;
             stl.Selected = false;
             BoundingBox.CopyTo(stl.BoundingBox);    // NOTE: This must be after copying position becuse setting position will update bounding box.
-
-            return stl;
         }
 
         public void Clear()
