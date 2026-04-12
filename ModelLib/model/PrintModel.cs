@@ -5,8 +5,6 @@ using View3D.ModelObjectTool;
 
 namespace OpenGL3DViewerNET10.ModelLib.model
 {
-    public delegate void PrintModelChangedEvent(PrintModel model);
-    public delegate LinkedList<PrintModel> ListviewGetModelsDelegate(bool selected);
     public partial class PrintModel : ThreeDModel
     {
         public TopoModel Model;         // Original STL file triangles data.
