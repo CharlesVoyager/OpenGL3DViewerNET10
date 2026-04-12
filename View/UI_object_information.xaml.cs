@@ -45,9 +45,9 @@ namespace View3D.view
 
             txtCollision.Text = pm.outside.ToString();
             txtFilename.Text = pm.Name;
-            txtPosX.Text = pm.Position.x.ToString("0.000");
-            txtPosY.Text = pm.Position.y.ToString("0.000");
-            txtPosZ.Text = pm.Position.z.ToString("0.000");
+            txtPosX.Text = pm.Position.X.ToString("0.000");
+            txtPosY.Text = pm.Position.Y.ToString("0.000");
+            txtPosZ.Text = pm.Position.Z.ToString("0.000");
         }
     }
 }

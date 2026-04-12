@@ -1,16 +1,61 @@
 ﻿using OpenGL3DViewerNET10.Draw;
 using OpenTK.Mathematics;
-using System.Windows.Controls.Primitives;
-using System.Windows.Media.Imaging;
+using System.Diagnostics;
 using View3D.model.geom;
 using View3D.ModelObjectTool;
 
 namespace OpenGL3DViewerNET10.ModelLib.model
 {
+    public class Coord3D
+    {
+        double x = 0, y = 0, z = 0;
+       
+        private readonly Action<double, double, double> updateBoundingBoxByShift;
+        public Coord3D(Action<double, double, double> operation)
+        {
+            updateBoundingBoxByShift = operation;
+        }
+
+        public double X
+        {
+            get { return x; }
+            set 
+            {
+                double old = x;
+                x = value;
+                updateBoundingBoxByShift(x - old, 0, 0);
+            }
+        }
+
+        public double Y
+        {
+            get { return y; }
+            set
+            {
+                double old = y;
+                y = value;
+                updateBoundingBoxByShift(0, y - old, 0);
+            }
+        }
+
+        public double Z
+        {
+            get { return z; }
+            set
+            {
+                double old = z;
+                z = value;
+                updateBoundingBoxByShift(0, 0, z - old);
+            }
+        }
+    }
+
+
     public class ThreeDModel
     {
         private bool selected = false;
-        private RHVector3 position = new RHVector3(0, 0, 0);   
+
+        private Coord3D position = null;   
         private RHVector3 rotation = new RHVector3(0, 0, 0);    
         private RHVector3 scale = new RHVector3(1, 1, 1);
 
@@ -33,6 +78,7 @@ namespace OpenGL3DViewerNET10.ModelLib.model
 
         public ThreeDModel()
         {
+            position = new Coord3D(updateBoundingBoxByShift);
             Model = new TopoModel();
             Mesh = new Submesh();
             Drawer = new ModelGLDraw(this);
@@ -44,11 +90,10 @@ namespace OpenGL3DViewerNET10.ModelLib.model
             ThreeDModel stl = new ThreeDModel();
             Model.CopyTo(stl.Model);   // NOTE: Just clone Model is enough. Drawer/BoundingBox do not need to clone.
             Mesh.CopyTo(stl.Mesh);
-            BoundingBox.CopyTo(stl.BoundingBox);
             stl.Name = Name;
-            stl.Position.x = Position.x;
-            stl.Position.y = Position.y;
-            stl.Position.z = Position.z;
+            stl.position.X = position.X;
+            stl.position.Y = position.Y;
+            stl.position.Z = position.Z;
             stl.Scale.x = Scale.x;
             stl.Scale.y = Scale.y;
             stl.Scale.z = Scale.z;
@@ -57,6 +102,8 @@ namespace OpenGL3DViewerNET10.ModelLib.model
             stl.Rotation.z = Rotation.z;
             stl.trans = trans;
             stl.Selected = false;
+            BoundingBox.CopyTo(stl.BoundingBox);    // NOTE: This must be after copying position becuse setting position will update bounding box.
+
             return stl;
         }
 
@@ -84,9 +131,8 @@ namespace OpenGL3DViewerNET10.ModelLib.model
         public void Land()
         {
             float shiftZ = -zMin;
-            Position.z += shiftZ;
+            Position.Z += shiftZ;
             UpdateTransMatrix();
-            UpdateBoundingBoxByShift(0, 0, shiftZ);
         }
 
         // Keep same height to the printer base after rotation.
@@ -95,10 +141,9 @@ namespace OpenGL3DViewerNET10.ModelLib.model
             if (Math.Abs(targetMinZ - zMin) < 0.001) return;
 
             float shiftZ = targetMinZ - zMin;
-            Position.z += shiftZ;
+            Position.Z += shiftZ;
 
             UpdateTransMatrix();
-            UpdateBoundingBoxByShift(0, 0, shiftZ);
         }
 
         // Scale → Rotate → Translate (applied right-to-left in matrix multiplication):
@@ -114,7 +159,7 @@ namespace OpenGL3DViewerNET10.ModelLib.model
             Matrix4 rotY = Matrix4.CreateRotationY((float)(Rotation.y * Math.PI / 180.0));
             Matrix4 rotZ = Matrix4.CreateRotationZ((float)(Rotation.z * Math.PI / 180.0));
 
-            Matrix4 transl = Matrix4.CreateTranslation((float)Position.x, (float)Position.y, (float)Position.z);
+            Matrix4 transl = Matrix4.CreateTranslation((float)Position.X, (float)Position.Y, (float)Position.Z);
 
             // Combine: Scale → RotX → RotY → RotZ → Translate
             trans = scale * rotX * rotY * rotZ * transl;
@@ -122,7 +167,7 @@ namespace OpenGL3DViewerNET10.ModelLib.model
 
         private unsafe void updateBoundingBox()
         {
-            //Stopwatch sw = Stopwatch.StartNew();
+            Stopwatch sw = Stopwatch.StartNew();
 
             BoundingBox.Clear();
 
@@ -137,7 +182,7 @@ namespace OpenGL3DViewerNET10.ModelLib.model
                 BoundingBox.Add(box3.MinX, box3.MinY, box3.MinZ);
             }
 
-            //Debug.WriteLine("[PrintModel.updateBoundingBox]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
+            Debug.WriteLine("[ThreeDModel.updateBoundingBox]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }
 
         public void UpdateBoundingBoxAndMatrix()
@@ -148,13 +193,13 @@ namespace OpenGL3DViewerNET10.ModelLib.model
 
             updateBoundingBox();
 
-            //Debug.WriteLine("[PrintModel.UpdateBoundingBoxAndMatrix]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
+            //Debug.WriteLine("[ThreeDModel.UpdateBoundingBoxAndMatrix]==> Elapsed Time: " + sw.ElapsedMilliseconds.ToString());
         }
 
         // This function is used when moving the object for saving bounding box compuation.
         // NOTE NOTE NOTE: If the model is rotated, the bounding box can not be obtained just through trans matrix but compute all vertices in regular way.
         // Import Test Case: Rotate the model 40 degress -> Move the object to check if the bounding box is align correctly.
-        public void UpdateBoundingBoxByShift(double shiftX, double shiftY, double shiftZ)
+        void updateBoundingBoxByShift(double shiftX, double shiftY, double shiftZ)
         {
             BoundingBox.MaxPoint.x += shiftX;
             BoundingBox.MinPoint.x += shiftX;
@@ -264,22 +309,19 @@ namespace OpenGL3DViewerNET10.ModelLib.model
             get { return selected; }
             set { selected = value; }
         }
-        public RHVector3 Position
+        public Coord3D Position
         {
             get { return position; }
-            set { position = value; }
         }
 
         public RHVector3 Rotation
         {
             get { return rotation; }
-            set { rotation = value; }
         }
 
         public RHVector3 Scale
         {
             get { return scale; }
-            set { scale = value; }
         }
     }
 }

@@ -84,17 +84,17 @@ namespace View3D.view
             slider_moveY.Minimum = -1000;
             slider_moveZ.Maximum = 1000;
             slider_moveZ.Minimum = -1000;
-            slider_moveX.Value = stl.Position.x;
-            slider_moveY.Value = stl.Position.y;
-            slider_moveZ.Value = stl.Position.z;
+            slider_moveX.Value = stl.Position.X;
+            slider_moveY.Value = stl.Position.Y;
+            slider_moveZ.Value = stl.Position.Z;
 
             double moveMax, moveMin;
 
-            moveMax = (int)Math.Floor((MainWindow.main.threeDSettings.PrintAreaWidth - (stl.BoundingBox.xMax - stl.Position.x)) * 100) * 0.01;
-            moveMin = (int)Math.Ceiling((stl.Position.x - stl.BoundingBox.xMin) * 100) * 0.01;
+            moveMax = (int)Math.Floor((MainWindow.main.threeDSettings.PrintAreaWidth - (stl.BoundingBox.xMax - stl.Position.X)) * 100) * 0.01;
+            moveMin = (int)Math.Ceiling((stl.Position.X - stl.BoundingBox.xMin) * 100) * 0.01;
 
-            double a = MainWindow.main.threeDSettings.PrintAreaWidth - (stl.BoundingBox.xMax - stl.Position.x);
-            double b = stl.Position.x - stl.BoundingBox.xMin;
+            double a = MainWindow.main.threeDSettings.PrintAreaWidth - (stl.BoundingBox.xMax - stl.Position.X);
+            double b = stl.Position.X - stl.BoundingBox.xMin;
 
             a += 0;
             b += 0;
@@ -102,11 +102,11 @@ namespace View3D.view
             //module is out of bound,it cannot move. 
             if (moveMin > moveMax)
                 slider_moveX.Value = (float)(moveMin + moveMax) / 2;
-            else if (moveMin <= stl.Position.x && stl.Position.x <= moveMax)//module is in of bound.
-                slider_moveX.Value = stl.Position.x;
-            else if (stl.Position.x > moveMax)//model is out of bound(too big), but it can move.
+            else if (moveMin <= stl.Position.X && stl.Position.X <= moveMax)//module is in of bound.
+                slider_moveX.Value = stl.Position.X;
+            else if (stl.Position.X > moveMax)//model is out of bound(too big), but it can move.
                 slider_moveX.Value = moveMax;
-            else // (moveMin > stl.Position.x)//model is out of bound(too small), but it can move.
+            else // (moveMin > stl.Position.X)//model is out of bound(too small), but it can move.
                 slider_moveX.Value = moveMin;
 
             if (moveMin > moveMax)
@@ -121,17 +121,17 @@ namespace View3D.view
             }
 
 
-            moveMax = (int)Math.Floor((MainWindow.main.threeDSettings.PrintAreaDepth - (stl.BoundingBox.yMax - stl.Position.y)) * 100) * 0.01;
-            moveMin = (int)Math.Ceiling((stl.Position.y - stl.BoundingBox.yMin) * 100) * 0.01;
+            moveMax = (int)Math.Floor((MainWindow.main.threeDSettings.PrintAreaDepth - (stl.BoundingBox.yMax - stl.Position.Y)) * 100) * 0.01;
+            moveMin = (int)Math.Ceiling((stl.Position.Y - stl.BoundingBox.yMin) * 100) * 0.01;
 
             //module is out of bound,it can not move. 
             if (moveMin > moveMax)
                 slider_moveY.Value = (float)(moveMin + moveMax) / 2;
-            else if (moveMin <= stl.Position.y && stl.Position.y <= moveMax)//module is in of bound.
-                slider_moveY.Value = stl.Position.y;
-            else if (stl.Position.y > moveMax)//model is out of bound(too big), but it can move.
+            else if (moveMin <= stl.Position.Y && stl.Position.Y <= moveMax)//module is in of bound.
+                slider_moveY.Value = stl.Position.Y;
+            else if (stl.Position.Y > moveMax)//model is out of bound(too big), but it can move.
                 slider_moveY.Value = moveMax;
-            else // (moveMin > stl.Position.y)//model is out of bound(too small), but it can move.
+            else // (moveMin > stl.Position.Y)//model is out of bound(too small), but it can move.
                 slider_moveY.Value = moveMin;
 
             if (moveMin > moveMax)
@@ -145,15 +145,15 @@ namespace View3D.view
                 slider_moveY.Minimum = moveMin;
             }
 
-            moveMax = MainWindow.main.threeDSettings.PrintAreaHeight - (stl.BoundingBox.zMax - stl.Position.z);
-            moveMin = stl.Position.z - stl.BoundingBox.zMin;
+            moveMax = MainWindow.main.threeDSettings.PrintAreaHeight - (stl.BoundingBox.zMax - stl.Position.Z);
+            moveMin = stl.Position.Z - stl.BoundingBox.zMin;
             if (moveMin > moveMax)
                 moveMin = moveMax;
-            if (moveMin <= stl.Position.z && moveMax >= stl.Position.z)
-                slider_moveZ.Value = stl.Position.z;
-            else if (moveMax < stl.Position.z)
+            if (moveMin <= stl.Position.Z && moveMax >= stl.Position.Z)
+                slider_moveZ.Value = stl.Position.Z;
+            else if (moveMax < stl.Position.Z)
                 slider_moveZ.Value = moveMax;
-            else // (moveMin > stl.Position.z)
+            else // (moveMin > stl.Position.Z)
                 slider_moveZ.Value = moveMin;
             slider_moveZ.Maximum = moveMax;
             slider_moveZ.Minimum = moveMin;
@@ -181,9 +181,9 @@ namespace View3D.view
 
             stl.Land();
 
-            slider_moveX.Value = stl.Position.x;
-            slider_moveY.Value = stl.Position.y;
-            slider_moveZ.Value = stl.Position.z;
+            slider_moveX.Value = stl.Position.X;
+            slider_moveY.Value = stl.Position.Y;
+            slider_moveZ.Value = stl.Position.Z;
  
             MainWindow.main.stlComposer.UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
