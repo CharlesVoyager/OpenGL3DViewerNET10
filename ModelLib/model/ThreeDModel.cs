@@ -195,7 +195,7 @@ namespace OpenGL3DViewerNET10.ModelLib.model
 
         // This function is used when moving the object for saving bounding box compuation.
         // NOTE NOTE NOTE: If the model is rotated, the bounding box can not be obtained just through trans matrix but compute all vertices in regular way.
-        // Import Test Case: Rotate the model 40 degress -> Move the object to check if the bounding box is align correctly.
+        // Important Test Case: Rotate the model 40 degress -> Move the object to check if the bounding box is align correctly.
         void updateBoundingBoxByShift(double shiftX, double shiftY, double shiftZ)
         {
             BoundingBox.MaxPoint.x += shiftX;
