@@ -17,9 +17,8 @@ namespace View3D.view
         public uint PrintAreaDepth { get; set; } = 256;
         public uint PrintAreaHeight { get; set; } = 200;
 
-
         public uint BackgroundTopColor { get; set; } = 0xFFF5F5F5;
-        public uint BackgroundBottomColor { get; set; } = 0xFF6495ED;
+        public uint BackgroundBottomColor { get; set; } = 0xFF000000;
         public uint FacesColor { get; set; } = 0xFF4169E1;
         public uint EdgesColor { get; set; } = 0xFFA9A9A9;
         public uint SelectedFacesColor { get; set; } = 0xFF6495ED;
@@ -27,21 +26,20 @@ namespace View3D.view
         public uint PrinterFrameColor { get; set; } = 0xFF000000;
         public uint OutsidePrintbedColor { get; set; } = 0xFFFF0000;
 
-
         public bool ShowEdges { get; set; } = false;
         public bool ShowFaces { get; set; } = true;
         public bool ShowPrintbed { get; set; } = true;
         public int DrawMethod { get; set; } = 0;
 
-
         public uint SelectionBoxColor { get; set; } = 0xFFFFFFFF;
         public uint ErrorModelColor { get; set; } = 0xFFFF0000;
         public uint InsideFacesColor { get; set; } = 0xFF000000;
 
-
         public string Light1X { get; set; } = "1";
         public string Light1Y { get; set; } = "0.5";
         public string Light1Z { get; set; } = "2";
+
+        public uint ModelColor { get; set; } = 0xFF6BA3C6;
     }
 
     public class SettingsService
@@ -230,6 +228,8 @@ namespace View3D.view
                 xdir1.Text = settingsService.Settings.Light1X;
                 ydir1.Text = settingsService.Settings.Light1Y;
                 zdir1.Text = settingsService.Settings.Light1Z;
+
+                modelColor.Background = new SolidColorBrush(ArgbToColor(settingsService.Settings.ModelColor));
             }
             catch { }
         }
@@ -754,13 +754,15 @@ namespace View3D.view
 
         private void ResetLightSettingsToDefault_Click(object sender, RoutedEventArgs e)
         {
-            xdir1.Text = "1";
-            ydir1.Text = "0.5";
-            zdir1.Text = "2";
+            AppSettings defaultSettings = new AppSettings();
+
+            xdir1.Text = defaultSettings.Light1X.ToString();
+            ydir1.Text = defaultSettings.Light1Y.ToString();
+            zdir1.Text = defaultSettings.Light1Z.ToString();
 
             lightColor.Background = Brushes.White;
-            var drawingColor = System.Drawing.ColorTranslator.FromHtml("#6BA3C6");
-            modelColor.Background = new SolidColorBrush(Color.FromArgb(drawingColor.A, drawingColor.R, drawingColor.G, drawingColor.B));
+
+            modelColor.Background = new SolidColorBrush(ArgbToColor(defaultSettings.ModelColor));
 
             sliderAmbient.Value = 0.3;
             sliderSpecular.Value = 0.3;
