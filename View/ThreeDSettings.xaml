@@ -1,0 +1,247 @@
+<Window x:Class="View3D.view.ThreeDSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="3D Visualization Settings"
+        Width="660" Height="500"
+        ResizeMode="NoResize"
+        Topmost="True"
+        Closing="ThreeDSettings_Closing"
+        Closed="ThreeDSettings_Closed">
+
+    <Window.Resources>
+        <Style x:Key="SwatchStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="#888"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="26"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,3"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <TabControl x:Name="tabControl1">
+
+            <!-- ═══════════════════════════════════════════
+                 TAB 1 — General
+            ════════════════════════════════════════════ -->
+            <TabItem Header="General">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <GroupBox Header="Print Area" Grid.Row="0" Margin="0,0,0,10">
+                        <Grid Margin="6,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="160"/>
+                                <ColumnDefinition Width="160"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="110"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="34"/>
+                                <RowDefinition Height="34"/>
+                                <RowDefinition Height="34"/>
+                                <RowDefinition Height="34"/>
+                                <RowDefinition Height="34"/>
+                            </Grid.RowDefinitions>
+
+                            <CheckBox x:Name="showPrintbed"
+                                      Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                      Content="Show printbed" IsChecked="True"
+                                      VerticalAlignment="Center"
+                                      Checked="showEdges_CheckedChanged"
+                                      Unchecked="showEdges_CheckedChanged"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Background Top:" VerticalAlignment="Center"/>
+                            <Border x:Name="backgroundTop" Grid.Row="1" Grid.Column="1"
+                                    Background="WhiteSmoke" Style="{StaticResource SwatchStyle}"
+                                    MouseLeftButtonUp="ColorSwatch_Click"/>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Background Bottom:" VerticalAlignment="Center"/>
+                            <Border x:Name="backgroundBottom" Grid.Row="2" Grid.Column="1"
+                                    Background="CornflowerBlue" Style="{StaticResource SwatchStyle}"
+                                    MouseLeftButtonUp="ColorSwatch_Click"/>
+
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Printer base:" VerticalAlignment="Center"/>
+                            <Border x:Name="printerBase" Grid.Row="3" Grid.Column="1"
+                                    Background="Gainsboro"  Style="{StaticResource SwatchStyle}"
+                                    MouseLeftButtonUp="ColorSwatch_Click"/>
+
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Printer Frame:" VerticalAlignment="Center"/>
+                            <Border x:Name="printerFrame" Grid.Row="4" Grid.Column="1"
+                                    Background="Black" Style="{StaticResource SwatchStyle}"
+                                    MouseLeftButtonUp="ColorSwatch_Click"/>
+
+                            <Label Grid.Row="1" Grid.Column="3" Content="Print Area Width:" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            <Label Grid.Row="2" Grid.Column="3" Content="Print Area Depth:" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            <Label Grid.Row="3" Grid.Column="3" Content="Print Area Height:" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            <TextBox x:Name="txtPrintAreaWidth" Grid.Row="1" Grid.Column="4" Text="" Margin="0,6" TextChanged="PrintAreaWidth_TextChanged" />
+                            <TextBox x:Name="txtPrintAreaDepth" Grid.Row="2" Grid.Column="4" Text="" Margin="0,6" TextChanged="PrintAreaDepth_TextChanged"/>
+                            <TextBox x:Name="txtPrintAreaHeight" Grid.Row="3" Grid.Column="4" Text="" Margin="0,6" TextChanged="PrintAreaHeight_TextChanged"/>
+                            <Label Content="(Change print area dimension needs restart to apply.)" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#888"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="4,0,0,0">
+                        <TextBlock Text="Draw method:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <ComboBox x:Name="comboDrawMethod" Width="180" IsEnabled="False">
+                            <ComboBoxItem>VBOs (fastest)</ComboBoxItem>
+                            <ComboBoxItem>Arrays (medium)</ComboBoxItem>
+                            <ComboBoxItem>Immediate (slow)</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                    <Button Grid.Row="2" Content="Reset All Settings to Default" Width="200" Height="28" Margin="0,10" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="ResetSettings_Click"/>
+                </Grid>
+            </TabItem>
+
+            <!-- ═══════════════════════════════════════════
+                 TAB 2 — Model
+            ════════════════════════════════════════════ -->
+            <TabItem Header="Model">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <GroupBox Header="Colors" Grid.Row="0" Margin="0,0,0,8">
+                        <Grid Margin="6,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="185"/>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="145"/>
+                                <ColumnDefinition Width="100"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="34"/>
+                                <RowDefinition Height="34"/>
+                                <RowDefinition Height="34"/>
+                                <RowDefinition Height="34"/>
+                                <RowDefinition Height="34"/>
+                                <RowDefinition Height="34"/>
+                                <RowDefinition Height="34"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Left column -->
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Faces:"                      VerticalAlignment="Center"/>
+                            <Border x:Name="faces"          Grid.Row="0" Grid.Column="1" Background="RoyalBlue"      Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Selected faces:"             VerticalAlignment="Center"/>
+                            <Border x:Name="selectedFaces"  Grid.Row="1" Grid.Column="1" Background="CornflowerBlue" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click"/>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Edges:"                      VerticalAlignment="Center"/>
+                            <Border x:Name="edges"          Grid.Row="2" Grid.Column="1" Background="DarkGray"       Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click"/>
+
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Objects outside printbed:"   VerticalAlignment="Center"/>
+                            <Border x:Name="outsidePrintbed" Grid.Row="3" Grid.Column="1" Background="Red"           Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click"/>
+
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Selection Box:"              VerticalAlignment="Center"/>
+                            <Border x:Name="selectionBox"   Grid.Row="4" Grid.Column="1" Background="White"          Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click"/>
+
+                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Model errors (face):"        VerticalAlignment="Center"/>
+                            <Border x:Name="errorModel"     Grid.Row="5" Grid.Column="1" Background="Red"            Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click"/>
+
+                            <TextBlock Grid.Row="6" Grid.Column="0" Text="Model errors (edge):"        VerticalAlignment="Center"/>
+                            <Border x:Name="errorModelEdge" Grid.Row="6" Grid.Column="1" Background="Cyan"           Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click"/>
+
+                            <!-- Right column -->
+                            <TextBlock Grid.Row="0" Grid.Column="3" Text="Inner faces:"  VerticalAlignment="Center"/>
+                            <Border x:Name="insideFaces"  Grid.Row="0" Grid.Column="4" Background="Black"     Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="3" Text="Cut faces:"   VerticalAlignment="Center"/>
+                            <Border x:Name="cutFaces"     Grid.Row="1" Grid.Column="4" Background="RoyalBlue" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Header="Editor" Grid.Row="1">
+                        <StackPanel Margin="6,4" Orientation="Vertical">
+                            <CheckBox x:Name="showEdges" Content="Show edges" Margin="0,4"
+                                      Checked="showEdges_CheckedChanged" Unchecked="showEdges_CheckedChanged"/>
+                            <CheckBox x:Name="showFaces" Content="Show faces" IsChecked="True" Margin="0,4"
+                                      Checked="showEdges_CheckedChanged" Unchecked="showEdges_CheckedChanged"/>
+                        </StackPanel>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+
+            <!-- ═══════════════════════════════════════════
+                 TAB 3 — Lights
+            ════════════════════════════════════════════ -->
+            <TabItem Header="Lights">
+                <Grid Margin="12,12,12,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="110"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="36"/>
+                        <RowDefinition Height="34"/>
+                        <RowDefinition Height="34"/>
+                        <RowDefinition Height="34"/>
+                        <RowDefinition Height="34"/>
+                        <RowDefinition Height="34"/>
+                        <RowDefinition Height="34"/>
+                        <RowDefinition Height="34"/>
+                        <RowDefinition Height="34"/>
+                        <RowDefinition Height="34"/>
+                        <RowDefinition Height="34"/>
+                        <RowDefinition Height="34"/>
+                        <RowDefinition Height="34"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Light (Plastic) -->
+                    <RadioButton x:Name="enableLightPlastic" Grid.Row="0" Grid.Column="1" Content="Light (Plastic)" IsChecked="True" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
+
+                    <!-- X direction -->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="X direction:" VerticalAlignment="Center"/>
+                    <TextBox x:Name="xdir1" Grid.Row="1" Grid.Column="1" Text="1" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
+
+                    <!-- Y direction -->
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Y direction:" VerticalAlignment="Center"/>
+                    <TextBox x:Name="ydir1" Grid.Row="2" Grid.Column="1" Text="2" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
+
+                    <!-- Z direction -->
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Z direction:" VerticalAlignment="Center"/>
+                    <TextBox x:Name="zdir1" Grid.Row="3" Grid.Column="1" Text="1" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
+
+                    <!-- Light Color -->
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Light Color:" VerticalAlignment="Center"/>
+                    <Border x:Name="lightColor" Grid.Row="5" Grid.Column="1" Background="White" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
+
+                    <!-- Model Color, EX: 0.6f, 0.7f, 0.8f  / 154, 179,  205  -->
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Model Color:" VerticalAlignment="Center"/>
+                    <Border x:Name="modelColor" Grid.Row="6" Grid.Column="1" Background="#6BA3C6" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
+
+                    <!-- Ambient intensity -->
+                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Ambient intensity:" VerticalAlignment="Center"/>
+                    <Slider Grid.Row="7" Grid.Column="1" Name="sliderAmbient" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="0" Maximum="1.0" Value="0.15"/>
+                    <TextBlock Grid.Row="7" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Width="24" Text="{Binding ElementName=sliderAmbient, Path=Value, StringFormat={}{0:0.##}}" TextAlignment="Right" FontFamily="Arial" />
+
+                    <!-- Specular intensity -->
+                    <TextBlock Grid.Row="8" Grid.Column="0" Text="Specular intensity:" VerticalAlignment="Center"/>
+                    <Slider Grid.Row="8" Grid.Column="1" Name="sliderSpecular" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="0" Maximum="1.0" Value="0.5"/>
+                    <TextBlock Grid.Row="8" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Width="24" Text="{Binding ElementName=sliderSpecular, Path=Value, StringFormat={}{0:0.##}}" TextAlignment="Right" FontFamily="Arial" />
+
+                    <!-- Shininess exponent -->
+                    <TextBlock Grid.Row="9" Grid.Column="0" Text="Shininess exponent:" VerticalAlignment="Center"/>
+                    <Slider Grid.Row="9" Grid.Column="1" Name="sliderShininess" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="1" Maximum="256" Value="32" TickFrequency="1" IsSnapToTickEnabled="True"/>
+                    <TextBlock Grid.Row="9" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Width="24" Text="{Binding ElementName=sliderShininess, Path=Value, StringFormat={}{0:0.##}}" TextAlignment="Right" FontFamily="Arial" />
+
+                    <!-- Reset to default -->
+                    <Button Grid.Row="10" Grid.Column="0" Margin="6" Content="Reset to default" Click="ResetLightSettingsToDefault_Click"/>
+
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</Window>

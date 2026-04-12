@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="View3D.view.BusyWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="404" d:DesignWidth="672" Background="#9B000000">
+    <Grid Name="grid1" MinWidth="289" MinHeight="140" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Rectangle Name="rectangle1" Stroke="Black" Fill="#FFF0F0F0" RadiusX="10" RadiusY="10" Grid.RowSpan="4" />
+        <ProgressBar Height="32" Margin="20,0" Name="busyProgressbar" IsIndeterminate="True" Grid.Row="2" />
+        <TextBlock Text="View 3D STL Files" HorizontalAlignment="Center" Margin="0,5" Name="labelXYZware" VerticalAlignment="Center" Width="265" FontFamily="Arial" FontWeight="Bold" DataContext="{Binding}" FontSize="26" TextAlignment="Center" />
+        <TextBlock TextWrapping="Wrap" Text="Loading..." FontFamily="Arial" FontSize="18" HorizontalAlignment="Center" Margin="20,0,20,5" Name="labelBusyMessage" VerticalAlignment="Center" TextAlignment="Center" Grid.Row="1" />
+        <TextBlock Text="Elapsed Time" FontFamily="Arial" HorizontalAlignment="Left" Margin="20,5,0,5" Name="labelElapsedTime" VerticalAlignment="Center" Grid.Row="3" />
+        <TextBlock HorizontalAlignment="Right" Margin="0,5,20,5" Name="textBlock_time" Text="00:00:00" VerticalAlignment="Top" TextAlignment="Right" Grid.Row="3" Grid.Column="1" />
+        <Button Content="X" FontFamily="Arial" HorizontalAlignment="Right" Margin="0,0,25,0" x:Name="buttonCancel" VerticalAlignment="Center" Background="{x:Null}" FontWeight="Bold" FontSize="16" BorderBrush="{x:Null}" Click="buttonCancel_Click" Grid.Row="2" Grid.ColumnSpan="2" />
+    </Grid>
+</UserControl>
