@@ -493,7 +493,7 @@ namespace View3D.view
 
 
         // ── Pick / ray-cast ───────────────────────────────────────────────────
-        public void UpdatePickLine(int x, int y)
+        void UpdatePickLine(int x, int y)
         {
             float bedRadius = (float)(1.5 * Math.Sqrt(
                  (MainWindow.main.threeDSettings.PrintAreaDepth * MainWindow.main.threeDSettings.PrintAreaDepth +
@@ -526,7 +526,7 @@ namespace View3D.view
             pickLine.dir.normalize();
         }
 
-        private ThreeDModel Picktest(int x, int y)
+        ThreeDModel Picktest(int x, int y)
         {
             Stopwatch sw = Stopwatch.StartNew();
 
