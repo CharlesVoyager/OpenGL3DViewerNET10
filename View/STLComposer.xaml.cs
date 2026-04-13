@@ -109,7 +109,7 @@ namespace View3D.view
                                               model.Model.boundingBox.Size.y.ToString("0.000") + "," +
                                               model.Model.boundingBox.Size.z.ToString("0.000") + ")";
             labelVertices.Text             = "(To be implemented)";
-            txtTriangles.Text            = model.Model.triangles.Count.ToString();
+            txtTriangles.Text            = model.Model.drawTriangles.Count.ToString();
 
             // Colour: black when zero, red when non-zero
             var red   = new SolidColorBrush(Colors.Red);
@@ -213,7 +213,7 @@ namespace View3D.view
                 _meshDataReady.Set();
                 return; 
             }
-            if (MainWindow.main.BusyWindow.killed || newModel.Model.triangles.Count == 0)
+            if (MainWindow.main.BusyWindow.killed || newModel.Model.drawTriangles.Count == 0)
             {
                 newModel.Model.Clear();
                 return;

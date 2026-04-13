@@ -106,8 +106,8 @@ namespace OpenGL3DViewerNET10.MeshIOLib
             BinaryWriter w = new BinaryWriter(fs);
             int i;
             for (i = 0; i < 20; i++) w.Write((int)0);
-            w.Write(model.triangles.Count);
-            foreach (TopoTriangle t in model.triangles)
+            w.Write(model.drawTriangles.Count);
+            foreach (TopoTriangle t in model.drawTriangles)
             {
                 w.Write((float)t.Normal.x);
                 w.Write((float)t.Normal.y);
@@ -124,7 +124,7 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                 if (count % 5000 == 0)
                 {
                     if (updateRate != null)
-                        updateRate( (int)(((double)count / model.triangles.Count) * 100.0) );
+                        updateRate( (int)(((double)count / model.drawTriangles.Count) * 100.0) );
 
                     if (Command == COMMAND.Abort)
                     {
@@ -143,7 +143,7 @@ namespace OpenGL3DViewerNET10.MeshIOLib
             int count = 0;
             TextWriter w = new EnglishStreamWriter(fs);
             w.WriteLine("solid XYZ");
-            foreach (TopoTriangle t in model.triangles)
+            foreach (TopoTriangle t in model.drawTriangles)
             {
                 w.Write("  facet normal ");
                 w.Write(t.Normal.x);
@@ -177,7 +177,7 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                 if (count % 5000 == 0)
                 {
                     if (updateRate != null)
-                        updateRate( (int)(((double)count / model.triangles.Count) * 100.0) );
+                        updateRate( (int)(((double)count / model.drawTriangles.Count) * 100.0) );
 
                     if (Command == COMMAND.Abort)
                     {

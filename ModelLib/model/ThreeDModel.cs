@@ -239,7 +239,7 @@ namespace OpenGL3DViewerNET10.ModelLib.model
 
             Mesh.Clear();
 
-            Mesh.EnsureCapacity(Model.triangles.Count, Model.HasColor());
+            Mesh.EnsureCapacity(Model.drawTriangles.Count, Model.HasColor());
 
             var ranges = Model.primitiveMaterials
                 .OrderBy(r => r.StartTriangle)

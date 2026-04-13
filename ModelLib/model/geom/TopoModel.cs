@@ -42,8 +42,11 @@ namespace View3D.model.geom
     // TopoModel: Used to store original STL / GLB file triangle data intact.
     public class TopoModel
     {
+#if false //HashSet is fine for uniqueness-style model storage, but not safe for ordered GLB attribute/material binding during draw preparation.
         public HashSet<TopoTriangle> triangles = new HashSet<TopoTriangle>();
+#else
         public List<TopoTriangle> drawTriangles = new List<TopoTriangle>();
+#endif
 
         public RHBoundingBox boundingBox = new RHBoundingBox();
 
@@ -61,7 +64,6 @@ namespace View3D.model.geom
 
         public void Clear()
         {
-            triangles.Clear();
             drawTriangles.Clear();
             boundingBox.Clear();
             materials.Clear();
@@ -72,14 +74,11 @@ namespace View3D.model.geom
 
         public void EnsureCapacity(int triCount)
         {
-            triangles.EnsureCapacity(triCount);
+            drawTriangles.EnsureCapacity(triCount);
         }
 
         public void CopyTo(TopoModel newModel)
         {
-            foreach (TopoTriangle t in triangles)
-                newModel.triangles.Add(new TopoTriangle(t));
-
             foreach (TopoTriangle t in drawTriangles)
                 newModel.drawTriangles.Add(new TopoTriangle(t));
 
@@ -243,20 +242,18 @@ namespace View3D.model.geom
 
         private void removeTriangle(TopoTriangle triangle)
         {
-            triangles.Remove(triangle);
             drawTriangles.Remove(triangle);
         }
 
         private void AddTriangleInternal(TopoTriangle triangle)
         {
-            triangles.Add(triangle);
             drawTriangles.Add(triangle);
         }
 
         public double Surface()
         {
             double surface = 0;
-            foreach (TopoTriangle t in triangles)
+            foreach (TopoTriangle t in drawTriangles)
                 surface += t.Area();
             return surface;
         }
@@ -264,7 +261,7 @@ namespace View3D.model.geom
         public double Volume()
         {
             double volume = 0;
-            foreach (TopoTriangle t in triangles)
+            foreach (TopoTriangle t in drawTriangles)
                 volume += t.SignedVolume();
             return Math.Abs(volume);
         }
@@ -293,7 +290,7 @@ namespace View3D.model.geom
 
         public bool HasColor()
         {
-            foreach (TopoTriangle t in triangles)
+            foreach (TopoTriangle t in drawTriangles)
             {
                 if (t.Color != null)
                     return true;

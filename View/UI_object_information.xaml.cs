@@ -27,7 +27,7 @@ namespace View3D.view
         public void Analyse(ThreeDModel pm)
         {
             double volume = 0;
-            foreach (TopoTriangle t in pm.Model.triangles)
+            foreach (TopoTriangle t in pm.Model.drawTriangles)
             {
                 volume += t.SignedVolume();
             }
