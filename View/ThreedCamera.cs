@@ -11,7 +11,7 @@ namespace View3D.view
         public double originDistance, distance, minDistance = 10, defaultDistance = 200;
         public double theta = 0;
         public double phi = 0;
-        public double angle = 15.0 * Math.PI / 180;
+        public double angle = 15 * Math.PI / 180;
 
         Vector3 viewCenterStart = new Vector3();
         double startTheta, startPhi, startDistance;
@@ -161,8 +161,6 @@ namespace View3D.view
                 distance = minDistance;
             if (distance > 6 * defaultDistance)
                 distance = 6 * defaultDistance;
-
-                angle = 15.0 * Math.PI / 180;
         }
 
         public void Rotate(double side, double updown)
@@ -239,7 +237,6 @@ namespace View3D.view
             while (loops > 0)
             {
                 loops--;
-                angle = 15.0 * Math.PI / 180;
                 double ratio = 1;
                 Vector3 camPos = CameraPosition;
                 Matrix4 lookAt = Matrix4.LookAt(camPos.X, camPos.Y, camPos.Z, viewCenter.X, viewCenter.Y, viewCenter.Z, 0, 0, 1.0f);
