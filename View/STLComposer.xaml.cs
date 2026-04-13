@@ -897,16 +897,16 @@ namespace View3D.view
         {
             if (Keyboard.Modifiers == ModifierKeys.Shift)
             {
-                if (!sel.Selected) SetObjectSelected((ThreeDModel)sel, true);
+                if (!sel.Selected) SetObjectSelected(sel, true);
             }
             else if (Keyboard.Modifiers == ModifierKeys.Control)
             {
-                SetObjectSelected((ThreeDModel)sel, !sel.Selected);
+                SetObjectSelected(sel, !sel.Selected);
             }
             else
             {
                 listObjects.SelectedItems.Clear();
-                SetObjectSelected((ThreeDModel)sel, true);
+                SetObjectSelected(sel, true);
             }
         }
 
