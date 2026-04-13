@@ -5,11 +5,19 @@ namespace View3D.model.geom
    
     public class Submesh
     {
+        public class DrawRange
+        {
+            public int StartVertex;
+            public int VertexCount;
+            public int MaterialIndex = -1;
+        }
+
         public bool selected = false;
 
         public float[] glVertices = null; // [x y z]
         public float[] glNormals = null;  // [nx ny nz]
         public float[] glColors = null;
+        public List<DrawRange> DrawRanges = new List<DrawRange>();
 
         int idxVertices = 0;
         int idxNormals = 0;
@@ -28,6 +36,10 @@ namespace View3D.model.geom
             glVertices = null;
             glNormals = null;
             glColors = null;
+            DrawRanges.Clear();
+            idxVertices = 0;
+            idxNormals = 0;
+            idxColors = 0;
         }
 
         public void CopyTo(Submesh newMesh)
@@ -43,9 +55,24 @@ namespace View3D.model.geom
                 newMesh.glColors = new float[glColors.Length];
                 Array.Copy(glColors, newMesh.glColors, glColors.Length);
             }
+
+            foreach (DrawRange range in DrawRanges)
+            {
+                newMesh.DrawRanges.Add(new DrawRange
+                {
+                    StartVertex = range.StartVertex,
+                    VertexCount = range.VertexCount,
+                    MaterialIndex = range.MaterialIndex
+                });
+            }
         }
 
         public void AddTriangle(RHVector3 v1, RHVector3 v2, RHVector3 v3, RHVector3 n, float[] color)
+        {
+            AddTriangle(v1, v2, v3, n, n, n, color);
+        }
+
+        public void AddTriangle(RHVector3 v1, RHVector3 v2, RHVector3 v3, RHVector3 n0, RHVector3 n1, RHVector3 n2, float[]? color)
         {
             if (idxVertices + 9 > glVertices.Length)
                 throw new Exception("Too many triangles added to submesh vertices.");
@@ -57,25 +84,25 @@ namespace View3D.model.geom
             glVertices[idxVertices++] = (float)v1.y;
             glVertices[idxVertices++] = (float)v1.z;
 
-            glNormals[idxNormals++] = (float)n.x;
-            glNormals[idxNormals++] = (float)n.y;
-            glNormals[idxNormals++] = (float)n.z;
+            glNormals[idxNormals++] = (float)n0.x;
+            glNormals[idxNormals++] = (float)n0.y;
+            glNormals[idxNormals++] = (float)n0.z;
 
             glVertices[idxVertices++] = (float)v2.x;
             glVertices[idxVertices++] = (float)v2.y;
             glVertices[idxVertices++] = (float)v2.z;
 
-            glNormals[idxNormals++] = (float)n.x;
-            glNormals[idxNormals++] = (float)n.y;
-            glNormals[idxNormals++] = (float)n.z;
+            glNormals[idxNormals++] = (float)n1.x;
+            glNormals[idxNormals++] = (float)n1.y;
+            glNormals[idxNormals++] = (float)n1.z;
 
             glVertices[idxVertices++] = (float)v3.x;
             glVertices[idxVertices++] = (float)v3.y;
             glVertices[idxVertices++] = (float)v3.z;
 
-            glNormals[idxNormals++] = (float)n.x;
-            glNormals[idxNormals++] = (float)n.y;
-            glNormals[idxNormals++] = (float)n.z;
+            glNormals[idxNormals++] = (float)n2.x;
+            glNormals[idxNormals++] = (float)n2.y;
+            glNormals[idxNormals++] = (float)n2.z;
 
             if (color != null)
             {

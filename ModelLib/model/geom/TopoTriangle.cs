@@ -5,14 +5,19 @@ namespace View3D.model.geom
     {
         public TopoVertex[] Vertices = new TopoVertex[3];
         public RHVector3 Normal;
+        public RHVector3[] VertexNormals = new RHVector3[3];
         public float[]? Color;
 
         public TopoTriangle(TopoTriangle t)
         {
             for (int i = 0; i < 3; i++)
+            {
                 Vertices[i] = new TopoVertex(new RHVector3(t.Vertices[i].pos.x, t.Vertices[i].pos.y, t.Vertices[i].pos.z));
+                VertexNormals[i] = new RHVector3(t.VertexNormals[i].x, t.VertexNormals[i].y, t.VertexNormals[i].z);
+            }
 
             Normal = new RHVector3(t.Normal.x, t.Normal.y, t.Normal.z);
+            Color = t.Color != null ? (float[])t.Color.Clone() : null;
         }
 
         public TopoTriangle(TopoVertex v1, TopoVertex v2, TopoVertex v3)
@@ -21,6 +26,7 @@ namespace View3D.model.geom
             Vertices[1] = v2;
             Vertices[2] = v3;
             RecomputeNormal();
+            SetVertexNormalsFromFaceNormal();
             Color = null;
         }
 
@@ -30,6 +36,7 @@ namespace View3D.model.geom
             Vertices[1] = v2;
             Vertices[2] = v3;
             Normal = n;
+            SetVertexNormalsFromFaceNormal();
             Color = null;
         }
 
@@ -39,6 +46,18 @@ namespace View3D.model.geom
             Vertices[1] = v2;
             Vertices[2] = v3;
             Normal = n;
+            SetVertexNormalsFromFaceNormal();
+            Color = color;
+        }
+
+        public TopoTriangle(TopoVertex v1, TopoVertex v2, TopoVertex v3, RHVector3[] vertexNormals, RHVector3 faceNormal, float[]? color = null)
+        {
+            Vertices[0] = v1;
+            Vertices[1] = v2;
+            Vertices[2] = v3;
+            Normal = faceNormal;
+            for (int i = 0; i < 3; i++)
+                VertexNormals[i] = new RHVector3(vertexNormals[i].x, vertexNormals[i].y, vertexNormals[i].z);
             Color = color;
         }
 
@@ -61,9 +80,15 @@ namespace View3D.model.geom
         public void FlipDirection()
         {
             Normal.Scale(-1);
+            for (int i = 0; i < 3; i++)
+                VertexNormals[i].Scale(-1);
             TopoVertex v = Vertices[0];
             Vertices[0] = Vertices[1];
             Vertices[1] = v;
+
+            RHVector3 n = VertexNormals[0];
+            VertexNormals[0] = VertexNormals[1];
+            VertexNormals[1] = n;
         }
 
         public void RecomputeNormal()
@@ -72,6 +97,13 @@ namespace View3D.model.geom
             RHVector3 d2 = Vertices[2].pos.Subtract(Vertices[1].pos);
             Normal = d1.CrossProduct(d2);
             Normal.NormalizeSafe();
+            SetVertexNormalsFromFaceNormal();
+        }
+
+        private void SetVertexNormalsFromFaceNormal()
+        {
+            for (int i = 0; i < 3; i++)
+                VertexNormals[i] = new RHVector3(Normal.x, Normal.y, Normal.z);
         }
 
         public int VertexIndexFor(TopoVertex test)

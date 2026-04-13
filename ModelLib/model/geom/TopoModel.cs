@@ -32,10 +32,18 @@ namespace View3D.model.geom
         public float[] EmissiveFactor               = { 0f, 0f, 0f };       // RGB
     }
 
+    public class PrimitiveMaterialRange
+    {
+        public int StartTriangle { get; set; }
+        public int TriangleCount { get; set; }
+        public int MaterialIndex { get; set; } = -1;
+    }
+
     // TopoModel: Used to store original STL / GLB file triangle data intact.
     public class TopoModel
     {
         public HashSet<TopoTriangle> triangles = new HashSet<TopoTriangle>();
+        public List<TopoTriangle> drawTriangles = new List<TopoTriangle>();
 
         public RHBoundingBox boundingBox = new RHBoundingBox();
 
@@ -49,14 +57,17 @@ namespace View3D.model.geom
         // Tangent vectors: 4 floats per vertex (x, y, z, w) where w = handedness (±1).
         // Same ordering as texCoords — 3 tangents per triangle, matching glVertices.
         public List<float> tangents = new List<float>();
+        public List<PrimitiveMaterialRange> primitiveMaterials = new List<PrimitiveMaterialRange>();
 
         public void Clear()
         {
             triangles.Clear();
+            drawTriangles.Clear();
             boundingBox.Clear();
             materials.Clear();
             texCoords.Clear();
             tangents.Clear();
+            primitiveMaterials.Clear();
         }
 
         public void EnsureCapacity(int triCount)
@@ -68,6 +79,9 @@ namespace View3D.model.geom
         {
             foreach (TopoTriangle t in triangles)
                 newModel.triangles.Add(new TopoTriangle(t));
+
+            foreach (TopoTriangle t in drawTriangles)
+                newModel.drawTriangles.Add(new TopoTriangle(t));
 
             boundingBox.CopyTo(newModel.boundingBox);
 
@@ -91,6 +105,15 @@ namespace View3D.model.geom
             newModel.texCoords.AddRange(texCoords);
 
             newModel.tangents.AddRange(tangents);
+            foreach (PrimitiveMaterialRange range in primitiveMaterials)
+            {
+                newModel.primitiveMaterials.Add(new PrimitiveMaterialRange
+                {
+                    StartTriangle = range.StartTriangle,
+                    TriangleCount = range.TriangleCount,
+                    MaterialIndex = range.MaterialIndex
+                });
+            }
         }
 
         // ------------------------------------------------------------------
@@ -103,7 +126,7 @@ namespace View3D.model.geom
             TopoVertex v2 = new TopoVertex(p2);
             TopoVertex v3 = new TopoVertex(p3);
 
-            triangles.Add(new TopoTriangle(v1, v2, v3, normal));
+            AddTriangleInternal(new TopoTriangle(v1, v2, v3, normal));
             boundingBox.Add(p1);
             boundingBox.Add(p2);
             boundingBox.Add(p3);
@@ -115,7 +138,33 @@ namespace View3D.model.geom
             TopoVertex v2 = new TopoVertex(p2);
             TopoVertex v3 = new TopoVertex(p3);
 
-            triangles.Add(new TopoTriangle(v1, v2, v3, normal, color));
+            AddTriangleInternal(new TopoTriangle(v1, v2, v3, normal, color));
+            boundingBox.Add(p1);
+            boundingBox.Add(p2);
+            boundingBox.Add(p3);
+        }
+
+        public void AddTriangle(
+            RHVector3 p1, RHVector3 p2, RHVector3 p3,
+            RHVector3 n0, RHVector3 n1, RHVector3 n2,
+            float[]? color = null)
+        {
+            TopoVertex v1 = new TopoVertex(p1);
+            TopoVertex v2 = new TopoVertex(p2);
+            TopoVertex v3 = new TopoVertex(p3);
+
+            RHVector3 faceNormal = new RHVector3(
+                (n0.x + n1.x + n2.x) / 3.0,
+                (n0.y + n1.y + n2.y) / 3.0,
+                (n0.z + n1.z + n2.z) / 3.0);
+            faceNormal.NormalizeSafe();
+
+            AddTriangleInternal(new TopoTriangle(
+                v1, v2, v3,
+                new[] { n0, n1, n2 },
+                faceNormal,
+                color));
+
             boundingBox.Add(p1);
             boundingBox.Add(p2);
             boundingBox.Add(p3);
@@ -135,7 +184,7 @@ namespace View3D.model.geom
             TopoVertex v2 = new TopoVertex(p2);
             TopoVertex v3 = new TopoVertex(p3);
 
-            triangles.Add(new TopoTriangle(v1, v2, v3, normal));
+            AddTriangleInternal(new TopoTriangle(v1, v2, v3, normal));
             boundingBox.Add(p1);
             boundingBox.Add(p2);
             boundingBox.Add(p3);
@@ -157,11 +206,51 @@ namespace View3D.model.geom
             }
         }
 
+        public void AddTriangle(
+            RHVector3 p1, RHVector3 p2, RHVector3 p3,
+            RHVector3 n0, RHVector3 n1, RHVector3 n2,
+            float[] uv0,  float[] uv1,  float[] uv2,
+            float[]? tan0 = null, float[]? tan1 = null, float[]? tan2 = null)
+        {
+            AddTriangle(p1, p2, p3, n0, n1, n2, null, uv0, uv1, uv2, tan0, tan1, tan2);
+        }
+
+        public void AddTriangle(
+            RHVector3 p1, RHVector3 p2, RHVector3 p3,
+            RHVector3 n0, RHVector3 n1, RHVector3 n2,
+            float[]? color,
+            float[] uv0,  float[] uv1,  float[] uv2,
+            float[]? tan0 = null, float[]? tan1 = null, float[]? tan2 = null)
+        {
+            AddTriangle(p1, p2, p3, n0, n1, n2, color);
+
+            if (uv0 != null && uv1 != null && uv2 != null)
+            {
+                texCoords.Add(uv0[0]); texCoords.Add(uv0[1]);
+                texCoords.Add(uv1[0]); texCoords.Add(uv1[1]);
+                texCoords.Add(uv2[0]); texCoords.Add(uv2[1]);
+            }
+
+            if (tan0 != null && tan1 != null && tan2 != null)
+            {
+                tangents.Add(tan0[0]); tangents.Add(tan0[1]); tangents.Add(tan0[2]); tangents.Add(tan0[3]);
+                tangents.Add(tan1[0]); tangents.Add(tan1[1]); tangents.Add(tan1[2]); tangents.Add(tan1[3]);
+                tangents.Add(tan2[0]); tangents.Add(tan2[1]); tangents.Add(tan2[2]); tangents.Add(tan2[3]);
+            }
+        }
+
         // ------------------------------------------------------------------
 
         private void removeTriangle(TopoTriangle triangle)
         {
             triangles.Remove(triangle);
+            drawTriangles.Remove(triangle);
+        }
+
+        private void AddTriangleInternal(TopoTriangle triangle)
+        {
+            triangles.Add(triangle);
+            drawTriangles.Add(triangle);
         }
 
         public double Surface()

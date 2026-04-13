@@ -173,6 +173,11 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                     if (attrib.TryGetProperty("COLOR_0", out var colEl))
                         vertexColors = ReadColorAccessor(colEl.GetInt32(), accessors, bufferViews, buffers);
 
+                    // ---- Optional: imported vertex normals ----
+                    RHVector3[]? normals = null;
+                    if (attrib.TryGetProperty("NORMAL", out var normEl))
+                        normals = ReadVec3Accessor(normEl.GetInt32(), accessors, bufferViews, buffers);
+
                     // ---- Optional: UV coordinates ----
                     float[][]? texcoords = null;
                     if (attrib.TryGetProperty("TEXCOORD_0", out var uvEl))
@@ -185,7 +190,7 @@ namespace OpenGL3DViewerNET10.MeshIOLib
 
                     // After reading positions, normals, UVs, indices — and when tangents == null:
                     if (tangents == null && texcoords != null)
-                        tangents = ComputeTangents(positions, texcoords, indices, positions.Length);
+                        tangents = ComputeTangents(positions, normals, texcoords, indices, positions.Length);
 
                     // ---- Material ----
                     float[]?    flatColor   = null;
@@ -216,11 +221,19 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                         }
                     }
 
+                    int materialIndex = model.materials.Count;
                     model.materials.Add(pbrMaterial);
+                    model.primitiveMaterials.Add(new PrimitiveMaterialRange
+                    {
+                        StartTriangle = model.drawTriangles.Count,
+                        TriangleCount = indices != null ? indices.Length / 3 : positions.Length / 3,
+                        MaterialIndex = materialIndex
+                    });
 
                     AddPrimitiveToModel(
                         positions,
                         indices,
+                        normals,
                         vertexColors,
                         texcoords,
                         tangents,
@@ -240,6 +253,7 @@ namespace OpenGL3DViewerNET10.MeshIOLib
         static void AddPrimitiveToModel(
             RHVector3[]  positions,
             int[]?       indices,
+            RHVector3[]? vertexNormals,
             float[][]?   vertexColors,
             float[][]?   texcoords,
             float[][]?   tangents,
@@ -259,8 +273,17 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                 var p2 = positions[i1];
                 var p3 = positions[i2];
 
-                var normal = p2.Subtract(p1).CrossProduct(p3.Subtract(p1));
-                normal.NormalizeSafe();
+                var faceNormal = p2.Subtract(p1).CrossProduct(p3.Subtract(p1));
+                faceNormal.NormalizeSafe();
+                RHVector3 n0 = vertexNormals != null ? vertexNormals[i0] : new RHVector3(faceNormal.x, faceNormal.y, faceNormal.z);
+                RHVector3 n1 = vertexNormals != null ? vertexNormals[i1] : new RHVector3(faceNormal.x, faceNormal.y, faceNormal.z);
+                RHVector3 n2 = vertexNormals != null ? vertexNormals[i2] : new RHVector3(faceNormal.x, faceNormal.y, faceNormal.z);
+                bool hasAnyTexture = texcoords != null && (
+                    material.BaseColorTexture != null ||
+                    material.MetallicRoughnessTexture != null ||
+                    material.NormalTexture != null ||
+                    material.OcclusionTexture != null ||
+                    material.EmissiveTexture != null);
 
                 // ---- Priority 1: per-vertex colors ----
                 if (vertexColors != null)
@@ -275,10 +298,10 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                         (c0[2]+c1[2]+c2[2]) / 3f,
                         (c0[3]+c1[3]+c2[3]) / 3f,
                     };
-                    model.AddTriangle(p1, p2, p3, normal, color);
+                    model.AddTriangle(p1, p2, p3, n0, n1, n2, color);
                 }
                 // ---- Priority 2: UV-mapped texture (base color or PBR) ----
-                else if (texcoords != null && material.BaseColorTexture != null)
+                else if (hasAnyTexture)
                 {
                     float[]  uv0  = texcoords[i0];
                     float[]  uv1  = texcoords[i1];
@@ -287,13 +310,13 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                     float[]? tan1 = tangents?[i1];
                     float[]? tan2 = tangents?[i2];
 
-                    model.AddTriangle(p1, p2, p3, normal, uv0, uv1, uv2, tan0, tan1, tan2);
+                    model.AddTriangle(p1, p2, p3, n0, n1, n2, uv0, uv1, uv2, tan0, tan1, tan2);
                 }
                 // ---- Priority 3: flat material color ----
                 else
                 {
                     float[] color = flatColor ?? DefaultColor;
-                    model.AddTriangle(p1, p2, p3, normal, color);
+                    model.AddTriangle(p1, p2, p3, n0, n1, n2, color);
                 }
             }
         }
@@ -840,7 +863,7 @@ namespace OpenGL3DViewerNET10.MeshIOLib
             return c;
         }
 
-        static float[][] ComputeTangents(RHVector3[] positions, float[][] texcoords, int[]? indices, int vertCount)
+        static float[][] ComputeTangents(RHVector3[] positions, RHVector3[]? normals, float[][] texcoords, int[]? indices, int vertCount)
         {
             var tangentAccum = new Vector3[vertCount];
             var bitangentAccum = new Vector3[vertCount];
@@ -871,10 +894,31 @@ namespace OpenGL3DViewerNET10.MeshIOLib
             var result = new float[vertCount][];
             for (int i = 0; i < vertCount; i++)
             {
-                // Gram-Schmidt orthogonalize against the vertex normal (requires normals array)
-                var t = Vector3.Normalize(tangentAccum[i]);
-                var b = bitangentAccum[i];
-                float w = Vector3.Dot(Vector3.Cross(t, b), /* normal[i] */ Vector3.UnitZ) < 0 ? -1f : 1f;
+                Vector3 normal = normals != null
+                    ? new Vector3((float)normals[i].x, (float)normals[i].y, (float)normals[i].z)
+                    : Vector3.UnitZ;
+
+                if (normal.LengthSquared() < 1e-8f)
+                    normal = Vector3.UnitZ;
+                else
+                    normal = Vector3.Normalize(normal);
+
+                Vector3 t = tangentAccum[i];
+                if (t.LengthSquared() < 1e-8f)
+                {
+                    Vector3 axis = Math.Abs(normal.Z) < 0.999f ? Vector3.UnitZ : Vector3.UnitX;
+                    t = Vector3.Normalize(Vector3.Cross(axis, normal));
+                }
+                else
+                {
+                    t = Vector3.Normalize(t - normal * Vector3.Dot(normal, t));
+                }
+
+                Vector3 b = bitangentAccum[i];
+                if (b.LengthSquared() < 1e-8f)
+                    b = Vector3.Cross(normal, t);
+
+                float w = Vector3.Dot(Vector3.Cross(t, b), normal) < 0 ? -1f : 1f;
                 result[i] = new float[] { t.X, t.Y, t.Z, w };
             }
             return result;

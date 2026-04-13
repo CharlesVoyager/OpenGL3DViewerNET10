@@ -22,6 +22,20 @@ namespace OpenGL3DViewerNET10.Draw
 
     public class ModelGLDraw
     {
+        class MaterialGpuState
+        {
+            public int BaseColorTexId;
+            public int MetallicRoughnessTexId;
+            public int NormalMapId;
+            public int OcclusionTexId;
+            public int EmissiveTexId;
+
+            public float MetallicFactor = 1f;
+            public float RoughnessFactor = 1f;
+            public float[] EmissiveFactor = { 0f, 0f, 0f };
+            public float[] BaseColorFactor = { 1f, 1f, 1f, 1f };
+        }
+
         ThreeDModel printModel;
 
         // ---- GPU object handles ----
@@ -58,18 +72,7 @@ namespace OpenGL3DViewerNET10.Draw
         int emissiveFactorLoc;
         int baseColorFactorLoc;
 
-        // ---- OpenGL texture IDs (0 = not loaded) ----
-        int baseColorTexId           = 0;
-        int metallicRoughnessTexId   = 0;
-        int normalMapId              = 0;
-        int occlusionTexId           = 0;
-        int emissiveTexId            = 0;
-
-        // ---- PBR scalar factors (fallback when textures absent) ----
-        float   metallicFactor       = 1f;
-        float   roughnessFactor      = 1f;
-        float[] emissiveFactor       = { 0f, 0f, 0f };
-        float[] baseColorFactor      = { 1f, 1f, 1f, 1f };
+        readonly List<MaterialGpuState> materialStates = new List<MaterialGpuState>();
 
         // =========================================================================
         // Vertex shader
@@ -467,21 +470,21 @@ namespace OpenGL3DViewerNET10.Draw
 
             GL.BindVertexArray(0);
 
-            // --- Load PBR textures and scalar factors from the first material ---
-            if (printModel.Model.materials.Count > 0)
+            materialStates.Clear();
+            foreach (var mat in printModel.Model.materials)
             {
-                var mat = printModel.Model.materials[0];
-
-                baseColorTexId          = LoadTexture(mat.BaseColorTexture);
-                metallicRoughnessTexId  = LoadTexture(mat.MetallicRoughnessTexture);
-                normalMapId             = LoadTexture(mat.NormalTexture);
-                occlusionTexId          = LoadTexture(mat.OcclusionTexture);
-                emissiveTexId           = LoadTexture(mat.EmissiveTexture);
-
-                metallicFactor   = mat.MetallicFactor;
-                roughnessFactor  = mat.RoughnessFactor;
-                emissiveFactor   = mat.EmissiveFactor;
-                baseColorFactor  = mat.BaseColorFactor;
+                materialStates.Add(new MaterialGpuState
+                {
+                    BaseColorTexId = LoadTexture(mat.BaseColorTexture),
+                    MetallicRoughnessTexId = LoadTexture(mat.MetallicRoughnessTexture),
+                    NormalMapId = LoadTexture(mat.NormalTexture),
+                    OcclusionTexId = LoadTexture(mat.OcclusionTexture),
+                    EmissiveTexId = LoadTexture(mat.EmissiveTexture),
+                    MetallicFactor = mat.MetallicFactor,
+                    RoughnessFactor = mat.RoughnessFactor,
+                    EmissiveFactor = (float[])mat.EmissiveFactor.Clone(),
+                    BaseColorFactor = (float[])mat.BaseColorFactor.Clone()
+                });
             }
         }
 
@@ -516,27 +519,37 @@ namespace OpenGL3DViewerNET10.Draw
             // ---- Fallback color (STL grey or user setting) ----
             GL.Uniform3(objectColorLoc, ModelColor);
 
-            // ---- Vertex color flag ----
-            bool hasColors = printModel.Mesh.glColors != null && printModel.Mesh.glColors.Length > 0;
-            GL.Uniform1(useVertexColorLoc, hasColors ? 1 : 0);
-
-            // ---- PBR scalar factors ----
-            GL.Uniform1(metallicFactorLoc,  metallicFactor);
-            GL.Uniform1(roughnessFactorLoc, roughnessFactor);
-            GL.Uniform3(emissiveFactorLoc,  emissiveFactor[0], emissiveFactor[1], emissiveFactor[2]);
-            GL.Uniform4(baseColorFactorLoc, baseColorFactor[0], baseColorFactor[1],
-                                            baseColorFactor[2], baseColorFactor[3]);
-
-            // ---- Bind all 5 PBR texture units ----
-            BindTexture(TextureUnit.Texture0, baseColorTexId,         baseColorTexLoc,         useBaseColorTexLoc);
-            BindTexture(TextureUnit.Texture1, metallicRoughnessTexId, metallicRoughnessTexLoc, useMetallicRoughnessTexLoc);
-            BindTexture(TextureUnit.Texture2, normalMapId,            normalMapLoc,            useNormalMapLoc);
-            BindTexture(TextureUnit.Texture3, occlusionTexId,         occlusionTexLoc,         useOcclusionTexLoc);
-            BindTexture(TextureUnit.Texture4, emissiveTexId,          emissiveTexLoc,          useEmissiveTexLoc);
-
-            // ---- Draw ----
             GL.BindVertexArray(vao);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, printModel.Mesh.glVertices.Length / 3);
+
+            bool hasColors = printModel.Mesh.glColors != null && printModel.Mesh.glColors.Length > 0;
+            if (printModel.Mesh.DrawRanges.Count == 0)
+            {
+                BindMaterial(-1, hasColors);
+                GL.DrawArrays(PrimitiveType.Triangles, 0, printModel.Mesh.glVertices.Length / 3);
+                return;
+            }
+
+            int i = 0;
+            while (i < printModel.Mesh.DrawRanges.Count)
+            {
+                var range = printModel.Mesh.DrawRanges[i];
+                int startVertex = range.StartVertex;
+                int vertexCount = range.VertexCount;
+                int materialIndex = range.MaterialIndex;
+
+                while (i + 1 < printModel.Mesh.DrawRanges.Count)
+                {
+                    var next = printModel.Mesh.DrawRanges[i + 1];
+                    if (next.MaterialIndex != materialIndex || next.StartVertex != startVertex + vertexCount)
+                        break;
+                    vertexCount += next.VertexCount;
+                    i++;
+                }
+
+                BindMaterial(materialIndex, hasColors);
+                GL.DrawArrays(PrimitiveType.Triangles, startVertex, vertexCount);
+                i++;
+            }
         }
 
         /// <summary>
@@ -560,6 +573,28 @@ namespace OpenGL3DViewerNET10.Draw
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 GL.Uniform1(enableFlagLoc, 0);
             }
+        }
+
+        private void BindMaterial(int materialIndex, bool hasColors)
+        {
+            MaterialGpuState? material = materialIndex >= 0 && materialIndex < materialStates.Count
+                ? materialStates[materialIndex]
+                : null;
+
+            GL.Uniform1(useVertexColorLoc, hasColors ? 1 : 0);
+            GL.Uniform1(metallicFactorLoc, material?.MetallicFactor ?? 1f);
+            GL.Uniform1(roughnessFactorLoc, material?.RoughnessFactor ?? 1f);
+
+            float[] emissive = material?.EmissiveFactor ?? new float[] { 0f, 0f, 0f };
+            float[] baseColor = material?.BaseColorFactor ?? new float[] { 1f, 1f, 1f, 1f };
+            GL.Uniform3(emissiveFactorLoc, emissive[0], emissive[1], emissive[2]);
+            GL.Uniform4(baseColorFactorLoc, baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+
+            BindTexture(TextureUnit.Texture0, material?.BaseColorTexId ?? 0,         baseColorTexLoc,         useBaseColorTexLoc);
+            BindTexture(TextureUnit.Texture1, material?.MetallicRoughnessTexId ?? 0, metallicRoughnessTexLoc, useMetallicRoughnessTexLoc);
+            BindTexture(TextureUnit.Texture2, material?.NormalMapId ?? 0,            normalMapLoc,            useNormalMapLoc);
+            BindTexture(TextureUnit.Texture3, material?.OcclusionTexId ?? 0,         occlusionTexLoc,         useOcclusionTexLoc);
+            BindTexture(TextureUnit.Texture4, material?.EmissiveTexId ?? 0,          emissiveTexLoc,          useEmissiveTexLoc);
         }
 
         // -------------------------------------------------------------------------
@@ -652,11 +687,15 @@ namespace OpenGL3DViewerNET10.Draw
             if (texCoordVbo != 0) GL.DeleteBuffer(texCoordVbo);
             if (tangentVbo  != 0) GL.DeleteBuffer(tangentVbo);
 
-            DeleteTexture(baseColorTexId);
-            DeleteTexture(metallicRoughnessTexId);
-            DeleteTexture(normalMapId);
-            DeleteTexture(occlusionTexId);
-            DeleteTexture(emissiveTexId);
+            foreach (var material in materialStates)
+            {
+                DeleteTexture(material.BaseColorTexId);
+                DeleteTexture(material.MetallicRoughnessTexId);
+                DeleteTexture(material.NormalMapId);
+                DeleteTexture(material.OcclusionTexId);
+                DeleteTexture(material.EmissiveTexId);
+            }
+            materialStates.Clear();
 
             GL.DeleteProgram(shader);
         }

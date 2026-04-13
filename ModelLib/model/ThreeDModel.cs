@@ -241,9 +241,15 @@ namespace OpenGL3DViewerNET10.ModelLib.model
 
             Mesh.EnsureCapacity(Model.triangles.Count, Model.HasColor());
 
+            var ranges = Model.primitiveMaterials
+                .OrderBy(r => r.StartTriangle)
+                .ToList();
+            int rangeIndex = 0;
+            int nextRangeEnd = ranges.Count > 0 ? ranges[0].StartTriangle + ranges[0].TriangleCount : 0;
+
             // Fill Mesh with checking RAM 
             int cnt = 0;
-            foreach (TopoTriangle t in Model.triangles)
+            foreach (TopoTriangle t in Model.drawTriangles)
             {
                 if (0 == cnt % 50000)
                 {
@@ -252,11 +258,36 @@ namespace OpenGL3DViewerNET10.ModelLib.model
                         throw new System.OutOfMemoryException();
                     }
                 }
-                Mesh.AddTriangle(   t.Vertices[0].pos.Subtract(Model.boundingBox.Center),
-                                    t.Vertices[1].pos.Subtract(Model.boundingBox.Center),
-                                    t.Vertices[2].pos.Subtract(Model.boundingBox.Center),
-                                    t.Normal,
-                                    t.Color);
+
+                while (rangeIndex < ranges.Count && cnt >= nextRangeEnd)
+                {
+                    rangeIndex++;
+                    nextRangeEnd = rangeIndex < ranges.Count
+                        ? ranges[rangeIndex].StartTriangle + ranges[rangeIndex].TriangleCount
+                        : 0;
+                }
+
+                int materialIndex = rangeIndex < ranges.Count &&
+                                    cnt >= ranges[rangeIndex].StartTriangle &&
+                                    cnt < nextRangeEnd
+                    ? ranges[rangeIndex].MaterialIndex
+                    : -1;
+
+                Mesh.DrawRanges.Add(new Submesh.DrawRange
+                {
+                    StartVertex = cnt * 3,
+                    VertexCount = 3,
+                    MaterialIndex = materialIndex
+                });
+
+                Mesh.AddTriangle(
+                    t.Vertices[0].pos.Subtract(Model.boundingBox.Center),
+                    t.Vertices[1].pos.Subtract(Model.boundingBox.Center),
+                    t.Vertices[2].pos.Subtract(Model.boundingBox.Center),
+                    t.VertexNormals[0],
+                    t.VertexNormals[1],
+                    t.VertexNormals[2],
+                    t.Color);
                 cnt++;
             }
             // <>
