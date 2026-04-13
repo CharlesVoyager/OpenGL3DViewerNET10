@@ -863,12 +863,23 @@ namespace View3D.view
         // =====================================================================
         public void ObjectMoved(float dx, float dy)
         {
+            float maxX = MainWindow.main.threeDSettings.PrintAreaWidth * 1.2f;
+            float minX = -MainWindow.main.threeDSettings.PrintAreaWidth * 0.2f;
+            float maxY = MainWindow.main.threeDSettings.PrintAreaDepth * 1.2f;
+            float minY = -MainWindow.main.threeDSettings.PrintAreaDepth * 0.2f;
+
             foreach (var stl in ListObjects(true))
             {
-                if (stl.Position.X + dx < MainWindow.main.threeDSettings.PrintAreaWidth * 1.2f && stl.Position.X + dx > -MainWindow.main.threeDSettings.PrintAreaWidth * 0.2f) 
+                if ( dx < 0 && stl.Position.X + dx > minX)  // If the boject is out of bound, allow to move it back to the bound area.
                     stl.Position.X += dx;
-                if (stl.Position.Y + dy < MainWindow.main.threeDSettings.PrintAreaDepth * 1.2f && stl.Position.Y + dy > -MainWindow.main.threeDSettings.PrintAreaDepth * 0.2f) 
+                else if (stl.Position.X + dx < maxX && stl.Position.X + dx > minX) 
+                    stl.Position.X += dx;
+
+                if (dy < 0 && stl.Position.Y + dy > minY)
                     stl.Position.Y += dy;
+                else if (stl.Position.Y + dy < maxY && stl.Position.Y + dy > minY) 
+                    stl.Position.Y += dy;
+
                 if (listObjects.SelectedItems.Count == 1)
                 {
                     _suppressTextEvents = true;
