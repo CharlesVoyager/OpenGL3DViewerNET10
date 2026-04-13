@@ -262,41 +262,33 @@ namespace View3D.view
                 RHVector3 max = new RHVector3(0, 0, 0);
                 Vector4 pos;
                 RHBoundingBox bb = new RHBoundingBox();              
-                //pos = Vector4.Transform(box.minPoint.asVector4(), trans);
                 pos = box.minPoint.asVector4() * trans;
 
                 bb.Add(new RHVector3(pos));
-                //pos = Vector4.Transform(box.maxPoint.asVector4(), trans);
                 pos = box.minPoint.asVector4() * trans;
 
                 bb.Add(new RHVector3(pos));
                 Vector4 pnt = new Vector4((float)box.xMin, (float)box.yMax, (float)box.zMin, 1);
-                //pos = Vector4.Transform(pnt, trans);
                 pos = pnt * trans;
 
                 bb.Add(new RHVector3(pos));
                 pnt = new Vector4((float)box.xMin, (float)box.yMax, (float)box.zMin, 1);
-                //pos = Vector4.Transform(pnt, trans);
                 pos = pnt * trans;
 
                 bb.Add(new RHVector3(pos));
                 pnt = new Vector4((float)box.xMax, (float)box.yMax, (float)box.zMin, 1);
-                //pos = Vector4.Transform(pnt, trans);
                 pos = pnt * trans;
 
                 bb.Add(new RHVector3(pos));
                 pnt = new Vector4((float)box.xMin, (float)box.yMax, (float)box.zMax, 1);
-                //pos = Vector4.Transform(pnt, trans);
                 pos = pnt * trans;
 
                 bb.Add(new RHVector3(pos));
                 pnt = new Vector4((float)box.xMin, (float)box.yMin, (float)box.zMax, 1);
-                //pos = Vector4.Transform(pnt, trans);
                 pos = pnt * trans;
 
                 bb.Add(new RHVector3(pos));
                 pnt = new Vector4((float)box.xMax, (float)box.yMin, (float)box.zMax, 1);
-                //pos = Vector4.Transform(pnt, trans);
                 pos = pnt * trans;
 
                 bb.Add(new RHVector3(pos));
