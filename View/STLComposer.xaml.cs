@@ -7,6 +7,7 @@ using System.Windows.Media;
 using OpenGL3DViewerNET10.ModelLib.model;
 using OpenGL3DViewerNET10.ModelLib.Utils;
 using OpenGL3DViewerNET10.MeshIOLib;
+using View3D.model.geom;
 
 namespace View3D.view
 {
@@ -170,7 +171,21 @@ namespace View3D.view
             return list;
         }
 
+        bool isTooSmall(RHBoundingBox boundingBox)
+        {
+            // Don't use z size here because some STL files may have very small z size but large x/y size, and they should not be considered as "too small".
+            return (boundingBox.Size.x * boundingBox.Size.y * 0.001) < 0.1; 
+        }
+
+        bool isTooBig(RHBoundingBox boundingBox)
+        {
+            return (boundingBox.Size.x - 1e-4 > MainWindow.main.threeDSettings.PrintAreaWidth) ||
+                   (boundingBox.Size.y - 1e-4 > MainWindow.main.threeDSettings.PrintAreaDepth) ||
+                   (Math.Floor(boundingBox.Size.z * 1000) / 1000 > MainWindow.main.threeDSettings.PrintAreaHeight);
+        }
+
         public static readonly ManualResetEventSlim _meshDataReady = new ManualResetEventSlim(true);
+
         public async void OpenAndAddObject(string file)
         {
             if (MainWindow.main == null) return;
@@ -220,8 +235,7 @@ namespace View3D.view
             }
             newModel.Name = Path.GetFileName(file);
 
-            double xxx = newModel.BoundingBox.Size.x * newModel.BoundingBox.Size.y * 0.001; // Don't use z size here because some STL files may have very small z size but large x/y size, and they should not be considered as "too small".
-            if (xxx < 0.1)  // the object is too small.
+            if (isTooSmall(newModel.BoundingBox)) 
             {
                 if (newModel.Name.Contains(".glb"))
                 {
@@ -240,13 +254,11 @@ namespace View3D.view
                     else if (dlg.gIsInch) DoMmToInch(newModel);
                 }
             }
-            else if (newModel.BoundingBox.Size.x - 1e-4 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth)  ||
-                     newModel.BoundingBox.Size.y - 1e-4 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth)  ||
-                     Math.Floor(newModel.BoundingBox.Size.z * 1000) / 1000 > Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight))  // the object is too big.
+            else if (isTooBig(newModel.BoundingBox))  // the object is too big.
             {
-                double tXBound = newModel.BoundingBox.Size.x / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth);
-                double tYBound = newModel.BoundingBox.Size.y / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth);
-                double tZBound = newModel.BoundingBox.Size.z / Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight);
+                double tXBound = newModel.BoundingBox.Size.x / MainWindow.main.threeDSettings.PrintAreaWidth;
+                double tYBound = newModel.BoundingBox.Size.y / MainWindow.main.threeDSettings.PrintAreaDepth;
+                double tZBound = newModel.BoundingBox.Size.z / MainWindow.main.threeDSettings.PrintAreaHeight;
                 double tMax    = Math.Max(Math.Max(tXBound, tYBound), Math.Max(tYBound, tZBound));
                 double scaleValue = 0;
 
