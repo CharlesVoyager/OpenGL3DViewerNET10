@@ -530,7 +530,6 @@ namespace View3D.view
 
             foreach (var stl in allModels)
             {
-                if (typeof(ThreeDModel) != stl.GetType()) continue;
                 int w = 2 * border + (int)Math.Ceiling(stl.xMax - stl.xMin);
                 int h = 2 * border + (int)Math.Ceiling(stl.yMax - stl.yMin);
                 if (!packer.addAtEmptySpotAutoGrow(new PackerRect(0, 0, w, h, stl), (int)maxW, (int)maxH))
