@@ -1,11 +1,12 @@
-﻿using System.Globalization;
+﻿using OpenGL3DViewerNET10.MeshIOLib;
+using OpenGL3DViewerNET10.ModelLib.model;
+using OpenGL3DViewerNET10.ModelLib.Utils;
+using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using View3D.view;
-using OpenGL3DViewerNET10.ModelLib.model;
-using OpenGL3DViewerNET10.ModelLib.Utils;
 
 namespace View3D
 {
@@ -70,34 +71,19 @@ namespace View3D
             _mainWindowReady.Set();
         }
 
-        private void MainWindow_DragEnter(object sender, System.Windows.DragEventArgs e)
+        // NOTE: MainWindow is not fully overlay on the ThreeDControl.
+        // If the user drops a file on the ThreeDControl (GameWindow), the drop event in ThreeDControl will be triggered.
+        private void MainWindow_Drop(object sender, DragEventArgs e)
         {
-            bool canSupport = true;
-
-            if (e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop))
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                string[] files = (string[])e.Data.GetData(System.Windows.DataFormats.FileDrop);
+                var modelIO = new MeshIOWrapper();
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 foreach (string file in files)
                 {
-                    if (!file.ToUpper().EndsWith(".STL"))
-                    {
-                        canSupport = false;
-                        break;
-                    }
+                    if (modelIO.IsFileSupported(file))
+                        stlComposer.OpenAndAddObject(file);
                 }
-                e.Effects = canSupport ? System.Windows.DragDropEffects.Copy : System.Windows.DragDropEffects.None;
-            }
-
-            e.Handled = true;
-        }
-
-        private void MainWindow_Drop(object sender, System.Windows.DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop))
-            {
-                string[] files = (string[])e.Data.GetData(System.Windows.DataFormats.FileDrop);
-                foreach (string file in files)
-                    stlComposer.OpenAndAddObject(file);
             }
         }
 
@@ -454,12 +440,6 @@ namespace View3D
             foreach(var m in stlComposer.models)
             {
                 System.Diagnostics.Debug.WriteLine($"Model: {m.Name}, Position: {m.Position.ToString()}, Rotation: {m.Rotation.ToString()}, Scale: {m.Scale.ToString()}");
-
-                System.Diagnostics.Debug.WriteLine("trans: " + m.trans.Row0.ToString());
-                System.Diagnostics.Debug.WriteLine("       " + m.trans.Row1.ToString());
-                System.Diagnostics.Debug.WriteLine("       " + m.trans.Row2.ToString());
-                System.Diagnostics.Debug.WriteLine("       " + m.trans.Row3.ToString());
-                // System.Diagnostics.Debug.WriteLine($"  BoundingBox: Min({m.BoundingBox.xMin}, {m.BoundingBox.yMin}, {m.BoundingBox.zMin}), Max({m.BoundingBox.xMax}, {m.BoundingBox.yMax}, {m.BoundingBox.zMax})");
             }
         }
     }

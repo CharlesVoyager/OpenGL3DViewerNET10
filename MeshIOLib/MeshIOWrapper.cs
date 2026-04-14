@@ -5,6 +5,12 @@ namespace OpenGL3DViewerNET10.MeshIOLib
 {
     public class MeshIOWrapper
     {
+        public bool IsFileSupported(string file)
+        {
+            string lname = file.ToLower();
+            return lname.EndsWith(".stl") || lname.EndsWith(".glb");
+        }
+
         public void LoadWOCatch(string file, TopoModel model)
         {
             string lname = file.ToLower();

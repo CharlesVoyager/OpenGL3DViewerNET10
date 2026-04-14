@@ -1,4 +1,5 @@
 using OpenGL3DViewerNET10.Draw;
+using OpenGL3DViewerNET10.MeshIOLib;
 using OpenGL3DViewerNET10.ModelLib.model;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -415,6 +416,21 @@ namespace View3D.view
                 if (zoom < 0.002f) zoom = 0.002f;
                 if (zoom > 5.9f) zoom = 5.9f;
                 Invalidate();
+            }
+        }
+
+        protected override void OnFileDrop(FileDropEventArgs e)
+        {
+            base.OnFileDrop(e);
+
+            foreach (var file in e.FileNames)
+            {
+                MainWindow.main.Dispatcher.InvokeAsync(() =>
+                {
+                    var modelIO = new MeshIOWrapper();
+                    if (modelIO.IsFileSupported(file))
+                        MainWindow.main.stlComposer.OpenAndAddObject(file);
+                });
             }
         }
 
