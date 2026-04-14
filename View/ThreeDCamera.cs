@@ -196,15 +196,16 @@ namespace View3D.view
             viewCenter.Z = (float)(viewCenterStart.Z + leftRight * lr.Z + upDown * ud.Z);
         }
 
-        public RHBoundingBox PrinterBoundingBox()
+        public void FitPrinter()
         {
             RHBoundingBox b = new RHBoundingBox();
             b.Add(0, 0, -0.0 * MainWindow.main.threeDSettings.PrintAreaHeight);
             b.Add(0 + MainWindow.main.threeDSettings.PrintAreaWidth, 0 + MainWindow.main.threeDSettings.PrintAreaDepth, 1.0 * MainWindow.main.threeDSettings.PrintAreaHeight);
-            return b;
+
+            FitBoundingBox(b);
         }
 
-        public RHBoundingBox ObjectsBoundingBox()
+        public void FitObjects()
         {
             RHBoundingBox b = new RHBoundingBox();
 
@@ -213,18 +214,10 @@ namespace View3D.view
                 b.Add(model.BoundingBox.minPoint);
                 b.Add(model.BoundingBox.maxPoint);
             }
-            if (b.minPoint == null) return PrinterBoundingBox();
-            return b;
-        }
-
-        public void FitPrinter()
-        {
-            FitBoundingBox(PrinterBoundingBox());
-        }
-
-        public void FitObjects()
-        {
-            FitBoundingBox(ObjectsBoundingBox());
+            if (b.minPoint == null)     // means there is no model is loaded.
+                FitPrinter();
+            else
+                FitBoundingBox(b);
         }
 
         public void FitBoundingBox(RHBoundingBox box)
