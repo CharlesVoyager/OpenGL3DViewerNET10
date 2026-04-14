@@ -44,7 +44,7 @@
         <local:UI_resize_advance x:Name="UI_resize_advance" Margin="102,211,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <local:UI_object_information x:Name="UI_object_information" Margin="102,211,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
-        <local:BusyWindow x:Name="BusyWindow" />
+        <local:BusyWindow x:Name="BusyWindow"/>
 
         <StackPanel x:Name="left_stackPanel" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,60,0,0">
             <StackPanel.Resources>
@@ -486,7 +486,7 @@
         </StackPanel>
 
         <!--About-->
-        <Grid x:Name="gridAbout" Height="200" Width="340" Margin="400,-100,0,0">
+        <Grid x:Name="gridAbout" Height="200" Width="340" Margin="400,-100,0,0" HorizontalAlignment="Left">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="80"/>
