@@ -307,7 +307,6 @@ namespace View3D.view
             minDistance = 0.001 * defaultDistance;
         }
 
-
         // ── UI button event handlers ────────────────────────────────────────────────────
         public void OnFrontView() { SetCameraDefaults(); OrientFront(); MainWindow.main.threeDControl.UpdateChanges(); }
         public void OnBackView() { SetCameraDefaults(); OrientBack(); MainWindow.main.threeDControl.UpdateChanges(); }
@@ -318,35 +317,37 @@ namespace View3D.view
         public void OnIsometricView() { SetCameraDefaults(); OrientIsometric(); MainWindow.main.threeDControl.UpdateChanges(); }
         // <>
 
-        public Vector3 GetEdgeTranslation() { return EdgeTranslation(); }
 
-
-        public void GetModelViewProj(ref Matrix4 model, ref Matrix4 view, ref Matrix4 proj)
+        public Matrix4 GetViewMatrix()
         {
-            model = Matrix4.Identity;
+            Matrix4 view = Matrix4.LookAt(CameraPosition, viewCenter, Vector3.UnitZ);
 
-#if true
-            view = Matrix4.LookAt(CameraPosition, viewCenter, Vector3.UnitZ);
-#else       // Fixed camera position for testing
-            view = Matrix4.LookAt(
-                new Vector3(300, 300, 300),
-                new Vector3(128, 128, 0),
-                Vector3.UnitZ);
+#if false // Fixed camera position for testing
+              view = Matrix4.LookAt(
+                            new Vector3(300, 300, 300),
+                            new Vector3(128, 128, 0),
+                            Vector3.UnitZ);
 #endif
+            return view;
+        }
+
+        public Matrix4 GetProjMatrix()
+        {
             float bedRadius = (float)(1.5 * Math.Sqrt(
-                 (MainWindow.main.threeDSettings.PrintAreaDepth * MainWindow.main.threeDSettings.PrintAreaDepth +
-                  MainWindow.main.threeDSettings.PrintAreaHeight * MainWindow.main.threeDSettings.PrintAreaHeight +
-                  MainWindow.main.threeDSettings.PrintAreaWidth * MainWindow.main.threeDSettings.PrintAreaWidth) * 0.25));
+                          (MainWindow.main.threeDSettings.PrintAreaDepth * MainWindow.main.threeDSettings.PrintAreaDepth +
+                           MainWindow.main.threeDSettings.PrintAreaHeight * MainWindow.main.threeDSettings.PrintAreaHeight +
+                           MainWindow.main.threeDSettings.PrintAreaWidth * MainWindow.main.threeDSettings.PrintAreaWidth) * 0.25));
 
             float dist = (float)distance;
             float nearDist = Math.Max(1, dist - bedRadius);
             float farDist = Math.Max(bedRadius * 2, dist + bedRadius);
             Vector2i size = MainWindow.main.threeDControl.Size;
-            proj = Matrix4.CreatePerspectiveFieldOfView(
+            Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(
                             (float)angle * 2.0f,
                             size.X / (float)size.Y,
                             nearDist,
                             farDist);
+            return proj;
         }
     }
 }

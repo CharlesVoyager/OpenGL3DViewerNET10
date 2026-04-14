@@ -133,10 +133,8 @@ namespace OpenGL3DViewerNET10.Draw
             GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)0, verticesBbox.Length * sizeof(float), verticesBbox);
 
             Matrix4 model = Matrix4.Identity;
-            Matrix4 view = Matrix4.Identity;
-            Matrix4 proj = Matrix4.Identity;
-
-            MainWindow.main.threeDCamera.GetModelViewProj(ref model, ref view, ref proj);
+            Matrix4 view = MainWindow.main.threeDCamera.GetViewMatrix();
+            Matrix4 proj = MainWindow.main.threeDCamera.GetProjMatrix();
 
             GL.UseProgram(shader);
 

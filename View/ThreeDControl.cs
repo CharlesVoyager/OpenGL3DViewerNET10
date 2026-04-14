@@ -532,11 +532,9 @@ namespace View3D.view
 
             var tool = ModelObjectToolWrapper.Instance.Tool;
 
-            Matrix4 modelMatrix = Matrix4.Identity;
-            Matrix4 view = Matrix4.Identity;
-            Matrix4 proj = Matrix4.Identity;
+            Matrix4 view = MainWindow.main.threeDCamera.GetViewMatrix();
+            Matrix4 proj = MainWindow.main.threeDCamera.GetProjMatrix();
             Vector2i windowSize = ClientSize;
-            threeDCam.GetModelViewProj(ref modelMatrix, ref view, ref proj);
             Ray ray = tool.GenerateRay(x, y, view, proj, windowSize, out Vector3 near, out _);
 
             float length = float.MaxValue;
