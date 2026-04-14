@@ -6,8 +6,9 @@ namespace View3D.view
 {
     public class ThreeDCamera
     {
+        Vector3 defaultCenter = new Vector3(0, 0, 0);
+
         public Vector3 viewCenter = new Vector3(0, 0, 0);
-        public Vector3 defaultCenter = new Vector3(0, 0, 0);
         public double originDistance, distance, minDistance = 10, defaultDistance = 200;
         public double theta = 0;
         public double phi = 0;
