@@ -1,4 +1,4 @@
-# OpenGL 3D Viwer
+# OpenGL 3D Viewer
 <img src="Snapshot.png" alt="image">
 A high-performance, lightweight 3D model viewer developed in C# using OpenTK. This project demonstrates the integration of OpenGL within the .NET ecosystem to render and interact with STL geometry.
 
