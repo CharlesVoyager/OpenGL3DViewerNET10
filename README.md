@@ -1,4 +1,4 @@
-# OpenGL 3D Viewer for .NET 10
+# OpenGL 3D Viewer
 
 <p align="center">
   <img src="Snapshot.png" alt="OpenGL 3D Viewer screenshot" width="900">
@@ -12,7 +12,6 @@ A Windows desktop 3D model viewer built with WPF, OpenTK, and OpenGL. The projec
 - Orbit, pan, and zoom the camera in real time.
 - Move, rotate, scale, reset, and clone loaded models.
 - Show a printer-bed volume to check model fit against configured build dimensions.
-- Tune viewer appearance, colors, lighting, and draw settings from the built-in settings window.
 - Open a model from the command line or by using the in-app import workflow.
 
 ## Tech Stack
