@@ -508,14 +508,14 @@ namespace View3D.view
 
             allModels.Add(newModel);
 
+            float maxW = MainWindow.main.threeDSettings.PrintAreaWidth;
+            float maxH = MainWindow.main.threeDSettings.PrintAreaDepth;
+
             if (allModels.Count == 1)
             {
                 var model = allModels[0];
-                float x = MainWindow.main.threeDSettings.PrintAreaWidth / 2;
-                float y = MainWindow.main.threeDSettings.PrintAreaDepth / 2;
-
-                model.Position.X = x;
-                model.Position.Y = y;
+                model.Position.X = maxW / 2;
+                model.Position.Y = maxH / 2;
                 model.UpdateTransMatrix();
                 return true;
             }
@@ -523,7 +523,6 @@ namespace View3D.view
             var packer    = new RectPacker(1, 1);
             var outPacker = new OutRectPacker(1000);
             int border    = 1;
-            float maxW = MainWindow.main.threeDSettings.PrintAreaWidth, maxH = MainWindow.main.threeDSettings.PrintAreaDepth;
             float xOff = 0, yOff = 0;
             outPacker.SetPlatformSize(maxW, maxH);
             bool autosizeFailed = false;
