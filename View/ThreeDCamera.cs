@@ -51,9 +51,7 @@ namespace View3D.view
 
         void OrientFront()
         {
-            viewCenter.X = defaultCenter.X;
-            viewCenter.Y = defaultCenter.Y;
-            viewCenter.Z = defaultCenter.Z;
+            viewCenter = defaultCenter;
             theta = Math.PI / 2;
             phi = Math.PI / 2;
             originDistance = distance;
@@ -63,9 +61,7 @@ namespace View3D.view
 
         void OrientBack()
         {
-            viewCenter.X = defaultCenter.X;
-            viewCenter.Y = defaultCenter.Y;
-            viewCenter.Z = defaultCenter.Z;
+            viewCenter = defaultCenter;
             theta = -Math.PI / 2;
             phi = Math.PI / 2;
             originDistance = distance;
@@ -75,9 +71,7 @@ namespace View3D.view
 
         void OrientLeft()
         {
-            viewCenter.X = defaultCenter.X;
-            viewCenter.Y = defaultCenter.Y;
-            viewCenter.Z = defaultCenter.Z;
+            viewCenter = defaultCenter;
             theta = 0;
             phi = Math.PI / 2;
             originDistance = distance;
@@ -87,9 +81,7 @@ namespace View3D.view
 
         void OrientRight()
         {
-            viewCenter.X = defaultCenter.X;
-            viewCenter.Y = defaultCenter.Y;
-            viewCenter.Z = defaultCenter.Z;
+            viewCenter = defaultCenter;
             theta = Math.PI;
             phi = Math.PI / 2;
             originDistance = distance;
@@ -99,9 +91,7 @@ namespace View3D.view
 
         void OrientTop()
         {
-            viewCenter.X = defaultCenter.X;
-            viewCenter.Y = defaultCenter.Y;
-            viewCenter.Z = defaultCenter.Z;
+            viewCenter = defaultCenter;
             theta = -Math.PI / 2;
             phi = 1e-5;
             originDistance = distance;
@@ -111,9 +101,7 @@ namespace View3D.view
 
         void OrientBottom()
         {
-            viewCenter.X = defaultCenter.X;
-            viewCenter.Y = defaultCenter.Y;
-            viewCenter.Z = defaultCenter.Z;
+            viewCenter = defaultCenter;
             theta = -Math.PI / 2;
             phi = Math.PI -1e-5;
             originDistance = distance;
@@ -123,9 +111,7 @@ namespace View3D.view
 
         public void OrientIsometric()
         {
-            viewCenter.X = defaultCenter.X;
-            viewCenter.Y = defaultCenter.Y;
-            viewCenter.Z = defaultCenter.Z;
+            viewCenter = defaultCenter;
             theta = -Math.PI * 1.25;
             phi = Math.PI / 2.5;
             distance = defaultDistance;
@@ -134,9 +120,7 @@ namespace View3D.view
 
         public void OrientIsometric2()
         {
-            viewCenter.X = defaultCenter.X;
-            viewCenter.Y = defaultCenter.Y;
-            viewCenter.Z = defaultCenter.Z;
+            viewCenter = defaultCenter;
             theta = -Math.PI * 1.25;
             phi = Math.PI / 2.5;
             originDistance = distance;
@@ -146,9 +130,7 @@ namespace View3D.view
 
         public void PreparePanZoomRot()
         {
-            viewCenterStart.X = viewCenter.X;
-            viewCenterStart.Y = viewCenter.Y;
-            viewCenterStart.Z = viewCenter.Z;
+            viewCenterStart = viewCenter;
             startDistance = distance;
             startPhi = phi;
             startTheta = theta;
