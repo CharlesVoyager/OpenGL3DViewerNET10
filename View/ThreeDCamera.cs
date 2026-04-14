@@ -49,7 +49,7 @@ namespace View3D.view
             return direction;
         }
 
-        public void OrientFront()
+        void OrientFront()
         {
             viewCenter.X = defaultCenter.X;
             viewCenter.Y = defaultCenter.Y;
@@ -61,7 +61,7 @@ namespace View3D.view
             distance = originDistance;
         }
 
-        public void OrientBack()
+        void OrientBack()
         {
             viewCenter.X = defaultCenter.X;
             viewCenter.Y = defaultCenter.Y;
@@ -73,7 +73,7 @@ namespace View3D.view
             distance = originDistance;
         }
 
-        public void OrientLeft()
+        void OrientLeft()
         {
             viewCenter.X = defaultCenter.X;
             viewCenter.Y = defaultCenter.Y;
@@ -85,7 +85,7 @@ namespace View3D.view
             distance = originDistance;
         }
 
-        public void OrientRight()
+        void OrientRight()
         {
             viewCenter.X = defaultCenter.X;
             viewCenter.Y = defaultCenter.Y;
@@ -97,7 +97,7 @@ namespace View3D.view
             distance = originDistance;
         }
 
-        public void OrientTop()
+        void OrientTop()
         {
             viewCenter.X = defaultCenter.X;
             viewCenter.Y = defaultCenter.Y;
@@ -109,7 +109,7 @@ namespace View3D.view
             distance = originDistance;
         }
 
-        public void OrientBottom()
+        void OrientBottom()
         {
             viewCenter.X = defaultCenter.X;
             viewCenter.Y = defaultCenter.Y;
