@@ -59,8 +59,6 @@ namespace View3D
 
             // Camera
             threeDCamera = new ThreeDCamera();
-            threeDCamera.SetCameraDefaults();
-            threeDCamera.OrientIsometric();
 
             InitializeComponent();
             initializeUi();

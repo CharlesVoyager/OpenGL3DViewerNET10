@@ -39,6 +39,9 @@ namespace OpenGL3DViewerNET10
                 ProcessCommandLine(mainWindow);
             });
 
+            // Set camera to isometric view.
+            mainWindow.threeDCamera.OnIsometricView();
+
             // Wait until STL model data is ready if import STL file through command line before starting rendering loop
             STLComposer._meshDataReady.Wait();
 

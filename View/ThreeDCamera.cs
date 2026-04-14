@@ -110,7 +110,7 @@ namespace View3D.view
             distance = originDistance;
         }
 
-        public void OrientIsometric()
+        void OrientIsometric()
         {
             viewCenter = defaultCenter;
             theta = -Math.PI * 1.25;
@@ -119,7 +119,7 @@ namespace View3D.view
             FitPrinter();
         }
 
-        public void OrientIsometric2()
+        void OrientIsometric2()
         {
             viewCenter = defaultCenter;
             theta = -Math.PI * 1.25;
@@ -273,7 +273,7 @@ namespace View3D.view
             }
         }
 
-        public void SetCameraDefaults()
+        void SetCameraDefaults()
         {
             viewCenter = new Vector3(0, 0, 0);
             defaultDistance = 1.6f * (float)Math.Sqrt(
