@@ -78,7 +78,6 @@ namespace View3D.view
 
         public void EnableBusyWindow()
         {
-            labelBusyMessage.Text = Trans.T("L_MODELING");
             killed = false;
             Visibility = Visibility.Visible;
             buttonCancel.Visibility = Visibility.Visible;

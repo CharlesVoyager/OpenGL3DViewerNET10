@@ -14,10 +14,9 @@
         </Grid.RowDefinitions>
         <Rectangle Name="rectangle1" Stroke="Black" Fill="#FFF0F0F0" RadiusX="10" RadiusY="10" Grid.RowSpan="4" />
         <ProgressBar Height="32" Margin="20,0" Name="busyProgressbar" IsIndeterminate="True" Grid.Row="2" />
-        <TextBlock Text="View 3D STL Files" HorizontalAlignment="Center" Margin="0,5" Name="labelXYZware" VerticalAlignment="Center" Width="265" FontFamily="Arial" FontWeight="Bold" DataContext="{Binding}" FontSize="26" TextAlignment="Center" />
-        <TextBlock TextWrapping="Wrap" Text="Loading..." FontFamily="Arial" FontSize="18" HorizontalAlignment="Center" Margin="20,0,20,5" Name="labelBusyMessage" VerticalAlignment="Center" TextAlignment="Center" Grid.Row="1" />
-        <TextBlock Text="Elapsed Time" FontFamily="Arial" HorizontalAlignment="Left" Margin="20,5,0,5" Name="labelElapsedTime" VerticalAlignment="Center" Grid.Row="3" />
-        <TextBlock HorizontalAlignment="Right" Margin="0,5,20,5" Name="textBlock_time" Text="00:00:00" VerticalAlignment="Top" TextAlignment="Right" Grid.Row="3" Grid.Column="1" />
+        <TextBlock Text="Loading a model..." HorizontalAlignment="Center" Margin="0,10" Name="labelXYZware" VerticalAlignment="Center" Width="265" FontFamily="Arial" FontWeight="Bold" DataContext="{Binding}" FontSize="26" TextAlignment="Center" />
+        <TextBlock Text="Elapsed Time" FontFamily="Arial" HorizontalAlignment="Left" Margin="20,10,0,8" Name="labelElapsedTime" VerticalAlignment="Center" Grid.Row="3" />
+        <TextBlock HorizontalAlignment="Right" Margin="0,10,20,8" Name="textBlock_time" Text="00:00:00" VerticalAlignment="Top" TextAlignment="Right" Grid.Row="3" Grid.Column="1" />
         <Button Content="X" FontFamily="Arial" HorizontalAlignment="Right" Margin="0,0,25,0" x:Name="buttonCancel" VerticalAlignment="Center" Background="{x:Null}" FontWeight="Bold" FontSize="16" BorderBrush="{x:Null}" Click="buttonCancel_Click" Grid.Row="2" Grid.ColumnSpan="2" />
     </Grid>
 </UserControl>
