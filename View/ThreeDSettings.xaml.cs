@@ -513,7 +513,6 @@ namespace View3D.view
         }
 
         // ── Public API (identical signatures to the original) ────────────────────
-      
         public float[] LightDirection()
         {
             float[] output = null;
@@ -576,116 +575,24 @@ namespace View3D.view
 
         // --------------------------------------------------------------------------------------------
 
-        public System.Drawing.Color InsideFacesBackgroundColor()
+        public float[] BackgroundTopBackgroundColor()
         {
-            System.Drawing.Color color = System.Drawing.Color.Empty;
+            float[] output = null;
             Application.Current.Dispatcher.Invoke(() =>
             {
-                color = ToDrawingColor(insideFaces.Background);
+                output = ToGLColor(backgroundTop);
             });
-            return color;
+            return output;
         }
 
-        public System.Drawing.Color ErrorModelBackgroundColor()
+        public float[] BackgroundBottomBackgroundColor()
         {
-            System.Drawing.Color color = System.Drawing.Color.Empty;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            float[] output = null;
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                color = ToDrawingColor(errorModel.Background);
+                output = ToGLColor(backgroundBottom);
             });
-            return color;
-        }
-
-        public System.Drawing.Color ErrorModelEdgeBackgroundColor()
-        {
-            System.Drawing.Color color = System.Drawing.Color.Empty;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                color = ToDrawingColor(errorModelEdge.Background);
-            });
-            return color;
-        }
-        public System.Drawing.Color OutsidePrintbedBackgroundColor()
-        {
-            System.Drawing.Color color = System.Drawing.Color.Empty;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                color = ToDrawingColor(outsidePrintbed.Background);
-            });
-            return color;
-        }
-
-        public System.Drawing.Color EdgesLoopBackgroundColor()
-        {
-            System.Drawing.Color color = System.Drawing.Color.Empty;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                color = ToDrawingColor(edges.Background);
-            });
-            return color;
-        }
-        public System.Drawing.Color CutFacesBackgroundColor()
-        {
-            System.Drawing.Color color = System.Drawing.Color.Empty;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                color = ToDrawingColor(cutFaces.Background);
-            });
-            return color;
-        }
-        public System.Drawing.Color EdgesBackgroundColor()
-        {
-            System.Drawing.Color color = System.Drawing.Color.Empty;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                color = ToDrawingColor(edges.Background);
-            });
-            return color;
-        }
-        public System.Drawing.Color SelectionBoxBackgroundColor()
-        {
-            System.Drawing.Color color = System.Drawing.Color.Empty;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                color = ToDrawingColor(selectionBox.Background);
-            });
-            return color;
-        }
-        public System.Drawing.Color PrinterFrameBackgroundColor()
-        {
-            System.Drawing.Color color = System.Drawing.Color.Empty;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                color = ToDrawingColor(printerFrame.Background);
-            });
-            return color;
-        }
-        public System.Drawing.Color PrinterBaseBackgroundColor()
-        {
-            System.Drawing.Color color = System.Drawing.Color.Empty;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                color = ToDrawingColor(printerBase.Background);
-            });
-            return color;
-        }
-        public System.Drawing.Color BackgroundTopBackgroundColor()
-        {
-            System.Drawing.Color color = System.Drawing.Color.Empty;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                color = ToDrawingColor(backgroundTop.Background);
-            });
-            return color;
-        }
-        public System.Drawing.Color BackgroundBottomBackgroundColor()
-        {
-            System.Drawing.Color color = System.Drawing.Color.Empty;
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            {
-                color = ToDrawingColor(backgroundBottom.Background);
-            });
-            return color;
+            return output;
         }
 
 

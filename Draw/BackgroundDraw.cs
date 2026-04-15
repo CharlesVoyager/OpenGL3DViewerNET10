@@ -96,11 +96,10 @@ namespace OpenGL3DViewerNET10.Draw
             // bind empty VAO to satisfy Core Profile requirement
             GL.BindVertexArray(dummyVao);
 
-            Color color;
-            color = MainWindow.main.threeDSettings.BackgroundTopBackgroundColor();
-            Vector4 topColor = new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
+            float[] color = MainWindow.main.threeDSettings.BackgroundTopBackgroundColor();
+            Vector4 topColor = new Vector4(color[0], color[1], color[2], color[3]);
             color = MainWindow.main.threeDSettings.BackgroundBottomBackgroundColor();
-            Vector4 bottomColor = new Vector4(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
+            Vector4 bottomColor = new Vector4(color[0], color[1], color[2], color[3]);
 
             GL.Uniform4(GL.GetUniformLocation(shader, "topColor"), topColor);
             GL.Uniform4(GL.GetUniformLocation(shader, "bottomColor"), bottomColor);
