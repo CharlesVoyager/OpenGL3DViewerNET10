@@ -45,7 +45,6 @@ namespace View3D.view
         public bool ShowEdges { get; set; } = false;
         public bool ShowFaces { get; set; } = true;
         public bool ShowPrintbed { get; set; } = true;
-        public int DrawMethod { get; set; } = 0;   // 0 = elements, 1 = drawElements, 2 = VBO
 
         public uint SelectionBoxColor { get; set; } = 0xFFFFFFFF;
         public uint ErrorModelColor { get; set; } = 0xFFFF0000;
@@ -192,8 +191,6 @@ namespace View3D.view
                 showEdges.IsChecked = SettingsService.Instance.Settings.ShowEdges;
                 showFaces.IsChecked = SettingsService.Instance.Settings.ShowFaces;
                 showPrintbed.IsChecked  = SettingsService.Instance.Settings.ShowPrintbed;
-
-                comboDrawMethod.SelectedIndex = SettingsService.Instance.Settings.DrawMethod;
 
                 selectionBox.Background = new SolidColorBrush(ArgbToColor(SettingsService.Instance.Settings.SelectionBoxColor));
                 errorModel.Background = new SolidColorBrush(ArgbToColor(SettingsService.Instance.Settings.ErrorModelColor));
@@ -705,8 +702,6 @@ namespace View3D.view
                 SettingsService.Instance.Settings.ShowEdges = (showEdges.IsChecked == true);
                 SettingsService.Instance.Settings.ShowFaces = (showFaces.IsChecked == true);
                 SettingsService.Instance.Settings.ShowPrintbed = (showPrintbed.IsChecked == true ? true : false);
-
-                SettingsService.Instance.Settings.DrawMethod = comboDrawMethod.SelectedIndex;
 
                 SettingsService.Instance.Settings.SelectionBoxColor = ToArgb(selectionBox);
                 SettingsService.Instance.Settings.ErrorModelColor = ToArgb(errorModel);
