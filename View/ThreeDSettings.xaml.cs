@@ -159,11 +159,9 @@ namespace View3D.view
         {
             InitializeComponent();
 
-            loadSettings();
-
-            ResetLightSettingsToDefault_Click(null, null);
-
             MainWindow.main.languageChanged += translate;
+
+            loadSettings();
         }
 
         public void translate()
@@ -193,7 +191,6 @@ namespace View3D.view
 
                 showEdges.IsChecked = SettingsService.Instance.Settings.ShowEdges;
                 showFaces.IsChecked = SettingsService.Instance.Settings.ShowFaces;
-
                 showPrintbed.IsChecked  = SettingsService.Instance.Settings.ShowPrintbed;
 
                 comboDrawMethod.SelectedIndex = SettingsService.Instance.Settings.DrawMethod;
@@ -236,13 +233,13 @@ namespace View3D.view
 
         // ── Color picker (replaces WinForms ColorDialog) ─────────────────────────
 
-        private void ColorSwatch_Click(object sender, MouseButtonEventArgs e)
+        void ColorSwatch_Click(object sender, MouseButtonEventArgs e)
         {
             if (sender is Border border)
                 PickColor(border);
         }
 
-        private void PickColor(Border border)
+        void PickColor(Border border)
         {
             // Get current color from the border's background
             System.Windows.Media.Color initialColor = System.Windows.Media.Colors.White;
@@ -573,8 +570,6 @@ namespace View3D.view
             return output;
         }
 
-        // --------------------------------------------------------------------------------------------
-
         public float[] BackgroundTopBackgroundColor()
         {
             float[] output = null;
@@ -613,11 +608,13 @@ namespace View3D.view
             throw new InvalidOperationException("Only SolidColorBrush can be converted to a single Color.");
         }
 
+        // Slider values changed.
         private void LightSetting_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             MainWindow.main.Update3D();
         }
 
+        // TextBox values changed.
         private void LightSetting_ValueChanged(object sender, TextChangedEventArgs e)
         {
             MainWindow.main.Update3D();
@@ -644,7 +641,6 @@ namespace View3D.view
 
         private void ThreeDSettings_Closed(object sender, EventArgs e)
         {
-            Debug.WriteLine("Application exiting — saving settings...");
             controlsToSettings();
             SettingsService.Instance.Save();
         }
@@ -711,15 +707,16 @@ namespace View3D.view
                 SettingsService.Instance.Settings.ShowPrintbed = (showPrintbed.IsChecked == true ? true : false);
 
                 SettingsService.Instance.Settings.DrawMethod = comboDrawMethod.SelectedIndex;
+
                 SettingsService.Instance.Settings.SelectionBoxColor = ToArgb(selectionBox);
                 SettingsService.Instance.Settings.ErrorModelColor = ToArgb(errorModel);
-                SettingsService.Instance.Settings.InsideFacesColor = ToArgb(insideFaces);
-
                 SettingsService.Instance.Settings.InsideFacesColor = ToArgb(insideFaces);
 
                 SettingsService.Instance.Settings.Light1X = xdir1.Text;
                 SettingsService.Instance.Settings.Light1Y = ydir1.Text;
                 SettingsService.Instance.Settings.Light1Z = zdir1.Text;
+
+                SettingsService.Instance.Settings.ModelColor = ToArgb(modelColor);
             }
             catch { }
         }
