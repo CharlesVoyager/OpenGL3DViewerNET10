@@ -1,7 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using View3D;
-using View3D.model;
+using View3D.view;
 
 namespace OpenGL3DViewerNET10.Draw
 {
@@ -78,8 +78,8 @@ namespace OpenGL3DViewerNET10.Draw
             gridColorLoc = GL.GetUniformLocation(shader, "gridColor");
             gridSpacingLoc = GL.GetUniformLocation(shader, "gridSpacing");
 
-            float x1 = MainWindow.main.threeDSettings.PrintAreaWidth;
-            float y1 = MainWindow.main.threeDSettings.PrintAreaDepth;
+            float x1 = AppSettings.Instance.PrintAreaWidth;
+            float y1 = AppSettings.Instance.PrintAreaDepth;
 
             float[] vertices =
             {

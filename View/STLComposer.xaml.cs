@@ -179,9 +179,9 @@ namespace View3D.view
 
         bool isTooBig(RHBoundingBox boundingBox)
         {
-            return (boundingBox.Size.x - 1e-4 > MainWindow.main.threeDSettings.PrintAreaWidth) ||
-                   (boundingBox.Size.y - 1e-4 > MainWindow.main.threeDSettings.PrintAreaDepth) ||
-                   (Math.Floor(boundingBox.Size.z * 1000) / 1000 > MainWindow.main.threeDSettings.PrintAreaHeight);
+            return (boundingBox.Size.x - 1e-4 > AppSettings.Instance.PrintAreaWidth) ||
+                   (boundingBox.Size.y - 1e-4 > AppSettings.Instance.PrintAreaDepth) ||
+                   (Math.Floor(boundingBox.Size.z * 1000) / 1000 > AppSettings.Instance.PrintAreaHeight);
         }
 
         public static readonly ManualResetEventSlim _meshDataReady = new ManualResetEventSlim(true);
@@ -256,15 +256,15 @@ namespace View3D.view
             }
             else if (isTooBig(newModel.BoundingBox))  // the object is too big.
             {
-                double tXBound = newModel.BoundingBox.Size.x / MainWindow.main.threeDSettings.PrintAreaWidth;
-                double tYBound = newModel.BoundingBox.Size.y / MainWindow.main.threeDSettings.PrintAreaDepth;
-                double tZBound = newModel.BoundingBox.Size.z / MainWindow.main.threeDSettings.PrintAreaHeight;
+                double tXBound = newModel.BoundingBox.Size.x / AppSettings.Instance.PrintAreaWidth;
+                double tYBound = newModel.BoundingBox.Size.y / AppSettings.Instance.PrintAreaDepth;
+                double tZBound = newModel.BoundingBox.Size.z / AppSettings.Instance.PrintAreaHeight;
                 double tMax    = Math.Max(Math.Max(tXBound, tYBound), Math.Max(tYBound, tZBound));
                 double scaleValue = 0;
 
-                if      (tMax == tXBound) scaleValue = MainWindow.main.threeDSettings.PrintAreaWidth / newModel.BoundingBox.Size.x;
-                else if (tMax == tYBound) scaleValue = MainWindow.main.threeDSettings.PrintAreaDepth / newModel.BoundingBox.Size.y;
-                else if (tMax == tZBound) scaleValue = MainWindow.main.threeDSettings.PrintAreaHeight / newModel.BoundingBox.Size.z;
+                if      (tMax == tXBound) scaleValue = AppSettings.Instance.PrintAreaWidth / newModel.BoundingBox.Size.x;
+                else if (tMax == tYBound) scaleValue = AppSettings.Instance.PrintAreaDepth / newModel.BoundingBox.Size.y;
+                else if (tMax == tZBound) scaleValue = AppSettings.Instance.PrintAreaHeight / newModel.BoundingBox.Size.z;
 
                 var result = MessageBox.Show(
                     Trans.T("M_OBJ_SCALE_DOWN") + " " + (int)(scaleValue * 100) + "%",
@@ -359,11 +359,11 @@ namespace View3D.view
         {
             double epsilon = 1e-4; // 0.0001
 
-            if (z < -0.1 || z > MainWindow.main.threeDSettings.PrintAreaHeight)
+            if (z < -0.1 || z > AppSettings.Instance.PrintAreaHeight)
                 return false;
 
-            if (x < -epsilon || x > MainWindow.main.threeDSettings.PrintAreaWidth + epsilon) return false;
-            if (y < -epsilon || y > MainWindow.main.threeDSettings.PrintAreaDepth + epsilon) return false;
+            if (x < -epsilon || x > AppSettings.Instance.PrintAreaWidth + epsilon) return false;
+            if (y < -epsilon || y > AppSettings.Instance.PrintAreaDepth + epsilon) return false;
 
             return true;
         }
@@ -508,8 +508,8 @@ namespace View3D.view
 
             allModels.Add(newModel);
 
-            float maxW = MainWindow.main.threeDSettings.PrintAreaWidth;
-            float maxH = MainWindow.main.threeDSettings.PrintAreaDepth;
+            float maxW = AppSettings.Instance.PrintAreaWidth;
+            float maxH = AppSettings.Instance.PrintAreaDepth;
 
             if (allModels.Count == 1)
             {
@@ -862,10 +862,10 @@ namespace View3D.view
         // =====================================================================
         public void ObjectMoved(float dx, float dy)
         {
-            float maxX = MainWindow.main.threeDSettings.PrintAreaWidth * 1.2f;
-            float minX = -MainWindow.main.threeDSettings.PrintAreaWidth * 0.2f;
-            float maxY = MainWindow.main.threeDSettings.PrintAreaDepth * 1.2f;
-            float minY = -MainWindow.main.threeDSettings.PrintAreaDepth * 0.2f;
+            float maxX = AppSettings.Instance.PrintAreaWidth * 1.2f;
+            float minX = -AppSettings.Instance.PrintAreaWidth * 0.2f;
+            float maxY = AppSettings.Instance.PrintAreaDepth * 1.2f;
+            float minY = -AppSettings.Instance.PrintAreaDepth * 0.2f;
 
             foreach (var stl in ListObjects(true))
             {
@@ -928,7 +928,7 @@ namespace View3D.view
 
                 // Find the largest dimension of the model.
                 double maxDim = Math.Max(Math.Max(bbox.Size.x, bbox.Size.y), bbox.Size.z);
-                double scaleFactor = (MainWindow.main.threeDSettings.PrintAreaWidth / 2) / maxDim;
+                double scaleFactor = (AppSettings.Instance.PrintAreaWidth / 2) / maxDim;
 
                 stl.Scale.x = (float)scaleFactor;
                 stl.Scale.y = (float)scaleFactor;
@@ -957,9 +957,9 @@ namespace View3D.view
 
                 ui.chk_Uniform.IsChecked = true;
                 double tempX = bbox.Size.x * 25.4, tempY = bbox.Size.y * 25.4, tempZ = bbox.Size.z * 25.4;
-                if (tempX > MainWindow.main.threeDSettings.PrintAreaWidth || 
-                    tempY > MainWindow.main.threeDSettings.PrintAreaDepth || 
-                    tempZ > MainWindow.main.threeDSettings.PrintAreaHeight)
+                if (tempX > AppSettings.Instance.PrintAreaWidth || 
+                    tempY > AppSettings.Instance.PrintAreaDepth || 
+                    tempZ > AppSettings.Instance.PrintAreaHeight)
                 {
                     if (!AskUserToChangeUnit())
                     {

@@ -449,19 +449,19 @@ namespace View3D.view
         public void checkMin()
         {
             if (MainWindow.main == null) return;
-            double txMaxScalableValue = Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaWidth) / dimX;
-            double tyMaxScalableValue = Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaDepth) / dimY;
-            double tzMaxScalableValue = Convert.ToDouble(MainWindow.main.threeDSettings.PrintAreaHeight) / dimZ;
+            double txMaxScalableValue = Convert.ToDouble(AppSettings.Instance.PrintAreaWidth) / dimX;
+            double tyMaxScalableValue = Convert.ToDouble(AppSettings.Instance.PrintAreaDepth) / dimY;
+            double tzMaxScalableValue = Convert.ToDouble(AppSettings.Instance.PrintAreaHeight) / dimZ;
             double tMaxScalableValue = Math.Min(Math.Min(txMaxScalableValue, tyMaxScalableValue), Math.Min(tyMaxScalableValue, tzMaxScalableValue));
 
             IsScale = false;
             if (txMaxScalableValue == tMaxScalableValue)
             {
                 xyzbind = "x";
-                slider_resize.Maximum = (double)MainWindow.main.threeDSettings.PrintAreaWidth;
+                slider_resize.Maximum = (double)AppSettings.Instance.PrintAreaWidth;
 
-                if ((dimY * txMaxScalableValue > (double)MainWindow.main.threeDSettings.PrintAreaDepth)
-                        || (dimZ * txMaxScalableValue > (double)MainWindow.main.threeDSettings.PrintAreaHeight))
+                if ((dimY * txMaxScalableValue > (double)AppSettings.Instance.PrintAreaDepth)
+                        || (dimZ * txMaxScalableValue > (double)AppSettings.Instance.PrintAreaHeight))
                 {
                     slider_resize.Maximum = Math.Floor(dimX * Math.Min(tyMaxScalableValue, tzMaxScalableValue) * 1000) / 1000;
                 }
@@ -469,10 +469,10 @@ namespace View3D.view
             else if (tyMaxScalableValue == tMaxScalableValue)
             {
                 xyzbind = "y";
-                slider_resize.Maximum = (double)MainWindow.main.threeDSettings.PrintAreaDepth;
+                slider_resize.Maximum = (double)AppSettings.Instance.PrintAreaDepth;
 
-                if ((dimX * tyMaxScalableValue > (double)MainWindow.main.threeDSettings.PrintAreaWidth)
-                        || (dimZ * tyMaxScalableValue > (double)MainWindow.main.threeDSettings.PrintAreaHeight))
+                if ((dimX * tyMaxScalableValue > (double)AppSettings.Instance.PrintAreaWidth)
+                        || (dimZ * tyMaxScalableValue > (double)AppSettings.Instance.PrintAreaHeight))
                 {
                     slider_resize.Maximum = Math.Floor(dimY * Math.Min(txMaxScalableValue, tzMaxScalableValue) * 1000) / 1000;
                 }
@@ -480,10 +480,10 @@ namespace View3D.view
             else if (tzMaxScalableValue == tMaxScalableValue)
             {
                 xyzbind = "z";
-                slider_resize.Maximum = (double)MainWindow.main.threeDSettings.PrintAreaHeight;
+                slider_resize.Maximum = (double)AppSettings.Instance.PrintAreaHeight;
 
-                if ((dimX * tzMaxScalableValue > (double)MainWindow.main.threeDSettings.PrintAreaWidth)
-                        || (dimY * tzMaxScalableValue > (double)MainWindow.main.threeDSettings.PrintAreaDepth))
+                if ((dimX * tzMaxScalableValue > (double)AppSettings.Instance.PrintAreaWidth)
+                        || (dimY * tzMaxScalableValue > (double)AppSettings.Instance.PrintAreaDepth))
                 {
                     slider_resize.Maximum = Math.Floor(dimZ * Math.Min(txMaxScalableValue, tyMaxScalableValue) * 1000) / 1000;
                 }

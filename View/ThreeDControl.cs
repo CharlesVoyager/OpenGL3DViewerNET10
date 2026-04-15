@@ -60,8 +60,8 @@ namespace View3D.view
         /// is later embedded via WindowsFormsHost in MainWindow.xaml.
         /// </summary>
         /// 
-        private const int MinWidth = 830;
-        private const int MinHeight = 700;
+        private const int MinWidth = 2024;//830;
+        private const int MinHeight = 1768;//700;
         public ThreeDControl(int width = MinWidth, int height = MinHeight)
             : base(
                 GameWindowSettings.Default,
@@ -512,9 +512,9 @@ namespace View3D.view
         void UpdatePickLine(int x, int y)
         {
             float bedRadius = (float)(1.5 * Math.Sqrt(
-                 (MainWindow.main.threeDSettings.PrintAreaDepth * MainWindow.main.threeDSettings.PrintAreaDepth +
-                  MainWindow.main.threeDSettings.PrintAreaHeight * MainWindow.main.threeDSettings.PrintAreaHeight +
-                  MainWindow.main.threeDSettings.PrintAreaWidth * MainWindow.main.threeDSettings.PrintAreaWidth) * 0.25));
+                 (AppSettings.Instance.PrintAreaDepth * AppSettings.Instance.PrintAreaDepth +
+                  AppSettings.Instance.PrintAreaHeight * AppSettings.Instance.PrintAreaHeight +
+                  AppSettings.Instance.PrintAreaWidth * AppSettings.Instance.PrintAreaWidth) * 0.25));
             
             float dist = (float)threeDCam.distance;
             float nearDist = Math.Max(1, dist - bedRadius);

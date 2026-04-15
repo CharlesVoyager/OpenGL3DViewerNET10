@@ -1,6 +1,7 @@
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using View3D;
+using View3D.view;
 
 namespace OpenGL3DViewerNET10.Draw
 {
@@ -62,9 +63,9 @@ namespace OpenGL3DViewerNET10.Draw
 
             // 8 corners of the build volume
             float x0 = 0f,      y0 = 0f,      z0 = 0f;
-            float x1 = MainWindow.main.threeDSettings.PrintAreaWidth;
-            float y1 = MainWindow.main.threeDSettings.PrintAreaDepth;
-            float z1 = MainWindow.main.threeDSettings.PrintAreaHeight;
+            float x1 = AppSettings.Instance.PrintAreaWidth;
+            float y1 = AppSettings.Instance.PrintAreaDepth;
+            float z1 = AppSettings.Instance.PrintAreaHeight;
 
             // 12 edges → 24 vertices (2 endpoints per edge)
             float[] vertices =

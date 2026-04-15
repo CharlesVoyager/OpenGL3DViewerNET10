@@ -35,11 +35,14 @@
                     <GroupBox Header="Print Area" Grid.Row="0" Margin="0,0,0,10">
                         <Grid Margin="6,4">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="160"/>
-                                <ColumnDefinition Width="160"/>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="10"/>
-                                <ColumnDefinition Width="110"/>
-                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="60"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -77,13 +80,21 @@
                                     Background="Black" Style="{StaticResource SwatchStyle}"
                                     MouseLeftButtonUp="ColorSwatch_Click"/>
 
-                            <Label Grid.Row="1" Grid.Column="3" Content="Print Area Width:" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                            <Label Grid.Row="2" Grid.Column="3" Content="Print Area Depth:" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                            <Label Grid.Row="3" Grid.Column="3" Content="Print Area Height:" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            <Label Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2" Content="Print Area Diemension" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <Label Grid.Row="1" Grid.Column="3" Content="Width:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <Label Grid.Row="2" Grid.Column="3" Content="Depth:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <Label Grid.Row="3" Grid.Column="3" Content="Height:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <TextBox x:Name="txtPrintAreaWidth" Grid.Row="1" Grid.Column="4" Text="" Margin="0,6" TextChanged="PrintAreaWidth_TextChanged" />
                             <TextBox x:Name="txtPrintAreaDepth" Grid.Row="2" Grid.Column="4" Text="" Margin="0,6" TextChanged="PrintAreaDepth_TextChanged"/>
                             <TextBox x:Name="txtPrintAreaHeight" Grid.Row="3" Grid.Column="4" Text="" Margin="0,6" TextChanged="PrintAreaHeight_TextChanged"/>
-                            <Label Content="(Change print area dimension needs restart to apply.)" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#888"/>
+
+                            <Label Grid.Row="0" Grid.Column="6" Grid.ColumnSpan="2" Content="OpenGL Client Size" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <Label Grid.Row="1" Grid.Column="6" Content="Width:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <Label Grid.Row="2" Grid.Column="6" Content="Height:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBox x:Name="txtClientSizeWidth" Grid.Row="1" Grid.Column="7" Text="" Margin="0,6" TextChanged="PrintAreaWidth_TextChanged" />
+                            <TextBox x:Name="txtClientSizeHeight" Grid.Row="2" Grid.Column="7" Text="" Margin="0,6" TextChanged="PrintAreaDepth_TextChanged"/>
+                            
+                            <Label Content="(Change print area dimension needs restart to apply.)" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="5" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#888"/>
                         </Grid>
                     </GroupBox>
 

@@ -23,7 +23,7 @@ namespace OpenGL3DViewerNET10
             });
             wpfThread.SetApartmentState(ApartmentState.STA);
             wpfThread.IsBackground = false;
-            wpfThread.Name = "WPF-Thread";
+            wpfThread.Name = "OpenGL 3D Viewer WPF Thread";
             wpfThread.Start();
 
             // Wait until MainWindow is ready before starting OpenTK

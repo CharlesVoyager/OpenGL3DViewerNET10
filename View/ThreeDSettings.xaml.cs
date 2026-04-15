@@ -13,9 +13,18 @@ namespace View3D.view
 {
     public class AppSettings
     {
-        public uint PrintAreaWidth { get; set; } = 256;
-        public uint PrintAreaDepth { get; set; } = 256;
-        public uint PrintAreaHeight { get; set; } = 200;
+        private static readonly AppSettings _instance = new AppSettings();
+        public static AppSettings Instance => _instance;
+
+
+        public uint PrintAreaWidth { get; set; } = 256;     // x-axis direction
+        public uint PrintAreaDepth { get; set; } = 256;     // y-axis direction
+        public uint PrintAreaHeight { get; set; } = 200;    // z-axis direction
+
+        // OpenGL Client Size
+        public uint ClientSizeWidth { get; set; } = 1024;
+        public uint ClientSizeHeight { get; set; } = 768;
+        // <>
 
         public uint BackgroundTopColor { get; set; } = 0xFFF5F5F5;
         public uint BackgroundBottomColor { get; set; } = 0xFF000000;
@@ -128,10 +137,6 @@ namespace View3D.view
     public partial class ThreeDSettings : Window, INotifyPropertyChanged
     {
         SettingsService settingsService = null;
-
-        public float PrintAreaWidth;  // x-axis direction
-        public float PrintAreaDepth;  // y-axis direction
-        public float PrintAreaHeight; // z-axis direction
 
         // UseVBOs and OpenGLVersion will be updated in OnLoad of ThreeDControl.
         public bool UseVBOs = false;
@@ -787,20 +792,20 @@ namespace View3D.view
 
         private void PrintAreaWidth_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (float.TryParse(txtPrintAreaWidth.Text, out float value))
-                PrintAreaWidth = value;
+            if (uint.TryParse(txtPrintAreaWidth.Text, out uint value))
+                AppSettings.Instance.PrintAreaWidth = value;
         }
 
         private void PrintAreaDepth_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (float.TryParse(txtPrintAreaDepth.Text, out float value))
-                PrintAreaDepth = value;
+            if (uint.TryParse(txtPrintAreaDepth.Text, out uint value))
+                AppSettings.Instance.PrintAreaDepth = value;
         }
 
         private void PrintAreaHeight_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (float.TryParse(txtPrintAreaHeight.Text, out float value))
-                PrintAreaHeight = value;
+            if (uint.TryParse(txtPrintAreaHeight.Text, out uint value))
+                AppSettings.Instance.PrintAreaHeight = value;
         }
 
         void controlsToSettings()

@@ -190,8 +190,8 @@ namespace View3D.view
         public void FitPrinter()
         {
             RHBoundingBox b = new RHBoundingBox();
-            b.Add(0, 0, -0.0 * MainWindow.main.threeDSettings.PrintAreaHeight);
-            b.Add(0 + MainWindow.main.threeDSettings.PrintAreaWidth, 0 + MainWindow.main.threeDSettings.PrintAreaDepth, 1.0 * MainWindow.main.threeDSettings.PrintAreaHeight);
+            b.Add(0, 0, -0.0 * AppSettings.Instance.PrintAreaHeight);
+            b.Add(0 + AppSettings.Instance.PrintAreaWidth, 0 + AppSettings.Instance.PrintAreaDepth, 1.0 * AppSettings.Instance.PrintAreaHeight);
 
             FitBoundingBox(b);
         }
@@ -213,8 +213,8 @@ namespace View3D.view
 
         public void FitBoundingBox(RHBoundingBox box)
         {
-            float bedRadius = (float)(1.5 * Math.Sqrt((MainWindow.main.threeDSettings.PrintAreaDepth * MainWindow.main.threeDSettings.PrintAreaDepth + MainWindow.main.threeDSettings.PrintAreaHeight * MainWindow.main.threeDSettings.PrintAreaHeight + MainWindow.main.threeDSettings.PrintAreaWidth * MainWindow.main.threeDSettings.PrintAreaWidth) * 0.25));
-            RHVector3 shift = new RHVector3( -0.5 * MainWindow.main.threeDSettings.PrintAreaWidth, -0.5 * MainWindow.main.threeDSettings.PrintAreaDepth, -0.5 * MainWindow.main.threeDSettings.PrintAreaHeight);
+            float bedRadius = (float)(1.5 * Math.Sqrt((AppSettings.Instance.PrintAreaDepth * AppSettings.Instance.PrintAreaDepth + AppSettings.Instance.PrintAreaHeight * AppSettings.Instance.PrintAreaHeight + AppSettings.Instance.PrintAreaWidth * AppSettings.Instance.PrintAreaWidth) * 0.25));
+            RHVector3 shift = new RHVector3( -0.5 * AppSettings.Instance.PrintAreaWidth, -0.5 * AppSettings.Instance.PrintAreaDepth, -0.5 * AppSettings.Instance.PrintAreaHeight);
             viewCenter = box.Center.asVector3();
             distance = defaultDistance;
             int loops = 5;
@@ -285,9 +285,9 @@ namespace View3D.view
         {
             viewCenter = defaultCenter;
             defaultDistance = 1.6f * (float)Math.Sqrt(
-                MainWindow.main.threeDSettings.PrintAreaDepth * MainWindow.main.threeDSettings.PrintAreaDepth +
-                MainWindow.main.threeDSettings.PrintAreaWidth * MainWindow.main.threeDSettings.PrintAreaWidth +
-                MainWindow.main.threeDSettings.PrintAreaHeight * MainWindow.main.threeDSettings.PrintAreaHeight);
+                AppSettings.Instance.PrintAreaDepth * AppSettings.Instance.PrintAreaDepth +
+                AppSettings.Instance.PrintAreaWidth * AppSettings.Instance.PrintAreaWidth +
+                AppSettings.Instance.PrintAreaHeight * AppSettings.Instance.PrintAreaHeight);
             minDistance = 0.001 * defaultDistance;
         }
 
@@ -318,9 +318,9 @@ namespace View3D.view
         public Matrix4 GetProjMatrix()
         {
             float bedRadius = (float)(1.5 * Math.Sqrt(
-                          (MainWindow.main.threeDSettings.PrintAreaDepth * MainWindow.main.threeDSettings.PrintAreaDepth +
-                           MainWindow.main.threeDSettings.PrintAreaHeight * MainWindow.main.threeDSettings.PrintAreaHeight +
-                           MainWindow.main.threeDSettings.PrintAreaWidth * MainWindow.main.threeDSettings.PrintAreaWidth) * 0.25));
+                          (AppSettings.Instance.PrintAreaDepth * AppSettings.Instance.PrintAreaDepth +
+                           AppSettings.Instance.PrintAreaHeight * AppSettings.Instance.PrintAreaHeight +
+                           AppSettings.Instance.PrintAreaWidth * AppSettings.Instance.PrintAreaWidth) * 0.25));
 
             float dist = (float)distance;
             float nearDist = Math.Max(1, dist - bedRadius);

@@ -1,6 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using View3D;
+using View3D.view;
 
 namespace OpenGL3DViewerNET10.Draw
 {
@@ -38,7 +39,7 @@ namespace OpenGL3DViewerNET10.Draw
             shader = createShaderProgram();
 
             int pad = 2, tri = 10;
-            float w = MainWindow.main.threeDSettings.PrintAreaWidth, d = MainWindow.main.threeDSettings.PrintAreaDepth;
+            float w = AppSettings.Instance.PrintAreaWidth, d = AppSettings.Instance.PrintAreaDepth;
 
             // Same vertex order as the original LineStrip
             var verts = new float[]
