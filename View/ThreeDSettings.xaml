@@ -42,7 +42,7 @@
                                 <ColumnDefinition Width="60"/>
                                 <ColumnDefinition Width="30"/>
                                 <ColumnDefinition Width="80"/>
-                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="50"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -91,8 +91,8 @@
                             <Label Grid.Row="0" Grid.Column="6" Grid.ColumnSpan="2" Content="OpenGL Client Size" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <Label Grid.Row="1" Grid.Column="6" Content="Width:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <Label Grid.Row="2" Grid.Column="6" Content="Height:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <TextBox x:Name="txtClientSizeWidth" Grid.Row="1" Grid.Column="7" Text="" Margin="0,6" TextChanged="PrintAreaWidth_TextChanged" />
-                            <TextBox x:Name="txtClientSizeHeight" Grid.Row="2" Grid.Column="7" Text="" Margin="0,6" TextChanged="PrintAreaDepth_TextChanged"/>
+                            <TextBox x:Name="txtClientSizeWidth" Grid.Row="1" Grid.Column="7" Text="" Margin="0,6" TextChanged="ClientSizeWidth_TextChanged" />
+                            <TextBox x:Name="txtClientSizeHeight" Grid.Row="2" Grid.Column="7" Text="" Margin="0,6" TextChanged="ClientSizeHeight_TextChanged"/>
                             
                             <Label Content="(Change print area dimension needs restart to apply.)" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="5" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#888"/>
                         </Grid>

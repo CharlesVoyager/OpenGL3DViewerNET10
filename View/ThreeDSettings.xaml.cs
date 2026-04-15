@@ -12,9 +12,11 @@ namespace View3D.view
 {
     public class AppSettings
     {
+        // Printer area diemnsions in millimeters.  These are used to draw the printer bed and frame,
         public uint PrintAreaWidth { get; set; } = 256;     // x-axis direction
         public uint PrintAreaDepth { get; set; } = 256;     // y-axis direction
         public uint PrintAreaHeight { get; set; } = 200;    // z-axis direction
+        // <>
 
         // Initial OpenGL Client Size
         public int InitialClientSizeWidth { get; set; } = 1024;
@@ -43,7 +45,7 @@ namespace View3D.view
         public bool ShowEdges { get; set; } = false;
         public bool ShowFaces { get; set; } = true;
         public bool ShowPrintbed { get; set; } = true;
-        public int DrawMethod { get; set; } = 0;
+        public int DrawMethod { get; set; } = 0;   // 0 = elements, 1 = drawElements, 2 = VBO
 
         public uint SelectionBoxColor { get; set; } = 0xFFFFFFFF;
         public uint ErrorModelColor { get; set; } = 0xFFFF0000;
@@ -145,10 +147,6 @@ namespace View3D.view
 
     public partial class ThreeDSettings : Window, INotifyPropertyChanged
     {
-        // ── Fields ───────────────────────────────────────────────────────────────
-        int drawMethod = 0;         // 0 = elements, 1 = drawElements, 2 = VBO
-        private bool _showEdges = false;
-        private bool _showFaces = true;
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -173,35 +171,6 @@ namespace View3D.view
             // Localisation hook — populate as needed.
         }
 
-        // ── ShowEdges / ShowFaces properties (INotifyPropertyChanged + registry) ─
-        public bool ShowEdges
-        {
-            get => _showEdges;
-            set
-            {
-                if (value == _showEdges) return;
-                _showEdges = value;
-                SettingsService.Instance.Settings.ShowEdges = _showEdges;
-
-                OnPropertyChanged(new PropertyChangedEventArgs(nameof(ShowEdges)));
-                MainWindow.main.Update3D();
-            }
-        }
-
-        public bool ShowFaces
-        {
-            get => _showFaces;
-            set
-            {
-                if (value == _showFaces) return;
-                _showFaces = value;
-                SettingsService.Instance.Settings.ShowFaces = _showFaces;
-                OnPropertyChanged(new PropertyChangedEventArgs(nameof(ShowFaces)));
-                MainWindow.main.Update3D();
-            }
-        }
-
-
         void loadSettings()
         {
             try
@@ -209,6 +178,9 @@ namespace View3D.view
                 txtPrintAreaWidth.Text = SettingsService.Instance.Settings.PrintAreaWidth.ToString();
                 txtPrintAreaDepth.Text = SettingsService.Instance.Settings.PrintAreaDepth.ToString();
                 txtPrintAreaHeight.Text = SettingsService.Instance.Settings.PrintAreaHeight.ToString();
+
+                txtClientSizeWidth.Text = SettingsService.Instance.Settings.InitialClientSizeWidth.ToString();
+                txtClientSizeHeight.Text = SettingsService.Instance.Settings.InitialClientSizeHeight.ToString();
 
                 backgroundTop.Background = new SolidColorBrush(ArgbToColor(SettingsService.Instance.Settings.BackgroundTopColor));
                 backgroundBottom.Background = new SolidColorBrush(ArgbToColor(SettingsService.Instance.Settings.BackgroundBottomColor));
@@ -219,9 +191,8 @@ namespace View3D.view
                 printerFrame.Background = new SolidColorBrush(ArgbToColor(SettingsService.Instance.Settings.PrinterFrameColor));
                 outsidePrintbed.Background = new SolidColorBrush(ArgbToColor(SettingsService.Instance.Settings.OutsidePrintbedColor));
 
-
-                _showEdges = SettingsService.Instance.Settings.ShowEdges;
-                _showFaces = SettingsService.Instance.Settings.ShowFaces;
+                showEdges.IsChecked = SettingsService.Instance.Settings.ShowEdges;
+                showFaces.IsChecked = SettingsService.Instance.Settings.ShowFaces;
 
                 showPrintbed.IsChecked  = SettingsService.Instance.Settings.ShowPrintbed;
 
@@ -485,13 +456,13 @@ namespace View3D.view
         private void CheckedChanged(object sender, RoutedEventArgs e)
         {
             if (sender == showEdges)
-                ShowEdges = showEdges.IsChecked == true;
+                SettingsService.Instance.Settings.ShowEdges = showEdges.IsChecked == true;
             else if (sender == showFaces)
-                ShowFaces = showFaces.IsChecked == true;
+                SettingsService.Instance.Settings.ShowFaces = showFaces.IsChecked == true;
             else if (sender == showPrintbed)
                 SettingsService.Instance.Settings.ShowPrintbed = showPrintbed.IsChecked == true;
-            else
-                MainWindow.main.Update3D();
+
+            MainWindow.main.Update3D();
         }
 
         /// <summary>
@@ -735,19 +706,11 @@ namespace View3D.view
             throw new InvalidOperationException("Only SolidColorBrush can be converted to a single Color.");
         }
 
-        //public bool IsPrintbed()
-        //{
-        //    bool result = false;
-        //    System.Windows.Application.Current.Dispatcher.Invoke(() =>
-        //    {
-        //        result = showPrintbed.IsChecked == true;
-        //    });
-        //    return result;
-        //}
         private void LightSetting_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             MainWindow.main.Update3D();
         }
+
         private void LightSetting_ValueChanged(object sender, TextChangedEventArgs e)
         {
             MainWindow.main.Update3D();
@@ -804,14 +767,28 @@ namespace View3D.view
                 SettingsService.Instance.Settings.PrintAreaHeight = value;
         }
 
+        private void ClientSizeWidth_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (int.TryParse(txtClientSizeWidth.Text, out int value))
+                SettingsService.Instance.Settings.InitialClientSizeWidth = value;
+        }
+
+        private void ClientSizeHeight_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (int.TryParse(txtClientSizeHeight.Text, out int value))
+                SettingsService.Instance.Settings.InitialClientSizeHeight = value;
+        }
+
         void controlsToSettings()
         {
             try
             {
-                uint value;
-                if (uint.TryParse(txtPrintAreaWidth.Text, out value)) SettingsService.Instance.Settings.PrintAreaWidth = value;
+                if (uint.TryParse(txtPrintAreaWidth.Text, out uint value)) SettingsService.Instance.Settings.PrintAreaWidth = value;
                 if (uint.TryParse(txtPrintAreaDepth.Text, out value)) SettingsService.Instance.Settings.PrintAreaDepth = value;
                 if (uint.TryParse(txtPrintAreaHeight.Text, out value)) SettingsService.Instance.Settings.PrintAreaHeight = value;
+                
+                if (int.TryParse(txtClientSizeWidth.Text, out int intValue)) SettingsService.Instance.Settings.InitialClientSizeWidth = intValue;
+                if (int.TryParse(txtClientSizeHeight.Text, out intValue)) SettingsService.Instance.Settings.InitialClientSizeHeight = intValue;
 
                 SettingsService.Instance.Settings.BackgroundTopColor = ToArgb(backgroundTop);
                 SettingsService.Instance.Settings.BackgroundBottomColor = ToArgb(backgroundBottom);
@@ -822,8 +799,8 @@ namespace View3D.view
                 SettingsService.Instance.Settings.PrinterFrameColor = ToArgb(printerFrame);
                 SettingsService.Instance.Settings.OutsidePrintbedColor = ToArgb(outsidePrintbed);
 
-                SettingsService.Instance.Settings.ShowEdges = _showEdges;
-                SettingsService.Instance.Settings.ShowFaces = _showFaces;
+                SettingsService.Instance.Settings.ShowEdges = (showEdges.IsChecked == true);
+                SettingsService.Instance.Settings.ShowFaces = (showFaces.IsChecked == true);
                 SettingsService.Instance.Settings.ShowPrintbed = (showPrintbed.IsChecked == true ? true : false);
 
                 SettingsService.Instance.Settings.DrawMethod = comboDrawMethod.SelectedIndex;
