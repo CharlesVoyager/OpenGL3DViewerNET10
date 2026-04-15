@@ -283,7 +283,7 @@ namespace View3D.view
 
         void SetCameraDefaults()
         {
-            viewCenter = new Vector3(0, 0, 0);
+            viewCenter = defaultCenter;
             defaultDistance = 1.6f * (float)Math.Sqrt(
                 MainWindow.main.threeDSettings.PrintAreaDepth * MainWindow.main.threeDSettings.PrintAreaDepth +
                 MainWindow.main.threeDSettings.PrintAreaWidth * MainWindow.main.threeDSettings.PrintAreaWidth +
