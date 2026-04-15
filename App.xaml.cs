@@ -30,7 +30,7 @@ namespace OpenGL3DViewerNET10
             View3D.MainWindow._mainWindowReady.Wait();
 
             // OpenTK GameWindow runs on the main thread (required by GLFW)
-            mainWindow.threeDControl = new ThreeDControl();
+            mainWindow.threeDControl = new ThreeDControl(AppSettings.Instance.InitialClientSizeWidth, AppSettings.Instance.InitialClientSizeHeight);
             mainWindow.threeDControl.SetComp(mainWindow.stlComposer);
             mainWindow.threeDControl.SetCamera(mainWindow.threeDCamera);
 

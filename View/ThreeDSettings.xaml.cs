@@ -21,9 +21,14 @@ namespace View3D.view
         public uint PrintAreaDepth { get; set; } = 256;     // y-axis direction
         public uint PrintAreaHeight { get; set; } = 200;    // z-axis direction
 
-        // OpenGL Client Size
-        public uint ClientSizeWidth { get; set; } = 1024;
-        public uint ClientSizeHeight { get; set; } = 768;
+        // Initial OpenGL Client Size
+        public int InitialClientSizeWidth { get; set; } = 1024;
+        public int InitialClientSizeHeight { get; set; } = 768;
+        // <>
+
+        // Minimum OpenGL Client Size to prevent extremely small windows that can cause rendering issues
+        public int MinClientSizeWidth { get; set; } = 830;
+        public int MinClientSizeHeight { get; set; } = 700;
         // <>
 
         public uint BackgroundTopColor { get; set; } = 0xFFF5F5F5;

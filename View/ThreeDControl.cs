@@ -60,9 +60,7 @@ namespace View3D.view
         /// is later embedded via WindowsFormsHost in MainWindow.xaml.
         /// </summary>
         /// 
-        private const int MinWidth = 2024;//830;
-        private const int MinHeight = 1768;//700;
-        public ThreeDControl(int width = MinWidth, int height = MinHeight)
+        public ThreeDControl(int width, int height)
             : base(
                 GameWindowSettings.Default,
                 new NativeWindowSettings
@@ -133,8 +131,8 @@ namespace View3D.view
                 MINMAXINFO mmi = (MINMAXINFO)Marshal.PtrToStructure(
                     lParam, typeof(MINMAXINFO));
 
-                mmi.ptMinTrackSize.x = MinWidth;
-                mmi.ptMinTrackSize.y = MinHeight;
+                mmi.ptMinTrackSize.x = AppSettings.Instance.MinClientSizeWidth;
+                mmi.ptMinTrackSize.y = AppSettings.Instance.MinClientSizeHeight;
 
                 Marshal.StructureToPtr(mmi, lParam, false);
                 return IntPtr.Zero;
