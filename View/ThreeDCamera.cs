@@ -52,9 +52,10 @@ namespace View3D.view
 
         void OrientFront()
         {
-            viewCenter = defaultCenter;
             theta = Math.PI / 2;
             phi = Math.PI / 2;
+
+            viewCenter = defaultCenter;
             originDistance = distance;
             FitPrinter();
             distance = originDistance;
@@ -62,9 +63,10 @@ namespace View3D.view
 
         void OrientBack()
         {
-            viewCenter = defaultCenter;
             theta = -Math.PI / 2;
             phi = Math.PI / 2;
+
+            viewCenter = defaultCenter;
             originDistance = distance;
             FitPrinter();
             distance = originDistance;
@@ -72,9 +74,10 @@ namespace View3D.view
 
         void OrientLeft()
         {
-            viewCenter = defaultCenter;
             theta = 0;
             phi = Math.PI / 2;
+
+            viewCenter = defaultCenter;
             originDistance = distance;
             FitPrinter();
             distance = originDistance;
@@ -82,9 +85,10 @@ namespace View3D.view
 
         void OrientRight()
         {
-            viewCenter = defaultCenter;
             theta = Math.PI;
             phi = Math.PI / 2;
+
+            viewCenter = defaultCenter;
             originDistance = distance;
             FitPrinter();
             distance = originDistance;
@@ -92,9 +96,10 @@ namespace View3D.view
 
         void OrientTop()
         {
-            viewCenter = defaultCenter;
             theta = -Math.PI / 2;
             phi = 1e-5;
+
+            viewCenter = defaultCenter;
             originDistance = distance;
             FitPrinter();
             distance = originDistance;
@@ -102,9 +107,10 @@ namespace View3D.view
 
         void OrientBottom()
         {
-            viewCenter = defaultCenter;
             theta = -Math.PI / 2;
             phi = Math.PI -1e-5;
+
+            viewCenter = defaultCenter;
             originDistance = distance;
             FitPrinter();
             distance = originDistance;
@@ -112,18 +118,20 @@ namespace View3D.view
 
         void OrientIsometric()
         {
-            viewCenter = defaultCenter;
             theta = -Math.PI * 1.25;
             phi = Math.PI / 2.5;
+
+            viewCenter = defaultCenter;
             distance = defaultDistance;
             FitPrinter();
         }
 
         void OrientIsometric2()
         {
-            viewCenter = defaultCenter;
             theta = -Math.PI * 1.25;
             phi = Math.PI / 2.5;
+
+            viewCenter = defaultCenter;
             originDistance = distance;
             FitPrinter();
             distance = originDistance;
