@@ -90,10 +90,10 @@ namespace View3D.view
 
             double moveMax, moveMin;
 
-            moveMax = (int)Math.Floor((AppSettings.Instance.PrintAreaWidth - (stl.BoundingBox.xMax - stl.Position.X)) * 100) * 0.01;
+            moveMax = (int)Math.Floor((SettingsService.Instance.Settings.PrintAreaWidth - (stl.BoundingBox.xMax - stl.Position.X)) * 100) * 0.01;
             moveMin = (int)Math.Ceiling((stl.Position.X - stl.BoundingBox.xMin) * 100) * 0.01;
 
-            double a = AppSettings.Instance.PrintAreaWidth - (stl.BoundingBox.xMax - stl.Position.X);
+            double a = SettingsService.Instance.Settings.PrintAreaWidth - (stl.BoundingBox.xMax - stl.Position.X);
             double b = stl.Position.X - stl.BoundingBox.xMin;
 
             a += 0;
@@ -121,7 +121,7 @@ namespace View3D.view
             }
 
 
-            moveMax = (int)Math.Floor((AppSettings.Instance.PrintAreaDepth - (stl.BoundingBox.yMax - stl.Position.Y)) * 100) * 0.01;
+            moveMax = (int)Math.Floor((SettingsService.Instance.Settings.PrintAreaDepth - (stl.BoundingBox.yMax - stl.Position.Y)) * 100) * 0.01;
             moveMin = (int)Math.Ceiling((stl.Position.Y - stl.BoundingBox.yMin) * 100) * 0.01;
 
             //module is out of bound,it can not move. 
@@ -145,7 +145,7 @@ namespace View3D.view
                 slider_moveY.Minimum = moveMin;
             }
 
-            moveMax = AppSettings.Instance.PrintAreaHeight - (stl.BoundingBox.zMax - stl.Position.Z);
+            moveMax = SettingsService.Instance.Settings.PrintAreaHeight - (stl.BoundingBox.zMax - stl.Position.Z);
             moveMin = stl.Position.Z - stl.BoundingBox.zMin;
             if (moveMin > moveMax)
                 moveMin = moveMax;

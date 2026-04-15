@@ -131,8 +131,8 @@ namespace View3D.view
                 MINMAXINFO mmi = (MINMAXINFO)Marshal.PtrToStructure(
                     lParam, typeof(MINMAXINFO));
 
-                mmi.ptMinTrackSize.x = AppSettings.Instance.MinClientSizeWidth;
-                mmi.ptMinTrackSize.y = AppSettings.Instance.MinClientSizeHeight;
+                mmi.ptMinTrackSize.x = SettingsService.Instance.Settings.MinClientSizeWidth;
+                mmi.ptMinTrackSize.y = SettingsService.Instance.Settings.MinClientSizeHeight;
 
                 Marshal.StructureToPtr(mmi, lParam, false);
                 return IntPtr.Zero;
@@ -176,7 +176,7 @@ namespace View3D.view
                 {
                     p = sv.IndexOf('.', p + 1);
                     if (p > 0) sv = sv.Substring(0, p);
-                    AppSettings.Instance.OpenGLVersion = Convert.ToSingle(sv, CultureInfo.InvariantCulture);
+                    SettingsService.Instance.Settings.OpenGLVersion = Convert.ToSingle(sv, CultureInfo.InvariantCulture);
                 }
                 else
                 {
@@ -184,14 +184,14 @@ namespace View3D.view
                     {
                         float val;
                         float.TryParse(sv, out val);
-                        AppSettings.Instance.OpenGLVersion = val;
+                        SettingsService.Instance.Settings.OpenGLVersion = val;
                     }
                     catch 
                     {
-                        AppSettings.Instance.OpenGLVersion = 1.1f; 
+                        SettingsService.Instance.Settings.OpenGLVersion = 1.1f; 
                     }
                 }
-                AppSettings.Instance.UseVBOs = GL.GetString(StringName.Extensions).Contains("GL_ARB_vertex_buffer_object");
+                SettingsService.Instance.Settings.UseVBOs = GL.GetString(StringName.Extensions).Contains("GL_ARB_vertex_buffer_object");
             }
             catch { }
             #endregion
@@ -510,9 +510,9 @@ namespace View3D.view
         void UpdatePickLine(int x, int y)
         {
             float bedRadius = (float)(1.5 * Math.Sqrt(
-                 (AppSettings.Instance.PrintAreaDepth * AppSettings.Instance.PrintAreaDepth +
-                  AppSettings.Instance.PrintAreaHeight * AppSettings.Instance.PrintAreaHeight +
-                  AppSettings.Instance.PrintAreaWidth * AppSettings.Instance.PrintAreaWidth) * 0.25));
+                 (SettingsService.Instance.Settings.PrintAreaDepth * SettingsService.Instance.Settings.PrintAreaDepth +
+                  SettingsService.Instance.Settings.PrintAreaHeight * SettingsService.Instance.Settings.PrintAreaHeight +
+                  SettingsService.Instance.Settings.PrintAreaWidth * SettingsService.Instance.Settings.PrintAreaWidth) * 0.25));
             
             float dist = (float)threeDCam.distance;
             float nearDist = Math.Max(1, dist - bedRadius);

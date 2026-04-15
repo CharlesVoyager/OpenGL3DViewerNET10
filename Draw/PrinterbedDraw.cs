@@ -78,8 +78,8 @@ namespace OpenGL3DViewerNET10.Draw
             gridColorLoc = GL.GetUniformLocation(shader, "gridColor");
             gridSpacingLoc = GL.GetUniformLocation(shader, "gridSpacing");
 
-            float x1 = AppSettings.Instance.PrintAreaWidth;
-            float y1 = AppSettings.Instance.PrintAreaDepth;
+            float x1 = SettingsService.Instance.Settings.PrintAreaWidth;
+            float y1 = SettingsService.Instance.Settings.PrintAreaDepth;
 
             float[] vertices =
             {
@@ -142,7 +142,7 @@ namespace OpenGL3DViewerNET10.Draw
         // Call each frame in place of the original GL.Begin/End block
         public void Draw()
         {
-            if (MainWindow.main.threeDSettings.IsPrintbed() != true) return;
+            if (SettingsService.Instance.Settings.ShowPrintbed == false) return;
 
             Matrix4 model = Matrix4.Identity;
             Matrix4 view = MainWindow.main.threeDCamera.GetViewMatrix();

@@ -21,7 +21,7 @@ namespace View3D.view
 
             MainWindow.main.languageChanged += translate;
 
-            double targetLargestSize = AppSettings.Instance.PrintAreaWidth / 2;
+            double targetLargestSize = SettingsService.Instance.Settings.PrintAreaWidth / 2;
 
             double newSizeMMx = originalSizeX;
             double newSizeMMy = originalSizeY;

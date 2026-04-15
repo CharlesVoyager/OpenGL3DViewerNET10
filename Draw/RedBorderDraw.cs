@@ -39,7 +39,7 @@ namespace OpenGL3DViewerNET10.Draw
             shader = createShaderProgram();
 
             int pad = 2, tri = 10;
-            float w = AppSettings.Instance.PrintAreaWidth, d = AppSettings.Instance.PrintAreaDepth;
+            float w = SettingsService.Instance.Settings.PrintAreaWidth, d = SettingsService.Instance.Settings.PrintAreaDepth;
 
             // Same vertex order as the original LineStrip
             var verts = new float[]
@@ -105,7 +105,7 @@ namespace OpenGL3DViewerNET10.Draw
         // Call each frame in place of the original GL.Begin/End block
         public void Draw()
         {
-            if (MainWindow.main.threeDSettings.IsPrintbed() != true) return;
+            if (SettingsService.Instance.Settings.ShowPrintbed == false) return;
 
             Matrix4 model = Matrix4.Identity;
             Matrix4 view = MainWindow.main.threeDCamera.GetViewMatrix();

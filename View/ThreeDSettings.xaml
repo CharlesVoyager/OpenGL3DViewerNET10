@@ -57,8 +57,8 @@
                                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                                       Content="Show printbed" IsChecked="True"
                                       VerticalAlignment="Center"
-                                      Checked="showEdges_CheckedChanged"
-                                      Unchecked="showEdges_CheckedChanged"/>
+                                      Checked="CheckedChanged"
+                                      Unchecked="CheckedChanged"/>
 
                             <TextBlock Grid.Row="1" Grid.Column="0" Text="Background Top:" VerticalAlignment="Center"/>
                             <Border x:Name="backgroundTop" Grid.Row="1" Grid.Column="1"
@@ -173,9 +173,9 @@
                     <GroupBox Header="Editor" Grid.Row="1">
                         <StackPanel Margin="6,4" Orientation="Vertical">
                             <CheckBox x:Name="showEdges" Content="Show edges" Margin="0,4"
-                                      Checked="showEdges_CheckedChanged" Unchecked="showEdges_CheckedChanged"/>
+                                      Checked="CheckedChanged" Unchecked="CheckedChanged"/>
                             <CheckBox x:Name="showFaces" Content="Show faces" IsChecked="True" Margin="0,4"
-                                      Checked="showEdges_CheckedChanged" Unchecked="showEdges_CheckedChanged"/>
+                                      Checked="CheckedChanged" Unchecked="CheckedChanged"/>
                         </StackPanel>
                     </GroupBox>
                 </Grid>

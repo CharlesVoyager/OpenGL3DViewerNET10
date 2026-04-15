@@ -63,9 +63,9 @@ namespace OpenGL3DViewerNET10.Draw
 
             // 8 corners of the build volume
             float x0 = 0f,      y0 = 0f,      z0 = 0f;
-            float x1 = AppSettings.Instance.PrintAreaWidth;
-            float y1 = AppSettings.Instance.PrintAreaDepth;
-            float z1 = AppSettings.Instance.PrintAreaHeight;
+            float x1 = SettingsService.Instance.Settings.PrintAreaWidth;
+            float y1 = SettingsService.Instance.Settings.PrintAreaDepth;
+            float z1 = SettingsService.Instance.Settings.PrintAreaHeight;
 
             // 12 edges → 24 vertices (2 endpoints per edge)
             float[] vertices =
@@ -109,7 +109,7 @@ namespace OpenGL3DViewerNET10.Draw
         /// <summary>Call every frame from gl_Paint, after PrinterbedDraw.Draw().</summary>
         public void Draw()
         {
-            if (MainWindow.main.threeDSettings.IsPrintbed() != true) return;
+            if (SettingsService.Instance.Settings.ShowPrintbed == false) return;
 
             Matrix4 model = Matrix4.Identity;
             Matrix4 view = MainWindow.main.threeDCamera.GetViewMatrix();
