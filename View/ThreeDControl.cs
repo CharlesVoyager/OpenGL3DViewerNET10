@@ -176,7 +176,7 @@ namespace View3D.view
                 {
                     p = sv.IndexOf('.', p + 1);
                     if (p > 0) sv = sv.Substring(0, p);
-                    MainWindow.main.threeDSettings.OpenGLVersion = Convert.ToSingle(sv, CultureInfo.InvariantCulture);
+                    AppSettings.Instance.OpenGLVersion = Convert.ToSingle(sv, CultureInfo.InvariantCulture);
                 }
                 else
                 {
@@ -184,14 +184,14 @@ namespace View3D.view
                     {
                         float val;
                         float.TryParse(sv, out val);
-                        MainWindow.main.threeDSettings.OpenGLVersion = val;
+                        AppSettings.Instance.OpenGLVersion = val;
                     }
                     catch 
-                    { 
-                        MainWindow.main.threeDSettings.OpenGLVersion = 1.1f; 
+                    {
+                        AppSettings.Instance.OpenGLVersion = 1.1f; 
                     }
                 }
-                MainWindow.main.threeDSettings.UseVBOs = GL.GetString(StringName.Extensions).Contains("GL_ARB_vertex_buffer_object");
+                AppSettings.Instance.UseVBOs = GL.GetString(StringName.Extensions).Contains("GL_ARB_vertex_buffer_object");
             }
             catch { }
             #endregion
