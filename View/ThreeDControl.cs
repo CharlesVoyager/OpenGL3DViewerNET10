@@ -472,7 +472,6 @@ namespace View3D.view
         // ── Rendering ─────────────────────────────────────────────────────────
         private void gl_Paint()
         {
-            if (!loaded) return;
             try
             {
                 fpsTimer.Reset();
@@ -594,7 +593,7 @@ namespace View3D.view
 
         private void inputHandling()
         {
-            if (!loaded || (speedX == 0 && speedY == 0)) return;
+            if (speedX == 0 && speedY == 0) return;
 
             var kb = KeyboardState;
             var mouse = MouseState;
