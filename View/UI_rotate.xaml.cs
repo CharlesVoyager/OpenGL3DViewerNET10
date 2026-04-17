@@ -327,6 +327,7 @@ namespace View3D.view
             {
                 limitRotateAngle(textboxZ);
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+                if (stl == null) return;
                 sliderZ.Value = Convert.ToDouble(textboxZ.Text);
                 MainWindow.main.stlComposer.textRotZ.Text = textboxZ.Text;
             }
