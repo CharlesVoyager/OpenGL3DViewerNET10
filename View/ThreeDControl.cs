@@ -602,9 +602,7 @@ namespace View3D.view
             int emode = 0;
             if (kb.IsKeyDown(Keys.LeftShift) || kb.IsKeyDown(Keys.RightShift) || mouse.IsButtonDown(MouseButton.Middle)) 
                 emode = 2;
-            if (kb.IsKeyDown(Keys.LeftControl) || kb.IsKeyDown(Keys.RightControl)) 
-                emode = 0;
-            if (kb.IsKeyDown(Keys.LeftAlt) || kb.IsKeyDown(Keys.RightAlt)) 
+            else if (kb.IsKeyDown(Keys.LeftAlt) || kb.IsKeyDown(Keys.RightAlt)) 
                 emode = 4;
 
             float d = Math.Min(ClientSize.X, ClientSize.Y) / 3f;
@@ -618,8 +616,7 @@ namespace View3D.view
                     Invalidate();
                     break;
 
-                case 1: // Pan (slow)
-                case 2: // Pan (fast)
+                case 2: // Pan
                 {
                     speedX = (xPos - xDown) / ClientSize.X;
                     speedY = (yPos - yDown) / ClientSize.Y;
