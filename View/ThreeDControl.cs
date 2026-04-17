@@ -235,15 +235,14 @@ namespace View3D.view
         protected override void OnResize(ResizeEventArgs e)
         {
             base.OnResize(e);
-            if (!loaded) return;
+            if (!loaded) return;    // Note: OnResize can be called before OnLoad, so guard against that.
 
             int newWidth = e.Width;
             int newHeight = e.Height;
 
             MainWindow.main.Dispatcher.Invoke(() =>
             {
-                if (MainWindow.main != null)
-                    MainWindow.main.UpdateSize(newWidth, newHeight);
+                MainWindow.main.UpdateSize(newWidth, newHeight);
             });
 
             GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
