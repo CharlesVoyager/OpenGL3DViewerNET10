@@ -9,7 +9,7 @@
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="Common">
-                <VisualState x:Name="State1">
+                <VisualState x:Name="StateVisible">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames BeginTime="0:0:0" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0">
@@ -21,7 +21,7 @@
                         <DoubleAnimation To="1" Duration="0:00:00.7" Storyboard.TargetName="State1Panel" Storyboard.TargetProperty="(UIElement.Opacity)" />
                     </Storyboard>
                 </VisualState>
-                <VisualState x:Name="State2">
+                <VisualState x:Name="StateHidden">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames BeginTime="0:0:0" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0">

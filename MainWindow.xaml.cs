@@ -128,11 +128,11 @@ namespace View3D
         private ContextMenu? _contextMenu;
         private void initializeUi()
         {
-            VisualStateManager.GoToState(UI_view, "State2", true);
-            VisualStateManager.GoToState(UI_move, "State2", true);
-            VisualStateManager.GoToState(UI_rotate, "State2", true);
-            VisualStateManager.GoToState(UI_resize_advance, "State2", true);
-            VisualStateManager.GoToState(UI_object_information, "State2", true);
+            VisualStateManager.GoToState(UI_view, "StateHidden", true);
+            VisualStateManager.GoToState(UI_move, "StateHidden", true);
+            VisualStateManager.GoToState(UI_rotate, "StateHidden", true);
+            VisualStateManager.GoToState(UI_resize_advance, "StateHidden", true);
+            VisualStateManager.GoToState(UI_object_information, "StateHidden", true);
 
             UI_resize_advance.btn_Scale.FontSize = 12;
             UI_resize_advance.button_mmtoinch.FontSize = 12;
@@ -258,16 +258,16 @@ namespace View3D
                 info_toggleButton.Visibility = Visibility.Hidden;
                 remove_toggleButton.Visibility = Visibility.Hidden;
 
-                VisualStateManager.GoToState(UI_move, "State2", true);
-                VisualStateManager.GoToState(UI_rotate, "State2", true);
-                VisualStateManager.GoToState(UI_resize_advance, "State2", true);
-                VisualStateManager.GoToState(UI_object_information, "State2", true);
+                VisualStateManager.GoToState(UI_move, "StateHidden", true);
+                VisualStateManager.GoToState(UI_rotate, "StateHidden", true);
+                VisualStateManager.GoToState(UI_resize_advance, "StateHidden", true);
+                VisualStateManager.GoToState(UI_object_information, "StateHidden", true);
             }
         }
 
         private void view_toggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            VisualStateManager.GoToState(UI_view, "State1", true);
+            VisualStateManager.GoToState(UI_view, "StateVisible", true);
 
             move_toggleButton.IsChecked = false;
             rotate_toggleButton.IsChecked = false;
@@ -277,13 +277,13 @@ namespace View3D
 
         private void view_toggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
-            VisualStateManager.GoToState(UI_view, "State2", true);
+            VisualStateManager.GoToState(UI_view, "StateHidden", true);
             Focus();
         }
 
         public void move_toggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            VisualStateManager.GoToState(UI_move, "State1", true);
+            VisualStateManager.GoToState(UI_move, "StateVisible", true);
             view_toggleButton.IsChecked = false;
             rotate_toggleButton.IsChecked = false;
             resize_toggleButton.IsChecked = false;
@@ -294,7 +294,7 @@ namespace View3D
 
         public void move_toggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
-            VisualStateManager.GoToState(UI_move, "State2", true);
+            VisualStateManager.GoToState(UI_move, "StateHidden", true);
             Focus();
         }
 
@@ -333,7 +333,7 @@ namespace View3D
 
         private void rotate_toggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            VisualStateManager.GoToState(UI_rotate, "State1", true);
+            VisualStateManager.GoToState(UI_rotate, "StateVisible", true);
             
             UI_rotate.textRotX.Text = stlComposer.textRotX.Text;
             UI_rotate.textRotY.Text = stlComposer.textRotY.Text;
@@ -347,14 +347,14 @@ namespace View3D
 
         private void rotate_toggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
-            VisualStateManager.GoToState(UI_rotate, "State2", true);
+            VisualStateManager.GoToState(UI_rotate, "StateHidden", true);
             Focus();
         }
 
         // Scale
         public void resize_toggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            VisualStateManager.GoToState(UI_resize_advance, "State1", true);
+            VisualStateManager.GoToState(UI_resize_advance, "StateVisible", true);
             view_toggleButton.IsChecked = false;
             move_toggleButton.IsChecked = false;
             rotate_toggleButton.IsChecked = false;
@@ -365,13 +365,13 @@ namespace View3D
 
         private void resize_toggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
-            VisualStateManager.GoToState(UI_resize_advance, "State2", true);
+            VisualStateManager.GoToState(UI_resize_advance, "StateHidden", true);
             Focus();
         }
 
         private void info_toggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            VisualStateManager.GoToState(UI_object_information, "State1", true);
+            VisualStateManager.GoToState(UI_object_information, "StateVisible", true);
             view_toggleButton.IsChecked = false;
             move_toggleButton.IsChecked = false;
             rotate_toggleButton.IsChecked = false;
@@ -380,7 +380,7 @@ namespace View3D
 
         private void info_toggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
-            VisualStateManager.GoToState(UI_object_information, "State2", true);
+            VisualStateManager.GoToState(UI_object_information, "StateHidden", true);
             Focus();
         }
 
