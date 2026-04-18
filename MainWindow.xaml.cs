@@ -333,14 +333,22 @@ namespace View3D
 
         private void rotate_toggleButton_Checked(object sender, RoutedEventArgs e)
         {
+            VisualStateManager.GoToState(UI_rotate, "State1", true);
+            
             UI_rotate.textRotX.Text = stlComposer.textRotX.Text;
             UI_rotate.textRotY.Text = stlComposer.textRotY.Text;
             UI_rotate.textRotZ.Text = stlComposer.textRotZ.Text;
-            VisualStateManager.GoToState(UI_rotate, "State1", true);
+
             view_toggleButton.IsChecked = false;
             move_toggleButton.IsChecked = false;
             resize_toggleButton.IsChecked = false;
             info_toggleButton.IsChecked = false;
+        }
+
+        private void rotate_toggleButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(UI_rotate, "State2", true);
+            Focus();
         }
 
         // Scale
@@ -353,12 +361,6 @@ namespace View3D
             info_toggleButton.IsChecked = false;
 
             UI_resize_advance.Init();
-        }
-
-        private void rotate_toggleButton_Unchecked(object sender, RoutedEventArgs e)
-        {
-            VisualStateManager.GoToState(UI_rotate, "State2", true);
-            Focus();
         }
 
         private void resize_toggleButton_Unchecked(object sender, RoutedEventArgs e)
