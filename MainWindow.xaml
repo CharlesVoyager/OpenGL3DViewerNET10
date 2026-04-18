@@ -38,8 +38,8 @@
     <Grid>
         <local:OutofBound x:Name="OutofBound" Margin="14,40,0,0"/>
         <local:UI_view x:Name="UI_view" Margin="102,123,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <local:UI_move x:Name="UI_move" Margin="102,180,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <local:UI_rotate x:Name="UI_rotate" Margin="102,200,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <local:UI_move x:Name="UI_move" Margin="102,268,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <local:UI_resize_advance x:Name="UI_resize_advance" Margin="102,211,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <local:UI_object_information x:Name="UI_object_information" Margin="102,211,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
