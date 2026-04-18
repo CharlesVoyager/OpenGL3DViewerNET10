@@ -43,9 +43,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Rectangle Height="80" HorizontalAlignment="Left" Margin="16,90,0,0" Name="rectangle1" Stroke="{x:Null}" VerticalAlignment="Top" Width="225
-                           " Fill="#64FFFFFF" RadiusX="5" RadiusY="10" />
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center"></StackPanel>
+                <Rectangle Height="80" HorizontalAlignment="Left" Margin="16,90,0,0" Name="rectangle1" Stroke="{x:Null}" VerticalAlignment="Top" Width="225 " Fill="#64FFFFFF" RadiusX="5" RadiusY="10" />
                 <StackPanel Margin="14,164,0,15" Orientation="Horizontal" Width="110" Height="83" HorizontalAlignment="Left">
                     <StackPanel.Resources>
                         <Style TargetType="ToggleButton">
@@ -153,27 +151,8 @@
                         </ToggleButton.Background>
                     </ToggleButton>
                 </StackPanel>
-                <StackPanel Width="110" Height="115" Name="stackpanelZ" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" MouseMove="StackPanelZ_MouseMove" MouseDown="StackPanelZ_MouseLeftButtonDown" Margin="110,0,0,0" MouseLeave="stackpanelZ_MouseLeave" PreviewMouseWheel="orangeZ_PreviewMouseWheel">
-                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="White" StrokeThickness="55" Angle="360" Radius="1" />
-                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="#FF878889" StrokeThickness="10" Angle="360" Radius="30" />
-                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="Orange" StrokeThickness="10" Radius="30" x:Name="orangeZ" />
-                        <TextBox Name="textboxZ" Height="auto" Background="Transparent" Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" BorderBrush="Transparent" BorderThickness="0"  Visibility="Hidden" FontFamily="Arial" LostFocus="textboxZ_LostFocus" PreviewKeyDown="textboxZ_PreviewKeyDown" TextChanged="textboxZ_TextChanged" />
-                        <Label Content="°" Height="28" HorizontalAlignment="Right" Margin="0,35,28,0" Name="labelZ" VerticalAlignment="Top" FontSize="20" Visibility="Hidden" FontFamily="Arai" />
-                        <Label Content="Z" FontSize="30" HorizontalAlignment="Center" Name="label_Z" VerticalAlignment="Center" FontFamily="Arial" />
-                    </Grid>
-                </StackPanel>
-                <StackPanel Width="110" Height="115" Name="stackpanelY" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" MouseMove="StackPanelY_MouseMove" MouseDown="StackPanelY_MouseLeftButtonDown" Margin="-40,0,0,2" MouseLeave="stackpanelY_MouseLeave" PreviewMouseWheel="orangeY_PreviewMouseWheel">
-                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="White" StrokeThickness="55" Angle="360" Radius="1" />
-                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="#FF878889" StrokeThickness="10" Angle="360" Radius="30" />
-                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="Orange" StrokeThickness="10" Radius="30" x:Name="orangeY" />
-                        <TextBox Name="textboxY" Height="auto" Background="Transparent" Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" BorderBrush="Transparent" BorderThickness="0"  Visibility="Hidden" FontFamily="Arial"  LostFocus="textboxY_LostFocus" PreviewKeyDown="textboxY_PreviewKeyDown" TextChanged="textboxY_TextChanged" />
-                        <Label Content="°" FontSize="20" Height="28" HorizontalAlignment="Right" Margin="0,33,29,0" Name="labelY" VerticalAlignment="Top" Visibility="Hidden" FontFamily="Arial" />
-                        <Label Content="Y" FontSize="30" HorizontalAlignment="Center" Name="label_Y" VerticalAlignment="Center" FontFamily="Arial" />
-                    </Grid>
-                </StackPanel>
-                <StackPanel Width="110" Height="115" Name="stackpanelX" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" MouseMove="StackPanelX_MouseMove" MouseDown="StackPanelX_MouseLeftButtonDown" Margin="-190,0,0,0" MouseLeave="stackpanelX_MouseLeave" PreviewMouseWheel="orangeX_PreviewMouseWheel">
+
+                <StackPanel Width="110" Height="115" Name="stackpanelX" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" MouseMove="StackPanelX_MouseMove" MouseDown="StackPanelX_MouseLeftButtonDown" Margin="-148,0,0,0" MouseLeave="stackpanelX_MouseLeave" PreviewMouseWheel="orangeX_PreviewMouseWheel">
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                         <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="White" StrokeThickness="55" Angle="360" Radius="1" />
                         <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="#FF878889" StrokeThickness="10" Angle="360" Radius="30" />
@@ -183,110 +162,32 @@
                         <Label Content="X" Name="label_X" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30" FontFamily="Arial" />
                     </Grid>
                 </StackPanel>
-                <StackPanel Margin="245,5,0,5" Orientation="Horizontal" Width="50" Height="80" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <StackPanel.Resources>
-                        <Style TargetType="ToggleButton">
-                            <Setter Property="Control.VerticalContentAlignment" Value="Bottom" />
-                            <Setter Property="Control.Background" Value="#FF1F3B53" />
-                            <Setter Property="Control.Foreground" Value="#FF000000" />
-                            <Setter Property="Control.Padding" Value="3" />
-                            <Setter Property="Control.BorderThickness" Value="1" />
-                            <Setter Property="Control.BorderBrush">
-                                <Setter.Value>
-                                    <LinearGradientBrush EndPoint="0.5,1" Opacity="0.5" StartPoint="0.5,0">
-                                        <GradientStop Color="#FFA3AEB9" Offset="0" />
-                                        <GradientStop Color="#FF8399A9" Offset="0.375" />
-                                        <GradientStop Color="#FF718597" Offset="0.375" />
-                                        <GradientStop Color="#FF617584" Offset="1" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                            <Setter Property="Control.Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ToggleButton">
-                                        <Grid>
-                                            <VisualStateManager.VisualStateGroups>
-                                                <VisualStateGroup Name="CommonStates">
-                                                    <VisualState Name="Normal" />
-                                                    <VisualState Name="MouseOver">
-                                                        <VisualState.Storyboard>
-                                                            <Storyboard>
-                                                                <DoubleAnimation Duration="0:00:00.2" Storyboard.TargetName="BackgroundAnimation" Storyboard.TargetProperty="(UIElement.Opacity)" To="0.3" />
-                                                                <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Rectangle.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Color)" To="#F2FFFFFF" />
-                                                                <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Rectangle.Fill).(GradientBrush.GradientStops)[2].(GradientStop.Color)" To="#CCFFFFFF" />
-                                                                <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Rectangle.Fill).(GradientBrush.GradientStops)[3].(GradientStop.Color)" To="#7FFFFFFF" />
-                                                            </Storyboard>
-                                                        </VisualState.Storyboard>
-                                                    </VisualState>
-                                                    <VisualState Name="Pressed">
-                                                        <VisualState.Storyboard>
-                                                            <Storyboard>
-                                                                <ColorAnimation Duration="0" Storyboard.TargetName="Background" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="#FF6DBDD1" />
-                                                                <DoubleAnimation Duration="0" Storyboard.TargetName="BackgroundAnimation" Storyboard.TargetProperty="Opacity" To="0.5" />
-                                                                <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Rectangle.Fill).(GradientBrush.GradientStops)[0].(GradientStop.Color)" To="#D8FFFFFF" />
-                                                                <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Rectangle.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Color)" To="#C6FFFFFF" />
-                                                                <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Rectangle.Fill).(GradientBrush.GradientStops)[2].(GradientStop.Color)" To="#8CFFFFFF" />
-                                                                <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Rectangle.Fill).(GradientBrush.GradientStops)[3].(GradientStop.Color)" To="#3FFFFFFF" />
-                                                            </Storyboard>
-                                                        </VisualState.Storyboard>
-                                                    </VisualState>
-                                                    <VisualState Name="Disabled">
-                                                        <VisualState.Storyboard>
-                                                            <Storyboard>
-                                                                <DoubleAnimation Duration="0" Storyboard.TargetName="DisabledVisualElement" Storyboard.TargetProperty="Opacity" To=".5" />
-                                                            </Storyboard>
-                                                        </VisualState.Storyboard>
-                                                    </VisualState>
-                                                </VisualStateGroup>
-                                                <VisualStateGroup Name="CheckStates">
-                                                    <VisualState Name="Checked">
-                                                        <VisualState.Storyboard>
-                                                            <Storyboard>
-                                                                <PointAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Rectangle.Fill).(LinearGradientBrush.StartPoint)" To="0.7,1" />
-                                                                <PointAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Rectangle.Fill).(LinearGradientBrush.EndPoint)" To="0.7,0" />
-                                                            </Storyboard>
-                                                        </VisualState.Storyboard>
-                                                    </VisualState>
-                                                    <VisualState Name="Unchecked" />
-                                                </VisualStateGroup>
-                                                <VisualStateGroup Name="FocusStates">
-                                                    <VisualState Name="Focused">
-                                                        <VisualState.Storyboard>
-                                                            <Storyboard>
-                                                                <DoubleAnimation Duration="0" Storyboard.TargetName="FocusVisualElement" Storyboard.TargetProperty="Opacity" To="0.5" />
-                                                            </Storyboard>
-                                                        </VisualState.Storyboard>
-                                                    </VisualState>
-                                                    <VisualState Name="Unfocused" />
-                                                </VisualStateGroup>
-                                            </VisualStateManager.VisualStateGroups>
-                                            <Border Background="White" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="{TemplateBinding Control.BorderThickness}" CornerRadius="3" Name="Background">
-                                                <Grid Background="{TemplateBinding Control.Background}" Margin="1">
-                                                    <Border Background="#FF448DCA" Name="BackgroundAnimation" Opacity="0" />
-                                                    <Rectangle Name="BackgroundGradient">
-                                                        <Rectangle.Fill>
-                                                            <LinearGradientBrush EndPoint=".7,1" Opacity="0.1" StartPoint=".7,0">
-                                                                <GradientStop Color="#FFFFFFFF" Offset="0" />
-                                                                <GradientStop Color="#F9FFFFFF" Offset="0.375" />
-                                                                <GradientStop Color="#E5FFFFFF" Offset="0.625" />
-                                                                <GradientStop Color="#C6FFFFFF" Offset="1" />
-                                                            </LinearGradientBrush>
-                                                        </Rectangle.Fill>
-                                                    </Rectangle>
-                                                </Grid>
-                                            </Border>
-                                            <ContentPresenter Content="{TemplateBinding ContentControl.Content}" ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" Margin="{TemplateBinding Control.Padding}" Name="contentPresenter" VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}" />
-                                            <Rectangle Fill="#FFFFFFFF" IsHitTestVisible="false" Name="DisabledVisualElement" Opacity="0" RadiusX="3" RadiusY="3" />
-                                            <Rectangle IsHitTestVisible="false" Margin="1" Name="FocusVisualElement" Opacity="0" RadiusX="2" RadiusY="2" Stroke="#FF6DBDD1" StrokeThickness="1" />
-                                        </Grid>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </StackPanel.Resources>
 
+
+                <StackPanel Width="110" Height="115" Name="stackpanelY" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" MouseMove="StackPanelY_MouseMove" MouseDown="StackPanelY_MouseLeftButtonDown" Margin="0,0,0,2" MouseLeave="stackpanelY_MouseLeave" PreviewMouseWheel="orangeY_PreviewMouseWheel">
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="White" StrokeThickness="55" Angle="360" Radius="1" />
+                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="#FF878889" StrokeThickness="10" Angle="360" Radius="30" />
+                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="Orange" StrokeThickness="10" Radius="30" x:Name="orangeY" />
+                        <TextBox Name="textboxY" Height="auto" Background="Transparent" Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" BorderBrush="Transparent" BorderThickness="0"  Visibility="Hidden" FontFamily="Arial"  LostFocus="textboxY_LostFocus" PreviewKeyDown="textboxY_PreviewKeyDown" TextChanged="textboxY_TextChanged" />
+                        <Label Content="°" FontSize="20" Height="28" HorizontalAlignment="Right" Margin="0,33,29,0" Name="labelY" VerticalAlignment="Top" Visibility="Hidden" FontFamily="Arial" />
+                        <Label Content="Y" FontSize="30" HorizontalAlignment="Center" Name="label_Y" VerticalAlignment="Center" FontFamily="Arial" />
+                    </Grid>
                 </StackPanel>
-            </Grid>
+
+
+                <StackPanel Width="110" Height="115" Name="stackpanelZ" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" MouseMove="StackPanelZ_MouseMove" MouseDown="StackPanelZ_MouseLeftButtonDown" Margin="148,0,0,0" MouseLeave="stackpanelZ_MouseLeave" PreviewMouseWheel="orangeZ_PreviewMouseWheel">
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="White" StrokeThickness="55" Angle="360" Radius="1" />
+                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="#FF878889" StrokeThickness="10" Angle="360" Radius="30" />
+                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="Orange" StrokeThickness="10" Radius="30" x:Name="orangeZ" />
+                        <TextBox Name="textboxZ" Height="auto" Background="Transparent" Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" BorderBrush="Transparent" BorderThickness="0"  Visibility="Hidden" FontFamily="Arial" LostFocus="textboxZ_LostFocus" PreviewKeyDown="textboxZ_PreviewKeyDown" TextChanged="textboxZ_TextChanged" />
+                        <Label Content="°" Height="28" HorizontalAlignment="Right" Margin="0,35,28,0" Name="labelZ" VerticalAlignment="Top" FontSize="20" Visibility="Hidden" FontFamily="Arai" />
+                        <Label Content="Z" FontSize="30" HorizontalAlignment="Center" Name="label_Z" VerticalAlignment="Center" FontFamily="Arial" />
+                    </Grid>
+                </StackPanel>
+                           
+                          </Grid>
         </Border>
     </Grid>
 
