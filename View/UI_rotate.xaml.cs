@@ -192,17 +192,17 @@ namespace View3D.view
             labelZ.Visibility = Visibility.Visible;
         }
 
-        private void textboxZ_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void textboxX_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             if (e.Key == Key.Up)
             {
-                textRotZ.Text = (Convert.ToDouble(textRotZ.Text) + 1).ToString();
+                textRotX.Text = (Convert.ToDouble(textRotX.Text) + 1).ToString();
             }
             else if (e.Key == Key.Down)
             {
-                textRotZ.Text = (Convert.ToDouble(textRotZ.Text) - 1).ToString();
+                textRotX.Text = (Convert.ToDouble(textRotX.Text) - 1).ToString();
             }
             else if (e.Key == Key.Enter)
             {
@@ -226,17 +226,17 @@ namespace View3D.view
             }
         }
 
-        private void textboxX_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void textboxZ_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             if (e.Key == Key.Up)
             {
-                textRotX.Text = (Convert.ToDouble(textRotX.Text) + 1).ToString();
+                textRotZ.Text = (Convert.ToDouble(textRotZ.Text) + 1).ToString();
             }
             else if (e.Key == Key.Down)
             {
-                textRotX.Text = (Convert.ToDouble(textRotX.Text) - 1).ToString();
+                textRotZ.Text = (Convert.ToDouble(textRotZ.Text) - 1).ToString();
             }
             else if (e.Key == Key.Enter)
             {
