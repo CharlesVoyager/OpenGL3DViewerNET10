@@ -179,8 +179,8 @@
                         <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="White" StrokeThickness="55" Angle="360" Radius="1" />
                         <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="#FF878889" StrokeThickness="10" Angle="360" Radius="30" />
                         <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="Orange" StrokeThickness="10" Radius="30" x:Name="orangeZ" />
-                        <TextBox Name="textRotZ" Height="auto" Background="Transparent" Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" BorderBrush="Transparent" BorderThickness="0"  Visibility="Hidden" FontFamily="Arial" LostFocus="textboxZ_LostFocus" PreviewKeyDown="textboxZ_PreviewKeyDown" TextChanged="textRotZ_TextChanged" />
-                        <Label Content="°" Height="28" HorizontalAlignment="Right" Margin="0,35,28,0" VerticalAlignment="Top" FontSize="20" Visibility="{Binding Visibility, ElementName=textRotZ}" FontFamily="Arai" />
+                        <TextBox Name="textRotZ" Height="auto" Background="Transparent" Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" BorderBrush="Transparent" BorderThickness="0" Visibility="Hidden" FontFamily="Arial" LostFocus="textboxZ_LostFocus" PreviewKeyDown="textboxZ_PreviewKeyDown" TextChanged="textRotZ_TextChanged" />
+                        <Label Content="°" Height="28" HorizontalAlignment="Right" Margin="0,35,28,0" VerticalAlignment="Top" FontSize="20" Visibility="{Binding Visibility, ElementName=textRotZ}" FontFamily="Arial" />
                         <Label Content="Z" Name="labelZ" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Arial" />
                     </Grid>
                 </StackPanel>
