@@ -48,13 +48,13 @@ namespace View3D.view
         private void StackPanelX_MouseMove(object sender, MouseEventArgs e)
         {
             labelX.Visibility = Visibility.Hidden;
-            textboxX.Visibility = Visibility.Visible;
+            textRotX.Visibility = Visibility.Visible;
             labelDegreeX.Visibility = Visibility.Visible;
-            if (e.LeftButton == MouseButtonState.Pressed && textboxX.IsMouseDirectlyOver == false)
+            if (e.LeftButton == MouseButtonState.Pressed && textRotX.IsMouseDirectlyOver == false)
             {
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                textboxX.Text = ConvertPositionAngel(new Point(stackpanelX.Width / 2, stackpanelX.Height / 2), e.GetPosition(stackpanelX)).ToString();
+                textRotX.Text = ConvertPositionAngel(new Point(stackpanelX.Width / 2, stackpanelX.Height / 2), e.GetPosition(stackpanelX)).ToString();
             }
         }
 
@@ -66,13 +66,13 @@ namespace View3D.view
         private void StackPanelY_MouseMove(object sender, MouseEventArgs e)
         {
             labelY.Visibility = Visibility.Hidden;
-            textboxY.Visibility = Visibility.Visible;
+            textRotY.Visibility = Visibility.Visible;
             labelDegreeY.Visibility = Visibility.Visible;
-            if (e.LeftButton == MouseButtonState.Pressed && textboxY.IsMouseDirectlyOver == false)
+            if (e.LeftButton == MouseButtonState.Pressed && textRotY.IsMouseDirectlyOver == false)
             {
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                textboxY.Text = ConvertPositionAngel(new Point(stackpanelY.Width / 2, stackpanelY.Height / 2), e.GetPosition(stackpanelY)).ToString();
+                textRotY.Text = ConvertPositionAngel(new Point(stackpanelY.Width / 2, stackpanelY.Height / 2), e.GetPosition(stackpanelY)).ToString();
             }
         }
 
@@ -84,13 +84,13 @@ namespace View3D.view
         private void StackPanelZ_MouseMove(object sender, MouseEventArgs e)
         {
             labelZ.Visibility = Visibility.Hidden;
-            textboxZ.Visibility = Visibility.Visible;
+            textRotZ.Visibility = Visibility.Visible;
             labelDegreeZ.Visibility = Visibility.Visible;
-            if (e.LeftButton == MouseButtonState.Pressed && textboxZ.IsMouseDirectlyOver == false)
+            if (e.LeftButton == MouseButtonState.Pressed && textRotZ.IsMouseDirectlyOver == false)
             {
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                textboxZ.Text = ConvertPositionAngel(new Point(stackpanelZ.Width / 2, stackpanelZ.Height / 2), e.GetPosition(stackpanelZ)).ToString();
+                textRotZ.Text = ConvertPositionAngel(new Point(stackpanelZ.Width / 2, stackpanelZ.Height / 2), e.GetPosition(stackpanelZ)).ToString();
             }
         }
 
@@ -100,19 +100,19 @@ namespace View3D.view
             if (stl == null) return;
 
 
-            if (textboxX.Text == "0" && textboxY.Text == "0" && textboxZ.Text == "0")
+            if (textRotX.Text == "0" && textRotY.Text == "0" && textRotZ.Text == "0")
             {
                 // Consider the case: Load a model -> Load another model then rotate -> Select a model then reset -> Select second model -> Click reset -> It will hit here...
-                textboxX_TextChanged(null, null);
-                textboxY_TextChanged(null, null);
-                textboxZ_TextChanged(null, null);
+                textRotX_TextChanged(null, null);
+                textRotY_TextChanged(null, null);
+                textRotZ_TextChanged(null, null);
             }
             else
             {
                 // slider value will trigger textbox value changed event, so no need to update textbox value here
-                textboxX.Text = "0";
-                textboxY.Text = "0";
-                textboxZ.Text = "0";
+                textRotX.Text = "0";
+                textRotY.Text = "0";
+                textRotZ.Text = "0";
             }
 
             stl.UpdateBoundingBoxAndMatrix();
@@ -122,27 +122,27 @@ namespace View3D.view
 
         private void stackpanelX_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (textboxX.IsFocused == true)
+            if (textRotX.IsFocused == true)
                 return;
-            textboxX.Visibility = Visibility.Hidden;
+            textRotX.Visibility = Visibility.Hidden;
             labelDegreeX.Visibility = Visibility.Hidden;
             labelX.Visibility = Visibility.Visible;
         }
 
         private void stackpanelY_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (textboxY.IsFocused == true)
+            if (textRotY.IsFocused == true)
                 return;
-            textboxY.Visibility = Visibility.Hidden;
+            textRotY.Visibility = Visibility.Hidden;
             labelDegreeY.Visibility = Visibility.Hidden;
             labelY.Visibility = Visibility.Visible;
         }
 
         private void stackpanelZ_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (textboxZ.IsFocused == true)
+            if (textRotZ.IsFocused == true)
                 return;
-            textboxZ.Visibility = Visibility.Hidden;
+            textRotZ.Visibility = Visibility.Hidden;
             labelDegreeZ.Visibility = Visibility.Hidden;
             labelZ.Visibility = Visibility.Visible;
         }
@@ -152,9 +152,9 @@ namespace View3D.view
             ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             if (e.Delta > 0)
-                textboxX.Text = (Convert.ToDouble(textboxX.Text) + 1).ToString();
+                textRotX.Text = (Convert.ToDouble(textRotX.Text) + 1).ToString();
             else
-                textboxX.Text = (Convert.ToDouble(textboxX.Text) - 1).ToString();
+                textRotX.Text = (Convert.ToDouble(textRotX.Text) - 1).ToString();
             e.Handled = true;
         }
 
@@ -163,9 +163,9 @@ namespace View3D.view
             ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             if (e.Delta > 0)
-                textboxY.Text = (Convert.ToDouble(textboxY.Text) + 1).ToString();
+                textRotY.Text = (Convert.ToDouble(textRotY.Text) + 1).ToString();
             else
-                textboxY.Text = (Convert.ToDouble(textboxY.Text) - 1).ToString();
+                textRotY.Text = (Convert.ToDouble(textRotY.Text) - 1).ToString();
             e.Handled = true;
         }
 
@@ -174,29 +174,29 @@ namespace View3D.view
             ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             if (e.Delta > 0)
-                textboxZ.Text = (Convert.ToDouble(textboxZ.Text) + 1).ToString();
+                textRotZ.Text = (Convert.ToDouble(textRotZ.Text) + 1).ToString();
             else
-                textboxZ.Text = (Convert.ToDouble(textboxZ.Text) - 1).ToString();
+                textRotZ.Text = (Convert.ToDouble(textRotZ.Text) - 1).ToString();
             e.Handled = true;
         }
 
         private void textboxX_LostFocus(object sender, RoutedEventArgs e)
         {
-            textboxX.Visibility = Visibility.Hidden;
+            textRotX.Visibility = Visibility.Hidden;
             labelDegreeX.Visibility = Visibility.Hidden;
             labelX.Visibility = Visibility.Visible;
         }
 
         private void textboxY_LostFocus(object sender, RoutedEventArgs e)
         {
-            textboxY.Visibility = Visibility.Hidden;
+            textRotY.Visibility = Visibility.Hidden;
             labelDegreeY.Visibility = Visibility.Hidden;
             labelY.Visibility = Visibility.Visible;
         }
 
         private void textboxZ_LostFocus(object sender, RoutedEventArgs e)
         {
-            textboxZ.Visibility = Visibility.Hidden;
+            textRotZ.Visibility = Visibility.Hidden;
             labelDegreeZ.Visibility = Visibility.Hidden;
             labelZ.Visibility = Visibility.Visible;
         }
@@ -207,11 +207,11 @@ namespace View3D.view
             if (stl == null) return;
             if (e.Key == Key.Up)
             {
-                textboxZ.Text = (Convert.ToDouble(textboxZ.Text) + 1).ToString();
+                textRotZ.Text = (Convert.ToDouble(textRotZ.Text) + 1).ToString();
             }
             else if (e.Key == Key.Down)
             {
-                textboxZ.Text = (Convert.ToDouble(textboxZ.Text) - 1).ToString();
+                textRotZ.Text = (Convert.ToDouble(textRotZ.Text) - 1).ToString();
             }
             else if (e.Key == Key.Enter)
             {
@@ -224,11 +224,11 @@ namespace View3D.view
             if (stl == null) return;
             if (e.Key == Key.Up)
             {
-                textboxY.Text = (Convert.ToDouble(textboxY.Text) + 1).ToString();
+                textRotY.Text = (Convert.ToDouble(textRotY.Text) + 1).ToString();
             }
             else if (e.Key == Key.Down)
             {
-                textboxY.Text = (Convert.ToDouble(textboxY.Text) - 1).ToString();
+                textRotY.Text = (Convert.ToDouble(textRotY.Text) - 1).ToString();
             }
             else if (e.Key == Key.Enter)
             {
@@ -241,11 +241,11 @@ namespace View3D.view
             if (stl == null) return;
             if (e.Key == Key.Up)
             {
-                textboxX.Text = (Convert.ToDouble(textboxX.Text) + 1).ToString();
+                textRotX.Text = (Convert.ToDouble(textRotX.Text) + 1).ToString();
             }
             else if (e.Key == Key.Down)
             {
-                textboxX.Text = (Convert.ToDouble(textboxX.Text) - 1).ToString();
+                textRotX.Text = (Convert.ToDouble(textRotX.Text) - 1).ToString();
             }
             else if (e.Key == Key.Enter)
             {
@@ -270,23 +270,23 @@ namespace View3D.view
             }
             if (e.Text.Trim() == ".")
             {
-                if (textboxX.IsFocused)
+                if (textRotX.IsFocused)
                 {
-                    if (textboxX.Text.IndexOf(".") != -1)
+                    if (textRotX.Text.IndexOf(".") != -1)
                     {
                         e.Handled = true;
                     }
                 }
-                else if (textboxY.IsFocused)
+                else if (textRotY.IsFocused)
                 {
-                    if (textboxY.Text.IndexOf(".") != -1)
+                    if (textRotY.Text.IndexOf(".") != -1)
                     {
                         e.Handled = true;
                     }
                 }
-                else if (textboxZ.IsFocused)
+                else if (textRotZ.IsFocused)
                 {
-                    if (textboxZ.Text.IndexOf(".") != -1)
+                    if (textRotZ.Text.IndexOf(".") != -1)
                     {
                         e.Handled = true;
                     }
@@ -295,41 +295,41 @@ namespace View3D.view
             base.OnPreviewTextInput(e);
         }
 
-        private void textboxX_TextChanged(object sender, TextChangedEventArgs e)
+        private void textRotX_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
             {
-                limitRotateAngle(textboxX);
+                limitRotateAngle(textRotX);
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                orangeX.Angle = Convert.ToDouble(textboxX.Text);
-                MainWindow.main.stlComposer.textRotX.Text = textboxX.Text;
+                orangeX.Angle = Convert.ToDouble(textRotX.Text);
+                MainWindow.main.stlComposer.textRotX.Text = textRotX.Text;
             }
             catch { }
         }
 
-        private void textboxY_TextChanged(object sender, TextChangedEventArgs e)
+        private void textRotY_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
             {
-                limitRotateAngle(textboxY);
+                limitRotateAngle(textRotY);
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                orangeY.Angle = Convert.ToDouble(textboxY.Text);
-                MainWindow.main.stlComposer.textRotY.Text = textboxY.Text;
+                orangeY.Angle = Convert.ToDouble(textRotY.Text);
+                MainWindow.main.stlComposer.textRotY.Text = textRotY.Text;
             }
             catch { }
         }
 
-        private void textboxZ_TextChanged(object sender, TextChangedEventArgs e)
+        private void textRotZ_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
             {
-                limitRotateAngle(textboxZ);
+                limitRotateAngle(textRotZ);
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                orangeZ.Angle = Convert.ToDouble(textboxZ.Text);
-                MainWindow.main.stlComposer.textRotZ.Text = textboxZ.Text;
+                orangeZ.Angle = Convert.ToDouble(textRotZ.Text);
+                MainWindow.main.stlComposer.textRotZ.Text = textRotZ.Text;
             }
             catch { }
         }
