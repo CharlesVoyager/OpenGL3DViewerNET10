@@ -38,7 +38,7 @@
         </VisualStateManager.VisualStateGroups>
         
         <Border Name="State1Panel" Opacity="1" Width="280">
-            <Grid x:Name="LayoutRoot" VerticalAlignment="Center" HorizontalAlignment="Left">
+            <Grid x:Name="LayoutRoot" VerticalAlignment="Center" Margin="-14,0,0,0" HorizontalAlignment="Left">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
