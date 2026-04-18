@@ -47,9 +47,9 @@ namespace View3D.view
 
         private void StackPanelX_MouseMove(object sender, MouseEventArgs e)
         {
-            label_X.Visibility = Visibility.Hidden;
+            labelX.Visibility = Visibility.Hidden;
             textboxX.Visibility = Visibility.Visible;
-            labelX.Visibility = Visibility.Visible;
+            labelDegreeX.Visibility = Visibility.Visible;
             if (e.LeftButton == MouseButtonState.Pressed && textboxX.IsMouseDirectlyOver == false)
             {
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
@@ -65,9 +65,9 @@ namespace View3D.view
 
         private void StackPanelY_MouseMove(object sender, MouseEventArgs e)
         {
-            label_Y.Visibility = Visibility.Hidden;
+            labelY.Visibility = Visibility.Hidden;
             textboxY.Visibility = Visibility.Visible;
-            labelY.Visibility = Visibility.Visible;
+            labelDegreeY.Visibility = Visibility.Visible;
             if (e.LeftButton == MouseButtonState.Pressed && textboxY.IsMouseDirectlyOver == false)
             {
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
@@ -83,9 +83,9 @@ namespace View3D.view
 
         private void StackPanelZ_MouseMove(object sender, MouseEventArgs e)
         {
-            label_Z.Visibility = Visibility.Hidden;
+            labelZ.Visibility = Visibility.Hidden;
             textboxZ.Visibility = Visibility.Visible;
-            labelZ.Visibility = Visibility.Visible;
+            labelDegreeZ.Visibility = Visibility.Visible;
             if (e.LeftButton == MouseButtonState.Pressed && textboxZ.IsMouseDirectlyOver == false)
             {
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
@@ -125,8 +125,8 @@ namespace View3D.view
             if (textboxX.IsFocused == true)
                 return;
             textboxX.Visibility = Visibility.Hidden;
-            labelX.Visibility = Visibility.Hidden;
-            label_X.Visibility = Visibility.Visible;
+            labelDegreeX.Visibility = Visibility.Hidden;
+            labelX.Visibility = Visibility.Visible;
         }
 
         private void stackpanelY_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
@@ -134,8 +134,8 @@ namespace View3D.view
             if (textboxY.IsFocused == true)
                 return;
             textboxY.Visibility = Visibility.Hidden;
-            labelY.Visibility = Visibility.Hidden;
-            label_Y.Visibility = Visibility.Visible;
+            labelDegreeY.Visibility = Visibility.Hidden;
+            labelY.Visibility = Visibility.Visible;
         }
 
         private void stackpanelZ_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
@@ -143,8 +143,8 @@ namespace View3D.view
             if (textboxZ.IsFocused == true)
                 return;
             textboxZ.Visibility = Visibility.Hidden;
-            labelZ.Visibility = Visibility.Hidden;
-            label_Z.Visibility = Visibility.Visible;
+            labelDegreeZ.Visibility = Visibility.Hidden;
+            labelZ.Visibility = Visibility.Visible;
         }
 
         private void orangeX_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -183,22 +183,22 @@ namespace View3D.view
         private void textboxX_LostFocus(object sender, RoutedEventArgs e)
         {
             textboxX.Visibility = Visibility.Hidden;
-            labelX.Visibility = Visibility.Hidden;
-            label_X.Visibility = Visibility.Visible;
+            labelDegreeX.Visibility = Visibility.Hidden;
+            labelX.Visibility = Visibility.Visible;
         }
 
         private void textboxY_LostFocus(object sender, RoutedEventArgs e)
         {
             textboxY.Visibility = Visibility.Hidden;
-            labelY.Visibility = Visibility.Hidden;
-            label_Y.Visibility = Visibility.Visible;
+            labelDegreeY.Visibility = Visibility.Hidden;
+            labelY.Visibility = Visibility.Visible;
         }
 
         private void textboxZ_LostFocus(object sender, RoutedEventArgs e)
         {
             textboxZ.Visibility = Visibility.Hidden;
-            labelZ.Visibility = Visibility.Hidden;
-            label_Z.Visibility = Visibility.Visible;
+            labelDegreeZ.Visibility = Visibility.Hidden;
+            labelZ.Visibility = Visibility.Visible;
         }
 
         private void textboxZ_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
