@@ -298,6 +298,18 @@ namespace View3D.view
             }
             catch { }
         }
+        private void textRotY_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                limitRotateAngle(textRotY);
+                ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+                if (stl == null) return;
+                orangeY.Angle = Convert.ToDouble(textRotY.Text);
+                MainWindow.main.stlComposer.textRotY.Text = textRotY.Text;
+            }
+            catch { }
+        }
 
         private void textRotZ_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -308,19 +320,6 @@ namespace View3D.view
                 if (stl == null) return;
                 orangeZ.Angle = Convert.ToDouble(textRotZ.Text);
                 MainWindow.main.stlComposer.textRotZ.Text = textRotZ.Text;
-            }
-            catch { }
-        }
-
-        private void textRotY_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            try
-            {
-                limitRotateAngle(textRotY);
-                ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-                if (stl == null) return;
-                orangeY.Angle = Convert.ToDouble(textRotY.Text);
-                MainWindow.main.stlComposer.textRotY.Text = textRotY.Text;
             }
             catch { }
         }
