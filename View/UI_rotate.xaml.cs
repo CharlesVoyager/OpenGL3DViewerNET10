@@ -50,11 +50,7 @@ namespace View3D.view
             labelX.Visibility = Visibility.Hidden;
             textRotX.Visibility = Visibility.Visible;
             if (e.LeftButton == MouseButtonState.Pressed && textRotX.IsMouseDirectlyOver == false)
-            {
-                ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-                if (stl == null) return;
                 textRotX.Text = ConvertPositionAngel(new Point(stackpanelX.Width / 2, stackpanelX.Height / 2), e.GetPosition(stackpanelX)).ToString();
-            }
         }
 
         private void StackPanelY_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -67,11 +63,7 @@ namespace View3D.view
             labelY.Visibility = Visibility.Hidden;
             textRotY.Visibility = Visibility.Visible;
             if (e.LeftButton == MouseButtonState.Pressed && textRotY.IsMouseDirectlyOver == false)
-            {
-                ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-                if (stl == null) return;
                 textRotY.Text = ConvertPositionAngel(new Point(stackpanelY.Width / 2, stackpanelY.Height / 2), e.GetPosition(stackpanelY)).ToString();
-            }
         }
 
         private void StackPanelZ_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -84,18 +76,11 @@ namespace View3D.view
             labelZ.Visibility = Visibility.Hidden;
             textRotZ.Visibility = Visibility.Visible;
             if (e.LeftButton == MouseButtonState.Pressed && textRotZ.IsMouseDirectlyOver == false)
-            {
-                ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-                if (stl == null) return;
                 textRotZ.Text = ConvertPositionAngel(new Point(stackpanelZ.Width / 2, stackpanelZ.Height / 2), e.GetPosition(stackpanelZ)).ToString();
-            }
         }
 
         public void button_rotate_reset_Click(object sender, RoutedEventArgs e)
         {
-            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-            if (stl == null) return;
-
             if (textRotX.Text == "0" && textRotY.Text == "0" && textRotZ.Text == "0")
             {
                 // Consider the case: Load a model -> Load another model then rotate -> Select a model then reset -> Select second model -> Click reset -> It will hit here...
@@ -137,8 +122,6 @@ namespace View3D.view
 
         private void orangeX_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-            if (stl == null) return;
             if (e.Delta > 0)
                 textRotX.Text = (Convert.ToDouble(textRotX.Text) + 1).ToString();
             else
@@ -148,8 +131,6 @@ namespace View3D.view
 
         private void orangeY_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-            if (stl == null) return;
             if (e.Delta > 0)
                 textRotY.Text = (Convert.ToDouble(textRotY.Text) + 1).ToString();
             else
@@ -159,8 +140,6 @@ namespace View3D.view
 
         private void orangeZ_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-            if (stl == null) return;
             if (e.Delta > 0)
                 textRotZ.Text = (Convert.ToDouble(textRotZ.Text) + 1).ToString();
             else
@@ -188,8 +167,6 @@ namespace View3D.view
 
         private void textboxX_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-            if (stl == null) return;
             if (e.Key == Key.Up)
             {
                 textRotX.Text = (Convert.ToDouble(textRotX.Text) + 1).ToString();
@@ -205,8 +182,6 @@ namespace View3D.view
 
         private void textboxY_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-            if (stl == null) return;
             if (e.Key == Key.Up)
             {
                 textRotY.Text = (Convert.ToDouble(textRotY.Text) + 1).ToString();
@@ -222,8 +197,6 @@ namespace View3D.view
 
         private void textboxZ_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-            if (stl == null) return;
             if (e.Key == Key.Up)
             {
                 textRotZ.Text = (Convert.ToDouble(textRotZ.Text) + 1).ToString();
@@ -285,8 +258,6 @@ namespace View3D.view
             try
             {
                 limitRotateAngle(textRotX);
-                ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-                if (stl == null) return;
                 orangeX.Angle = Convert.ToDouble(textRotX.Text);
                 MainWindow.main.stlComposer.textRotX.Text = textRotX.Text;
             }
@@ -297,8 +268,6 @@ namespace View3D.view
             try
             {
                 limitRotateAngle(textRotY);
-                ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-                if (stl == null) return;
                 orangeY.Angle = Convert.ToDouble(textRotY.Text);
                 MainWindow.main.stlComposer.textRotY.Text = textRotY.Text;
             }
@@ -310,8 +279,6 @@ namespace View3D.view
             try
             {
                 limitRotateAngle(textRotZ);
-                ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-                if (stl == null) return;
                 orangeZ.Angle = Convert.ToDouble(textRotZ.Text);
                 MainWindow.main.stlComposer.textRotZ.Text = textRotZ.Text;
             }
