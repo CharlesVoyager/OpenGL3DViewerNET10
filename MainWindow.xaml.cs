@@ -333,9 +333,9 @@ namespace View3D
 
         private void rotate_toggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            UI_rotate.sliderX.Value = Convert.ToDouble(stlComposer.textRotX.Text);
-            UI_rotate.sliderY.Value = Convert.ToDouble(stlComposer.textRotY.Text);
-            UI_rotate.sliderZ.Value = Convert.ToDouble(stlComposer.textRotZ.Text);
+            UI_rotate.textboxX.Text = stlComposer.textRotX.Text;
+            UI_rotate.textboxY.Text = stlComposer.textRotY.Text;
+            UI_rotate.textboxZ.Text = stlComposer.textRotZ.Text;
             VisualStateManager.GoToState(UI_rotate, "State1", true);
             view_toggleButton.IsChecked = false;
             move_toggleButton.IsChecked = false;

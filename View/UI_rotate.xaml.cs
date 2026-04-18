@@ -54,7 +54,7 @@ namespace View3D.view
             {
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                sliderX.Value = ConvertPositionAngel(new Point(stackpanelX.Width / 2, stackpanelX.Height / 2), e.GetPosition(stackpanelX));
+                textboxX.Text = ConvertPositionAngel(new Point(stackpanelX.Width / 2, stackpanelX.Height / 2), e.GetPosition(stackpanelX)).ToString();
             }
         }
 
@@ -72,7 +72,7 @@ namespace View3D.view
             {
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                sliderY.Value = ConvertPositionAngel(new Point(stackpanelY.Width / 2, stackpanelY.Height / 2), e.GetPosition(stackpanelY));
+                textboxY.Text = ConvertPositionAngel(new Point(stackpanelY.Width / 2, stackpanelY.Height / 2), e.GetPosition(stackpanelY)).ToString();
             }
         }
 
@@ -90,7 +90,7 @@ namespace View3D.view
             {
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                sliderZ.Value = ConvertPositionAngel(new Point(stackpanelZ.Width / 2, stackpanelZ.Height / 2), e.GetPosition(stackpanelZ));
+                textboxZ.Text = ConvertPositionAngel(new Point(stackpanelZ.Width / 2, stackpanelZ.Height / 2), e.GetPosition(stackpanelZ)).ToString();
             }
         }
 
@@ -152,9 +152,9 @@ namespace View3D.view
             ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             if (e.Delta > 0)
-                sliderX.Value++;
+                textboxX.Text = (Convert.ToDouble(textboxX.Text) + 1).ToString();
             else
-                sliderX.Value--;
+                textboxX.Text = (Convert.ToDouble(textboxX.Text) - 1).ToString();
             e.Handled = true;
         }
 
@@ -163,9 +163,9 @@ namespace View3D.view
             ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             if (e.Delta > 0)
-                sliderY.Value++;
+                textboxY.Text = (Convert.ToDouble(textboxY.Text) + 1).ToString();
             else
-                sliderY.Value--;
+                textboxY.Text = (Convert.ToDouble(textboxY.Text) - 1).ToString();
             e.Handled = true;
         }
 
@@ -174,9 +174,9 @@ namespace View3D.view
             ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
             if (e.Delta > 0)
-                sliderZ.Value++;
+                textboxZ.Text = (Convert.ToDouble(textboxZ.Text) + 1).ToString();
             else
-                sliderZ.Value--;
+                textboxZ.Text = (Convert.ToDouble(textboxZ.Text) - 1).ToString();
             e.Handled = true;
         }
 
@@ -207,11 +207,11 @@ namespace View3D.view
             if (stl == null) return;
             if (e.Key == Key.Up)
             {
-                sliderZ.Value++;
+                textboxZ.Text = (Convert.ToDouble(textboxZ.Text) + 1).ToString();
             }
             else if (e.Key == Key.Down)
             {
-                sliderZ.Value--;
+                textboxZ.Text = (Convert.ToDouble(textboxZ.Text) - 1).ToString();
             }
             else if (e.Key == Key.Enter)
             {
@@ -224,11 +224,11 @@ namespace View3D.view
             if (stl == null) return;
             if (e.Key == Key.Up)
             {
-                sliderY.Value++;
+                textboxY.Text = (Convert.ToDouble(textboxY.Text) + 1).ToString();
             }
             else if (e.Key == Key.Down)
             {
-                sliderY.Value--;
+                textboxY.Text = (Convert.ToDouble(textboxY.Text) - 1).ToString();
             }
             else if (e.Key == Key.Enter)
             {
@@ -241,11 +241,11 @@ namespace View3D.view
             if (stl == null) return;
             if (e.Key == Key.Up)
             {
-                sliderX.Value++;
+                textboxX.Text = (Convert.ToDouble(textboxX.Text) + 1).ToString();
             }
             else if (e.Key == Key.Down)
             {
-                sliderX.Value--;
+                textboxX.Text = (Convert.ToDouble(textboxX.Text) - 1).ToString();
             }
             else if (e.Key == Key.Enter)
             {
@@ -302,7 +302,7 @@ namespace View3D.view
                 limitRotateAngle(textboxX);
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                sliderX.Value = Convert.ToDouble(textboxX.Text);
+                orangeX.Angle = Convert.ToDouble(textboxX.Text);
                 MainWindow.main.stlComposer.textRotX.Text = textboxX.Text;
             }
             catch { }
@@ -315,7 +315,7 @@ namespace View3D.view
                 limitRotateAngle(textboxY);
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                sliderY.Value = Convert.ToDouble(textboxY.Text);
+                orangeY.Angle = Convert.ToDouble(textboxY.Text);
                 MainWindow.main.stlComposer.textRotY.Text = textboxY.Text;
             }
             catch { }
@@ -328,7 +328,7 @@ namespace View3D.view
                 limitRotateAngle(textboxZ);
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
                 if (stl == null) return;
-                sliderZ.Value = Convert.ToDouble(textboxZ.Text);
+                orangeZ.Angle = Convert.ToDouble(textboxZ.Text);
                 MainWindow.main.stlComposer.textRotZ.Text = textboxZ.Text;
             }
             catch { }

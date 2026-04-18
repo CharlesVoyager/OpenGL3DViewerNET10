@@ -157,9 +157,8 @@
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                         <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="White" StrokeThickness="55" Angle="360" Radius="1" />
                         <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="#FF878889" StrokeThickness="10" Angle="360" Radius="30" />
-                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" Angle="{Binding Value, ElementName=sliderZ}" SegmentColor="Orange" StrokeThickness="10" Radius="30" x:Name="orangeZ" />
-                        <Slider x:Name="sliderZ" Visibility="Hidden" Maximum="360" IsSnapToTickEnabled="True" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
-                        <TextBox Name="textboxZ" Text="{Binding ElementName= sliderZ, Path= Value, StringFormat={}{0}}" Height="auto" Background="Transparent" Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" BorderBrush="Transparent" BorderThickness="0"  Visibility="Hidden" FontFamily="Arial" LostFocus="textboxZ_LostFocus" PreviewKeyDown="textboxZ_PreviewKeyDown" TextChanged="textboxZ_TextChanged" />
+                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="Orange" StrokeThickness="10" Radius="30" x:Name="orangeZ" />
+                        <TextBox Name="textboxZ" Height="auto" Background="Transparent" Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" BorderBrush="Transparent" BorderThickness="0"  Visibility="Hidden" FontFamily="Arial" LostFocus="textboxZ_LostFocus" PreviewKeyDown="textboxZ_PreviewKeyDown" TextChanged="textboxZ_TextChanged" />
                         <Label Content="°" Height="28" HorizontalAlignment="Right" Margin="0,35,28,0" Name="labelZ" VerticalAlignment="Top" FontSize="20" Visibility="Hidden" FontFamily="Arai" />
                         <Label Content="Z" FontSize="30" HorizontalAlignment="Center" Name="label_Z" VerticalAlignment="Center" FontFamily="Arial" />
                     </Grid>
@@ -168,9 +167,8 @@
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                         <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="White" StrokeThickness="55" Angle="360" Radius="1" />
                         <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="#FF878889" StrokeThickness="10" Angle="360" Radius="30" />
-                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" Angle="{Binding Value, ElementName=sliderY}" SegmentColor="Orange" StrokeThickness="10" Radius="30" x:Name="orangeY" />
-                        <Slider x:Name="sliderY" Visibility="Hidden" Maximum="360" IsSnapToTickEnabled="True" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
-                        <TextBox Name="textboxY" Text="{Binding ElementName= sliderY, Path= Value, StringFormat={}{0}}" Height="auto" Background="Transparent" Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" BorderBrush="Transparent" BorderThickness="0"  Visibility="Hidden" FontFamily="Arial"  LostFocus="textboxY_LostFocus" PreviewKeyDown="textboxY_PreviewKeyDown" TextChanged="textboxY_TextChanged" />
+                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="Orange" StrokeThickness="10" Radius="30" x:Name="orangeY" />
+                        <TextBox Name="textboxY" Height="auto" Background="Transparent" Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" BorderBrush="Transparent" BorderThickness="0"  Visibility="Hidden" FontFamily="Arial"  LostFocus="textboxY_LostFocus" PreviewKeyDown="textboxY_PreviewKeyDown" TextChanged="textboxY_TextChanged" />
                         <Label Content="°" FontSize="20" Height="28" HorizontalAlignment="Right" Margin="0,33,29,0" Name="labelY" VerticalAlignment="Top" Visibility="Hidden" FontFamily="Arial" />
                         <Label Content="Y" FontSize="30" HorizontalAlignment="Center" Name="label_Y" VerticalAlignment="Center" FontFamily="Arial" />
                     </Grid>
@@ -179,9 +177,8 @@
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                         <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="White" StrokeThickness="55" Angle="360" Radius="1" />
                         <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="#FF878889" StrokeThickness="10" Angle="360" Radius="30" />
-                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" Angle="{Binding Value, ElementName=sliderX}" SegmentColor="Orange" StrokeThickness="10" Radius="30" x:Name="orangeX" />
-                        <Slider x:Name="sliderX" Visibility="Hidden" Maximum="360" IsSnapToTickEnabled="True" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
-                        <TextBox Name="textboxX" Text="{Binding ElementName= sliderX, Path= Value, StringFormat={}{0}}" Height="auto" Background="Transparent" Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" BorderBrush="Transparent" BorderThickness="0"  Visibility="Hidden" FontFamily="Arial"  LostFocus="textboxX_LostFocus" PreviewKeyDown="textboxX_PreviewKeyDown" TextChanged="textboxX_TextChanged" />
+                        <DesignInControl:CircularProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" SegmentColor="Orange" StrokeThickness="10" Radius="30" x:Name="orangeX" />
+                        <TextBox Name="textboxX" Height="auto" Background="Transparent" Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" BorderBrush="Transparent" BorderThickness="0"  Visibility="Hidden" FontFamily="Arial"  LostFocus="textboxX_LostFocus" PreviewKeyDown="textboxX_PreviewKeyDown" TextChanged="textboxX_TextChanged" />
                         <Label Content="°" FontSize="20" Height="28" HorizontalAlignment="Right" Margin="0,34,28,0" Name="labelX" VerticalAlignment="Top" Visibility="Hidden" FontFamily="Arial" />
                         <Label Content="X" Name="label_X" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30" FontFamily="Arial" />
                     </Grid>
