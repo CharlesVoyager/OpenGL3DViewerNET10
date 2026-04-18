@@ -96,7 +96,6 @@ namespace View3D.view
             ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
-
             if (textRotX.Text == "0" && textRotY.Text == "0" && textRotZ.Text == "0")
             {
                 // Consider the case: Load a model -> Load another model then rotate -> Select a model then reset -> Select second model -> Click reset -> It will hit here...
@@ -106,7 +105,6 @@ namespace View3D.view
             }
             else
             {
-                // slider value will trigger textbox value changed event, so no need to update textbox value here
                 textRotX.Text = "0";
                 textRotY.Text = "0";
                 textRotZ.Text = "0";
