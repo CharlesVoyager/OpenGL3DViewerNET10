@@ -49,7 +49,6 @@ namespace View3D.view
         {
             labelX.Visibility = Visibility.Hidden;
             textRotX.Visibility = Visibility.Visible;
-            labelDegreeX.Visibility = Visibility.Visible;
             if (e.LeftButton == MouseButtonState.Pressed && textRotX.IsMouseDirectlyOver == false)
             {
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
@@ -67,7 +66,6 @@ namespace View3D.view
         {
             labelY.Visibility = Visibility.Hidden;
             textRotY.Visibility = Visibility.Visible;
-            labelDegreeY.Visibility = Visibility.Visible;
             if (e.LeftButton == MouseButtonState.Pressed && textRotY.IsMouseDirectlyOver == false)
             {
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
@@ -85,7 +83,6 @@ namespace View3D.view
         {
             labelZ.Visibility = Visibility.Hidden;
             textRotZ.Visibility = Visibility.Visible;
-            labelDegreeZ.Visibility = Visibility.Visible;
             if (e.LeftButton == MouseButtonState.Pressed && textRotZ.IsMouseDirectlyOver == false)
             {
                 ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
@@ -125,7 +122,6 @@ namespace View3D.view
             if (textRotX.IsFocused == true)
                 return;
             textRotX.Visibility = Visibility.Hidden;
-            labelDegreeX.Visibility = Visibility.Hidden;
             labelX.Visibility = Visibility.Visible;
         }
 
@@ -134,7 +130,6 @@ namespace View3D.view
             if (textRotY.IsFocused == true)
                 return;
             textRotY.Visibility = Visibility.Hidden;
-            labelDegreeY.Visibility = Visibility.Hidden;
             labelY.Visibility = Visibility.Visible;
         }
 
@@ -143,7 +138,6 @@ namespace View3D.view
             if (textRotZ.IsFocused == true)
                 return;
             textRotZ.Visibility = Visibility.Hidden;
-            labelDegreeZ.Visibility = Visibility.Hidden;
             labelZ.Visibility = Visibility.Visible;
         }
 
@@ -183,21 +177,18 @@ namespace View3D.view
         private void textboxX_LostFocus(object sender, RoutedEventArgs e)
         {
             textRotX.Visibility = Visibility.Hidden;
-            labelDegreeX.Visibility = Visibility.Hidden;
             labelX.Visibility = Visibility.Visible;
         }
 
         private void textboxY_LostFocus(object sender, RoutedEventArgs e)
         {
             textRotY.Visibility = Visibility.Hidden;
-            labelDegreeY.Visibility = Visibility.Hidden;
             labelY.Visibility = Visibility.Visible;
         }
 
         private void textboxZ_LostFocus(object sender, RoutedEventArgs e)
         {
             textRotZ.Visibility = Visibility.Hidden;
-            labelDegreeZ.Visibility = Visibility.Hidden;
             labelZ.Visibility = Visibility.Visible;
         }
 
