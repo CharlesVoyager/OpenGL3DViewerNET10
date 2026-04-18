@@ -7,7 +7,7 @@
              mc:Ignorable="d"
              >
     
-    <Grid Height="264" Width="338">
+    <Grid Height="264" Width="280">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="Common">
                 <VisualState x:Name="StateVisible">
@@ -37,8 +37,8 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         
-        <Border Name="State1Panel" Opacity="1" Margin="0,0,12,0" Width="320">
-            <Grid x:Name="LayoutRoot" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Border Name="State1Panel" Opacity="1" Width="280">
+            <Grid x:Name="LayoutRoot" VerticalAlignment="Center" HorizontalAlignment="Left">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
