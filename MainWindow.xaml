@@ -485,7 +485,7 @@
         </StackPanel>
 
         <!--About-->
-        <Grid x:Name="gridAbout" Height="200" Width="340" Margin="400,-100,0,0" HorizontalAlignment="Left">
+        <Grid x:Name="gridAbout" Height="200" Width="340" Margin="000,150,40,0" HorizontalAlignment="Right" VerticalAlignment="Top">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="80"/>
