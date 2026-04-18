@@ -109,10 +109,6 @@ namespace View3D.view
                 textRotY.Text = "0";
                 textRotZ.Text = "0";
             }
-
-            stl.UpdateBoundingBoxAndMatrix();
-            MainWindow.main.stlComposer.UpdateOutOfBound();
-            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         private void stackpanelX_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
