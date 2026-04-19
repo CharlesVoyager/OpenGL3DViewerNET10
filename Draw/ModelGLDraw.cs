@@ -760,7 +760,8 @@ namespace OpenGL3DViewerNET10.Draw
         {
             get
             {
-                Vector3 v = new Vector3(-0.6f, 1.0f, 0.8f);
+                float[] output = MainWindow.main.threeDSettings.KeyDir();
+                Vector3 v = new Vector3(output[0], output[1], output[2]);
                 v.Normalize();
                 return v;
             }
@@ -770,14 +771,15 @@ namespace OpenGL3DViewerNET10.Draw
         {
             get
             {
-                return new Vector3(1.00f, 0.98f, 0.95f);
+                float[] output = MainWindow.main.threeDSettings.KeyColor();
+                return new Vector3(output[0], output[1], output[2]);
             }
         }
         float keyStr
         {
             get
             {
-                return 1.8f;
+                return MainWindow.main.threeDSettings.KeyStr();
             }
         }
 
@@ -785,7 +787,8 @@ namespace OpenGL3DViewerNET10.Draw
         {
             get
             {
-                Vector3 v = new Vector3(0.8f, 0.3f, 0.5f);
+                float[] output = MainWindow.main.threeDSettings.FillDir();
+                Vector3 v = new Vector3(output[0], output[1], output[2]);
                 v.Normalize();
                 return v;
             }
@@ -795,14 +798,15 @@ namespace OpenGL3DViewerNET10.Draw
         {
             get
             {
-                return new Vector3(0.80f, 0.88f, 1.00f);
+                float[] output = MainWindow.main.threeDSettings.FillColor();
+                return new Vector3(output[0], output[1], output[2]);
             }
         }
         float fillStr
         {
             get
             {
-                return 1.2f;
+                return MainWindow.main.threeDSettings.FillStr();
             }
         }
 
@@ -810,7 +814,8 @@ namespace OpenGL3DViewerNET10.Draw
         {
             get
             {
-                Vector3 v = new Vector3(0.1f, -0.5f, -1.0f);
+                float[] output = MainWindow.main.threeDSettings.BackDir();
+                Vector3 v = new Vector3(output[0], output[1], output[2]);
                 v.Normalize();
                 return v;
             }
@@ -820,14 +825,15 @@ namespace OpenGL3DViewerNET10.Draw
         {
             get
             {
-                return new Vector3(0.90f, 0.92f, 1.00f);
+                float[] output = MainWindow.main.threeDSettings.BackColor();
+                return new Vector3(output[0], output[1], output[2]);
             }
         }
         float backStr
         {
             get
             {
-                return 0.9f;
+                return MainWindow.main.threeDSettings.BackStr();
             }
         }
         // --- Hemisphere ambient ---
@@ -835,7 +841,8 @@ namespace OpenGL3DViewerNET10.Draw
         {
             get
             {
-                return new Vector3(0.60f, 0.70f, 0.90f);
+                float[] output = MainWindow.main.threeDSettings.SkyColor();
+                return new Vector3(output[0], output[1], output[2]);
             }
         }
 
@@ -843,14 +850,15 @@ namespace OpenGL3DViewerNET10.Draw
         {
             get
             {
-                return new Vector3(0.25f, 0.20f, 0.18f);
+                float[] output = MainWindow.main.threeDSettings.GroundColor();
+                return new Vector3(output[0], output[1], output[2]);
             }
         }
         float ambientStr
         {
             get
             {
-                return 1.2f;
+                return MainWindow.main.threeDSettings.AmbientStr();
             }
         }
         /*

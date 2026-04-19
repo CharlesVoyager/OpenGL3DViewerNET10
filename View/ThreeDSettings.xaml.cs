@@ -196,10 +196,6 @@ namespace View3D.view
                 errorModel.Background = new SolidColorBrush(ArgbToColor(SettingsService.Instance.Settings.ErrorModelColor));
                 insideFaces.Background = new SolidColorBrush(ArgbToColor(SettingsService.Instance.Settings.InsideFacesColor));
 
-                xdir1.Text = SettingsService.Instance.Settings.Light1X;
-                ydir1.Text = SettingsService.Instance.Settings.Light1Y;
-                zdir1.Text = SettingsService.Instance.Settings.Light1Z;
-
                 modelColor.Background = new SolidColorBrush(ArgbToColor(SettingsService.Instance.Settings.ModelColor));
             }
             catch { }
@@ -477,16 +473,12 @@ namespace View3D.view
 
         private void ThreeDSettings_Closing(object sender, CancelEventArgs e)
         {
-            //RegMemory.StoreWindowPos("threeDSettingsWindow", this, false, false);
-
             e.Cancel = true; // Prevent the window from actually closing
             this.Hide();
         }
 
         // ── OpenGL colour helpers ─────────────────────────────────────────────────
-
-        /// <summary>Convert a WPF SolidColorBrush swatch to a normalised OpenGL float[4].</summary>
-        private static float[] ToGLColor(Border b)
+        float[] ToGLColor(Border b)
         {
             if (b.Background is SolidColorBrush scb)
             {
@@ -497,8 +489,7 @@ namespace View3D.view
         }
 
         // ── Light direction helpers ───────────────────────────────────────────────
-
-        private static float[] ToDir(System.Windows.Controls.TextBox x, System.Windows.Controls.TextBox y, System.Windows.Controls.TextBox z)
+        float[] ToDir(TextBox x, TextBox y, TextBox z)
         {
             float.TryParse(x.Text, out float xf);
             float.TryParse(y.Text, out float yf);
@@ -506,66 +497,129 @@ namespace View3D.view
             return new float[] { xf, yf, zf, 0f };
         }
 
-        // ── Public API (identical signatures to the original) ────────────────────
-        public float[] LightDirection()
+        // ──────────────────── Public API ────────────────────
+        public float[] KeyDir()
         {
             float[] output = null;
             Application.Current.Dispatcher.Invoke(() =>
             {
-                output = ToDir(xdir1, ydir1, zdir1);
+                output = ToDir(keyDirX, keyDirY, keyDirZ);
             });
             return output;
         }
 
-        public float[] LightColor()
+        public float[] KeyColor()
         {
             float[] output = null;
             Application.Current.Dispatcher.Invoke(() =>
             {
-                output = ToGLColor(lightColor);
+                output = ToGLColor(keyColor);
             });
             return output;
         }
 
-        public float[] ModelColor()
+        public float KeyStr()
+        {
+            float output = 0;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                output = (float)keyStr.Value;
+            });
+            return output;
+        }
+
+
+        public float[] FillDir()
         {
             float[] output = null;
             Application.Current.Dispatcher.Invoke(() =>
             {
-                output = ToGLColor(modelColor);
+                output = ToDir(fillDirX, fillDirY, fillDirZ);
             });
             return output;
         }
 
-        public float GetAmbientIntensity()
+        public float[] FillColor()
         {
-            float output = 0;
+            float[] output = null;
             Application.Current.Dispatcher.Invoke(() =>
             {
-                output = (float)sliderAmbient.Value;
+                output = ToGLColor(fillColor);
             });
             return output;
         }
 
-        public float GetSpecularIntensity()
+        public float FillStr()
         {
             float output = 0;
             Application.Current.Dispatcher.Invoke(() =>
             {
-                output = (float)sliderSpecular.Value;
+                output = (float)fillStr.Value;
             });
             return output;
         }
 
-        public float GetShininess()
+        public float[] BackDir()
+        {
+            float[] output = null;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                output = ToDir(backDirX, backDirY, backDirZ);
+            });
+            return output;
+        }
+
+        public float[] BackColor()
+        {
+            float[] output = null;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                output = ToGLColor(backColor);
+            });
+            return output;
+        }
+
+        public float BackStr()
         {
             float output = 0;
             Application.Current.Dispatcher.Invoke(() =>
             {
-                output = (float)sliderShininess.Value;
+                output = (float)backStr.Value;
             });
             return output;
         }
+
+        // Ambient
+        public float[] SkyColor()
+        {
+            float[] output = null;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                output = ToGLColor(groundColor);
+            });
+            return output;
+        }
+
+        public float[] GroundColor()
+        {
+            float[] output = null;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                output = ToGLColor(groundColor);
+            });
+            return output;
+        }
+
+        public float AmbientStr()
+        {
+            float output = 0;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                output = (float)ambientStr.Value;
+            });
+            return output;
+        }
+
 
         public float[] BackgroundTopBackgroundColor()
         {
@@ -587,6 +641,15 @@ namespace View3D.view
             return output;
         }
 
+        public float[] ModelColor()
+        {
+            float[] output = null;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                output = ToGLColor(modelColor);
+            });
+            return output;
+        }
 
         /// <summary>
         /// Converts a WPF SolidColorBrush to a WinForms System.Drawing.Color.
@@ -617,23 +680,33 @@ namespace View3D.view
             MainWindow.main.Update3D();
         }
 
+        /*  Light default settings
+            // --- Three-point studio rig ---
+            const vec3  keyDir   = normalize(vec3(-0.6, 1.0, 0.8));
+            const vec3  keyColor = vec3(1.00, 0.98, 0.95);
+            const float keyStr   = 1.8;
+
+            const vec3  fillDir   = normalize(vec3(0.8, 0.3, 0.5));
+            const vec3  fillColor = vec3(0.80, 0.88, 1.00);
+            const float fillStr   = 1.2;
+
+            const vec3  backDir   = normalize(vec3(0.1, -0.5, -1.0));
+            const vec3  backColor = vec3(0.90, 0.92, 1.00);
+            const float backStr   = 0.9;
+
+            // --- Hemisphere ambient ---
+            const vec3  skyColor    = vec3(0.60, 0.70, 0.90);
+            const vec3  groundColor = vec3(0.25, 0.20, 0.18);
+            const float ambientStr  = 1.2;
+         */
+
         private void ResetLightSettingsToDefault_Click(object sender, RoutedEventArgs e)
         {
             AppSettings defaultSettings = new AppSettings();
 
-            xdir1.Text = defaultSettings.Light1X.ToString();
-            ydir1.Text = defaultSettings.Light1Y.ToString();
-            zdir1.Text = defaultSettings.Light1Z.ToString();
+ 
 
-            lightColor.Background = Brushes.White;
-
-            modelColor.Background = new SolidColorBrush(ArgbToColor(defaultSettings.ModelColor));
-
-            sliderAmbient.Value = 0.3;
-            sliderSpecular.Value = 0.3;
-            sliderShininess.Value = 16;
-
-            MainWindow.main.Update3D();
+            //MainWindow.main.Update3D();
         }
 
         private void ThreeDSettings_Closed(object sender, EventArgs e)
@@ -706,10 +779,6 @@ namespace View3D.view
                 SettingsService.Instance.Settings.SelectionBoxColor = ToArgb(selectionBox);
                 SettingsService.Instance.Settings.ErrorModelColor = ToArgb(errorModel);
                 SettingsService.Instance.Settings.InsideFacesColor = ToArgb(insideFaces);
-
-                SettingsService.Instance.Settings.Light1X = xdir1.Text;
-                SettingsService.Instance.Settings.Light1Y = ydir1.Text;
-                SettingsService.Instance.Settings.Light1Z = zdir1.Text;
 
                 SettingsService.Instance.Settings.ModelColor = ToArgb(modelColor);
             }

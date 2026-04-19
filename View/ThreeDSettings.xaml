@@ -93,7 +93,7 @@
                             <Label Grid.Row="2" Grid.Column="6" Content="Height:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <TextBox x:Name="txtClientSizeWidth" Grid.Row="1" Grid.Column="7" Text="" Margin="0,6" TextChanged="ClientSizeWidth_TextChanged" />
                             <TextBox x:Name="txtClientSizeHeight" Grid.Row="2" Grid.Column="7" Text="" Margin="0,6" TextChanged="ClientSizeHeight_TextChanged"/>
-                            
+
                             <Label Content="(Change print area dimension needs restart to apply.)" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="5" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#888"/>
                         </Grid>
                     </GroupBox>
@@ -158,10 +158,15 @@
 
                             <TextBlock Grid.Row="1" Grid.Column="3" Text="Cut faces:"   VerticalAlignment="Center"/>
                             <Border x:Name="cutFaces"     Grid.Row="1" Grid.Column="4" Background="RoyalBlue" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click"/>
+
+                            <!-- Model Color, EX: 0.6f, 0.7f, 0.8f / 154, 179, 205  -->
+                            <TextBlock Grid.Row="4" Grid.Column="3" Text="Model Color:" VerticalAlignment="Center"/>
+                            <Border x:Name="modelColor" Grid.Row="4" Grid.Column="4" Background="#6BA3C6" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click"/>
+
                         </Grid>
                     </GroupBox>
 
-                    <GroupBox Header="Editor" Grid.Row="1">
+                    <GroupBox Header="Editor" Grid.Row="1" Grid.ColumnSpan="2">
                         <StackPanel Margin="6,4" Orientation="Vertical">
                             <CheckBox x:Name="showEdges" Content="Show edges" Margin="0,4"
                                       Checked="CheckedChanged" Unchecked="CheckedChanged"/>
@@ -175,7 +180,7 @@
             <!-- ═══════════════════════════════════════════
                  TAB 3 — Lights
             ════════════════════════════════════════════ -->
-            <TabItem Header="Lights">
+            <TabItem Header="Lights" Height="20" VerticalAlignment="Top">
                 <Grid Margin="12,12,12,8">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="110"/>
@@ -200,43 +205,61 @@
                         <RowDefinition Height="34"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Light (Plastic) -->
-                    <RadioButton x:Name="enableLightPlastic" Grid.Row="0" Grid.Column="1" Content="Light (Plastic)" IsChecked="True" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
+                    <!-- Light (Key) / Default Dir: -0.6, 1.0, 0.8, Default Color: 1.00, 0.98, 0.95 (#FFFAF2), Default Strength: 1.8 -->
+                    <Label Grid.Row="0" Grid.Column="1" Content="Key" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
 
-                    <!-- X direction -->
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="X direction:" VerticalAlignment="Center"/>
-                    <TextBox x:Name="xdir1" Grid.Row="1" Grid.Column="1" Text="1" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
+                    <TextBox x:Name="keyDirX" Grid.Row="1" Grid.Column="1" Text="-0.6" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
 
-                    <!-- Y direction -->
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Y direction:" VerticalAlignment="Center"/>
-                    <TextBox x:Name="ydir1" Grid.Row="2" Grid.Column="1" Text="2" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
+                    <TextBox x:Name="keyDirY" Grid.Row="2" Grid.Column="1" Text="1.0" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
 
-                    <!-- Z direction -->
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="Z direction:" VerticalAlignment="Center"/>
-                    <TextBox x:Name="zdir1" Grid.Row="3" Grid.Column="1" Text="1" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
+                    <TextBox x:Name="keyDirZ" Grid.Row="3" Grid.Column="1" Text="0.8" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
 
-                    <!-- Light Color -->
                     <TextBlock Grid.Row="5" Grid.Column="0" Text="Light Color:" VerticalAlignment="Center"/>
-                    <Border x:Name="lightColor" Grid.Row="5" Grid.Column="1" Background="White" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
+                    <Border x:Name="keyColor" Grid.Row="5" Grid.Column="1" Background="#FFFAF2" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
 
-                    <!-- Model Color, EX: 0.6f, 0.7f, 0.8f  / 154, 179,  205  -->
-                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Model Color:" VerticalAlignment="Center"/>
-                    <Border x:Name="modelColor" Grid.Row="6" Grid.Column="1" Background="#6BA3C6" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
+                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Strength:" VerticalAlignment="Center"/>
+                    <Slider Name="keyStr" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="0" Maximum="10" Value="1.8"/>
+                    <Label Grid.Row="7" Grid.Column="1" HorizontalAlignment="Right" Content="{Binding ElementName=keyStr, Path=Value, StringFormat={}{0:0.#}}" Width="30" HorizontalContentAlignment="Left"/>
 
-                    <!-- Ambient intensity -->
-                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Ambient intensity:" VerticalAlignment="Center"/>
-                    <Slider Grid.Row="7" Grid.Column="1" Name="sliderAmbient" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="0" Maximum="1.0" Value="0.15"/>
-                    <TextBlock Grid.Row="7" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Width="24" Text="{Binding ElementName=sliderAmbient, Path=Value, StringFormat={}{0:0.##}}" TextAlignment="Right" FontFamily="Arial" />
 
-                    <!-- Specular intensity -->
-                    <TextBlock Grid.Row="8" Grid.Column="0" Text="Specular intensity:" VerticalAlignment="Center"/>
-                    <Slider Grid.Row="8" Grid.Column="1" Name="sliderSpecular" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="0" Maximum="1.0" Value="0.5"/>
-                    <TextBlock Grid.Row="8" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Width="24" Text="{Binding ElementName=sliderSpecular, Path=Value, StringFormat={}{0:0.##}}" TextAlignment="Right" FontFamily="Arial" />
+                    <!-- Light (fill) / Default Dir: 0.8, 0.3, 0.5, Default Color: 0.80, 0.88, 1.00 (#CCE0FF), Default Strength: 1.2-->
+                    <Label Grid.Row="0" Grid.Column="2" Content="fill" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
 
-                    <!-- Shininess exponent -->
-                    <TextBlock Grid.Row="9" Grid.Column="0" Text="Shininess exponent:" VerticalAlignment="Center"/>
-                    <Slider Grid.Row="9" Grid.Column="1" Name="sliderShininess" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="1" Maximum="256" Value="32" TickFrequency="1" IsSnapToTickEnabled="True"/>
-                    <TextBlock Grid.Row="9" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Width="24" Text="{Binding ElementName=sliderShininess, Path=Value, StringFormat={}{0:0.##}}" TextAlignment="Right" FontFamily="Arial" />
+                    <TextBox x:Name="fillDirX" Grid.Row="1" Grid.Column="2" Text="0.8" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
+                    <TextBox x:Name="fillDirY" Grid.Row="2" Grid.Column="2" Text="0.3" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
+                    <TextBox x:Name="fillDirZ" Grid.Row="3" Grid.Column="2" Text="0.5" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
+
+                    <Border x:Name="fillColor" Grid.Row="5" Grid.Column="2" Background="#CCE0FF" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
+
+                    <Slider Name="fillStr" Grid.Row="7" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="0" Maximum="10" Value="1.2"/>
+                    <Label Grid.Row="7" Grid.Column="2" HorizontalAlignment="Right" Content="{Binding ElementName=fillStr, Path=Value, StringFormat={}{0:0.#}}"/>
+
+                    <!-- Light (back) / Default Dir: 0.1, -0.5, -1.0, Default Color: 0.90, 0.92, 1.00 (#E6EBFF), Default Strength: 0.9-->
+                    <Label Grid.Row="0" Grid.Column="3" Content="back" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
+
+                    <TextBox x:Name="backDirX" Grid.Row="1" Grid.Column="3" Text="0.1" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
+                    <TextBox x:Name="backDirY" Grid.Row="2" Grid.Column="3" Text="-0.5" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
+                    <TextBox x:Name="backDirZ" Grid.Row="3" Grid.Column="3" Text="-1.0" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
+
+                    <Border x:Name="backColor" Grid.Row="5" Grid.Column="3" Background="#E6EBFF" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
+
+                    <Slider Name="backStr" Grid.Row="7" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="0" Maximum="10" Value="0.9"/>
+                    <Label Grid.Row="7" Grid.Column="3" HorizontalAlignment="Right" Content="{Binding ElementName=backStr, Path=Value, StringFormat={}{0:0.#}}"/>
+
+                    <!-- Ambient / Default Sky Color: 0.60, 0.70, 0.90 (#99B2E6), Default Ground Color: 0.25, 0.20, 0.18 (#40332E), Default Strength: 1.2 -->
+                    <Label Grid.Row="0" Grid.Column="4" Content="Ambient" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
+
+                    <TextBlock Grid.Row="4" Grid.Column="3" Text="Sky Color:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <Border x:Name="skyColor" Grid.Row="4" Grid.Column="4" Background="#99B2E6" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
+               
+                    <TextBlock Grid.Row="6" Grid.Column="3" Text="Ground Color:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <Border x:Name="groundColor" Grid.Row="6" Grid.Column="4" Background="#40332E" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
+
+                    <Slider Name="ambientStr" Grid.Row="7" Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="0" Maximum="10" Value="1.2"/>
+                    <Label Grid.Row="7" Grid.Column="4" HorizontalAlignment="Right" Content="{Binding ElementName=ambientStr, Path=Value, StringFormat={}{0:0.#}}"/>
 
                     <!-- Reset to default -->
                     <Button Grid.Row="10" Grid.Column="0" Margin="6" Content="Reset to default" Click="ResetLightSettingsToDefault_Click"/>
