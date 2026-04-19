@@ -175,6 +175,7 @@ namespace View3D.view
             if (stl == null) return;
 
             stl.Land();
+            MainWindow.main.stlComposer.UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
 
             slider_moveX.Value = stl.Position.X;
