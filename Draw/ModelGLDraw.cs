@@ -72,6 +72,23 @@ namespace OpenGL3DViewerNET10.Draw
         int emissiveFactorLoc;
         int baseColorFactorLoc;
 
+        // Light settings
+        int keyDirLoc;
+        int keyColorLoc;
+        int keyStrLoc;
+
+        int fillDirLoc;
+        int fillColorLoc;
+        int fillStrLoc;
+
+        int backDirLoc;
+        int backColorLoc;
+        int backStrLoc;
+
+        int skyColorLoc;
+        int groundColorLoc;
+        int ambientStrLoc;
+
         readonly List<MaterialGpuState> materialStates = new List<MaterialGpuState>();
 
         // =========================================================================
@@ -179,22 +196,22 @@ namespace OpenGL3DViewerNET10.Draw
             uniform vec4  baseColorFactor;
 
             // --- Three-point studio rig ---
-            const vec3  keyDir   = normalize(vec3(-0.6, 1.0, 0.8));
-            const vec3  keyColor = vec3(1.00, 0.98, 0.95);
-            const float keyStr   = 1.8;
+            uniform vec3  keyDir;
+            uniform vec3  keyColor;
+            uniform float keyStr;
 
-            const vec3  fillDir   = normalize(vec3( 0.8, 0.3, 0.5));
-            const vec3  fillColor = vec3(0.80, 0.88, 1.00);
-            const float fillStr   = 1.2;
+            uniform vec3  fillDir;
+            uniform vec3  fillColor;
+            uniform float fillStr;
 
-            const vec3  backDir   = normalize(vec3( 0.1, -0.5, -1.0));
-            const vec3  backColor = vec3(0.90, 0.92, 1.00);
-            const float backStr   = 0.9;
+            uniform vec3  backDir;
+            uniform vec3  backColor;
+            uniform float backStr;
 
             // --- Hemisphere ambient ---
-            const vec3  skyColor    = vec3(0.60, 0.70, 0.90);
-            const vec3  groundColor = vec3(0.25, 0.20, 0.18);
-            const float ambientStr  = 1.2;
+            uniform vec3  skyColor;
+            uniform vec3  groundColor;
+            uniform float ambientStr;
 
             const float PI = 3.14159265358979;
 
@@ -394,6 +411,23 @@ namespace OpenGL3DViewerNET10.Draw
             roughnessFactorLoc  = GL.GetUniformLocation(shader, "roughnessFactor");
             emissiveFactorLoc   = GL.GetUniformLocation(shader, "emissiveFactor");
             baseColorFactorLoc  = GL.GetUniformLocation(shader, "baseColorFactor");
+
+            // Light settings
+            keyDirLoc       = GL.GetUniformLocation(shader, "keyDir");
+            keyColorLoc     = GL.GetUniformLocation(shader, "keyColor");
+            keyStrLoc       = GL.GetUniformLocation(shader, "keyStr");
+
+            fillDirLoc      = GL.GetUniformLocation(shader, "fillDir");
+            fillColorLoc    = GL.GetUniformLocation(shader, "fillColor");
+            fillStrLoc      = GL.GetUniformLocation(shader, "fillStr");
+
+            backDirLoc      = GL.GetUniformLocation(shader, "backDir");
+            backColorLoc    = GL.GetUniformLocation(shader, "backColor");
+            backStrLoc      = GL.GetUniformLocation(shader, "backStr");
+
+            skyColorLoc     = GL.GetUniformLocation(shader, "skyColor");
+            groundColorLoc  = GL.GetUniformLocation(shader, "groundColor");
+            ambientStrLoc   = GL.GetUniformLocation(shader, "ambientStr");
         }
 
         // -------------------------------------------------------------------------
@@ -516,7 +550,24 @@ namespace OpenGL3DViewerNET10.Draw
             GL.Uniform3(viewPosLoc, MainWindow.main.threeDCamera.CameraPosition);
 
             // ---- Fallback color (STL grey or user setting) ----
-            GL.Uniform3(objectColorLoc, ModelColor);
+            GL.Uniform3(objectColorLoc, modelColor);
+
+            // ---- Fallback light settings ----
+            GL.Uniform3(keyDirLoc, keyDir);
+            GL.Uniform3(keyColorLoc, keyColor);
+            GL.Uniform1(keyStrLoc, keyStr);
+
+            GL.Uniform3(fillDirLoc, fillDir);
+            GL.Uniform3(fillColorLoc, fillColor);
+            GL.Uniform1(fillStrLoc, fillStr);
+
+            GL.Uniform3(backDirLoc, backDir);
+            GL.Uniform3(backColorLoc, backColor);
+            GL.Uniform1(backStrLoc, backStr);
+
+            GL.Uniform3(skyColorLoc, skyColor);
+            GL.Uniform3(groundColorLoc, groundColor);
+            GL.Uniform1(ambientStrLoc, ambientStr);
 
             GL.BindVertexArray(vao);
 
@@ -599,7 +650,7 @@ namespace OpenGL3DViewerNET10.Draw
         // -------------------------------------------------------------------------
         // Fallback model color (used when no PBR base-color texture is present)
         // -------------------------------------------------------------------------
-        public Vector3 ModelColor
+        Vector3 modelColor
         {
             get
             {
@@ -703,5 +754,123 @@ namespace OpenGL3DViewerNET10.Draw
         {
             if (texId != 0) GL.DeleteTexture(texId);
         }
+
+        // --- Three-point studio rig ---
+        Vector3 keyDir
+        {
+            get
+            {
+                Vector3 v = new Vector3(-0.6f, 1.0f, 0.8f);
+                v.Normalize();
+                return v;
+            }
+        }
+
+        Vector3 keyColor
+        {
+            get
+            {
+                return new Vector3(1.00f, 0.98f, 0.95f);
+            }
+        }
+        float keyStr
+        {
+            get
+            {
+                return 1.8f;
+            }
+        }
+
+        Vector3 fillDir
+        {
+            get
+            {
+                Vector3 v = new Vector3(0.8f, 0.3f, 0.5f);
+                v.Normalize();
+                return v;
+            }
+        }
+
+        Vector3 fillColor
+        {
+            get
+            {
+                return new Vector3(0.80f, 0.88f, 1.00f);
+            }
+        }
+        float fillStr
+        {
+            get
+            {
+                return 1.2f;
+            }
+        }
+
+        Vector3 backDir
+        {
+            get
+            {
+                Vector3 v = new Vector3(0.1f, -0.5f, -1.0f);
+                v.Normalize();
+                return v;
+            }
+        }
+
+        Vector3 backColor
+        {
+            get
+            {
+                return new Vector3(0.90f, 0.92f, 1.00f);
+            }
+        }
+        float backStr
+        {
+            get
+            {
+                return 0.9f;
+            }
+        }
+        // --- Hemisphere ambient ---
+        Vector3 skyColor
+        {
+            get
+            {
+                return new Vector3(0.60f, 0.70f, 0.90f);
+            }
+        }
+
+        Vector3 groundColor
+        {
+            get
+            {
+                return new Vector3(0.25f, 0.20f, 0.18f);
+            }
+        }
+        float ambientStr
+        {
+            get
+            {
+                return 1.2f;
+            }
+        }
+        /*
+            // --- Three-point studio rig ---
+            const vec3  keyDir   = normalize(vec3(-0.6, 1.0, 0.8));
+            const vec3  keyColor = vec3(1.00, 0.98, 0.95);
+            const float keyStr   = 1.8;
+
+            const vec3  fillDir   = normalize(vec3(0.8, 0.3, 0.5));
+            const vec3  fillColor = vec3(0.80, 0.88, 1.00);
+            const float fillStr   = 1.2;
+
+            const vec3  backDir   = normalize(vec3(0.1, -0.5, -1.0));
+            const vec3  backColor = vec3(0.90, 0.92, 1.00);
+            const float backStr   = 0.9;
+
+            // --- Hemisphere ambient ---
+            const vec3  skyColor    = vec3(0.60, 0.70, 0.90);
+            const vec3  groundColor = vec3(0.25, 0.20, 0.18);
+            const float ambientStr  = 1.2;
+         */
     }
 }
