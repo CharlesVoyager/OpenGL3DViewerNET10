@@ -7,7 +7,7 @@ using OpenGL3DViewerNET10.ModelLib.Utils;
 
 namespace View3D.view
 {
-    public enum Axis
+    enum Axis
     {
         X,
         Y,
@@ -645,7 +645,7 @@ namespace View3D.view
             txtZ.Text = dimZ.ToString("0.000");
         }
 
-        public void updateSliderValue(Axis axis)
+        void updateSliderValue(Axis axis)
         {
             double dimForDisplay = 0.0;
             switch (axis)
