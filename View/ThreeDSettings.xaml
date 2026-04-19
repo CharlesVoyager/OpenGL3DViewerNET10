@@ -222,8 +222,7 @@
 
                     <TextBlock Grid.Row="7" Grid.Column="0" Text="Strength:" VerticalAlignment="Center"/>
                     <Slider Name="keyStr" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="0" Maximum="10" Value="1.8"/>
-                    <Label Grid.Row="7" Grid.Column="1" HorizontalAlignment="Right" Content="{Binding ElementName=keyStr, Path=Value, StringFormat={}{0:0.#}}" Width="30" HorizontalContentAlignment="Left"/>
-
+                    <TextBox Grid.Row="7" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding ElementName=keyStr, Path=Value, StringFormat={}{0:0.0}}" IsReadOnly="True"/>
 
                     <!-- Light (fill) / Default Dir: 0.8, 0.3, 0.5, Default Color: 0.80, 0.88, 1.00 (#CCE0FF), Default Strength: 1.2-->
                     <Label Grid.Row="0" Grid.Column="2" Content="fill" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
@@ -235,7 +234,7 @@
                     <Border x:Name="fillColor" Grid.Row="5" Grid.Column="2" Background="#CCE0FF" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
 
                     <Slider Name="fillStr" Grid.Row="7" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="0" Maximum="10" Value="1.2"/>
-                    <Label Grid.Row="7" Grid.Column="2" HorizontalAlignment="Right" Content="{Binding ElementName=fillStr, Path=Value, StringFormat={}{0:0.#}}"/>
+                    <TextBox Grid.Row="7" Grid.Column="2" HorizontalAlignment="Right" Text="{Binding ElementName=fillStr, Path=Value, StringFormat={}{0:0.0}}" IsReadOnly="True"/>
 
                     <!-- Light (back) / Default Dir: 0.1, -0.5, -1.0, Default Color: 0.90, 0.92, 1.00 (#E6EBFF), Default Strength: 0.9-->
                     <Label Grid.Row="0" Grid.Column="3" Content="back" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
@@ -247,7 +246,7 @@
                     <Border x:Name="backColor" Grid.Row="5" Grid.Column="3" Background="#E6EBFF" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
 
                     <Slider Name="backStr" Grid.Row="7" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="0" Maximum="10" Value="0.9"/>
-                    <Label Grid.Row="7" Grid.Column="3" HorizontalAlignment="Right" Content="{Binding ElementName=backStr, Path=Value, StringFormat={}{0:0.#}}"/>
+                    <TextBox Grid.Row="7" Grid.Column="3" HorizontalAlignment="Right" Text="{Binding ElementName=backStr, Path=Value, StringFormat={}{0:0.0}}" IsReadOnly="True"/>
 
                     <!-- Ambient / Default Sky Color: 0.60, 0.70, 0.90 (#99B2E6), Default Ground Color: 0.25, 0.20, 0.18 (#40332E), Default Strength: 1.2 -->
                     <Label Grid.Row="0" Grid.Column="4" Content="Ambient" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
@@ -259,7 +258,7 @@
                     <Border x:Name="groundColor" Grid.Row="6" Grid.Column="4" Background="#40332E" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
 
                     <Slider Name="ambientStr" Grid.Row="7" Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="0" Maximum="10" Value="1.2"/>
-                    <Label Grid.Row="7" Grid.Column="4" HorizontalAlignment="Right" Content="{Binding ElementName=ambientStr, Path=Value, StringFormat={}{0:0.#}}"/>
+                    <TextBox Grid.Row="7" Grid.Column="4" HorizontalAlignment="Right" Text="{Binding ElementName=ambientStr, Path=Value, StringFormat={}{0:0.0}}" IsReadOnly="True"/>
 
                     <!-- Reset to default -->
                     <Button Grid.Row="10" Grid.Column="0" Margin="6" Content="Reset to default" Click="ResetLightSettingsToDefault_Click"/>
