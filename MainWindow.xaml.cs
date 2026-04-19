@@ -85,12 +85,6 @@ namespace View3D
             }
         }
 
-        public void Update3D()
-        {
-            if (threeDControl != null)
-                threeDControl.UpdateChanges();
-        }
-
         private void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             try

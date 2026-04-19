@@ -326,7 +326,7 @@ namespace View3D.view
 
                 // Allow live preview of changes without needing to click OK.
                 border.Background = new SolidColorBrush(selectedColor);
-                MainWindow.main.Update3D();
+                MainWindow.main.threeDControl.UpdateChanges();
                 // <END>
             };
 
@@ -438,7 +438,7 @@ namespace View3D.view
             if (confirmed)
             {
                 border.Background = new SolidColorBrush(selectedColor);
-                MainWindow.main.Update3D();
+                MainWindow.main.threeDControl.UpdateChanges();
             }
         }
 
@@ -452,7 +452,8 @@ namespace View3D.view
             else if (sender == showPrintbed)
                 SettingsService.Instance.Settings.ShowPrintbed = showPrintbed.IsChecked == true;
 
-            MainWindow.main.Update3D();
+            if (MainWindow.main.threeDControl != null)
+                MainWindow.main.threeDControl.UpdateChanges();
         }
 
         /// <summary>
@@ -655,11 +656,11 @@ namespace View3D.view
         /// Converts a WPF SolidColorBrush to a WinForms System.Drawing.Color.
         /// Returns Color.Empty or throws if the brush is not a SolidColorBrush.
         /// </summary>
-        public System.Drawing.Color ToDrawingColor(System.Windows.Media.Brush wpfBrush)
+        public System.Drawing.Color ToDrawingColor(Brush wpfBrush)
         {
-            if (wpfBrush is System.Windows.Media.SolidColorBrush solidBrush)
+            if (wpfBrush is SolidColorBrush solidBrush)
             {
-                System.Windows.Media.Color c = solidBrush.Color;
+                Color c = solidBrush.Color;
                 return System.Drawing.Color.FromArgb(c.A, c.R, c.G, c.B);
             }
 
@@ -671,13 +672,15 @@ namespace View3D.view
         // Slider values changed.
         private void LightSetting_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            MainWindow.main.Update3D();
+            if (MainWindow.main.threeDControl != null)
+                MainWindow.main.threeDControl.UpdateChanges();
         }
 
         // TextBox values changed.
         private void LightSetting_ValueChanged(object sender, TextChangedEventArgs e)
         {
-            MainWindow.main.Update3D();
+            if (MainWindow.main.threeDControl != null)
+                MainWindow.main.threeDControl.UpdateChanges();
         }
 
         /*  Light default settings
@@ -719,7 +722,7 @@ namespace View3D.view
         {
             SettingsService.Instance.Reset();
             loadSettings();
-            MainWindow.main.Update3D();
+            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         private void PrintAreaWidth_TextChanged(object sender, TextChangedEventArgs e)
