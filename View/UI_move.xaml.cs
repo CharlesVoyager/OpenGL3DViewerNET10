@@ -167,11 +167,6 @@ namespace View3D.view
             slider_moveX.Value = stl.InitialPosition.x;
             slider_moveY.Value = stl.InitialPosition.y;
             slider_moveZ.Value = stl.InitialPosition.z;
-
-            stl.Land();
-
-            MainWindow.main.stlComposer.UpdateOutOfBound();
-            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         public void button_land_Click(object sender, RoutedEventArgs e)
@@ -180,13 +175,11 @@ namespace View3D.view
             if (stl == null) return;
 
             stl.Land();
+            MainWindow.main.threeDControl.UpdateChanges();
 
             slider_moveX.Value = stl.Position.X;
             slider_moveY.Value = stl.Position.Y;
             slider_moveZ.Value = stl.Position.Z;
- 
-            MainWindow.main.stlComposer.UpdateOutOfBound();
-            MainWindow.main.threeDControl.UpdateChanges();
         }
 
         private void slider_moveX_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -221,11 +214,7 @@ namespace View3D.view
             try
             {
                 if (Math.Abs(e.OldValue - e.NewValue) > 0.01)
-                {
-                    ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-                    if (stl == null) return;
                     MainWindow.main.stlComposer.textTransX.Text = slider_moveX.Value.ToString("0.000");
-                }
             }
             catch { }
         }
@@ -235,11 +224,7 @@ namespace View3D.view
             try
             {
                 if (Math.Abs(e.OldValue - e.NewValue) > 0.01)
-                {
-                    ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-                    if (stl == null) return;
                     MainWindow.main.stlComposer.textTransY.Text = slider_moveY.Value.ToString("0.000");
-                }
             }
             catch { }
         }
@@ -249,11 +234,7 @@ namespace View3D.view
             try
             {
                 if (Math.Abs(e.OldValue - e.NewValue) > 0.0001)
-                {
-                    ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-                    if (stl == null) return;
                     MainWindow.main.stlComposer.textTransZ.Text = slider_moveZ.Value.ToString("0.000");
-                }
             }
             catch { }
         }

@@ -125,12 +125,7 @@ namespace OpenGL3DViewerNET10.ModelLib.model
         /// <summary>
         /// Translate Object, so that the lowest point is 0.
         /// </summary>
-        public void Land()
-        {
-            float shiftZ = -zMin;
-            Position.Z += shiftZ;
-            UpdateTransMatrix();
-        }
+        public void Land() => LandToMinZ(0);
 
         // Keep same height to the printer base after rotation.
         public void LandToMinZ(float targetMinZ)
