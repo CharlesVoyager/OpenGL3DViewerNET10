@@ -235,7 +235,7 @@ namespace View3D.view
         void PickColor(Border border)
         {
             // Get current color from the border's background
-            System.Windows.Media.Color initialColor = System.Windows.Media.Colors.White;
+            Color initialColor = Colors.White;
             if (border.Background is SolidColorBrush scb)
             {
                 initialColor = scb.Color;
@@ -462,7 +462,7 @@ namespace View3D.view
         /// </summary>
         private void float_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (sender is System.Windows.Controls.TextBox tb)
+            if (sender is TextBox tb)
             {
                 bool valid = float.TryParse(tb.Text, out _);
                 //tb.BorderBrush = valid
