@@ -71,10 +71,6 @@ namespace View3D.view
         public uint ErrorModelColor { get; set; } = 0xFFFF0000;
         public uint InsideFacesColor { get; set; } = 0xFF000000;
 
-        public string Light1X { get; set; } = "1";
-        public string Light1Y { get; set; } = "0.5";
-        public string Light1Z { get; set; } = "2";
-
         public uint ModelColor { get; set; } = 0xFF6BA3C6;
     }
 
