@@ -617,7 +617,7 @@ namespace View3D.view
             float[] output = null;
             Application.Current.Dispatcher.Invoke(() =>
             {
-                output = ToGLColor(groundColor);
+                output = ToGLColor(skyColor);
             });
             return output;
         }
