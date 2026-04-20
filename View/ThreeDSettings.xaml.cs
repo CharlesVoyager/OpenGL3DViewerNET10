@@ -703,30 +703,47 @@ namespace View3D.view
         /*  Light default settings
             // --- Three-point studio rig ---
             const vec3  keyDir   = normalize(vec3(-0.6, 1.0, 0.8));
-            const vec3  keyColor = vec3(1.00, 0.98, 0.95);
+            const vec3  keyColor = vec3(1.00, 0.98, 0.95);                  //#FFFAF2
             const float keyStr   = 1.8;
 
             const vec3  fillDir   = normalize(vec3(0.8, 0.3, 0.5));
-            const vec3  fillColor = vec3(0.80, 0.88, 1.00);
+            const vec3  fillColor = vec3(0.80, 0.88, 1.00);                 //#CCE0FF
             const float fillStr   = 1.2;
 
             const vec3  backDir   = normalize(vec3(0.1, -0.5, -1.0));
-            const vec3  backColor = vec3(0.90, 0.92, 1.00);
+            const vec3  backColor = vec3(0.90, 0.92, 1.00);                 //#E6EBFF
             const float backStr   = 0.9;
 
             // --- Hemisphere ambient ---
-            const vec3  skyColor    = vec3(0.60, 0.70, 0.90);
-            const vec3  groundColor = vec3(0.25, 0.20, 0.18);
+            const vec3  skyColor    = vec3(0.60, 0.70, 0.90);               //#99B2E6
+            const vec3  groundColor = vec3(0.25, 0.20, 0.18);               //#40332E
             const float ambientStr  = 1.2;
          */
 
         private void ResetLightSettingsToDefault_Click(object sender, RoutedEventArgs e)
         {
-            AppSettings defaultSettings = new AppSettings();
+            // To Do: AppSettings defaultSettings = new AppSettings();
+            keyDirX.Text = "-0.6";
+            keyDirY.Text = "1.0";
+            keyDirZ.Text = "0.8";
+            keyColor.Background = new SolidColorBrush(ArgbToColor(0xFFFFFAF2));
+            keyStr.Value = 1.8;
 
- 
+            fillDirX.Text = "0.8";
+            fillDirY.Text = "0.3";
+            fillDirZ.Text = "0.5";
+            fillColor.Background = new SolidColorBrush(ArgbToColor(0xFFCCE0FF));
+            fillStr.Value = 1.2;
 
-            //MainWindow.main.Update3D();
+            backDirX.Text = "0.1";
+            backDirY.Text = "-0.5";
+            backDirZ.Text = "-1.0";
+            backColor.Background = new SolidColorBrush(ArgbToColor(0xFFE6EBFF));
+            backStr.Value = 0.9;
+
+            skyColor.Background = new SolidColorBrush(ArgbToColor(0xFF99B2E6));
+            groundColor.Background = new SolidColorBrush(ArgbToColor(0xFF40332E));
+            ambientStr.Value = 1.2;
         }
 
         private void ThreeDSettings_Closed(object sender, EventArgs e)
