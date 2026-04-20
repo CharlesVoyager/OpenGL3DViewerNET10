@@ -59,7 +59,7 @@
 
                             <CheckBox x:Name="showPrintbed"
                                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                                      Content="Show printbed" IsChecked="True"
+                                      Content="Show Printbed" IsChecked="True"
                                       VerticalAlignment="Center"
                                       Checked="CheckedChanged"
                                       Unchecked="CheckedChanged"/>
@@ -74,7 +74,7 @@
                                     Background="CornflowerBlue" Style="{StaticResource SwatchStyle}"
                                     MouseLeftButtonUp="ColorSwatch_Click"/>
 
-                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Printer base:" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Printer Base:" VerticalAlignment="Center"/>
                             <Border x:Name="printerBase" Grid.Row="3" Grid.Column="1"
                                     Background="Gainsboro"  Style="{StaticResource SwatchStyle}"
                                     MouseLeftButtonUp="ColorSwatch_Click"/>
@@ -92,7 +92,7 @@
                             <TextBox x:Name="txtPrintAreaDepth" Grid.Row="2" Grid.Column="4" Text="" Margin="0,6" TextChanged="PrintAreaDepth_TextChanged"/>
                             <TextBox x:Name="txtPrintAreaHeight" Grid.Row="3" Grid.Column="4" Text="" Margin="0,6" TextChanged="PrintAreaHeight_TextChanged"/>
 
-                            <Label Grid.Row="0" Grid.Column="6" Grid.ColumnSpan="2" Content="OpenGL Client Size" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <Label Grid.Row="0" Grid.Column="6" Grid.ColumnSpan="3" Content="Initial OpenGL Client Size" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <Label Grid.Row="1" Grid.Column="6" Content="Width:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <Label Grid.Row="2" Grid.Column="6" Content="Height:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <TextBox x:Name="txtClientSizeWidth" Grid.Row="1" Grid.Column="7" Text="" Margin="0,6" TextChanged="ClientSizeWidth_TextChanged" />
@@ -212,13 +212,13 @@
                     <!-- Light (Key) / Default Dir: -0.6, 1.0, 0.8, Default Color: 1.00, 0.98, 0.95 (#FFFAF2), Default Strength: 1.8 -->
                     <Label Grid.Row="0" Grid.Column="1" Content="Key" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="X direction:" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="X Direction:" VerticalAlignment="Center"/>
                     <TextBox x:Name="keyDirX" Grid.Row="1" Grid.Column="1" Text="-0.6" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
 
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Y direction:" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Y Direction:" VerticalAlignment="Center"/>
                     <TextBox x:Name="keyDirY" Grid.Row="2" Grid.Column="1" Text="1.0" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
 
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Z direction:" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Z Direction:" VerticalAlignment="Center"/>
                     <TextBox x:Name="keyDirZ" Grid.Row="3" Grid.Column="1" Text="0.8" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
 
                     <TextBlock Grid.Row="5" Grid.Column="0" Text="Light Color:" VerticalAlignment="Center"/>
@@ -229,7 +229,7 @@
                     <TextBox Grid.Row="7" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding ElementName=keyStr, Path=Value, StringFormat={}{0:0.0}}" IsReadOnly="True"/>
 
                     <!-- Light (fill) / Default Dir: 0.8, 0.3, 0.5, Default Color: 0.80, 0.88, 1.00 (#CCE0FF), Default Strength: 1.2-->
-                    <Label Grid.Row="0" Grid.Column="2" Content="fill" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
+                    <Label Grid.Row="0" Grid.Column="2" Content="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
 
                     <TextBox x:Name="fillDirX" Grid.Row="1" Grid.Column="2" Text="0.8" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
                     <TextBox x:Name="fillDirY" Grid.Row="2" Grid.Column="2" Text="0.3" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
@@ -241,7 +241,7 @@
                     <TextBox Grid.Row="7" Grid.Column="2" HorizontalAlignment="Right" Text="{Binding ElementName=fillStr, Path=Value, StringFormat={}{0:0.0}}" IsReadOnly="True"/>
 
                     <!-- Light (back) / Default Dir: 0.1, -0.5, -1.0, Default Color: 0.90, 0.92, 1.00 (#E6EBFF), Default Strength: 0.9-->
-                    <Label Grid.Row="0" Grid.Column="3" Content="back" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
+                    <Label Grid.Row="0" Grid.Column="3" Content="Back" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
 
                     <TextBox x:Name="backDirX" Grid.Row="1" Grid.Column="3" Text="0.1" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
                     <TextBox x:Name="backDirY" Grid.Row="2" Grid.Column="3" Text="-0.5" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
