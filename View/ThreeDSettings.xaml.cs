@@ -1,15 +1,36 @@
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
 namespace View3D.view
 {
+    public class BrushToFloatConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is SolidColorBrush brush)
+            {
+                var color = brush.Color;
+                // Convert 0-255 byte values to 0.0-1.0 floats
+                float r = color.R / 255f;
+                float g = color.G / 255f;
+                float b = color.B / 255f;
+                return $"{r:F2}, {g:F2}, {b:F2}";
+            }
+            return "0.00, 0.00, 0.00";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotImplementedException();
+    }
     public class AppSettings
     {
         // Printer area diemnsions in millimeters.  These are used to draw the printer bed and frame,

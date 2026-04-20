@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="3D Visualization Settings"
+        xmlns:local="clr-namespace:View3D.view"
         Width="660" Height="500"
         ResizeMode="NoResize"
         Topmost="True"
@@ -16,6 +17,9 @@
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Margin" Value="0,3"/>
         </Style>
+
+        <local:BrushToFloatConverter x:Key="FloatConverter"/>
+        
     </Window.Resources>
 
     <Grid Margin="10">
@@ -218,7 +222,7 @@
                     <TextBox x:Name="keyDirZ" Grid.Row="3" Grid.Column="1" Text="0.8" Margin="4,3" TextChanged="LightSetting_ValueChanged" LostFocus="float_LostFocus"/>
 
                     <TextBlock Grid.Row="5" Grid.Column="0" Text="Light Color:" VerticalAlignment="Center"/>
-                    <Border x:Name="keyColor" Grid.Row="5" Grid.Column="1" Background="#FFFAF2" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3"/>
+                    <Border x:Name="keyColor" Grid.Row="5" Grid.Column="1" Background="#FFFAF2" Style="{StaticResource SwatchStyle}" MouseLeftButtonUp="ColorSwatch_Click" Margin="4,3" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Background, Converter={StaticResource FloatConverter}}"/>
 
                     <TextBlock Grid.Row="7" Grid.Column="0" Text="Strength:" VerticalAlignment="Center"/>
                     <Slider Name="keyStr" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Width="90" ValueChanged="LightSetting_ValueChanged" Minimum="0" Maximum="10" Value="1.8"/>
