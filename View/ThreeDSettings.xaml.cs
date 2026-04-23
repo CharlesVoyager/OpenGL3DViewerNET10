@@ -242,8 +242,7 @@ namespace View3D.view
         }
 
         // ── Color picker (replaces WinForms ColorDialog) ─────────────────────────
-
-        void ColorSwatch_Click(object sender, MouseButtonEventArgs e)
+        private void ColorSwatch_Click(object sender, MouseButtonEventArgs e)
         {
             if (sender is Border border)
                 PickColor(border);
