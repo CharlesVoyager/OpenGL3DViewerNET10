@@ -1,7 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using System.Drawing;
-using View3D;
+
+using View3D.view;
 
 namespace OpenGL3DViewerNET10.Draw
 {
@@ -96,10 +96,17 @@ namespace OpenGL3DViewerNET10.Draw
             // bind empty VAO to satisfy Core Profile requirement
             GL.BindVertexArray(dummyVao);
 
-            float[] color = MainWindow.main.threeDSettings.BackgroundTopBackgroundColor();
-            Vector4 topColor = new Vector4(color[0], color[1], color[2], color[3]);
-            color = MainWindow.main.threeDSettings.BackgroundBottomBackgroundColor();
-            Vector4 bottomColor = new Vector4(color[0], color[1], color[2], color[3]);
+            float r = (SettingsService.Instance.Settings.BackgroundTopColor >> 16 & 0xFF) / 255f;
+            float g = (SettingsService.Instance.Settings.BackgroundTopColor >> 8 & 0xFF) / 255f;
+            float b = (SettingsService.Instance.Settings.BackgroundTopColor & 0xFF) / 255f;
+            float a = (SettingsService.Instance.Settings.BackgroundTopColor >> 24 & 0xFF) / 255f;
+            Vector4 topColor = new Vector4(r, g, b, a);
+
+            r = (SettingsService.Instance.Settings.BackgroundBottomColor >> 16 & 0xFF) / 255f;
+            g = (SettingsService.Instance.Settings.BackgroundBottomColor >> 8 & 0xFF) / 255f;
+            b = (SettingsService.Instance.Settings.BackgroundBottomColor & 0xFF) / 255f;
+            a = (SettingsService.Instance.Settings.BackgroundBottomColor >> 24 & 0xFF) / 255f;
+            Vector4 bottomColor = new Vector4(r, g, b, a);
 
             GL.Uniform4(GL.GetUniformLocation(shader, "topColor"), topColor);
             GL.Uniform4(GL.GetUniformLocation(shader, "bottomColor"), bottomColor);

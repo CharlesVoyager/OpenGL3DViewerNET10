@@ -3,6 +3,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using System.Drawing;
 using View3D;
+using View3D.view;
 
 namespace OpenGL3DViewerNET10.Draw
 {
@@ -654,8 +655,10 @@ namespace OpenGL3DViewerNET10.Draw
         {
             get
             {
-                float[] c = MainWindow.main.threeDSettings.ModelColor();
-                return new Vector3(c[0], c[1], c[2]);
+                float r = (SettingsService.Instance.Settings.ModelColor >> 16 & 0xFF) / 255f;
+                float g = (SettingsService.Instance.Settings.ModelColor >> 8 & 0xFF) / 255f;
+                float b = (SettingsService.Instance.Settings.ModelColor & 0xFF) / 255f;
+                return new Vector3(r, g, b);
             }
         }
 
@@ -760,8 +763,9 @@ namespace OpenGL3DViewerNET10.Draw
         {
             get
             {
-                float[] output = MainWindow.main.threeDSettings.KeyDir();
-                Vector3 v = new Vector3(output[0], output[1], output[2]);
+                Vector3 v = new Vector3(SettingsService.Instance.Settings.KeyDirX, 
+                                        SettingsService.Instance.Settings.KeyDirY, 
+                                        SettingsService.Instance.Settings.KeyDirZ);
                 v.Normalize();
                 return v;
             }
@@ -771,15 +775,17 @@ namespace OpenGL3DViewerNET10.Draw
         {
             get
             {
-                float[] output = MainWindow.main.threeDSettings.KeyColor();
-                return new Vector3(output[0], output[1], output[2]);
+                float r = (SettingsService.Instance.Settings.KeyColor >> 16 & 0xFF) / 255f;
+                float g = (SettingsService.Instance.Settings.KeyColor >> 8 & 0xFF) / 255f;
+                float b = (SettingsService.Instance.Settings.KeyColor & 0xFF) / 255f;
+                return new Vector3(r, g, b);
             }
         }
         float keyStr
         {
             get
             {
-                return MainWindow.main.threeDSettings.KeyStr();
+                return SettingsService.Instance.Settings.KeyStr;
             }
         }
 
@@ -787,8 +793,9 @@ namespace OpenGL3DViewerNET10.Draw
         {
             get
             {
-                float[] output = MainWindow.main.threeDSettings.FillDir();
-                Vector3 v = new Vector3(output[0], output[1], output[2]);
+                Vector3 v = new Vector3(    SettingsService.Instance.Settings.FillDirX,
+                                            SettingsService.Instance.Settings.FillDirY,
+                                            SettingsService.Instance.Settings.FillDirZ);
                 v.Normalize();
                 return v;
             }
@@ -798,15 +805,17 @@ namespace OpenGL3DViewerNET10.Draw
         {
             get
             {
-                float[] output = MainWindow.main.threeDSettings.FillColor();
-                return new Vector3(output[0], output[1], output[2]);
+                float r = (SettingsService.Instance.Settings.FillColor >> 16 & 0xFF) / 255f;
+                float g = (SettingsService.Instance.Settings.FillColor >> 8 & 0xFF) / 255f;
+                float b = (SettingsService.Instance.Settings.FillColor & 0xFF) / 255f;
+                return new Vector3(r, g, b);
             }
         }
         float fillStr
         {
             get
             {
-                return MainWindow.main.threeDSettings.FillStr();
+                return SettingsService.Instance.Settings.FillStr;
             }
         }
 
@@ -814,8 +823,9 @@ namespace OpenGL3DViewerNET10.Draw
         {
             get
             {
-                float[] output = MainWindow.main.threeDSettings.BackDir();
-                Vector3 v = new Vector3(output[0], output[1], output[2]);
+                Vector3 v = new Vector3(    SettingsService.Instance.Settings.BackDirX,
+                                            SettingsService.Instance.Settings.BackDirY,
+                                            SettingsService.Instance.Settings.BackDirZ);
                 v.Normalize();
                 return v;
             }
@@ -825,15 +835,17 @@ namespace OpenGL3DViewerNET10.Draw
         {
             get
             {
-                float[] output = MainWindow.main.threeDSettings.BackColor();
-                return new Vector3(output[0], output[1], output[2]);
+                float r = (SettingsService.Instance.Settings.BackColor >> 16 & 0xFF) / 255f;
+                float g = (SettingsService.Instance.Settings.BackColor >> 8 & 0xFF) / 255f;
+                float b = (SettingsService.Instance.Settings.BackColor & 0xFF) / 255f;
+                return new Vector3(r, g, b);
             }
         }
         float backStr
         {
             get
             {
-                return MainWindow.main.threeDSettings.BackStr();
+                return SettingsService.Instance.Settings.BackStr;
             }
         }
         // --- Hemisphere ambient ---
@@ -841,8 +853,10 @@ namespace OpenGL3DViewerNET10.Draw
         {
             get
             {
-                float[] output = MainWindow.main.threeDSettings.SkyColor();
-                return new Vector3(output[0], output[1], output[2]);
+                float r = (SettingsService.Instance.Settings.SkyColor >> 16 & 0xFF) / 255f;
+                float g = (SettingsService.Instance.Settings.SkyColor >> 8 & 0xFF) / 255f;
+                float b = (SettingsService.Instance.Settings.SkyColor & 0xFF) / 255f;
+                return new Vector3(r, g, b);
             }
         }
 
@@ -850,15 +864,17 @@ namespace OpenGL3DViewerNET10.Draw
         {
             get
             {
-                float[] output = MainWindow.main.threeDSettings.GroundColor();
-                return new Vector3(output[0], output[1], output[2]);
+                float r = (SettingsService.Instance.Settings.GroundColor >> 16 & 0xFF) / 255f;
+                float g = (SettingsService.Instance.Settings.GroundColor >> 8 & 0xFF) / 255f;
+                float b = (SettingsService.Instance.Settings.GroundColor & 0xFF) / 255f;
+                return new Vector3(r, g, b);
             }
         }
         float ambientStr
         {
             get
             {
-                return MainWindow.main.threeDSettings.AmbientStr();
+                return SettingsService.Instance.Settings.AmbientStr;
             }
         }
         /*

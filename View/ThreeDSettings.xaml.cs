@@ -72,6 +72,29 @@ namespace View3D.view
         public uint InsideFacesColor { get; set; } = 0xFF000000;
 
         public uint ModelColor { get; set; } = 0xFF6BA3C6;
+        
+        public float KeyDirX { get; set; } = -0.6f;
+        public float KeyDirY { get; set; } = 1.0f;
+        public float KeyDirZ { get; set; } = 0.0f;
+        public uint KeyColor { get; set; } = 0xFFFFFAF2;
+        public float KeyStr { get; set; } = 1.8f;
+
+        public float FillDirX { get; set; } = 0.8f;
+        public float FillDirY { get; set; } = 0.3f;
+        public float FillDirZ { get; set; } = 0.5f;
+
+        public uint FillColor { get; set; } = 0xFFCCE0FF;
+        public float FillStr { get; set; } = 1.2f;
+
+        public float BackDirX { get; set; } = 0.1f;
+        public float BackDirY { get; set; } = -0.5f;
+        public float BackDirZ { get; set; } = -1.0f;
+        public uint BackColor { get; set; } = 0xFFE6EBFF;
+        public float BackStr { get; set; } = 0.9f;
+
+        public uint SkyColor { get; set; } = 0xFF99B2E6;
+        public uint GroundColor { get; set; } = 0xFF40332E;
+        public float AmbientStr { get; set; } = 1.2f;
     }
 
     public class SettingsService
@@ -189,6 +212,32 @@ namespace View3D.view
         {
             try
             {
+                txtPrintAreaWidth.TextChanged -= PrintAreaWidth_TextChanged; // Temporarily detach event handlers to prevent triggering on load
+                txtPrintAreaDepth.TextChanged -= PrintAreaDepth_TextChanged;
+                txtPrintAreaHeight.TextChanged -= PrintAreaHeight_TextChanged;
+
+                txtClientSizeWidth.TextChanged -= ClientSizeWidth_TextChanged;
+                txtClientSizeHeight.TextChanged -= ClientSizeHeight_TextChanged;
+
+                keyDirX.TextChanged -= LightSetting_ValueChanged;
+                keyDirY.TextChanged -= LightSetting_ValueChanged;
+                keyDirY.TextChanged -= LightSetting_ValueChanged;
+                keyStr.ValueChanged -= LightSetting_ValueChanged;
+                
+                fillDirX.TextChanged -= LightSetting_ValueChanged;
+                fillDirY.TextChanged -= LightSetting_ValueChanged;
+                fillDirZ.TextChanged -= LightSetting_ValueChanged;
+                fillStr.ValueChanged -= LightSetting_ValueChanged;
+                
+                backDirX.TextChanged -= LightSetting_ValueChanged;
+                backDirY.TextChanged -= LightSetting_ValueChanged;
+                backDirZ.TextChanged -= LightSetting_ValueChanged;
+                backStr.ValueChanged -= LightSetting_ValueChanged;
+
+                ambientStr.ValueChanged -= LightSetting_ValueChanged;
+
+                //=================================================================================================
+
                 txtPrintAreaWidth.Text = SettingsService.Instance.Settings.PrintAreaWidth.ToString();
                 txtPrintAreaDepth.Text = SettingsService.Instance.Settings.PrintAreaDepth.ToString();
                 txtPrintAreaHeight.Text = SettingsService.Instance.Settings.PrintAreaHeight.ToString();
@@ -214,6 +263,54 @@ namespace View3D.view
                 insideFaces.Background = new SolidColorBrush(ArgbToColor(SettingsService.Instance.Settings.InsideFacesColor));
 
                 modelColor.Background = new SolidColorBrush(ArgbToColor(SettingsService.Instance.Settings.ModelColor));
+
+                keyDirX.Text = SettingsService.Instance.Settings.KeyDirX.ToString();
+                keyDirY.Text = SettingsService.Instance.Settings.KeyDirY.ToString();
+                keyDirZ.Text = SettingsService.Instance.Settings.KeyDirZ.ToString();
+                keyColor.Background = new SolidColorBrush(ArgbToColor(SettingsService.Instance.Settings.KeyColor));
+                keyStr.Value = SettingsService.Instance.Settings.KeyStr;
+
+                fillDirX.Text = SettingsService.Instance.Settings.FillDirX.ToString();
+                fillDirY.Text = SettingsService.Instance.Settings.FillDirY.ToString();
+                fillDirZ.Text = SettingsService.Instance.Settings.FillDirZ.ToString();
+                fillColor.Background = new SolidColorBrush(ArgbToColor(SettingsService.Instance.Settings.FillColor));
+                fillStr.Value = SettingsService.Instance.Settings.FillStr;
+
+                backDirX.Text = SettingsService.Instance.Settings.BackDirX.ToString();
+                backDirY.Text = SettingsService.Instance.Settings.BackDirY.ToString();
+                backDirZ.Text = SettingsService.Instance.Settings.BackDirZ.ToString();
+                backColor.Background = new SolidColorBrush(ArgbToColor(SettingsService.Instance.Settings.BackColor));
+                backStr.Value = SettingsService.Instance.Settings.BackStr;
+
+                skyColor.Background = new SolidColorBrush(ArgbToColor(SettingsService.Instance.Settings.SkyColor));
+                groundColor.Background = new SolidColorBrush(ArgbToColor(SettingsService.Instance.Settings.GroundColor));
+                ambientStr.Value = SettingsService.Instance.Settings.AmbientStr;
+
+                //=================================================================================================
+
+                txtPrintAreaWidth.TextChanged += PrintAreaWidth_TextChanged; // Temporarily detach event handlers to prevent triggering on load
+                txtPrintAreaDepth.TextChanged += PrintAreaDepth_TextChanged;
+                txtPrintAreaHeight.TextChanged += PrintAreaHeight_TextChanged;
+
+                txtClientSizeWidth.TextChanged += ClientSizeWidth_TextChanged;
+                txtClientSizeHeight.TextChanged += ClientSizeHeight_TextChanged;
+
+                keyDirX.TextChanged += LightSetting_ValueChanged;
+                keyDirY.TextChanged += LightSetting_ValueChanged;
+                keyDirY.TextChanged += LightSetting_ValueChanged;
+                keyStr.ValueChanged += LightSetting_ValueChanged;
+
+                fillDirX.TextChanged += LightSetting_ValueChanged;
+                fillDirY.TextChanged += LightSetting_ValueChanged;
+                fillDirZ.TextChanged += LightSetting_ValueChanged;
+                fillStr.ValueChanged += LightSetting_ValueChanged;
+
+                backDirX.TextChanged += LightSetting_ValueChanged;
+                backDirY.TextChanged += LightSetting_ValueChanged;
+                backDirZ.TextChanged += LightSetting_ValueChanged;
+                backStr.ValueChanged += LightSetting_ValueChanged;
+
+                ambientStr.ValueChanged += LightSetting_ValueChanged;
             }
             catch { }
         }
@@ -230,7 +327,6 @@ namespace View3D.view
             }
             return 0;
         }
-
    
         private static Color ArgbToColor(uint argb)
         {
@@ -342,6 +438,7 @@ namespace View3D.view
 
                 // Allow live preview of changes without needing to click OK.
                 border.Background = new SolidColorBrush(selectedColor);
+                controlsToSettings();
                 MainWindow.main.threeDControl.UpdateChanges();
                 // <END>
             };
@@ -454,6 +551,7 @@ namespace View3D.view
             if (confirmed)
             {
                 border.Background = new SolidColorBrush(selectedColor);
+                controlsToSettings();
                 MainWindow.main.threeDControl.UpdateChanges();
             }
         }
@@ -494,180 +592,6 @@ namespace View3D.view
             this.Hide();
         }
 
-        // ── OpenGL colour helpers ─────────────────────────────────────────────────
-        float[] ToGLColor(Border b)
-        {
-            if (b.Background is SolidColorBrush scb)
-            {
-                var c = scb.Color;
-                return new float[] { c.R / 255f, c.G / 255f, c.B / 255f, 1f };
-            }
-            return new float[] { 0f, 0f, 0f, 1f };
-        }
-
-        // ── Light direction helpers ───────────────────────────────────────────────
-        float[] ToDir(TextBox x, TextBox y, TextBox z)
-        {
-            float.TryParse(x.Text, out float xf);
-            float.TryParse(y.Text, out float yf);
-            float.TryParse(z.Text, out float zf);
-            return new float[] { xf, yf, zf, 0f };
-        }
-
-        // ──────────────────── Public API ────────────────────
-        public float[] KeyDir()
-        {
-            float[] output = null;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToDir(keyDirX, keyDirY, keyDirZ);
-            });
-            return output;
-        }
-
-        public float[] KeyColor()
-        {
-            float[] output = null;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(keyColor);
-            });
-            return output;
-        }
-
-        public float KeyStr()
-        {
-            float output = 0;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = (float)keyStr.Value;
-            });
-            return output;
-        }
-
-
-        public float[] FillDir()
-        {
-            float[] output = null;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToDir(fillDirX, fillDirY, fillDirZ);
-            });
-            return output;
-        }
-
-        public float[] FillColor()
-        {
-            float[] output = null;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(fillColor);
-            });
-            return output;
-        }
-
-        public float FillStr()
-        {
-            float output = 0;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = (float)fillStr.Value;
-            });
-            return output;
-        }
-
-        public float[] BackDir()
-        {
-            float[] output = null;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToDir(backDirX, backDirY, backDirZ);
-            });
-            return output;
-        }
-
-        public float[] BackColor()
-        {
-            float[] output = null;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(backColor);
-            });
-            return output;
-        }
-
-        public float BackStr()
-        {
-            float output = 0;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = (float)backStr.Value;
-            });
-            return output;
-        }
-
-        // Ambient
-        public float[] SkyColor()
-        {
-            float[] output = null;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(skyColor);
-            });
-            return output;
-        }
-
-        public float[] GroundColor()
-        {
-            float[] output = null;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(groundColor);
-            });
-            return output;
-        }
-
-        public float AmbientStr()
-        {
-            float output = 0;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = (float)ambientStr.Value;
-            });
-            return output;
-        }
-
-
-        public float[] BackgroundTopBackgroundColor()
-        {
-            float[] output = null;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(backgroundTop);
-            });
-            return output;
-        }
-
-        public float[] BackgroundBottomBackgroundColor()
-        {
-            float[] output = null;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(backgroundBottom);
-            });
-            return output;
-        }
-
-        public float[] ModelColor()
-        {
-            float[] output = null;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                output = ToGLColor(modelColor);
-            });
-            return output;
-        }
-
         /// <summary>
         /// Converts a WPF SolidColorBrush to a WinForms System.Drawing.Color.
         /// Returns Color.Empty or throws if the brush is not a SolidColorBrush.
@@ -688,6 +612,18 @@ namespace View3D.view
         // Slider values changed.
         private void LightSetting_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            if (sender is Slider slider)
+            {
+                if (slider == keyStr)
+                    SettingsService.Instance.Settings.KeyStr = (float)slider.Value;
+                else if (slider == fillStr)
+                    SettingsService.Instance.Settings.FillStr = (float)slider.Value;
+                else if (slider == backStr)
+                    SettingsService.Instance.Settings.BackStr = (float)slider.Value;
+                else if (slider == ambientStr)
+                    SettingsService.Instance.Settings.AmbientStr = (float)slider.Value; 
+            }
+
             if (MainWindow.main.threeDControl != null)
                 MainWindow.main.threeDControl.UpdateChanges();
         }
@@ -695,6 +631,19 @@ namespace View3D.view
         // TextBox values changed.
         private void LightSetting_ValueChanged(object sender, TextChangedEventArgs e)
         {
+            if (sender is TextBox tb) 
+            {
+                if (tb == keyDirX) SettingsService.Instance.Settings.KeyDirX = float.TryParse(keyDirX.Text, out float kx) ? kx : SettingsService.Instance.Settings.KeyDirX;
+                else if (tb == keyDirY) SettingsService.Instance.Settings.KeyDirY = float.TryParse(keyDirY.Text, out float ky) ? ky : SettingsService.Instance.Settings.KeyDirY;
+                else if (tb == keyDirZ) SettingsService.Instance.Settings.KeyDirZ = float.TryParse(keyDirZ.Text, out float kz) ? kz : SettingsService.Instance.Settings.KeyDirZ;
+                else if (tb == fillDirX) SettingsService.Instance.Settings.FillDirX = float.TryParse(fillDirX.Text, out float fx) ? fx : SettingsService.Instance.Settings.FillDirX;
+                else if (tb == fillDirY) SettingsService.Instance.Settings.FillDirY = float.TryParse(fillDirY.Text, out float fy) ? fy : SettingsService.Instance.Settings.FillDirY;
+                else if (tb == fillDirZ) SettingsService.Instance.Settings.FillDirZ = float.TryParse(fillDirZ.Text, out float fz) ? fz : SettingsService.Instance.Settings.FillDirZ;
+                else if (tb == backDirX) SettingsService.Instance.Settings.BackDirX = float.TryParse(backDirX.Text, out float bx) ? bx : SettingsService.Instance.Settings.BackDirX;
+                else if (tb == backDirY) SettingsService.Instance.Settings.BackDirY = float.TryParse(backDirY.Text, out float by) ? by : SettingsService.Instance.Settings.BackDirY;
+                else if (tb == backDirZ) SettingsService.Instance.Settings.BackDirZ = float.TryParse(backDirZ.Text, out float bz) ? bz : SettingsService.Instance.Settings.BackDirZ;
+            }
+
             if (MainWindow.main.threeDControl != null)
                 MainWindow.main.threeDControl.UpdateChanges();
         }
