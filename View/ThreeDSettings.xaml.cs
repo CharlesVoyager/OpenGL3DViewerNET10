@@ -766,6 +766,13 @@ namespace View3D.view
                 SettingsService.Instance.Settings.InsideFacesColor = ToArgb(insideFaces);
 
                 SettingsService.Instance.Settings.ModelColor = ToArgb(modelColor);
+
+                SettingsService.Instance.Settings.KeyColor = ToArgb(keyColor);
+                SettingsService.Instance.Settings.FillColor = ToArgb(fillColor);
+                SettingsService.Instance.Settings.BackColor = ToArgb(backColor);
+
+                SettingsService.Instance.Settings.SkyColor = ToArgb(skyColor);
+                SettingsService.Instance.Settings.GroundColor = ToArgb(groundColor);
             }
             catch { }
         }
