@@ -193,14 +193,20 @@ namespace View3D.view
             PropertyChanged?.Invoke(this, e);
         }
 
+        private bool _isInitializing = true;
+
         // ── Constructor ──────────────────────────────────────────────────────────
         public ThreeDSettings()
         {
+            _isInitializing = true;
+
             InitializeComponent();
 
             MainWindow.main.languageChanged += translate;
 
             loadSettings();
+
+            _isInitializing = false;
         }
 
         public void translate()
@@ -559,6 +565,7 @@ namespace View3D.view
         // ── Event handlers ───────────────────────────────────────────────────────
         private void CheckedChanged(object sender, RoutedEventArgs e)
         {
+            if (_isInitializing) return;
             if (sender == showEdges)
                 SettingsService.Instance.Settings.ShowEdges = showEdges.IsChecked == true;
             else if (sender == showFaces)
@@ -612,6 +619,8 @@ namespace View3D.view
         // Slider values changed.
         private void LightSetting_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            if (_isInitializing) return;
+
             if (sender is Slider slider)
             {
                 if (slider == keyStr)
@@ -631,6 +640,8 @@ namespace View3D.view
         // TextBox values changed.
         private void LightSetting_ValueChanged(object sender, TextChangedEventArgs e)
         {
+            if (_isInitializing) return;
+
             if (sender is TextBox tb) 
             {
                 if (tb == keyDirX) SettingsService.Instance.Settings.KeyDirX = float.TryParse(keyDirX.Text, out float kx) ? kx : SettingsService.Instance.Settings.KeyDirX;
