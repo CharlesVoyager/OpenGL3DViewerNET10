@@ -586,10 +586,22 @@ namespace View3D.view
             if (sender is TextBox tb)
             {
                 bool valid = float.TryParse(tb.Text, out _);
-                //tb.BorderBrush = valid
-                //    ? SystemColors.ControlDarkBrush
-                //    : Brushes.Red;
-                //tb.ToolTip = valid ? null : Trans.T("L_NOT_A_NUMBER");
+                tb.BorderBrush = valid
+                    ? SystemColors.ControlDarkBrush
+                    : Brushes.Red;
+                tb.ToolTip = valid ? null : "Not a number";
+            }
+        }
+
+        private void uint_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox tb)
+            {
+                bool valid = uint.TryParse(tb.Text, out _);
+                tb.BorderBrush = valid
+                    ? SystemColors.ControlDarkBrush
+                    : Brushes.Red;
+                tb.ToolTip = valid ? null : "Not a number";
             }
         }
 
@@ -778,5 +790,7 @@ namespace View3D.view
             }
             catch { }
         }
+
+
     }
 }

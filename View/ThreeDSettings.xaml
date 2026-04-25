@@ -88,15 +88,15 @@
                             <Label Grid.Row="1" Grid.Column="3" Content="Width:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <Label Grid.Row="2" Grid.Column="3" Content="Depth:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <Label Grid.Row="3" Grid.Column="3" Content="Height:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <TextBox x:Name="txtPrintAreaWidth" Grid.Row="1" Grid.Column="4" Text="" Margin="0,6" TextChanged="PrintAreaWidth_TextChanged" />
-                            <TextBox x:Name="txtPrintAreaDepth" Grid.Row="2" Grid.Column="4" Text="" Margin="0,6" TextChanged="PrintAreaDepth_TextChanged"/>
-                            <TextBox x:Name="txtPrintAreaHeight" Grid.Row="3" Grid.Column="4" Text="" Margin="0,6" TextChanged="PrintAreaHeight_TextChanged"/>
+                            <TextBox x:Name="txtPrintAreaWidth" Grid.Row="1" Grid.Column="4" Text="" Margin="0,6" TextChanged="PrintAreaWidth_TextChanged" LostFocus="uint_LostFocus"/>
+                            <TextBox x:Name="txtPrintAreaDepth" Grid.Row="2" Grid.Column="4" Text="" Margin="0,6" TextChanged="PrintAreaDepth_TextChanged" LostFocus="uint_LostFocus"/>
+                            <TextBox x:Name="txtPrintAreaHeight" Grid.Row="3" Grid.Column="4" Text="" Margin="0,6" TextChanged="PrintAreaHeight_TextChanged" LostFocus="uint_LostFocus"/>
 
                             <Label Grid.Row="0" Grid.Column="6" Grid.ColumnSpan="3" Content="Initial OpenGL Client Size" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <Label Grid.Row="1" Grid.Column="6" Content="Width:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <Label Grid.Row="2" Grid.Column="6" Content="Height:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <TextBox x:Name="txtClientSizeWidth" Grid.Row="1" Grid.Column="7" Text="" Margin="0,6" TextChanged="ClientSizeWidth_TextChanged" />
-                            <TextBox x:Name="txtClientSizeHeight" Grid.Row="2" Grid.Column="7" Text="" Margin="0,6" TextChanged="ClientSizeHeight_TextChanged"/>
+                            <TextBox x:Name="txtClientSizeWidth" Grid.Row="1" Grid.Column="7" Text="" Margin="0,6" TextChanged="ClientSizeWidth_TextChanged" LostFocus="uint_LostFocus"/>
+                            <TextBox x:Name="txtClientSizeHeight" Grid.Row="2" Grid.Column="7" Text="" Margin="0,6" TextChanged="ClientSizeHeight_TextChanged" LostFocus="uint_LostFocus"/>
 
                             <Label Content="(Change print area dimension needs restart to apply.)" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="5" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Foreground="#888"/>
                         </Grid>
