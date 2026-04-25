@@ -536,30 +536,14 @@ namespace View3D.view
                 Padding = new Thickness(4),
                 IsDefault = true
             };
-            var cancelBtn = new Button
-            {
-                Content = "Cancel",
-                Width = 75,
-                Padding = new Thickness(4),
-                IsCancel = true
-            };
 
             okBtn.Click += (_, __) => { confirmed = true; colorPickerWindow.Close(); };
-            cancelBtn.Click += (_, __) => { colorPickerWindow.Close(); };
 
             btnPanel.Children.Add(okBtn);
-            btnPanel.Children.Add(cancelBtn);
             mainStack.Children.Add(btnPanel);
 
             colorPickerWindow.Content = mainStack;
             colorPickerWindow.ShowDialog();
-
-            if (confirmed)
-            {
-                border.Background = new SolidColorBrush(selectedColor);
-                controlsToSettings();
-                MainWindow.main.threeDControl.UpdateChanges();
-            }
         }
 
         // ── Event handlers ───────────────────────────────────────────────────────
