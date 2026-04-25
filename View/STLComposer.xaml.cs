@@ -793,8 +793,8 @@ namespace View3D.view
             if (stl == null) return;
             double old = stl.Scale.z;
             double.TryParse(textScaleZ.Text, out stl.Scale.z);
-            if (old != stl.Scale.z) stl.Land();
             stl.UpdateBoundingBoxAndMatrix();
+            if (old != stl.Scale.z) stl.Land();
             UpdateOutOfBound();
             MainWindow.main.threeDControl.UpdateChanges();
         }
