@@ -681,28 +681,29 @@ namespace View3D.view
 
         private void ResetLightSettingsToDefault_Click(object sender, RoutedEventArgs e)
         {
-            // To Do: AppSettings defaultSettings = new AppSettings();
-            keyDirX.Text = "-0.6";
-            keyDirY.Text = "1.0";
-            keyDirZ.Text = "0.8";
-            keyColor.Background = new SolidColorBrush(ArgbToColor(0xFFFFFAF2));
-            keyStr.Value = 1.8;
+            AppSettings defaultSettings = new AppSettings();
 
-            fillDirX.Text = "0.8";
-            fillDirY.Text = "0.3";
-            fillDirZ.Text = "0.5";
-            fillColor.Background = new SolidColorBrush(ArgbToColor(0xFFCCE0FF));
-            fillStr.Value = 1.2;
+            keyDirX.Text = defaultSettings.KeyDirX.ToString();
+            keyDirY.Text = defaultSettings.KeyDirY.ToString();
+            keyDirZ.Text = defaultSettings.KeyDirZ.ToString();
+            keyColor.Background = new SolidColorBrush(ArgbToColor(defaultSettings.KeyColor));
+            keyStr.Value = defaultSettings.KeyStr;
 
-            backDirX.Text = "0.1";
-            backDirY.Text = "-0.5";
-            backDirZ.Text = "-1.0";
-            backColor.Background = new SolidColorBrush(ArgbToColor(0xFFE6EBFF));
-            backStr.Value = 0.9;
+            fillDirX.Text = defaultSettings.FillDirX.ToString();
+            fillDirY.Text = defaultSettings.FillDirY.ToString();
+            fillDirZ.Text = defaultSettings.FillDirZ.ToString();
+            fillColor.Background = new SolidColorBrush(ArgbToColor(defaultSettings.FillColor));
+            fillStr.Value = defaultSettings.FillStr;
+         
+            backDirX.Text = defaultSettings.BackDirX.ToString();
+            backDirY.Text = defaultSettings.BackDirY.ToString();
+            backDirZ.Text = defaultSettings.BackDirZ.ToString();
+            backColor.Background = new SolidColorBrush(ArgbToColor(defaultSettings.BackColor));
+            backStr.Value = defaultSettings.BackStr;
 
-            skyColor.Background = new SolidColorBrush(ArgbToColor(0xFF99B2E6));
-            groundColor.Background = new SolidColorBrush(ArgbToColor(0xFF40332E));
-            ambientStr.Value = 1.2;
+            skyColor.Background = new SolidColorBrush(ArgbToColor(defaultSettings.SkyColor));
+            groundColor.Background = new SolidColorBrush(ArgbToColor(defaultSettings.GroundColor));
+            ambientStr.Value = defaultSettings.AmbientStr;
         }
 
         private void ThreeDSettings_Closed(object sender, EventArgs e)
