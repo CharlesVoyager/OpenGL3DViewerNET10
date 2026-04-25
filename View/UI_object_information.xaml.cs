@@ -26,11 +26,27 @@ namespace View3D.view
 
         public void Analyse(ThreeDModel pm)
         {
+            //Stopwatch sw = Stopwatch.StartNew();
+
+            if (pm == null || pm.Model == null)
+            {
+                txtVolume.Text = "0.000 cm³";
+                txtSizeX.Text = "0.000 mm";
+                txtSizeY.Text = "0.000 mm";
+                txtSizeZ.Text = "0.000 mm";
+                txtCollision.Text = "";
+                txtFilename.Text = "";
+                txtPosX.Text = "0.000";
+                txtPosY.Text = "0.000";
+                txtPosZ.Text = "0.000";
+                return;
+            }
+
             double volume = 0;
             foreach (TopoTriangle t in pm.Model.drawTriangles)
-            {
                 volume += t.SignedVolume();
-            }
+
+            volume = volume * pm.Scale.x * pm.Scale.y * pm.Scale.z;
 
             RHBoundingBox bbox = pm.BoundingBox;
 
@@ -48,6 +64,8 @@ namespace View3D.view
             txtPosX.Text = pm.Position.X.ToString("0.000");
             txtPosY.Text = pm.Position.Y.ToString("0.000");
             txtPosZ.Text = pm.Position.Z.ToString("0.000");
+
+            //Debug.WriteLine("Elapsed time for Analyse: " + sw.ElapsedMilliseconds + " ms");
         }
     }
 }

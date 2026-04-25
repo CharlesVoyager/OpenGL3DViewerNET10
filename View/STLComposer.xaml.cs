@@ -619,8 +619,6 @@ namespace View3D.view
                 textTransX.TextChanged += textTransX_TextChanged;
                 textTransY.TextChanged += textTransY_TextChanged;
                 textTransZ.TextChanged += textTransZ_TextChanged;
-
-                MainWindow.main.UI_object_information.Analyse(stl);
             }
 
             if (MainWindow.main.threeDControl != null)
