@@ -77,7 +77,7 @@ namespace View3D.view
                 double dimX = Convert.ToDouble(txtX.Text);
                 if (dimX == 0) dimX = 0.001;
 
-                Double tScalex = dimX / stl.BoundingBox.Size.x;
+                Double tScalex = dimX / stl.Model.boundingBox.Size.x;
  
                 MainWindow.main.stlComposer.textScaleX.Text = tScalex.ToString("0.000");
                 if (chk_Uniform.IsChecked == true)
@@ -107,7 +107,7 @@ namespace View3D.view
                 double dimY = Convert.ToDouble(txtY.Text);
                 if (dimY == 0) dimY = 0.001;
 
-                Double tScaley = dimY / stl.BoundingBox.Size.y;
+                Double tScaley = dimY / stl.Model.boundingBox.Size.y;
                 MainWindow.main.stlComposer.textScaleY.Text = tScaley.ToString("0.000");
                 if (chk_Uniform.IsChecked == true)
                 {
@@ -143,7 +143,7 @@ namespace View3D.view
                 double dimZ = Convert.ToDouble(txtZ.Text);
                 if (dimZ == 0) dimZ = 0.001;
 
-                Double tScalez = dimZ / stl.BoundingBox.Size.z;
+                Double tScalez = dimZ / stl.Model.boundingBox.Size.z;
                 MainWindow.main.stlComposer.textScaleZ.Text = tScalez.ToString("0.000");
                 if (chk_Uniform.IsChecked == true)
                 {
