@@ -948,12 +948,7 @@ namespace View3D.view
                 ui.button_mmtoinch.IsEnabled = false;
                 ui.button_inchtomm.IsEnabled = true;
                 var bbox = stl.BoundingBox;
-                ui.chk_Uniform.IsChecked = true;
-                ui.bboxnow = bbox.Size.x / stl.Scale.x;
-                ui.bboynow = bbox.Size.y / stl.Scale.y;
-                ui.bboznow = bbox.Size.z / stl.Scale.z;
 
-                ui.chk_Uniform.IsChecked = true;
                 double tempX = bbox.Size.x * 25.4, tempY = bbox.Size.y * 25.4, tempZ = bbox.Size.z * 25.4;
                 if (tempX > SettingsService.Instance.Settings.PrintAreaWidth || 
                     tempY > SettingsService.Instance.Settings.PrintAreaDepth || 
@@ -967,24 +962,13 @@ namespace View3D.view
                     }
                 }
                 ui.gIsShow = true;
-                ui.dimX    = bbox.Size.x;
-                ui.dimY    = bbox.Size.y;
-                ui.dimZ    = bbox.Size.z;
                 ui.updateTxt();
                 ui.chk_Uniform_Checked(null, null);
                 ui.gIsShow = false;
-                stl.Scale.x = (float)(tempX / ui.bboxnow);
-                stl.Scale.y = (float)(tempY / ui.bboynow);
 
-                if (ui.bboznow == 0)
-                    stl.Scale.z = 1;    // Consider the model is 2D without z hight.
-                else
-                    stl.Scale.z = (float)(tempZ / ui.bboznow);
-
-                stl.UpdateBoundingBoxAndMatrix();
-                stl.Land();
-                UpdateOutOfBound();
-                MainWindow.main.threeDControl.UpdateChanges();
+                textScaleX.Text = (25.4).ToString("0.000");
+                textScaleY.Text = (25.4).ToString("0.000");
+                textScaleZ.Text = (25.4).ToString("0.000");
             }
             catch { }
         }
@@ -998,18 +982,13 @@ namespace View3D.view
                 ui.chk_Uniform.IsChecked = true;
                 double tempX = bbox.Size.x / 25.4, tempY = bbox.Size.y / 25.4, tempZ = bbox.Size.z / 25.4;
                 ui.gIsShow = true;
-                ui.dimX    = tempX;
-                ui.dimY    = tempY;
-                ui.dimZ    = tempZ;
                 ui.updateTxt();
                 ui.chk_Uniform_Checked(null, null);
                 ui.gIsShow = false;
-                textScaleX.Text = (tempX / ui.bboxnow).ToString("0.000");
-                textScaleY.Text = (tempY / ui.bboynow).ToString("0.000");
-                textScaleZ.Text = (tempZ / ui.bboznow).ToString("0.000");
-                UpdateOutOfBound();
-                stl.Land();
-                MainWindow.main.threeDControl.UpdateChanges();
+
+                textScaleX.Text = (1 / 25.4).ToString("0.000");
+                textScaleY.Text = (1 / 25.4).ToString("0.000");
+                textScaleZ.Text = (1 / 25.4).ToString("0.000");
             }
             catch { }
         }

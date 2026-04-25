@@ -17,14 +17,7 @@ namespace View3D.view
     public partial class UI_resize_advance : UserControl
     {
         public bool gIsShow = false;
-        public double bboxnow;
-        public double bboynow;
-        public double bboznow;
-        public double dimX = 0.0, dimY = 0.0, dimZ = 0.0;
-
-        bool IsScale = false;
         Axis xyzbind = Axis.X;
-        string scaleKeyDown = "";
 
         public UI_resize_advance()
         {
@@ -63,33 +56,11 @@ namespace View3D.view
             MainWindow.main.UI_move.slider_moveZ.Maximum = 1000;
 
             RHBoundingBox bbox = stl.BoundingBox;
-            bboxnow = bbox.Size.x / Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text);
-            bboynow = bbox.Size.y / Convert.ToDouble(MainWindow.main.stlComposer.textScaleY.Text);
-            bboznow = bbox.Size.z / Convert.ToDouble(MainWindow.main.stlComposer.textScaleZ.Text);
-
             gIsShow = true;
-            dimX = bbox.Size.x;
-            dimY = bbox.Size.y;
-            dimZ = bbox.Size.z;
+
             updateTxt();
-
-            if (Convert.ToDouble(MainWindow.main.stlComposer.textRotX.Text) != 0 ||
-                Convert.ToDouble(MainWindow.main.stlComposer.textRotY.Text) != 0 ||
-                Convert.ToDouble(MainWindow.main.stlComposer.textRotZ.Text) != 0)
-            {
-                chk_Uniform.IsChecked = true;
-                chk_Uniform.IsEnabled = false;
-            }
-            else
-            {
-                chk_Uniform.IsEnabled = true;
-            }
-
-            if (chk_Uniform.IsChecked == true)
-            {
-                chk_Uniform_Checked(null, null);
-            }
-
+            chk_Uniform.IsChecked = true;
+            chk_Uniform_Checked(null, null);
             gIsShow = false;
         }
 
@@ -103,63 +74,21 @@ namespace View3D.view
             if (stl == null) return;
             try
             {
-                if (dimX == 0)
-                {
-                    dimX = 0.001;
-                    updateTxt();
-                }
-                else
-                {
-                    dimX = unit2MMTransform(Convert.ToDouble(txtX.Text));
-                        
-                    if(dimX == 0)
-                    {
-                        dimX = 0.001;
-                    }
-                }
+                double dimX = Convert.ToDouble(txtX.Text);
+                if (dimX == 0) dimX = 0.001;
 
-                Double tbefore = Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text);
-                Double tTempx = dimX / bboxnow;
-                Double tMultScale = 0.0;
-
-                tMultScale = tTempx / tbefore;
-                MainWindow.main.stlComposer.textScaleX.Text = tTempx.ToString("0.000");
+                Double tScalex = dimX / stl.BoundingBox.Size.x;
+ 
+                MainWindow.main.stlComposer.textScaleX.Text = tScalex.ToString("0.000");
                 if (chk_Uniform.IsChecked == true)
                 {
-                    Double temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleY.Text) * tMultScale;
-                    if (temp > 0)
-                    {
-                        MainWindow.main.stlComposer.textScaleY.Text = temp.ToString("0.000");
-                    }
-
-                    temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleZ.Text) * tMultScale;
-                    if (temp > 0)
-                    {
-                        MainWindow.main.stlComposer.textScaleZ.Text = temp.ToString("0.000");
-                    }
-
+                    MainWindow.main.stlComposer.textScaleY.Text = tScalex.ToString("0.000");
+                    MainWindow.main.stlComposer.textScaleZ.Text = tScalex.ToString("0.000");
+     
                     gIsShow = true;
-                    IsScale = false;
-       
                     updateSliderValue(xyzbind);
-
-                    if (scaleKeyDown != "x")
-                    {
-                        dimX = stl.BoundingBox.Size.x;
-                        updateTxt();
-                    }
-                    if (scaleKeyDown != "y")
-                    {
-                        dimY = stl.BoundingBox.Size.y;
-                        updateTxt();
-                    }
-                    if (scaleKeyDown != "z")
-                    {
-                        dimZ = stl.BoundingBox.Size.z;
-                        updateTxt();
-                    }
+                    updateTxt();
                     gIsShow = false;
-                    IsScale = true;
                 }
             }
             catch { }
@@ -175,62 +104,20 @@ namespace View3D.view
             if (stl == null) return;
             try
             {
-                if (dimY == 0)
-                {
-                    dimY = 0.001;
-                    updateTxt();
-                }
-                else
-                {
-                    dimY = unit2MMTransform(Convert.ToDouble(txtY.Text));
+                double dimY = Convert.ToDouble(txtY.Text);
+                if (dimY == 0) dimY = 0.001;
 
-                    if (dimY == 0)
-                    {
-                        dimY = 0.001;
-                    }
-                }
-
-                Double tbefore = Convert.ToDouble(MainWindow.main.stlComposer.textScaleY.Text);
-                Double tTempy = dimY / bboynow;
-                Double tMultScale = 0.0;
-
-                tMultScale = tTempy / tbefore;
-
-                MainWindow.main.stlComposer.textScaleY.Text = tTempy.ToString("0.000");
+                Double tScaley = dimY / stl.BoundingBox.Size.y;
+                MainWindow.main.stlComposer.textScaleY.Text = tScaley.ToString("0.000");
                 if (chk_Uniform.IsChecked == true)
                 {
-                    Double temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text) * tMultScale;
-                    if (temp > 0)
-                    {
-                        MainWindow.main.stlComposer.textScaleX.Text = temp.ToString("0.000");
-                    }
-
-                    temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleZ.Text) * tMultScale;
-                    if (temp > 0)
-                    {
-                        MainWindow.main.stlComposer.textScaleZ.Text = temp.ToString("0.000");
-                    }
-
+                    MainWindow.main.stlComposer.textScaleX.Text = tScaley.ToString("0.000");
+                    MainWindow.main.stlComposer.textScaleZ.Text = tScaley.ToString("0.000");
+  
                     gIsShow = true;
-                    IsScale = false;
                     updateSliderValue(xyzbind);
-                    if (scaleKeyDown != "x")
-                    {
-                        dimX = stl.BoundingBox.Size.x;
-                        updateTxt();
-                    }
-                    if (scaleKeyDown != "y")
-                    {
-                        dimY = stl.BoundingBox.Size.y;
-                        updateTxt();
-                    }
-                    if (scaleKeyDown != "z")
-                    {
-                        dimZ = stl.BoundingBox.Size.z;
-                        updateTxt();
-                    }
+                    updateTxt();
                     gIsShow = false;
-                    IsScale = true;
                 }
             }
             catch { }
@@ -253,63 +140,20 @@ namespace View3D.view
             }
             try
             { 
-                if (dimZ == 0)
-                {
-                    dimZ = 0.001;
-                    updateTxt();
-                }
-                else
-                {
-                    dimZ = unit2MMTransform(Convert.ToDouble(txtZ.Text));
+                double dimZ = Convert.ToDouble(txtZ.Text);
+                if (dimZ == 0) dimZ = 0.001;
 
-                    if (dimY == 0)
-                    {
-                        dimY = 0.001;
-                    }
-                }
-
-                Double tbefore = Convert.ToDouble(MainWindow.main.stlComposer.textScaleZ.Text);
-                Double tTempz = dimZ / bboznow;
-                Double tMultScale = 0.0;
-
-                tMultScale = tTempz / tbefore;
-
-                MainWindow.main.stlComposer.textScaleZ.Text = tTempz.ToString("0.000");
+                Double tScalez = dimZ / stl.BoundingBox.Size.z;
+                MainWindow.main.stlComposer.textScaleZ.Text = tScalez.ToString("0.000");
                 if (chk_Uniform.IsChecked == true)
                 {
-                    Double temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text) * tMultScale;
-                    if (temp > 0)
-                    {
-                        MainWindow.main.stlComposer.textScaleX.Text = temp.ToString("0.000");
-                    }
-
-                    temp = Convert.ToDouble(MainWindow.main.stlComposer.textScaleY.Text) * tMultScale;
-                    if (temp > 0)
-                    {
-                        MainWindow.main.stlComposer.textScaleY.Text = temp.ToString("0.000");
-                    }
-
+                    MainWindow.main.stlComposer.textScaleX.Text = tScalez.ToString("0.000");
+                    MainWindow.main.stlComposer.textScaleY.Text = tScalez.ToString("0.000");
+        
                     gIsShow = true;
-                    IsScale = false;
                     updateSliderValue(xyzbind);
-                    if (scaleKeyDown != "x")
-                    {
-                        dimX = stl.BoundingBox.Size.x;
-                        updateTxt();
-                    }
-                    if (scaleKeyDown != "y")
-                    {
-                        dimY = stl.BoundingBox.Size.y;
-                        updateTxt();
-                    }
-                    if (scaleKeyDown != "z")
-                    {
-                        dimZ = stl.BoundingBox.Size.z;
-                        updateTxt();
-                    }
-
+                    updateTxt();
                     gIsShow = false;
-                    IsScale = true;
                 }
                 stl.Land();
                 MainWindow.main.UI_move.slider_moveZ.Minimum = stl.Position.Z - stl.BoundingBox.zMin;
@@ -330,10 +174,7 @@ namespace View3D.view
                 txt_Scale.IsEnabled = true;
                 btn_Scale.IsEnabled = true;
                 checkMin();
-                IsScale = false;
                 updateSliderValue(xyzbind);
-                IsScale = true;
-
             }
             catch { }
         }
@@ -365,85 +206,43 @@ namespace View3D.view
             e.Handled = true;
         }
 
+        // NOTE: Slider change is always changed in uniform scale.
         private void slider_resize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (MainWindow.main == null) return;
             ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
-            switch (xyzbind)
-            {
-                case Axis.X:
-                    if (IsScale == true)
-                    {
-                        dimX = unit2MMTransform(slider_resize.Value);
-                        updateTxt();
-                    }
-                    break;
-                case Axis.Y:
-                    if (IsScale == true)
-                    {
-                        dimY = unit2MMTransform(slider_resize.Value);
-                        updateTxt();
-                    }
-                    break;
-                case Axis.Z:
-                    if (IsScale == true)
-                    {
-                        dimZ = unit2MMTransform(slider_resize.Value);
-                        updateTxt();
-                    }
-                    break;
-            }
-            txt_Scale.Text = (Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text) * 100).ToString("0");
+            txt_Scale.Text = slider_resize.Value.ToString("0");
+
+            MainWindow.main.stlComposer.textScaleX.Text = (slider_resize.Value / 100).ToString("0.000");
+            MainWindow.main.stlComposer.textScaleY.Text = (slider_resize.Value / 100).ToString("0.000");
+            MainWindow.main.stlComposer.textScaleZ.Text = (slider_resize.Value / 100).ToString("0.000");
+
+            gIsShow = true;
+            updateTxt();
+            gIsShow = false;
         }
 
-        public void checkMin()
+        void checkMin()
         {
             if (MainWindow.main == null) return;
-            double txMaxScalableValue = Convert.ToDouble(SettingsService.Instance.Settings.PrintAreaWidth) / dimX;
-            double tyMaxScalableValue = Convert.ToDouble(SettingsService.Instance.Settings.PrintAreaDepth) / dimY;
-            double tzMaxScalableValue = Convert.ToDouble(SettingsService.Instance.Settings.PrintAreaHeight) / dimZ;
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            if (stl == null) return;
+
+            double txMaxScalableValue = Convert.ToDouble(SettingsService.Instance.Settings.PrintAreaWidth) / stl.Model.boundingBox.Size.x;
+            double tyMaxScalableValue = Convert.ToDouble(SettingsService.Instance.Settings.PrintAreaDepth) / stl.Model.boundingBox.Size.y;
+            double tzMaxScalableValue = Convert.ToDouble(SettingsService.Instance.Settings.PrintAreaHeight) / stl.Model.boundingBox.Size.z;
             double tMaxScalableValue = Math.Min(Math.Min(txMaxScalableValue, tyMaxScalableValue), Math.Min(tyMaxScalableValue, tzMaxScalableValue));
 
-            IsScale = false;
+            slider_resize.Maximum = tzMaxScalableValue * 100;
+        
             if (txMaxScalableValue == tMaxScalableValue)
-            {
                 xyzbind = Axis.X;
-                slider_resize.Maximum = (double)SettingsService.Instance.Settings.PrintAreaWidth;
-
-                if ((dimY * txMaxScalableValue > (double)SettingsService.Instance.Settings.PrintAreaDepth)
-                        || (dimZ * txMaxScalableValue > (double)SettingsService.Instance.Settings.PrintAreaHeight))
-                {
-                    slider_resize.Maximum = Math.Floor(dimX * Math.Min(tyMaxScalableValue, tzMaxScalableValue) * 1000) / 1000;
-                }
-            }
             else if (tyMaxScalableValue == tMaxScalableValue)
-            {
                 xyzbind = Axis.Y;
-                slider_resize.Maximum = (double)SettingsService.Instance.Settings.PrintAreaDepth;
-
-                if ((dimX * tyMaxScalableValue > (double)SettingsService.Instance.Settings.PrintAreaWidth)
-                        || (dimZ * tyMaxScalableValue > (double)SettingsService.Instance.Settings.PrintAreaHeight))
-                {
-                    slider_resize.Maximum = Math.Floor(dimY * Math.Min(txMaxScalableValue, tzMaxScalableValue) * 1000) / 1000;
-                }
-            }
             else if (tzMaxScalableValue == tMaxScalableValue)
-            {
                 xyzbind = Axis.Z;
-                slider_resize.Maximum = (double)SettingsService.Instance.Settings.PrintAreaHeight;
-
-                if ((dimX * tzMaxScalableValue > (double)SettingsService.Instance.Settings.PrintAreaWidth)
-                        || (dimY * tzMaxScalableValue > (double)SettingsService.Instance.Settings.PrintAreaDepth))
-                {
-                    slider_resize.Maximum = Math.Floor(dimZ * Math.Min(txMaxScalableValue, tyMaxScalableValue) * 1000) / 1000;
-                }
-            }
-
-            slider_resize.Maximum = unit2InchTransform(slider_resize.Maximum);
-
-            IsScale = true;
         }
 
         public void button_Reset_Click(object sender, RoutedEventArgs e)
@@ -454,19 +253,11 @@ namespace View3D.view
             MainWindow.main.stlComposer.textScaleX.Text = "1";
             MainWindow.main.stlComposer.textScaleY.Text = "1";
             MainWindow.main.stlComposer.textScaleZ.Text = "1";
-            bboxnow = stl.BoundingBox.Size.x;
-            bboynow = stl.BoundingBox.Size.y;
-            bboznow = stl.BoundingBox.Size.z;
             txt_Scale.Text = "100";
 
             gIsShow = true;
-            dimX = stl.BoundingBox.Size.x;
-            dimY = stl.BoundingBox.Size.y;
-            dimZ = stl.BoundingBox.Size.z;
             updateTxt();
-            IsScale = false;
             updateSliderValue(xyzbind);
-            IsScale = true;
             gIsShow = false;
             checkMin();
             MainWindow.main.stlComposer.check_stl_size_too_small();
@@ -487,10 +278,9 @@ namespace View3D.view
             slider_resize.Value = Convert.ToDouble(txt_Scale.Text);
             slider_resize.ValueChanged += slider_resize_ValueChanged;
 
-            dimX = stl.BoundingBox.Size.x;
-            dimY = stl.BoundingBox.Size.y;
-            dimZ = stl.BoundingBox.Size.z;
+            gIsShow = true;
             updateTxt();
+            gIsShow = false;
         }
 
         private void button_inchtomm_Click(object sender, RoutedEventArgs e)
@@ -520,15 +310,10 @@ namespace View3D.view
                 MainWindow.main.stlComposer.textScaleY.Text = scaleValue.ToString("0.000");
                 MainWindow.main.stlComposer.textScaleZ.Text = scaleValue.ToString("0.000");
                 gIsShow = true;
-                dimX = stl.BoundingBox.Size.x;
-                dimY = stl.BoundingBox.Size.y;
-                dimZ = stl.BoundingBox.Size.z;
                 updateTxt();
                 gIsShow = false;
 
-                IsScale = false;
                 updateSliderValue(xyzbind);
-                IsScale = true;
             }
             catch { }
         }
@@ -538,54 +323,35 @@ namespace View3D.view
             ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
-            try
-            {
-                dimX = stl.BoundingBox.Size.x;
-                dimY = stl.BoundingBox.Size.y;
-                dimZ = stl.BoundingBox.Size.z;
-                updateTxt();
-
-                scaleKeyDown = "";
-            }
-            catch { }
-        }
-
-        private void scaleTextBoxKeyBoardFocus(object sender, KeyboardFocusChangedEventArgs e)
-        {
-            if ((TextBox)sender == txtX)
-                scaleKeyDown = "x";
-            else if ((TextBox)sender == txtY)
-                scaleKeyDown = "y";
-            else if ((TextBox)sender == txtZ)
-                scaleKeyDown = "z";
+            updateTxt();
         }
 
         public void updateTxt()
         {
-            txtX.Text = dimX.ToString("0.000");
-            txtY.Text = dimY.ToString("0.000");
-            txtZ.Text = dimZ.ToString("0.000");
+            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
+            if (stl == null) return;
+
+            txtX.Text = stl.BoundingBox.Size.x.ToString("0.000");
+            txtY.Text = stl.BoundingBox.Size.y.ToString("0.000");
+            txtZ.Text = stl.BoundingBox.Size.z.ToString("0.000");
         }
 
         void updateSliderValue(Axis axis)
         {
-            double dimForDisplay = 0.0;
             switch (axis)
             {
                 case Axis.X:
-                    dimForDisplay = dimX;
+                    slider_resize.Value = MainWindow.main.stlComposer.SingleSelectedModel.Scale.x * 100;
                     break;
 
                 case Axis.Y:
-                    dimForDisplay = dimY;
+                    slider_resize.Value = MainWindow.main.stlComposer.SingleSelectedModel.Scale.y * 100;
                     break;
 
                 case Axis.Z:
-                    dimForDisplay = dimZ;
+                    slider_resize.Value = MainWindow.main.stlComposer.SingleSelectedModel.Scale.z * 100;
                     break;
             }
-
-            slider_resize.Value = Convert.ToDouble(unit2InchTransform(dimForDisplay).ToString("0.000"));
         }
 
         // mm -> inch
