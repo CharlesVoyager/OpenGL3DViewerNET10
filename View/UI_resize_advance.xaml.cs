@@ -53,11 +53,8 @@ namespace View3D.view
             if (MainWindow.main == null) return; // At design time MainWindow.main is null. Add null guards to prevent NullReferenceException.
             ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
-            MainWindow.main.UI_move.slider_moveZ.Maximum = 1000;
 
-            RHBoundingBox bbox = stl.BoundingBox;
             gIsShow = true;
-
             updateTxt();
             chk_Uniform.IsChecked = true;
             chk_Uniform_Checked(null, null);
@@ -309,6 +306,7 @@ namespace View3D.view
                 MainWindow.main.stlComposer.textScaleX.Text = scaleValue.ToString("0.000");
                 MainWindow.main.stlComposer.textScaleY.Text = scaleValue.ToString("0.000");
                 MainWindow.main.stlComposer.textScaleZ.Text = scaleValue.ToString("0.000");
+            
                 gIsShow = true;
                 updateTxt();
                 gIsShow = false;
