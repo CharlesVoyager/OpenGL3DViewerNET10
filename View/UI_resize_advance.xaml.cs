@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using View3D.model.geom;
 using OpenGL3DViewerNET10.ModelLib.model;
 using OpenGL3DViewerNET10.ModelLib.Utils;
 
@@ -74,7 +73,7 @@ namespace View3D.view
                 double dimX = Convert.ToDouble(txtX.Text);
                 if (dimX == 0) dimX = 0.001;
 
-                Double tScalex = dimX / stl.Model.boundingBox.Size.x;
+                Double tScalex = dimX / Math.Max(stl.Model.boundingBox.Size.x, 0.0000001);
  
                 MainWindow.main.stlComposer.textScaleX.Text = tScalex.ToString("0.000");
                 if (chk_Uniform.IsChecked == true)
@@ -104,7 +103,7 @@ namespace View3D.view
                 double dimY = Convert.ToDouble(txtY.Text);
                 if (dimY == 0) dimY = 0.001;
 
-                Double tScaley = dimY / stl.Model.boundingBox.Size.y;
+                Double tScaley = dimY / Math.Max(stl.Model.boundingBox.Size.y, 0.0000001);
                 MainWindow.main.stlComposer.textScaleY.Text = tScaley.ToString("0.000");
                 if (chk_Uniform.IsChecked == true)
                 {
@@ -140,7 +139,7 @@ namespace View3D.view
                 double dimZ = Convert.ToDouble(txtZ.Text);
                 if (dimZ == 0) dimZ = 0.001;
 
-                Double tScalez = dimZ / stl.Model.boundingBox.Size.z;
+                Double tScalez = dimZ / Math.Max(stl.Model.boundingBox.Size.z, 0.0000001);
                 MainWindow.main.stlComposer.textScaleZ.Text = tScalez.ToString("0.000");
                 if (chk_Uniform.IsChecked == true)
                 {
@@ -227,12 +226,17 @@ namespace View3D.view
             ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
-            double txMaxScalableValue = Convert.ToDouble(SettingsService.Instance.Settings.PrintAreaWidth) / stl.Model.boundingBox.Size.x;
-            double tyMaxScalableValue = Convert.ToDouble(SettingsService.Instance.Settings.PrintAreaDepth) / stl.Model.boundingBox.Size.y;
-            double tzMaxScalableValue = Convert.ToDouble(SettingsService.Instance.Settings.PrintAreaHeight) / stl.Model.boundingBox.Size.z;
+            // Ensure the value of dimension is not zero; otherwise, exception happens when calculating scale.
+            double dimX = Math.Max(stl.Model.boundingBox.Size.x, 0.0000001);
+            double dimY = Math.Max(stl.Model.boundingBox.Size.y, 0.0000001);
+            double dimZ = Math.Max(stl.Model.boundingBox.Size.z, 0.0000001);
+
+            double txMaxScalableValue = Convert.ToDouble(SettingsService.Instance.Settings.PrintAreaWidth) / dimX;
+            double tyMaxScalableValue = Convert.ToDouble(SettingsService.Instance.Settings.PrintAreaDepth) / dimY;
+            double tzMaxScalableValue = Convert.ToDouble(SettingsService.Instance.Settings.PrintAreaHeight) / dimZ;
             double tMaxScalableValue = Math.Min(Math.Min(txMaxScalableValue, tyMaxScalableValue), Math.Min(tyMaxScalableValue, tzMaxScalableValue));
 
-            slider_resize.Maximum = tzMaxScalableValue * 100;
+            slider_resize.Maximum = tMaxScalableValue * 100;
         
             if (txMaxScalableValue == tMaxScalableValue)
                 xyzbind = Axis.X;
