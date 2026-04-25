@@ -247,10 +247,12 @@ namespace View3D.view
             if (MainWindow.main == null) return;
             ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
+         
             MainWindow.main.stlComposer.textScaleX.Text = "1";
             MainWindow.main.stlComposer.textScaleY.Text = "1";
             MainWindow.main.stlComposer.textScaleZ.Text = "1";
             txt_Scale.Text = "100";
+            chk_Uniform.IsChecked = true;
 
             gIsShow = true;
             updateTxt();
@@ -260,6 +262,11 @@ namespace View3D.view
             MainWindow.main.stlComposer.check_stl_size_too_small();
             button_mmtoinch.IsEnabled = true;
             button_inchtomm.IsEnabled = false;
+
+            gIsShow = true;
+            updateTxt();
+            updateSliderValue(xyzbind);
+            gIsShow = false;
         }
 
         private void button_mmtoinch_Click(object sender, RoutedEventArgs e)
@@ -316,12 +323,15 @@ namespace View3D.view
             catch { }
         }
 
+        // Check if values of TextBox is valid.
         private void scaleLostFocus(object sender, RoutedEventArgs e)
         {
             ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
+            gIsShow = true;
             updateTxt();
+            gIsShow = false;
         }
 
         public void updateTxt()
@@ -350,22 +360,6 @@ namespace View3D.view
                     slider_resize.Value = MainWindow.main.stlComposer.SingleSelectedModel.Scale.z * 100;
                     break;
             }
-        }
-
-        // mm -> inch
-        // Note: No conversion. Just return the input value. 
-        private double unit2InchTransform(double inputValue, int margin = 0)
-        {
-            double transformedValue = inputValue;
-            return transformedValue;
-        }
-
-        // inch -> mm
-        // Note: No conversion. Just return the input value. 
-        private double unit2MMTransform(double inputValue)
-        {
-            double transformedValue = inputValue;
-            return transformedValue;
         }
     }
 }
