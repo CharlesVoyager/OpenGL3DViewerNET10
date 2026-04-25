@@ -708,7 +708,6 @@ namespace View3D.view
 
         private void ThreeDSettings_Closed(object sender, EventArgs e)
         {
-            controlsToSettings();
             SettingsService.Instance.Save();
         }
 
@@ -749,17 +748,12 @@ namespace View3D.view
                 SettingsService.Instance.Settings.InitialClientSizeHeight = value;
         }
 
+        // Updates the SettingsService with current 'Border' control values. Called after color pickers and light setting changes.
+        // Other controls update SettingsService directly in their event handlers, so they don't need to call this method.
         void controlsToSettings()
         {
             try
             {
-                if (uint.TryParse(txtPrintAreaWidth.Text, out uint value)) SettingsService.Instance.Settings.PrintAreaWidth = value;
-                if (uint.TryParse(txtPrintAreaDepth.Text, out value)) SettingsService.Instance.Settings.PrintAreaDepth = value;
-                if (uint.TryParse(txtPrintAreaHeight.Text, out value)) SettingsService.Instance.Settings.PrintAreaHeight = value;
-                
-                if (int.TryParse(txtClientSizeWidth.Text, out int intValue)) SettingsService.Instance.Settings.InitialClientSizeWidth = intValue;
-                if (int.TryParse(txtClientSizeHeight.Text, out intValue)) SettingsService.Instance.Settings.InitialClientSizeHeight = intValue;
-
                 SettingsService.Instance.Settings.BackgroundTopColor = ToArgb(backgroundTop);
                 SettingsService.Instance.Settings.BackgroundBottomColor = ToArgb(backgroundBottom);
                 SettingsService.Instance.Settings.FacesColor = ToArgb(faces);
@@ -768,10 +762,6 @@ namespace View3D.view
                 SettingsService.Instance.Settings.PrinterBaseColor = ToArgb(printerBase);
                 SettingsService.Instance.Settings.PrinterFrameColor = ToArgb(printerFrame);
                 SettingsService.Instance.Settings.OutsidePrintbedColor = ToArgb(outsidePrintbed);
-
-                SettingsService.Instance.Settings.ShowEdges = (showEdges.IsChecked == true);
-                SettingsService.Instance.Settings.ShowFaces = (showFaces.IsChecked == true);
-                SettingsService.Instance.Settings.ShowPrintbed = (showPrintbed.IsChecked == true ? true : false);
 
                 SettingsService.Instance.Settings.SelectionBoxColor = ToArgb(selectionBox);
                 SettingsService.Instance.Settings.ErrorModelColor = ToArgb(errorModel);
