@@ -656,19 +656,21 @@ namespace View3D.view
 
             if (sender is TextBox tb) 
             {
-                if (tb == keyDirX) SettingsService.Instance.Settings.KeyDirX = float.TryParse(keyDirX.Text, out float kx) ? kx : SettingsService.Instance.Settings.KeyDirX;
-                else if (tb == keyDirY) SettingsService.Instance.Settings.KeyDirY = float.TryParse(keyDirY.Text, out float ky) ? ky : SettingsService.Instance.Settings.KeyDirY;
-                else if (tb == keyDirZ) SettingsService.Instance.Settings.KeyDirZ = float.TryParse(keyDirZ.Text, out float kz) ? kz : SettingsService.Instance.Settings.KeyDirZ;
-                else if (tb == fillDirX) SettingsService.Instance.Settings.FillDirX = float.TryParse(fillDirX.Text, out float fx) ? fx : SettingsService.Instance.Settings.FillDirX;
-                else if (tb == fillDirY) SettingsService.Instance.Settings.FillDirY = float.TryParse(fillDirY.Text, out float fy) ? fy : SettingsService.Instance.Settings.FillDirY;
-                else if (tb == fillDirZ) SettingsService.Instance.Settings.FillDirZ = float.TryParse(fillDirZ.Text, out float fz) ? fz : SettingsService.Instance.Settings.FillDirZ;
-                else if (tb == backDirX) SettingsService.Instance.Settings.BackDirX = float.TryParse(backDirX.Text, out float bx) ? bx : SettingsService.Instance.Settings.BackDirX;
-                else if (tb == backDirY) SettingsService.Instance.Settings.BackDirY = float.TryParse(backDirY.Text, out float by) ? by : SettingsService.Instance.Settings.BackDirY;
-                else if (tb == backDirZ) SettingsService.Instance.Settings.BackDirZ = float.TryParse(backDirZ.Text, out float bz) ? bz : SettingsService.Instance.Settings.BackDirZ;
-            }
+                float value = 0;
 
-            if (MainWindow.main.threeDControl != null)
-                MainWindow.main.threeDControl.UpdateChanges();
+                if (tb == keyDirX && float.TryParse(keyDirX.Text, out value)) SettingsService.Instance.Settings.KeyDirX = value;
+                else if (tb == keyDirY && float.TryParse(keyDirY.Text, out value)) SettingsService.Instance.Settings.KeyDirY = value;
+                else if (tb == keyDirZ && float.TryParse(keyDirZ.Text, out value)) SettingsService.Instance.Settings.KeyDirZ = value;
+                else if (tb == fillDirX && float.TryParse(fillDirX.Text, out value)) SettingsService.Instance.Settings.FillDirX = value;
+                else if (tb == fillDirY && float.TryParse(fillDirY.Text, out value)) SettingsService.Instance.Settings.FillDirY = value;
+                else if (tb == fillDirZ && float.TryParse(fillDirZ.Text, out value)) SettingsService.Instance.Settings.FillDirZ = value;
+                else if (tb == backDirX && float.TryParse(backDirX.Text, out value)) SettingsService.Instance.Settings.BackDirX = value;
+                else if (tb == backDirY && float.TryParse(backDirY.Text, out value)) SettingsService.Instance.Settings.BackDirY = value;
+                else if (tb == backDirZ && float.TryParse(backDirZ.Text, out value)) SettingsService.Instance.Settings.BackDirZ = value;
+        
+                if (MainWindow.main.threeDControl != null)
+                    MainWindow.main.threeDControl.UpdateChanges();
+            }
         }
 
         /*  Light default settings
