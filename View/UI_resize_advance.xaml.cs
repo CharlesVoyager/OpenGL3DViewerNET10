@@ -236,8 +236,10 @@ namespace View3D.view
             double tzMaxScalableValue = Convert.ToDouble(SettingsService.Instance.Settings.PrintAreaHeight) / dimZ;
             double tMaxScalableValue = Math.Min(Math.Min(txMaxScalableValue, tyMaxScalableValue), Math.Min(tyMaxScalableValue, tzMaxScalableValue));
 
+            slider_resize.ValueChanged -= slider_resize_ValueChanged;
             slider_resize.Maximum = tMaxScalableValue * 100;
-        
+            slider_resize.ValueChanged += slider_resize_ValueChanged;
+
             if (txMaxScalableValue == tMaxScalableValue)
                 xyzbind = Axis.X;
             else if (tyMaxScalableValue == tMaxScalableValue)
