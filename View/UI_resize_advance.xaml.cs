@@ -571,28 +571,20 @@ namespace View3D.view
             ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
 
-            model.geom.RHBoundingBox bbox = stl.BoundingBox;
-
             try
             {
-                Double tbeforeX = Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text);
-                Double tbeforeY = Convert.ToDouble(MainWindow.main.stlComposer.textScaleY.Text);
-                Double tbeforeZ = Convert.ToDouble(MainWindow.main.stlComposer.textScaleZ.Text);
-                Double temp = Convert.ToDouble(txt_Scale.Text) / 100;
-                Double tAddScaleX = tbeforeX * temp;
-                Double tAddScaleY = tbeforeY * temp;
-                Double tAddScaleZ = tbeforeZ * temp;
+                Double scaleValue = Convert.ToDouble(txt_Scale.Text) / 100;
 
-                MainWindow.main.stlComposer.textScaleX.Text = tAddScaleX.ToString("0.000");
-                MainWindow.main.stlComposer.textScaleY.Text = tAddScaleY.ToString("0.000");
-                MainWindow.main.stlComposer.textScaleZ.Text = tAddScaleZ.ToString("0.000");
+                MainWindow.main.stlComposer.textScaleX.Text = scaleValue.ToString("0.000");
+                MainWindow.main.stlComposer.textScaleY.Text = scaleValue.ToString("0.000");
+                MainWindow.main.stlComposer.textScaleZ.Text = scaleValue.ToString("0.000");
                 gIsShow = true;
                 dimX = stl.BoundingBox.Size.x;
                 dimY = stl.BoundingBox.Size.y;
                 dimZ = stl.BoundingBox.Size.z;
                 updateTxt();
                 gIsShow = false;
-                //checkMin();
+
                 IsScale = false;
                 if (xyzbind == "x")
                 {
