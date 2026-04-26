@@ -1,4 +1,6 @@
-﻿namespace View3D.model.geom
+﻿#nullable disable
+
+namespace View3D.model.geom
 {
     public class RHBoundingBox
     {

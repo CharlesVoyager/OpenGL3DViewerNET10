@@ -24,7 +24,12 @@ namespace View3D.view
 
             try
             {
+                stopWatch = new Stopwatch();
+
                 MainWindow.main.languageChanged += translate;
+                timer = new DispatcherTimer();
+                timer.Tick += dispatcherTimerTick_;
+                timer.Interval = new TimeSpan(0, 0, 1);
             }
             catch { }
         }
@@ -34,33 +39,16 @@ namespace View3D.view
             labelElapsedTime.Text = Trans.T("L_ELAPSED_TIME");
         }
 
-        public void StartTimer()
-        {
-            textBlock_time.Text = "00:00:00";
-            timer = new DispatcherTimer();
-            timer.Tick += dispatcherTimerTick_;
-            timer.Interval = new TimeSpan(0, 0, 1);
-            stopWatch = new Stopwatch();
-
-            stopWatch.Start();
-            timer.Start();
-        }
-
-        public void StopTimer()
-        {
-            textBlock_time.Text = "00:00:00";
-            stopWatch.Stop();
-            timer.Stop();
-        }
-      
-
         public int getStopWatch()
         {
+            if (stopWatch == null) return 0;
             return Convert.ToInt16(stopWatch.Elapsed.Seconds);
         }
 
         private void dispatcherTimerTick_(object sender, EventArgs e)
         {
+            if (stopWatch == null) return;
+
             textBlock_time.Text = stopWatch.Elapsed.Hours.ToString("00")
                 + ":" + stopWatch.Elapsed.Minutes.ToString("00")
                 + ":" + stopWatch.Elapsed.Seconds.ToString("00");
@@ -83,12 +71,23 @@ namespace View3D.view
             busyProgressbar.IsIndeterminate = false;
             busyProgressbar.Maximum = 100;
             busyProgressbar.Value = 0;
-            StartTimer();
+
+            if (stopWatch == null || timer == null) return;
+
+            textBlock_time.Text = "00:00:00";
+            stopWatch.Start();
+            timer.Start();
         }
 
         public void DisableBusyWindow()
         {
             Visibility = Visibility.Hidden;
+
+            if (stopWatch == null || timer == null) return;
+
+            textBlock_time.Text = "00:00:00";
+            stopWatch.Stop();
+            timer.Stop();
         }
     }
 }
