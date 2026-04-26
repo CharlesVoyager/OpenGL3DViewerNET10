@@ -401,16 +401,16 @@ namespace OpenGL3DViewerNET10.MeshIOLib
 
                 // Read 80-byte header
                 byte[] header = new byte[80];
-                f.Read(header, 0, 80);
+                f.ReadExactly(header);
 
                 // Read triangle count
                 byte[] countBuf = new byte[4];
-                f.Read(countBuf, 0, 4);
+                f.ReadExactly(countBuf);
                 int nTri = BitConverter.ToInt32(countBuf, 0);
 
                 // Read all triangle data at once
                 byte[] data = new byte[nTri * 50];
-                f.Read(data, 0, data.Length);
+                f.ReadExactly(data);
 
                 model.EnsureCapacity(nTri); // if supported
 
