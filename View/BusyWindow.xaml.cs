@@ -10,7 +10,9 @@ namespace View3D.view
     /// </summary>
     public partial class BusyWindow : System.Windows.Controls.UserControl
     {
-        public event EventHandler AbortTask;
+        public event EventHandler? AbortTask;
+        DispatcherTimer? timer;
+        Stopwatch? stopWatch;
 
         public bool killed = false;
         public double increment = 0;
@@ -50,9 +52,7 @@ namespace View3D.view
             stopWatch.Stop();
             timer.Stop();
         }
-        
-        private DispatcherTimer timer;
-        private Stopwatch stopWatch;
+      
 
         public int getStopWatch()
         {
