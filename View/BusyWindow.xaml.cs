@@ -45,7 +45,7 @@ namespace View3D.view
             return Convert.ToInt16(stopWatch.Elapsed.Seconds);
         }
 
-        private void dispatcherTimerTick_(object sender, EventArgs e)
+        private void dispatcherTimerTick_(object? sender, EventArgs e)
         {
             if (stopWatch == null) return;
 
