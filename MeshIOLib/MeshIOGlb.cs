@@ -301,7 +301,7 @@ namespace OpenGL3DViewerNET10.MeshIOLib
                     model.AddTriangle(p1, p2, p3, n0, n1, n2, color);
                 }
                 // ---- Priority 2: UV-mapped texture (base color or PBR) ----
-                else if (hasAnyTexture)
+                else if (hasAnyTexture && texcoords!=null)
                 {
                     float[]  uv0  = texcoords[i0];
                     float[]  uv1  = texcoords[i1];

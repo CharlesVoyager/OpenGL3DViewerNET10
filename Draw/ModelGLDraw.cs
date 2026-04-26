@@ -630,7 +630,7 @@ namespace OpenGL3DViewerNET10.Draw
 
         private void BindMaterial(int materialIndex, bool hasColors)
         {
-            MaterialGpuState? material = materialIndex >= 0 && materialIndex < materialStates.Count
+            MaterialGpuState material = materialIndex >= 0 && materialIndex < materialStates.Count
                 ? materialStates[materialIndex]
                 : null;
 
@@ -668,7 +668,7 @@ namespace OpenGL3DViewerNET10.Draw
         // Upload one Bitmap to an OpenGL texture.
         // Returns 0 if bitmap is null (caller can safely pass null for absent maps).
         // -------------------------------------------------------------------------
-        private int LoadTexture(Bitmap? bitmap)
+        private int LoadTexture(Bitmap bitmap)
         {
             if (bitmap == null) return 0;
 
