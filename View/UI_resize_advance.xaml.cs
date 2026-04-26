@@ -17,7 +17,7 @@ namespace View3D.view
     {
         const double MIN_DIMENSION = 0.001; // Minimum dimension to prevent exception when calculating scale.
 
-        public bool gIsShow = false;
+        bool gIsShow = false;
         Axis xyzbind = Axis.X;
 
         public UI_resize_advance()

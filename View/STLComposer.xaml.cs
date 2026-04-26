@@ -901,38 +901,37 @@ namespace View3D.view
         }
 
         // Auto scale the model to fit the half printer bed in X axis on the largest dimension.
-        public void DoAutoScale(ThreeDModel stl)
+        public void DoAutoScale(ThreeDModel model)
         {
             try
             {
-                var bbox = stl.BoundingBox;
+                var bbox = model.BoundingBox;
 
                 // Find the largest dimension of the model.
                 double maxDim = Math.Max(Math.Max(bbox.Size.x, bbox.Size.y), bbox.Size.z);
                 double scaleFactor = (SettingsService.Instance.Settings.PrintAreaWidth / 2) / maxDim;
 
-                stl.Scale.x = (float)scaleFactor;
-                stl.Scale.y = (float)scaleFactor;
-                stl.Scale.z = (float)scaleFactor;
+                model.Scale.x = (float)scaleFactor;
+                model.Scale.y = (float)scaleFactor;
+                model.Scale.z = (float)scaleFactor;
 
-                stl.UpdateBoundingBoxAndMatrix();
-                stl.Land();
+                model.UpdateBoundingBoxAndMatrix();
+                model.Land();
                 UpdateOutOfBound();
                 MainWindow.main.threeDControl.UpdateChanges();
             }
             catch { }
         }
 
-        public void DoMmToInch(ThreeDModel stl)
+        public void DoMmToInch(ThreeDModel model)
         {
             try
             {
                 var ui = MainWindow.main.UI_resize_advance;
                 ui.button_mmtoinch.IsEnabled = false;
                 ui.button_inchtomm.IsEnabled = true;
-                var bbox = stl.BoundingBox;
 
-                double tempX = bbox.Size.x * 25.4, tempY = bbox.Size.y * 25.4, tempZ = bbox.Size.z * 25.4;
+                double tempX = model.BoundingBox.Size.x * 25.4, tempY = model.BoundingBox.Size.y * 25.4, tempZ = model.BoundingBox.Size.z * 25.4;
                 if (tempX > SettingsService.Instance.Settings.PrintAreaWidth || 
                     tempY > SettingsService.Instance.Settings.PrintAreaDepth || 
                     tempZ > SettingsService.Instance.Settings.PrintAreaHeight)
@@ -944,14 +943,17 @@ namespace View3D.view
                         return;
                     }
                 }
-                ui.gIsShow = true;
-                ui.updateTxt();
-                ui.chk_Uniform_Checked(null, null);
-                ui.gIsShow = false;
 
-                textScaleX.Text = (25.4).ToString("0.000");
-                textScaleY.Text = (25.4).ToString("0.000");
-                textScaleZ.Text = (25.4).ToString("0.000");
+                double scaleFactor = 25.4; // 1 inch = 25.4 mm
+
+                model.Scale.x = (float)scaleFactor;
+                model.Scale.y = (float)scaleFactor;
+                model.Scale.z = (float)scaleFactor;
+
+                model.UpdateBoundingBoxAndMatrix();
+                model.Land();
+                UpdateOutOfBound();
+                MainWindow.main.threeDControl.UpdateChanges();
             }
             catch { }
         }
@@ -960,14 +962,9 @@ namespace View3D.view
         {
             try
             {
-                var ui   = MainWindow.main.UI_resize_advance;
-                var bbox = stl.BoundingBox;
-                ui.chk_Uniform.IsChecked = true;
-                double tempX = bbox.Size.x / 25.4, tempY = bbox.Size.y / 25.4, tempZ = bbox.Size.z / 25.4;
-                ui.gIsShow = true;
-                ui.updateTxt();
-                ui.chk_Uniform_Checked(null, null);
-                ui.gIsShow = false;
+                var ui = MainWindow.main.UI_resize_advance;
+                ui.button_mmtoinch.IsEnabled = true;
+                ui.button_inchtomm.IsEnabled = false;
 
                 textScaleX.Text = (1 / 25.4).ToString("0.000");
                 textScaleY.Text = (1 / 25.4).ToString("0.000");
