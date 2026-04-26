@@ -178,7 +178,7 @@ namespace View3D.view
             Vector3 ud = new Vector3(0, 0, 1);
             Vector3 camCenter = new Vector3();
             Vector3 cp = CameraPosition;
-            Vector3.Subtract(ref viewCenter, ref cp, out camCenter);
+            Vector3.Subtract(in viewCenter, in cp, out camCenter);
             Vector3 lr = new Vector3();
             Vector3.Cross(in camCenter, in ud, out lr);
             Vector3.Cross(in lr, in camCenter, out ud);
