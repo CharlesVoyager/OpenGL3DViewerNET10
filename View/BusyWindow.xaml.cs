@@ -75,6 +75,7 @@ namespace View3D.view
             if (stopWatch == null || timer == null) return;
 
             textBlock_time.Text = "00:00:00";
+            stopWatch.Reset();
             stopWatch.Start();
             timer.Start();
         }
