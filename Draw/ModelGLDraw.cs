@@ -5,6 +5,8 @@ using System.Drawing;
 using View3D;
 using View3D.view;
 
+#nullable disable
+
 namespace OpenGL3DViewerNET10.Draw
 {
     /*

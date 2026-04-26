@@ -529,7 +529,6 @@ namespace View3D.view
                 Margin = new Thickness(0, 15, 0, 0)
             };
 
-            bool confirmed = false;
             var okBtn = new Button
             {
                 Content = "OK",
@@ -539,7 +538,7 @@ namespace View3D.view
                 IsDefault = true
             };
 
-            okBtn.Click += (_, __) => { confirmed = true; colorPickerWindow.Close(); };
+            okBtn.Click += (_, __) => { colorPickerWindow.Close(); };
 
             btnPanel.Children.Add(okBtn);
             mainStack.Children.Add(btnPanel);
