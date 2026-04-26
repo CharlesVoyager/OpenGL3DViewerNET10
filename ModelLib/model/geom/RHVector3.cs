@@ -183,13 +183,15 @@ namespace View3D.model.geom
             }
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            RHVector3 compare = obj as RHVector3;
-            if (x == compare.x && y == compare.y && z == compare.z)
-                return true;
-            else
-                return false;
+            if (obj is not RHVector3 compare) return false;
+            return x == compare.x && y == compare.y && z == compare.z;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(x, y, z);
         }
 
         public override string ToString()
