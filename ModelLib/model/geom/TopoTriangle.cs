@@ -1,4 +1,5 @@
-﻿
+﻿#nullable disable
+
 namespace View3D.model.geom
 {
     public class TopoTriangle
@@ -6,7 +7,7 @@ namespace View3D.model.geom
         public TopoVertex[] Vertices = new TopoVertex[3];
         public RHVector3 Normal;
         public RHVector3[] VertexNormals = new RHVector3[3];
-        public float[]? Color;
+        public float[] Color;
 
         public TopoTriangle(TopoTriangle t)
         {
@@ -50,7 +51,7 @@ namespace View3D.model.geom
             Color = color;
         }
 
-        public TopoTriangle(TopoVertex v1, TopoVertex v2, TopoVertex v3, RHVector3[] vertexNormals, RHVector3 faceNormal, float[]? color = null)
+        public TopoTriangle(TopoVertex v1, TopoVertex v2, TopoVertex v3, RHVector3[] vertexNormals, RHVector3 faceNormal, float[] color = null)
         {
             Vertices[0] = v1;
             Vertices[1] = v2;

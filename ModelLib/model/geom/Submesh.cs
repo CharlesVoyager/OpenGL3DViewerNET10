@@ -71,7 +71,7 @@ namespace View3D.model.geom
             AddTriangle(v1, v2, v3, n, n, n, color);
         }
 
-        public void AddTriangle(RHVector3 v1, RHVector3 v2, RHVector3 v3, RHVector3 n0, RHVector3 n1, RHVector3 n2, float[]? color)
+        public void AddTriangle(RHVector3 v1, RHVector3 v2, RHVector3 v3, RHVector3 n0, RHVector3 n1, RHVector3 n2, float[] color)
         {
             if (idxVertices + 9 > glVertices.Length)
                 throw new Exception("Too many triangles added to submesh vertices.");

@@ -1,11 +1,6 @@
 ﻿
 namespace View3D.ModelObjectTool
 {
-    public enum ModelObjectToolType
-    {
-        Normal,
-        SIMD
-    }
 
     public class ModelObjectToolWrapper
     {
@@ -16,7 +11,6 @@ namespace View3D.ModelObjectTool
             get { return _Instance; }
         }
 
-        private ModelObjectToolType _ToolType = ModelObjectToolType.Normal;
         private ModelObjectToolBase _ModelObjectTool;
 
         public ModelObjectToolBase Tool
@@ -25,28 +19,6 @@ namespace View3D.ModelObjectTool
         }
 
         private ModelObjectToolWrapper()
-        {
-            ChangeToSIMDType();
-
-            CreateModelObjectTool(_ToolType);
-        }
-
-        public void ChangeType(ModelObjectToolType type)
-        {
-            if (_ToolType != type)
-            {
-                if (type == ModelObjectToolType.SIMD)
-                    ChangeToSIMDType();
-
-                CreateModelObjectTool(_ToolType);
-            }
-        }
-
-        private void ChangeToSIMDType()
-        {
-        }
-
-        private void CreateModelObjectTool(ModelObjectToolType type)
         {
             _ModelObjectTool = new ModelObjectToolNormal();
         }

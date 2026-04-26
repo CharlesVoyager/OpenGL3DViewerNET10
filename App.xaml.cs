@@ -14,7 +14,7 @@ namespace OpenGL3DViewerNET10
         [STAThread]
         public static void Main(string[] args)
         {
-            MainWindow? mainWindow = null;
+            MainWindow mainWindow = null;
             // Launch WPF on a dedicated STA background thread
             var wpfThread = new Thread(() =>
             {
