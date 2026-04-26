@@ -96,7 +96,7 @@ namespace OpenGL3DViewerNET10.ModelLib.Utils
 
         public static string T(string id, bool forcedToEnglish = false)
         {
-            string? res = null;
+            string res = null;
             if (forcedToEnglish)
             {
                 res = trans.english.trans[id];

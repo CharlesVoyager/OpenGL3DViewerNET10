@@ -2,12 +2,13 @@
 using View3D;
 using View3D.view;
 
+#nullable disable
+
 namespace OpenGL3DViewerNET10
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-
     public partial class App : System.Windows.Application
     {
         [STAThread]

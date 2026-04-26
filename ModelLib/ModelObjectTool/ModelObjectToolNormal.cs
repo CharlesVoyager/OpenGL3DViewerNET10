@@ -185,7 +185,7 @@ namespace View3D.ModelObjectTool
 
             Vector3 pVec = new Vector3();
             Vector3 rayNorm = ray.Normal;
-            Vector3.Cross(ref rayNorm, ref caVec, out pVec);
+            Vector3.Cross(in rayNorm, in caVec, out pVec);
             float det = Vector3.Dot(baVec, pVec);
 
             if (det > -0.00001 && det < 0.00001)
@@ -200,7 +200,7 @@ namespace View3D.ModelObjectTool
                 return false;
 
             Vector3 qVec = new Vector3();
-            Vector3.Cross(ref tVec, ref baVec, out qVec);
+            Vector3.Cross(in tVec, in baVec, out qVec);
             float v = invDet * Vector3.Dot(rayNorm, qVec);
 
             if (v < 0.0 || u + v > 1.0)
