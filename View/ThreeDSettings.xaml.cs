@@ -10,6 +10,8 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
+#nullable disable
+
 namespace View3D.view
 {
     public class BrushToFloatConverter : IValueConverter

@@ -14,6 +14,8 @@ using System.Windows.Interop;
 using View3D.ModelObjectTool;
 using View3D.Primitive;
 
+#nullable disable
+
 namespace View3D.view
 {
     /// <summary>

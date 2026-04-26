@@ -2,6 +2,8 @@
 using View3D.model.geom;
 using OpenGL3DViewerNET10.ModelLib.model;
 
+#nullable disable
+
 namespace View3D.view
 {
     public class ThreeDCamera

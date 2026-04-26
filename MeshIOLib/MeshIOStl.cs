@@ -239,8 +239,8 @@ namespace OpenGL3DViewerNET10.MeshIOLib
             using (var reader = new System.IO.StreamReader(filename))
             {
                 string line;
-                RHVector3 normalVect = null;
-                RHVector3 p1 = null, p2 = null;
+                RHVector3? normalVect = null;
+                RHVector3? p1 = null, p2 = null;
                 int vertexIndex = 0;
 
                 while ((line = reader.ReadLine()) != null)
