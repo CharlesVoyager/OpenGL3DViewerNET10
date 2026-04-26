@@ -279,10 +279,12 @@ namespace View3D.view
 
         private void button_mmtoinch_Click(object sender, RoutedEventArgs e)
         {
-            button_mmtoinch.IsEnabled = false;
-            button_inchtomm.IsEnabled = true;
             ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
             if (stl == null) return;
+
+            button_mmtoinch.IsEnabled = false;
+            button_inchtomm.IsEnabled = true;
+
             MainWindow.main.stlComposer.DoMmToInch(stl);
             txt_Scale.Text = (Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text) * 100).ToString("0");
 
@@ -297,16 +299,22 @@ namespace View3D.view
 
         private void button_inchtomm_Click(object sender, RoutedEventArgs e)
         {
-            button_mmtoinch.IsEnabled = true;
-            button_inchtomm.IsEnabled = false;
             ThreeDModel model = MainWindow.main.stlComposer.SingleSelectedModel;
             if (model == null) return;
+
+            button_mmtoinch.IsEnabled = true;
+            button_inchtomm.IsEnabled = false;
+
             MainWindow.main.stlComposer.DoInchtomm(model);
             txt_Scale.Text = (Convert.ToDouble(MainWindow.main.stlComposer.textScaleX.Text) * 100).ToString("0");
             
             slider_resize.ValueChanged -= slider_resize_ValueChanged;
             slider_resize.Value = Convert.ToDouble(txt_Scale.Text);
             slider_resize.ValueChanged += slider_resize_ValueChanged;
+
+            gIsShow = true;
+            updateTxt();
+            gIsShow = false;
         }
 
         private void btn_Scale_Click(object sender, RoutedEventArgs e)

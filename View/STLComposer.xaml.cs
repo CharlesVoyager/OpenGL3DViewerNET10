@@ -946,9 +946,9 @@ namespace View3D.view
 
                 double scaleFactor = 25.4; // 1 inch = 25.4 mm
 
-                model.Scale.x = (float)scaleFactor;
-                model.Scale.y = (float)scaleFactor;
-                model.Scale.z = (float)scaleFactor;
+                model.Scale.x *= (float)scaleFactor;
+                model.Scale.y *= (float)scaleFactor;
+                model.Scale.z *= (float)scaleFactor;
 
                 model.UpdateBoundingBoxAndMatrix();
                 model.Land();
@@ -958,7 +958,7 @@ namespace View3D.view
             catch { }
         }
 
-        public void DoInchtomm(ThreeDModel stl)
+        public void DoInchtomm(ThreeDModel model)
         {
             try
             {
@@ -966,9 +966,16 @@ namespace View3D.view
                 ui.button_mmtoinch.IsEnabled = true;
                 ui.button_inchtomm.IsEnabled = false;
 
-                textScaleX.Text = (1 / 25.4).ToString("0.000");
-                textScaleY.Text = (1 / 25.4).ToString("0.000");
-                textScaleZ.Text = (1 / 25.4).ToString("0.000");
+                double scaleFactor = 25.4; // 1 inch = 25.4 mm
+
+                model.Scale.x /= (float)scaleFactor;
+                model.Scale.y /= (float)scaleFactor;
+                model.Scale.z /= (float)scaleFactor;
+
+                model.UpdateBoundingBoxAndMatrix();
+                model.Land();
+                UpdateOutOfBound();
+                MainWindow.main.threeDControl.UpdateChanges();
             }
             catch { }
         }
