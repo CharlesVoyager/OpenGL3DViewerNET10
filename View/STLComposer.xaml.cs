@@ -94,14 +94,7 @@ namespace View3D.view
             return list;
         }
 
-        public ThreeDModel SingleSelectedModel
-        {
-            get
-            {
-                if (listObjects.SelectedItems.Count != 1) return null;
-                return ((ListViewItemModel)listObjects.SelectedItems[0]).Model;
-            }
-        }
+        public ThreeDModel SingleSelectedModel { get; set; } = null;
 
         void updateAnalyserData()
         {
@@ -127,10 +120,15 @@ namespace View3D.view
             {
                 if (!listObjects.SelectedItems.Contains(row))
                     listObjects.SelectedItems.Add(row);
+
+                SingleSelectedModel = model;
             }
             else
             {
                 listObjects.SelectedItems.Remove(row);
+
+                if (SingleSelectedModel == model)
+                    SingleSelectedModel = null;
             }
         }
 
@@ -446,40 +444,28 @@ namespace View3D.view
         // =====================================================================
         private void updateEnabled()
         {
-            int n = listObjects.SelectedItems.Count;
-            if (n != 1)
-            {
-                textRotX.IsEnabled          = false;
-                textRotY.IsEnabled          = false;
-                textRotZ.IsEnabled          = false;
-                textScaleX.IsEnabled        = false;
-                textScaleY.IsEnabled        = false;
-                textScaleZ.IsEnabled        = false;
-                textTransX.IsEnabled        = false;
-                textTransY.IsEnabled        = false;
-                textTransZ.IsEnabled        = false;
-
-                MainWindow.main.setbuttonVisable(listObjects.SelectedItems.Count == 1 && (n>0));
-
-                panelAnalysis.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                textRotX.IsEnabled         = true;
-                textRotY.IsEnabled         = true;
-                textRotZ.IsEnabled         = true;
-                textScaleX.IsEnabled       = true;
-                textScaleY.IsEnabled       = true;
-                textScaleZ.IsEnabled       = true;
-                textTransX.IsEnabled       = true;
-                textTransY.IsEnabled       = true;
-                textTransZ.IsEnabled       = true;
-
-                MainWindow.main.setbuttonVisable(listObjects.SelectedItems.Count == 1);
-
+            bool enable = SingleSelectedModel != null;
+            if (enable)
+            {         
                 panelAnalysis.Visibility = Visibility.Visible;
                 updateAnalyserData();
             }
+            else
+            {
+                panelAnalysis.Visibility = Visibility.Collapsed;
+            }
+
+            textTransX.IsEnabled       = enable;
+            textTransY.IsEnabled       = enable;
+            textTransZ.IsEnabled       = enable;
+            textScaleX.IsEnabled       = enable;
+            textScaleY.IsEnabled       = enable;
+            textScaleZ.IsEnabled       = enable;                
+            textRotX.IsEnabled         = enable;
+            textRotY.IsEnabled         = enable;
+            textRotZ.IsEnabled         = enable;
+
+            MainWindow.main.setbuttonVisable(enable);
         }
 
         // =====================================================================
@@ -560,12 +546,14 @@ namespace View3D.view
         // =====================================================================
         private void listObjects_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            updateEnabled();
             var list = ListObjects(false);
             var sellist = ListObjects(true);
             ThreeDModel stl = sellist.Count == 1 ? sellist.First.Value : null;
             foreach (var s in list)
                 s.Selected = sellist.Contains(s);
+ 
+            SingleSelectedModel = stl;
+            updateEnabled();
 
             if (stl != null)
             {
@@ -862,7 +850,7 @@ namespace View3D.view
                 else if (stl.Position.Y + dy < maxY && stl.Position.Y + dy > minY) 
                     stl.Position.Y += dy;
 
-                if (listObjects.SelectedItems.Count == 1)
+                if (SingleSelectedModel != null)
                 {
                     _suppressTextEvents = true;
                     textTransX.Text = stl.Position.X.ToString("0.000");

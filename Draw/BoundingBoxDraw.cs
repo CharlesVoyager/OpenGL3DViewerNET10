@@ -100,12 +100,7 @@ namespace OpenGL3DViewerNET10.Draw
         // Call each frame in place of the original GL.Begin/End block
         public void Draw()
         {
-            ThreeDModel? m = null;
-
-            MainWindow.main.Dispatcher.Invoke(() =>
-            {
-                m = MainWindow.main.stlComposer.SingleSelectedModel;
-            });
+            ThreeDModel? m = MainWindow.main.stlComposer.SingleSelectedModel;
 
             if (m == null) return;
 
