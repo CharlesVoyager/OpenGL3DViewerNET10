@@ -24,7 +24,7 @@ namespace View3D
         public STLComposer stlComposer = null;
         public ThreeDCamera threeDCamera = null;
 
-        public Trans? trans = null;
+        public Trans trans = null;
 
         public double dpiX, dpiY;
 
@@ -120,7 +120,7 @@ namespace View3D
         }
 
         //── UI (WPF) ────────────────────────────────────────────────
-        private ContextMenu? _contextMenu;
+        private ContextMenu _contextMenu;
         private void initializeUi()
         {
             VisualStateManager.GoToState(UI_view, "StateHidden", true);

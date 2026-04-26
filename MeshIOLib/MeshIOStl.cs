@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using View3D.model.geom;
 
+#nullable disable
+
 namespace OpenGL3DViewerNET10.MeshIOLib
 {
     public class StlSetting : IMeshOutSetting
@@ -517,7 +519,7 @@ namespace OpenGL3DViewerNET10.MeshIOLib
 
         }
 
-        void importByteArray(ref byte[] stlArr, TopoModel model, Action<int>? updateRate = null)
+        void importByteArray(ref byte[] stlArr, TopoModel model, Action<int> updateRate = null)
         {
             MemoryStream stream = new MemoryStream();
 

@@ -1,5 +1,4 @@
 ﻿using OpenGL3DViewerNET10.ModelLib.Utils;
-using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;

@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Xml;
 
+#nullable disable
+
 namespace OpenGL3DViewerNET10.ModelLib.Utils
 {
     public class Translation

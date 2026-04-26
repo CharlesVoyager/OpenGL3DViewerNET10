@@ -1,6 +1,8 @@
 using View3D.model.geom;
 using View3D;
 
+#nullable disable
+
 namespace OpenGL3DViewerNET10.MeshIOLib
 {
     public class MeshIOWrapper
