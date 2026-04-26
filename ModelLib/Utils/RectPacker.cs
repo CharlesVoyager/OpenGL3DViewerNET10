@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace OpenGL3DViewerNET10.ModelLib.Utils
 {
     public class PackerPos

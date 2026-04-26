@@ -1,8 +1,7 @@
-﻿using OpenTK.Mathematics;
+﻿#nullable disable
 
 namespace View3D.model.geom
 {
-   
     public class Submesh
     {
         public class DrawRange

@@ -1,8 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using OpenGL3DViewerNET10.ModelLib.model;
 using OpenGL3DViewerNET10.ModelLib.Utils;
+
+#nullable disable
 
 namespace View3D.view
 {

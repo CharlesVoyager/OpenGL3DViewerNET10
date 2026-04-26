@@ -4,6 +4,8 @@ using System.Diagnostics;
 using View3D.model.geom;
 using View3D.ModelObjectTool;
 
+#nullable disable
+
 namespace OpenGL3DViewerNET10.ModelLib.model
 {
     public class Coord3D

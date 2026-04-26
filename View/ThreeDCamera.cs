@@ -180,8 +180,8 @@ namespace View3D.view
             Vector3 cp = CameraPosition;
             Vector3.Subtract(ref viewCenter, ref cp, out camCenter);
             Vector3 lr = new Vector3();
-            Vector3.Cross(ref camCenter,ref ud, out lr);
-            Vector3.Cross(ref lr, ref camCenter, out ud);
+            Vector3.Cross(in camCenter, in ud, out lr);
+            Vector3.Cross(in lr, in camCenter, out ud);
             lr.Normalize();
             ud.Normalize();
             viewCenter.X = (float)(viewCenterStart.X + leftRight * lr.X + upDown * ud.X);
@@ -228,10 +228,10 @@ namespace View3D.view
                 Matrix4 lookAt = Matrix4.LookAt(camPos.X, camPos.Y, camPos.Z, viewCenter.X, viewCenter.Y, viewCenter.Z, 0, 0, 1.0f);
                 Matrix4 persp;
                 Vector3 dir = new Vector3();
-                Vector3.Subtract(ref viewCenter, ref camPos, out dir);
+                Vector3.Subtract(in viewCenter, in camPos, out dir);
                 dir.Normalize();
                 float dist;
-                Vector3.Dot(ref dir, ref camPos, out dist);
+                Vector3.Dot(in dir, in camPos, out dist);
                 dist = -dist;
 
                 float nearDist = Math.Max(1, dist - bedRadius);

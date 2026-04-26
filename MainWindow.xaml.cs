@@ -15,14 +15,14 @@ namespace View3D
 
     public partial class MainWindow : Window
     {
-        public event languageChangedEvent? languageChanged = null;
+        public event languageChangedEvent languageChanged = null;
 
-        public static MainWindow? main = null;
+        public static MainWindow main = null;
 
-        public ThreeDSettings? threeDSettings = null;
-        public ThreeDControl? threeDControl = null;
-        public STLComposer? stlComposer = null;
-        public ThreeDCamera? threeDCamera = null;
+        public ThreeDSettings threeDSettings = null;
+        public ThreeDControl threeDControl = null;
+        public STLComposer stlComposer = null;
+        public ThreeDCamera threeDCamera = null;
 
         public Trans? trans = null;
 
