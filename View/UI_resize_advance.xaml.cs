@@ -267,7 +267,7 @@ namespace View3D.view
             updateSliderValue(xyzbind);
             gIsShow = false;
             checkMin();
-            MainWindow.main.stlComposer.check_stl_size_too_small();
+            MainWindow.main.stlComposer.check_stl_size_too_small(stl);
             button_mmtoinch.IsEnabled = true;
             button_inchtomm.IsEnabled = false;
 

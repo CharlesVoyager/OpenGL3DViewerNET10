@@ -174,7 +174,7 @@ namespace View3D.view
         bool isTooSmall(RHBoundingBox boundingBox)
         {
             // Don't use z size here because some STL files may have very small z size but large x/y size, and they should not be considered as "too small".
-            return (boundingBox.Size.x * boundingBox.Size.y * 0.001) < 0.1; 
+            return (boundingBox.Size.x < 10 && boundingBox.Size.y < 10 && boundingBox.Size.z < 10); 
         }
 
         bool isTooBig(RHBoundingBox boundingBox)
@@ -235,34 +235,19 @@ namespace View3D.view
             }
             newModel.Name = Path.GetFileName(file);
 
-            if (isTooSmall(newModel.BoundingBox)) 
-            {
-                if (newModel.Name.Contains(".glb"))
-                {
-                    DoAutoScale(newModel);
-                }
-                else
-                {
-                    var dlg = new ObjectResizeDialog(
-                        newModel.BoundingBox.Size.x,
-                        newModel.BoundingBox.Size.y,
-                        newModel.BoundingBox.Size.z);
-                    if (MainWindow.main.Visibility == Visibility.Visible)
-                        dlg.Owner = MainWindow.main;
-                    dlg.ShowDialog();
-                    if (dlg.gIsScale) DoAutoScale(newModel);
-                    else if (dlg.gIsInch) DoMmToInch(newModel);
-                }
-            }
+            if (isTooSmall(newModel.BoundingBox) && newModel.Name.Contains(".glb"))
+                DoAutoScale(newModel);
+            else if (isTooSmall(newModel.BoundingBox))
+                check_stl_size_too_small(newModel);
             else if (isTooBig(newModel.BoundingBox))  // the object is too big.
             {
                 double tXBound = newModel.BoundingBox.Size.x / SettingsService.Instance.Settings.PrintAreaWidth;
                 double tYBound = newModel.BoundingBox.Size.y / SettingsService.Instance.Settings.PrintAreaDepth;
                 double tZBound = newModel.BoundingBox.Size.z / SettingsService.Instance.Settings.PrintAreaHeight;
-                double tMax    = Math.Max(Math.Max(tXBound, tYBound), Math.Max(tYBound, tZBound));
+                double tMax = Math.Max(Math.Max(tXBound, tYBound), Math.Max(tYBound, tZBound));
                 double scaleValue = 0;
 
-                if      (tMax == tXBound) scaleValue = SettingsService.Instance.Settings.PrintAreaWidth / newModel.BoundingBox.Size.x;
+                if (tMax == tXBound) scaleValue = SettingsService.Instance.Settings.PrintAreaWidth / newModel.BoundingBox.Size.x;
                 else if (tMax == tYBound) scaleValue = SettingsService.Instance.Settings.PrintAreaDepth / newModel.BoundingBox.Size.y;
                 else if (tMax == tZBound) scaleValue = SettingsService.Instance.Settings.PrintAreaHeight / newModel.BoundingBox.Size.z;
 
@@ -405,17 +390,16 @@ namespace View3D.view
             }
         }
 
-        public void check_stl_size_too_small()
+        public void check_stl_size_too_small(ThreeDModel model)
         {
-            ThreeDModel model = SingleSelectedModel;
             if (model == null) return;
 
-            if (model.BoundingBox.Size.x < 10 && model.BoundingBox.Size.y < 10 && model.BoundingBox.Size.z < 10)
+            if (isTooSmall(model.BoundingBox))
             {
                 var dlg = new ObjectResizeDialog(
-                    models[models.Count - 1].BoundingBox.Size.x,
-                    models[models.Count - 1].BoundingBox.Size.y,
-                    models[models.Count - 1].BoundingBox.Size.z);
+                    model.BoundingBox.Size.x,
+                    model.BoundingBox.Size.y,
+                    model.BoundingBox.Size.z);
                 if (MainWindow.main.Visibility == Visibility.Visible)
                     dlg.Owner = MainWindow.main;
                 dlg.ShowDialog();
