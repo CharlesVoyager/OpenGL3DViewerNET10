@@ -409,9 +409,8 @@ namespace View3D.view
         {
             ThreeDModel model = SingleSelectedModel;
             if (model == null) return;
-            double xxx = model.BoundingBox.Size.x * model.BoundingBox.Size.y
-                       * model.BoundingBox.Size.z * 0.001;
-            if (xxx < 0.1)
+
+            if (model.BoundingBox.Size.x < 10 && model.BoundingBox.Size.y < 10 && model.BoundingBox.Size.z < 10)
             {
                 var dlg = new ObjectResizeDialog(
                     models[models.Count - 1].BoundingBox.Size.x,

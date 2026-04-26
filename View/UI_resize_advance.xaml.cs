@@ -15,6 +15,8 @@ namespace View3D.view
 
     public partial class UI_resize_advance : UserControl
     {
+        const double MIN_DIMENSION = 0.001; // Minimum dimension to prevent exception when calculating scale.
+
         public bool gIsShow = false;
         Axis xyzbind = Axis.X;
 
@@ -71,9 +73,9 @@ namespace View3D.view
             try
             {
                 double dimX = Convert.ToDouble(txtX.Text);
-                if (dimX == 0) dimX = 0.001;
+                if (dimX == 0) dimX = MIN_DIMENSION;
 
-                Double tScalex = dimX / Math.Max(stl.Model.boundingBox.Size.x, 0.0000001);
+                Double tScalex = dimX / Math.Max(stl.Model.boundingBox.Size.x, MIN_DIMENSION);
  
                 MainWindow.main.stlComposer.textScaleX.Text = tScalex.ToString("0.000");
                 if (chk_Uniform.IsChecked == true)
@@ -101,9 +103,9 @@ namespace View3D.view
             try
             {
                 double dimY = Convert.ToDouble(txtY.Text);
-                if (dimY == 0) dimY = 0.001;
+                if (dimY == 0) dimY = MIN_DIMENSION;
 
-                Double tScaley = dimY / Math.Max(stl.Model.boundingBox.Size.y, 0.0000001);
+                Double tScaley = dimY / Math.Max(stl.Model.boundingBox.Size.y, MIN_DIMENSION);
                 MainWindow.main.stlComposer.textScaleY.Text = tScaley.ToString("0.000");
                 if (chk_Uniform.IsChecked == true)
                 {
@@ -137,9 +139,9 @@ namespace View3D.view
             try
             { 
                 double dimZ = Convert.ToDouble(txtZ.Text);
-                if (dimZ == 0) dimZ = 0.001;
+                if (dimZ == 0) dimZ = MIN_DIMENSION;
 
-                Double tScalez = dimZ / Math.Max(stl.Model.boundingBox.Size.z, 0.0000001);
+                Double tScalez = dimZ / Math.Max(stl.Model.boundingBox.Size.z, MIN_DIMENSION);
                 MainWindow.main.stlComposer.textScaleZ.Text = tScalez.ToString("0.000");
                 if (chk_Uniform.IsChecked == true)
                 {
@@ -227,9 +229,9 @@ namespace View3D.view
             if (stl == null) return;
 
             // Ensure the value of dimension is not zero; otherwise, exception happens when calculating scale.
-            double dimX = Math.Max(stl.Model.boundingBox.Size.x, 0.0000001);
-            double dimY = Math.Max(stl.Model.boundingBox.Size.y, 0.0000001);
-            double dimZ = Math.Max(stl.Model.boundingBox.Size.z, 0.0000001);
+            double dimX = Math.Max(stl.Model.boundingBox.Size.x, MIN_DIMENSION);
+            double dimY = Math.Max(stl.Model.boundingBox.Size.y, MIN_DIMENSION);
+            double dimZ = Math.Max(stl.Model.boundingBox.Size.z, MIN_DIMENSION);
 
             double txMaxScalableValue = Convert.ToDouble(SettingsService.Instance.Settings.PrintAreaWidth) / dimX;
             double tyMaxScalableValue = Convert.ToDouble(SettingsService.Instance.Settings.PrintAreaDepth) / dimY;
