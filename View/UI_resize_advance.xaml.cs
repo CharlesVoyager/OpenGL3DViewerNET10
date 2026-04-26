@@ -52,14 +52,27 @@ namespace View3D.view
         public void Init()
         {
             if (MainWindow.main == null) return; // At design time MainWindow.main is null. Add null guards to prevent NullReferenceException.
-            ThreeDModel stl = MainWindow.main.stlComposer.SingleSelectedModel;
-            if (stl == null) return;
+            ThreeDModel model = MainWindow.main.stlComposer.SingleSelectedModel;
+            if (model == null) return;
 
             gIsShow = true;
             updateTxt();
             chk_Uniform.IsChecked = true;
             chk_Uniform_Checked(null, null);
             gIsShow = false;
+
+            button_mmtoinch.IsEnabled = true;
+            button_inchtomm.IsEnabled = true;
+
+            // If the model is too big, do not allow model to scale up.
+            if (model.BoundingBox.Size.x > (SettingsService.Instance.Settings.PrintAreaWidth / 2) && 
+                model.BoundingBox.Size.y > (SettingsService.Instance.Settings.PrintAreaDepth / 2) &&
+                model.BoundingBox.Size.y > (SettingsService.Instance.Settings.PrintAreaHeight / 2))
+                button_mmtoinch.IsEnabled = false;
+
+            // If the model is too small, do not allow model to scale down.
+            if (model.BoundingBox.Size.x < 10 && model.BoundingBox.Size.y < 10 && model.BoundingBox.Size.z < 10)
+                button_inchtomm.IsEnabled = false;
         }
 
         private void txtX_TextChanged(object sender, TextChangedEventArgs e)
@@ -261,13 +274,6 @@ namespace View3D.view
             MainWindow.main.stlComposer.textScaleZ.Text = "1";
             txt_Scale.Text = "100";
             chk_Uniform.IsChecked = true;
-
-            gIsShow = true;
-            updateTxt();
-            updateSliderValue(xyzbind);
-            gIsShow = false;
-            checkMin();
-            MainWindow.main.stlComposer.check_stl_size_too_small(stl);
             button_mmtoinch.IsEnabled = true;
             button_inchtomm.IsEnabled = false;
 
@@ -275,6 +281,15 @@ namespace View3D.view
             updateTxt();
             updateSliderValue(xyzbind);
             gIsShow = false;
+            checkMin();
+
+            MainWindow.main.stlComposer.check_stl_size_too_small(stl);
+
+            gIsShow = true;
+            updateTxt();
+            updateSliderValue(xyzbind);
+            gIsShow = false;
+            checkMin();
         }
 
         private void button_mmtoinch_Click(object sender, RoutedEventArgs e)
