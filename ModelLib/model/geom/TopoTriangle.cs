@@ -143,8 +143,7 @@ namespace View3D.model.geom
             RHVector3 zero = new RHVector3(0, 0, 0);
             RHVector3 d1 = Vertices[1].pos.Subtract(Vertices[0].pos);
             RHVector3 d2 = Vertices[2].pos.Subtract(Vertices[1].pos);
-            //double angle = d1.Angle(d2);
-            //if (angle > 0.001 && angle<Math.PI-0.001) 
+
             if (!d1.CrossProduct(d2).Equals(zero))
                 return false;
             else
