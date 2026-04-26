@@ -9,6 +9,8 @@ using OpenGL3DViewerNET10.ModelLib.Utils;
 using OpenGL3DViewerNET10.MeshIOLib;
 using View3D.model.geom;
 
+#nullable disable
+
 namespace View3D.view
 {
     /// <summary>

@@ -22,11 +22,11 @@ namespace View3D.view
     /// </summary>
     public class ThreeDControl : GameWindow
     {
-        BackgroundDraw backgroundDraw = null;
-        PrinterbedDraw printerbedDraw = null;
-        PrinterAreaFrameDraw printerAreaFrameDraw = null;
-        BoundingBoxDraw boundingBoxDraw = null;
-        RedBorderDraw redBorderDraw = null;
+        BackgroundDraw? backgroundDraw = null;
+        PrinterbedDraw? printerbedDraw = null;
+        PrinterAreaFrameDraw? printerAreaFrameDraw = null;
+        BoundingBoxDraw? boundingBoxDraw = null;
+        RedBorderDraw? redBorderDraw = null;
 
         bool loaded = false;
         float xDown, yDown;

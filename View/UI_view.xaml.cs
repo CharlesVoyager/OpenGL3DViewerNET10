@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using OpenGL3DViewerNET10.ModelLib.Utils;
 
+#nullable disable
+
 namespace View3D.view
 {
     /// <summary>
