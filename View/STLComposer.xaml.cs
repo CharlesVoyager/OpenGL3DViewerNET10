@@ -473,9 +473,7 @@ namespace View3D.view
         // =====================================================================
         bool Autoposition(ThreeDModel newModel)
         {
-            List<ThreeDModel> allModels = new List<ThreeDModel>();
-            foreach (var m in models)
-                allModels.Add(m);
+            List<ThreeDModel> allModels = new List<ThreeDModel>(models);
 
             allModels.Add(newModel);
 
