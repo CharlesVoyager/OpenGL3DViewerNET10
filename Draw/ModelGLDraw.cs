@@ -135,7 +135,7 @@ namespace OpenGL3DViewerNET10.Draw
                 vec3 T = normalize(normalMatrix * aTangent.xyz);
                 vec3 N = Normal;
                 T = normalize(T - dot(T, N) * N);          // re-orthogonalize (Gram-Schmidt)
-                vec3 B = cross(N, T) * aTangent.w;          // w = handedness
+                vec3 B = cross(N, T) * aTangent.w;         // w = handedness
                 TBN = mat3(T, B, N);
 
                 gl_Position = projection * view * worldPos;

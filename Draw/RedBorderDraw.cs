@@ -110,7 +110,7 @@ namespace OpenGL3DViewerNET10.Draw
             Matrix4 model = Matrix4.Identity;
             Matrix4 view = MainWindow.main.threeDCamera.GetViewMatrix();
             Matrix4 proj = MainWindow.main.threeDCamera.GetProjMatrix();
-            Matrix4 mvp = model * view * proj;
+            Matrix4 mvp = model * view * proj;  // Note: OpenTK uses column-major order, so the multiplication order is reversed compared to row-major math libraries.
 
             GL.UseProgram(shader);
 
