@@ -237,26 +237,22 @@ namespace View3D.view
             while (loops > 0)
             {
                 loops--;
-                double ratio = 1;
-                Vector3 camPos = CameraPosition;
-                Matrix4 lookAt = Matrix4.LookAt(camPos.X, camPos.Y, camPos.Z, viewCenter.X, viewCenter.Y, viewCenter.Z, 0, 0, 1.0f);
+                Matrix4 lookAt = GetViewMatrix();
                 Matrix4 persp;
                 Vector3 dir = new Vector3();
-                Vector3.Subtract(in viewCenter, in camPos, out dir);
+                Vector3.Subtract(in viewCenter, CameraPosition, out dir);
                 dir.Normalize();
                 float dist;
-                Vector3.Dot(in dir, in camPos, out dist);
+                Vector3.Dot(in dir, CameraPosition, out dist);
                 dist = -dist;
 
                 float nearDist = Math.Max(1, dist - BedRadius);
                 float farDist = Math.Max(BedRadius * 2, dist + BedRadius);
                 float nearHeight = 2.0f * (float)Math.Tan(Angle) * dist;
 
-                persp = Matrix4.CreatePerspectiveFieldOfView(Angle * 1.9f, (float)ratio, nearDist, farDist);
+                persp = Matrix4.CreatePerspectiveFieldOfView(Angle * 1.9f, 1.0f, nearDist, farDist);
 
                 Matrix4 trans = Matrix4.Mult(lookAt, persp);
-                RHVector3 min = new RHVector3(0, 0, 0);
-                RHVector3 max = new RHVector3(0, 0, 0);
                 Vector4 pos;
                 RHBoundingBox bb = new RHBoundingBox();              
                 pos = box.minPoint.asVector4() * trans;
