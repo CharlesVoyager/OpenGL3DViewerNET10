@@ -228,7 +228,9 @@ namespace View3D.view
 
         public void FitBoundingBox(RHBoundingBox box)
         {
-            RHVector3 shift = new RHVector3( -0.5 * SettingsService.Instance.Settings.PrintAreaWidth, -0.5 * SettingsService.Instance.Settings.PrintAreaDepth, -0.5 * SettingsService.Instance.Settings.PrintAreaHeight);
+            RHVector3 shift = new RHVector3(    -0.5 * SettingsService.Instance.Settings.PrintAreaWidth, 
+                                                -0.5 * SettingsService.Instance.Settings.PrintAreaDepth, 
+                                                -0.5 * SettingsService.Instance.Settings.PrintAreaHeight);
             viewCenter = box.Center.asVector3();
             Distance = defaultDistance;
             int loops = 5;
