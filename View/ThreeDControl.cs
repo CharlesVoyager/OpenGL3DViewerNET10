@@ -458,14 +458,14 @@ namespace View3D.view
 
         public void ZoomOutKeyHandling(object sender, EventArgs e)
         {
-            threeDCam.PreparePanZoomRot(); threeDCam.Zoom(1.1);
+            threeDCam.PreparePanZoomRot(); threeDCam.Zoom(1.1f);
             zoom = Math.Max(0.002f, Math.Min(5.9f, zoom));
             Invalidate();
         }
 
         public void ZoomInKeyHandling(object sender, EventArgs e)
         {
-            threeDCam.PreparePanZoomRot(); threeDCam.Zoom(0.9);
+            threeDCam.PreparePanZoomRot(); threeDCam.Zoom(0.9f);
             zoom = Math.Max(0.002f, Math.Min(5.9f, zoom));
             Invalidate();
         }
@@ -508,9 +508,8 @@ namespace View3D.view
         // ── Pick / ray-cast ───────────────────────────────────────────────────
         void UpdatePickLine(int x, int y)
         {          
-            float dist = (float)threeDCam.distance;
-            float nearDist = Math.Max(1, dist - threeDCam.BedRadius);
-            float midHeight = 2.0f * (float)Math.Tan(threeDCam.Angle) * dist;
+            float nearDist = Math.Max(1, threeDCam.Distance - threeDCam.BedRadius);
+            float midHeight = 2.0f * (float)Math.Tan(threeDCam.Angle) * threeDCam.Distance;
             float nearHeight = 2.0f * (float)Math.Tan(threeDCam.Angle) * nearDist;
             float aspectRatio = (float)ClientSize.X / (float)ClientSize.Y;
 

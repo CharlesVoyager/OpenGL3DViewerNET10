@@ -10,14 +10,17 @@ namespace View3D.view
     {
         Vector3 defaultCenter = new Vector3(0, 0, 0);
         Vector3 viewCenterStart = new Vector3();
-        double startTheta, startPhi, startDistance;
 
+        double startTheta, startPhi;
         double theta = 0;
         double phi = 0;
 
-        public Vector3 viewCenter = new Vector3(0, 0, 0);
-        public double originDistance, distance, minDistance = 10, defaultDistance = 200;
+        float startDistance;
+        float originDistance, minDistance = 10, defaultDistance = 200;
 
+        public Vector3 viewCenter = new Vector3(0, 0, 0);
+
+        public float Distance { get; set; } = 0;
         public float Angle { get; set; } = 0;
         public float BedRadius { get; set; } = 0;
         public Vector3 CameraPosition
@@ -25,9 +28,9 @@ namespace View3D.view
             get
             {
                 Vector3 cam = new Vector3();
-                cam.X = viewCenter.X + (float)(distance * Math.Cos(theta) * Math.Sin(phi));
-                cam.Y = viewCenter.Y + (float)(distance * Math.Sin(theta) * Math.Sin(phi));
-                cam.Z = viewCenter.Z + (float)(distance * Math.Cos(phi));
+                cam.X = viewCenter.X + (float)(Distance * Math.Cos(theta) * Math.Sin(phi));
+                cam.Y = viewCenter.Y + (float)(Distance * Math.Sin(theta) * Math.Sin(phi));
+                cam.Z = viewCenter.Z + (float)(Distance * Math.Cos(phi));
                 return cam;
             }
         }
@@ -67,9 +70,9 @@ namespace View3D.view
             phi = Math.PI / 2;
 
             viewCenter = defaultCenter;
-            originDistance = distance;
+            originDistance = Distance;
             FitPrinter();
-            distance = originDistance;
+            Distance = originDistance;
         }
 
         void OrientBack()
@@ -78,9 +81,9 @@ namespace View3D.view
             phi = Math.PI / 2;
 
             viewCenter = defaultCenter;
-            originDistance = distance;
+            originDistance = Distance;
             FitPrinter();
-            distance = originDistance;
+            Distance = originDistance;
         }
 
         void OrientLeft()
@@ -89,9 +92,9 @@ namespace View3D.view
             phi = Math.PI / 2;
 
             viewCenter = defaultCenter;
-            originDistance = distance;
+            originDistance = Distance;
             FitPrinter();
-            distance = originDistance;
+            Distance = originDistance;
         }
 
         void OrientRight()
@@ -100,9 +103,9 @@ namespace View3D.view
             phi = Math.PI / 2;
 
             viewCenter = defaultCenter;
-            originDistance = distance;
+            originDistance = Distance;
             FitPrinter();
-            distance = originDistance;
+            Distance = originDistance;
         }
 
         void OrientTop()
@@ -111,9 +114,9 @@ namespace View3D.view
             phi = 1e-5;
 
             viewCenter = defaultCenter;
-            originDistance = distance;
+            originDistance = Distance;
             FitPrinter();
-            distance = originDistance;
+            Distance = originDistance;
         }
 
         void OrientBottom()
@@ -122,9 +125,9 @@ namespace View3D.view
             phi = Math.PI -1e-5;
 
             viewCenter = defaultCenter;
-            originDistance = distance;
+            originDistance = Distance;
             FitPrinter();
-            distance = originDistance;
+            Distance = originDistance;
         }
 
         void OrientIsometric()
@@ -133,7 +136,7 @@ namespace View3D.view
             phi = Math.PI / 2.5;
 
             viewCenter = defaultCenter;
-            distance = defaultDistance;
+            Distance = defaultDistance;
             FitPrinter();
         }
 
@@ -143,26 +146,26 @@ namespace View3D.view
             phi = Math.PI / 2.5;
 
             viewCenter = defaultCenter;
-            originDistance = distance;
+            originDistance = Distance;
             FitPrinter();
-            distance = originDistance;
+            Distance = originDistance;
         }
 
         public void PreparePanZoomRot()
         {
             viewCenterStart = viewCenter;
-            startDistance = distance;
+            startDistance = Distance;
             startPhi = phi;
             startTheta = theta;
         }
 
-        public void Zoom(double factor)
+        public void Zoom(float factor)
         {
-            distance = startDistance * factor;
-            if (distance < minDistance)
-                distance = minDistance;
-            if (distance > 6 * defaultDistance)
-                distance = 6 * defaultDistance;
+            Distance = startDistance * factor;
+            if (Distance < minDistance)
+                Distance = minDistance;
+            if (Distance > 6 * defaultDistance)
+                Distance = 6 * defaultDistance;
         }
 
         public void Rotate(double side, double updown)
@@ -181,7 +184,7 @@ namespace View3D.view
 
         public void Pan(double leftRight, double upDown, double dist)
         {
-            if (dist < 0) dist = distance;
+            if (dist < 0) dist = Distance;
             leftRight *= Math.Max(1,dist) * Math.Tan(Angle) * 2.0;
             upDown *= -Math.Max(1, dist) * Math.Tan(Angle) * 2.0;
             Vector3 ud = new Vector3(0, 0, 1);
@@ -226,7 +229,7 @@ namespace View3D.view
         {
             RHVector3 shift = new RHVector3( -0.5 * SettingsService.Instance.Settings.PrintAreaWidth, -0.5 * SettingsService.Instance.Settings.PrintAreaDepth, -0.5 * SettingsService.Instance.Settings.PrintAreaHeight);
             viewCenter = box.Center.asVector3();
-            distance = defaultDistance;
+            Distance = defaultDistance;
             int loops = 5;
             while (loops > 0)
             {
@@ -286,8 +289,8 @@ namespace View3D.view
                 double fac = Math.Max(Math.Abs(bb.xMin), Math.Abs(bb.xMax));
                 fac = Math.Max(fac, Math.Abs(bb.yMin));
                 fac = Math.Max(fac, Math.Abs(bb.yMax));
-                distance *= fac * 1.03;
-                if (distance < 1) Angle = (float)Math.Atan(distance * Math.Tan(15.0 * Math.PI / 180.0));
+                Distance *= (float)(fac * 1.03);
+                if (Distance < 1) Angle = (float)Math.Atan(Distance * Math.Tan(15.0 * Math.PI / 180.0));
             }
         }
 
@@ -298,7 +301,7 @@ namespace View3D.view
                 SettingsService.Instance.Settings.PrintAreaDepth * SettingsService.Instance.Settings.PrintAreaDepth +
                 SettingsService.Instance.Settings.PrintAreaWidth * SettingsService.Instance.Settings.PrintAreaWidth +
                 SettingsService.Instance.Settings.PrintAreaHeight * SettingsService.Instance.Settings.PrintAreaHeight);
-            minDistance = 0.001 * defaultDistance;
+            minDistance = 0.001f * defaultDistance;
         }
 
         // ── UI button event handlers ────────────────────────────────────────────────────
@@ -327,7 +330,7 @@ namespace View3D.view
 
         public Matrix4 GetProjMatrix()
         {
-            float dist = (float)distance;
+            float dist = (float)Distance;
             float nearDist = Math.Max(1, dist - BedRadius);
             float farDist = Math.Max(BedRadius * 2, dist + BedRadius);
             Vector2i size = MainWindow.main.threeDControl.Size;
