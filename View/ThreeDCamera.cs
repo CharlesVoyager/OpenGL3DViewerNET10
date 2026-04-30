@@ -13,7 +13,7 @@ namespace View3D.view
         double phi = 0;
 
         float startDistance;
-        float originDistance, minDistance = 10, defaultDistance = 200;
+        float minDistance = 10, defaultDistance = 200;
         
         readonly Vector3 viewCenterDefault = new Vector3(0, 0, 0);
         Vector3 viewCenterStart = new Vector3();
@@ -69,7 +69,7 @@ namespace View3D.view
             phi = Math.PI / 2;
 
             viewCenter = viewCenterDefault;
-            originDistance = Distance;
+            float originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
         }
@@ -80,7 +80,7 @@ namespace View3D.view
             phi = Math.PI / 2;
 
             viewCenter = viewCenterDefault;
-            originDistance = Distance;
+            float originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
         }
@@ -91,7 +91,7 @@ namespace View3D.view
             phi = Math.PI / 2;
 
             viewCenter = viewCenterDefault;
-            originDistance = Distance;
+            float originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
         }
@@ -102,7 +102,7 @@ namespace View3D.view
             phi = Math.PI / 2;
 
             viewCenter = viewCenterDefault;
-            originDistance = Distance;
+            float originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
         }
@@ -113,7 +113,7 @@ namespace View3D.view
             phi = 1e-5;
 
             viewCenter = viewCenterDefault;
-            originDistance = Distance;
+            float originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
         }
@@ -124,7 +124,7 @@ namespace View3D.view
             phi = Math.PI -1e-5;
 
             viewCenter = viewCenterDefault;
-            originDistance = Distance;
+            float originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
         }
@@ -145,7 +145,7 @@ namespace View3D.view
             phi = Math.PI / 2.5;
 
             viewCenter = viewCenterDefault;
-            originDistance = Distance;
+            float originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
         }
