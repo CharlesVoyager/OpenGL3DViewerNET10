@@ -20,17 +20,6 @@ namespace View3D.view
 
         public float Angle { get; set; } = 0;
         public float BedRadius { get; set; } = 0;
-
-        public ThreeDCamera()  
-        {
-            Angle = (float)(15 * Math.PI / 180);
-
-            BedRadius = (float)(0.75 * Math.Sqrt(
-                     SettingsService.Instance.Settings.PrintAreaDepth * SettingsService.Instance.Settings.PrintAreaDepth +
-                     SettingsService.Instance.Settings.PrintAreaHeight * SettingsService.Instance.Settings.PrintAreaHeight +
-                     SettingsService.Instance.Settings.PrintAreaWidth * SettingsService.Instance.Settings.PrintAreaWidth));
-        }
-
         public Vector3 CameraPosition
         {
             get
@@ -41,6 +30,16 @@ namespace View3D.view
                 cam.Z = viewCenter.Z + (float)(distance * Math.Cos(phi));
                 return cam;
             }
+        }
+
+        public ThreeDCamera()  
+        {
+            Angle = (float)(15 * Math.PI / 180);
+
+            BedRadius = (float)(0.75 * Math.Sqrt(
+                     SettingsService.Instance.Settings.PrintAreaDepth * SettingsService.Instance.Settings.PrintAreaDepth +
+                     SettingsService.Instance.Settings.PrintAreaHeight * SettingsService.Instance.Settings.PrintAreaHeight +
+                     SettingsService.Instance.Settings.PrintAreaWidth * SettingsService.Instance.Settings.PrintAreaWidth));
         }
 
         public Vector3 EdgeTranslation()
