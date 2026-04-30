@@ -9,20 +9,21 @@ namespace View3D.view
     public class ThreeDCamera
     {
         Vector3 defaultCenter = new Vector3(0, 0, 0);
+        Vector3 viewCenterStart = new Vector3();
+        double startTheta, startPhi, startDistance;
 
         public Vector3 viewCenter = new Vector3(0, 0, 0);
         public double originDistance, distance, minDistance = 10, defaultDistance = 200;
         public double theta = 0;
         public double phi = 0;
-        public double angle = 15 * Math.PI / 180;
 
-        Vector3 viewCenterStart = new Vector3();
-        double startTheta, startPhi, startDistance;
-
+        public float Angle { get; set; } = 0;
         public float BedRadius { get; set; } = 0;
 
         public ThreeDCamera()  
         {
+            Angle = (float)(15 * Math.PI / 180);
+
             BedRadius = (float)(0.75 * Math.Sqrt(
                      SettingsService.Instance.Settings.PrintAreaDepth * SettingsService.Instance.Settings.PrintAreaDepth +
                      SettingsService.Instance.Settings.PrintAreaHeight * SettingsService.Instance.Settings.PrintAreaHeight +
@@ -181,8 +182,8 @@ namespace View3D.view
         public void Pan(double leftRight, double upDown, double dist)
         {
             if (dist < 0) dist = distance;
-            leftRight *= Math.Max(1,dist) * Math.Tan(angle)*2.0;
-            upDown *= -Math.Max(1, dist) * Math.Tan(angle) * 2.0;
+            leftRight *= Math.Max(1,dist) * Math.Tan(Angle) * 2.0;
+            upDown *= -Math.Max(1, dist) * Math.Tan(Angle) * 2.0;
             Vector3 ud = new Vector3(0, 0, 1);
             Vector3 camCenter = new Vector3();
             Vector3 cp = CameraPosition;
@@ -243,9 +244,9 @@ namespace View3D.view
 
                 float nearDist = Math.Max(1, dist - BedRadius);
                 float farDist = Math.Max(BedRadius * 2, dist + BedRadius);
-                float nearHeight = 2.0f * (float)Math.Tan(angle) * dist;
+                float nearHeight = 2.0f * (float)Math.Tan(Angle) * dist;
 
-                persp = Matrix4.CreatePerspectiveFieldOfView((float)(angle * 1.9), (float)ratio, nearDist, farDist);
+                persp = Matrix4.CreatePerspectiveFieldOfView(Angle * 1.9f, (float)ratio, nearDist, farDist);
 
                 Matrix4 trans = Matrix4.Mult(lookAt, persp);
                 RHVector3 min = new RHVector3(0, 0, 0);
@@ -286,7 +287,7 @@ namespace View3D.view
                 fac = Math.Max(fac, Math.Abs(bb.yMin));
                 fac = Math.Max(fac, Math.Abs(bb.yMax));
                 distance *= fac * 1.03;
-                if (distance < 1) angle = Math.Atan(distance * Math.Tan(15.0 * Math.PI / 180.0));
+                if (distance < 1) Angle = (float)Math.Atan(distance * Math.Tan(15.0 * Math.PI / 180.0));
             }
         }
 
@@ -331,7 +332,7 @@ namespace View3D.view
             float farDist = Math.Max(BedRadius * 2, dist + BedRadius);
             Vector2i size = MainWindow.main.threeDControl.Size;
             Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(
-                            (float)angle * 2.0f,
+                            Angle * 2.0f,
                             size.X / (float)size.Y,
                             nearDist,
                             farDist);

@@ -510,8 +510,8 @@ namespace View3D.view
         {          
             float dist = (float)threeDCam.distance;
             float nearDist = Math.Max(1, dist - threeDCam.BedRadius);
-            float midHeight = 2.0f * (float)Math.Tan(threeDCam.angle) * dist;
-            float nearHeight = 2.0f * (float)Math.Tan(threeDCam.angle) * nearDist;
+            float midHeight = 2.0f * (float)Math.Tan(threeDCam.Angle) * dist;
+            float nearHeight = 2.0f * (float)Math.Tan(threeDCam.Angle) * nearDist;
             float aspectRatio = (float)ClientSize.X / (float)ClientSize.Y;
 
             int window_y = (ClientSize.Y - y) - ClientSize.Y / 2;            // CHANGED: Width/Height → ClientSize.X / ClientSize.Y
