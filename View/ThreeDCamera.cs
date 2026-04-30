@@ -203,8 +203,10 @@ namespace View3D.view
         public void FitPrinter()
         {
             RHBoundingBox b = new RHBoundingBox();
-            b.Add(0, 0, -0.0 * SettingsService.Instance.Settings.PrintAreaHeight);
-            b.Add(0 + SettingsService.Instance.Settings.PrintAreaWidth, 0 + SettingsService.Instance.Settings.PrintAreaDepth, 1.0 * SettingsService.Instance.Settings.PrintAreaHeight);
+            b.Add(0, 0, 0);
+            b.Add(  SettingsService.Instance.Settings.PrintAreaWidth, 
+                    SettingsService.Instance.Settings.PrintAreaDepth, 
+                    SettingsService.Instance.Settings.PrintAreaHeight);
 
             FitBoundingBox(b);
         }
