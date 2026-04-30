@@ -8,15 +8,15 @@ namespace View3D.view
 {
     public class ThreeDCamera
     {
-        Vector3 defaultCenter = new Vector3(0, 0, 0);
-        Vector3 viewCenterStart = new Vector3();
-
         double startTheta, startPhi;
         double theta = 0;
         double phi = 0;
 
         float startDistance;
         float originDistance, minDistance = 10, defaultDistance = 200;
+        
+        readonly Vector3 viewCenterDefault = new Vector3(0, 0, 0);
+        Vector3 viewCenterStart = new Vector3();
         Vector3 viewCenter = new Vector3(0, 0, 0);
 
         public float Distance { get; set; } = 0;
@@ -68,7 +68,7 @@ namespace View3D.view
             theta = Math.PI / 2;
             phi = Math.PI / 2;
 
-            viewCenter = defaultCenter;
+            viewCenter = viewCenterDefault;
             originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
@@ -79,7 +79,7 @@ namespace View3D.view
             theta = -Math.PI / 2;
             phi = Math.PI / 2;
 
-            viewCenter = defaultCenter;
+            viewCenter = viewCenterDefault;
             originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
@@ -90,7 +90,7 @@ namespace View3D.view
             theta = 0;
             phi = Math.PI / 2;
 
-            viewCenter = defaultCenter;
+            viewCenter = viewCenterDefault;
             originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
@@ -101,7 +101,7 @@ namespace View3D.view
             theta = Math.PI;
             phi = Math.PI / 2;
 
-            viewCenter = defaultCenter;
+            viewCenter = viewCenterDefault;
             originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
@@ -112,7 +112,7 @@ namespace View3D.view
             theta = -Math.PI / 2;
             phi = 1e-5;
 
-            viewCenter = defaultCenter;
+            viewCenter = viewCenterDefault;
             originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
@@ -123,7 +123,7 @@ namespace View3D.view
             theta = -Math.PI / 2;
             phi = Math.PI -1e-5;
 
-            viewCenter = defaultCenter;
+            viewCenter = viewCenterDefault;
             originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
@@ -134,7 +134,7 @@ namespace View3D.view
             theta = -Math.PI * 1.25;
             phi = Math.PI / 2.5;
 
-            viewCenter = defaultCenter;
+            viewCenter = viewCenterDefault;
             Distance = defaultDistance;
             FitPrinter();
         }
@@ -144,7 +144,7 @@ namespace View3D.view
             theta = -Math.PI * 1.25;
             phi = Math.PI / 2.5;
 
-            viewCenter = defaultCenter;
+            viewCenter = viewCenterDefault;
             originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
@@ -295,7 +295,7 @@ namespace View3D.view
 
         void SetCameraDefaults()
         {
-            viewCenter = defaultCenter;
+            viewCenter = viewCenterDefault;
             defaultDistance = 1.6f * (float)Math.Sqrt(
                 SettingsService.Instance.Settings.PrintAreaDepth * SettingsService.Instance.Settings.PrintAreaDepth +
                 SettingsService.Instance.Settings.PrintAreaWidth * SettingsService.Instance.Settings.PrintAreaWidth +
