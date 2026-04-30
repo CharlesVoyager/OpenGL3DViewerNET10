@@ -18,8 +18,7 @@ namespace View3D.view
         float startDistance;
         float originDistance, minDistance = 10, defaultDistance = 200;
 
-        public Vector3 viewCenter = new Vector3(0, 0, 0);
-
+        public Vector3 ViewCenter = new Vector3(0, 0, 0);
         public float Distance { get; set; } = 0;
         public float Angle { get; set; } = 0;
         public float BedRadius { get; set; } = 0;
@@ -28,9 +27,9 @@ namespace View3D.view
             get
             {
                 Vector3 cam = new Vector3();
-                cam.X = viewCenter.X + (float)(Distance * Math.Cos(theta) * Math.Sin(phi));
-                cam.Y = viewCenter.Y + (float)(Distance * Math.Sin(theta) * Math.Sin(phi));
-                cam.Z = viewCenter.Z + (float)(Distance * Math.Cos(phi));
+                cam.X = ViewCenter.X + (float)(Distance * Math.Cos(theta) * Math.Sin(phi));
+                cam.Y = ViewCenter.Y + (float)(Distance * Math.Sin(theta) * Math.Sin(phi));
+                cam.Z = ViewCenter.Z + (float)(Distance * Math.Cos(phi));
                 return cam;
             }
         }
@@ -69,7 +68,7 @@ namespace View3D.view
             theta = Math.PI / 2;
             phi = Math.PI / 2;
 
-            viewCenter = defaultCenter;
+            ViewCenter = defaultCenter;
             originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
@@ -80,7 +79,7 @@ namespace View3D.view
             theta = -Math.PI / 2;
             phi = Math.PI / 2;
 
-            viewCenter = defaultCenter;
+            ViewCenter = defaultCenter;
             originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
@@ -91,7 +90,7 @@ namespace View3D.view
             theta = 0;
             phi = Math.PI / 2;
 
-            viewCenter = defaultCenter;
+            ViewCenter = defaultCenter;
             originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
@@ -102,7 +101,7 @@ namespace View3D.view
             theta = Math.PI;
             phi = Math.PI / 2;
 
-            viewCenter = defaultCenter;
+            ViewCenter = defaultCenter;
             originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
@@ -113,7 +112,7 @@ namespace View3D.view
             theta = -Math.PI / 2;
             phi = 1e-5;
 
-            viewCenter = defaultCenter;
+            ViewCenter = defaultCenter;
             originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
@@ -124,7 +123,7 @@ namespace View3D.view
             theta = -Math.PI / 2;
             phi = Math.PI -1e-5;
 
-            viewCenter = defaultCenter;
+            ViewCenter = defaultCenter;
             originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
@@ -135,7 +134,7 @@ namespace View3D.view
             theta = -Math.PI * 1.25;
             phi = Math.PI / 2.5;
 
-            viewCenter = defaultCenter;
+            ViewCenter = defaultCenter;
             Distance = defaultDistance;
             FitPrinter();
         }
@@ -145,7 +144,7 @@ namespace View3D.view
             theta = -Math.PI * 1.25;
             phi = Math.PI / 2.5;
 
-            viewCenter = defaultCenter;
+            ViewCenter = defaultCenter;
             originDistance = Distance;
             FitPrinter();
             Distance = originDistance;
@@ -153,7 +152,7 @@ namespace View3D.view
 
         public void PreparePanZoomRot()
         {
-            viewCenterStart = viewCenter;
+            viewCenterStart = ViewCenter;
             startDistance = Distance;
             startPhi = phi;
             startTheta = theta;
@@ -190,15 +189,15 @@ namespace View3D.view
             Vector3 ud = new Vector3(0, 0, 1);
             Vector3 camCenter = new Vector3();
             Vector3 cp = CameraPosition;
-            Vector3.Subtract(in viewCenter, in cp, out camCenter);
+            Vector3.Subtract(in ViewCenter, in cp, out camCenter);
             Vector3 lr = new Vector3();
             Vector3.Cross(in camCenter, in ud, out lr);
             Vector3.Cross(in lr, in camCenter, out ud);
             lr.Normalize();
             ud.Normalize();
-            viewCenter.X = (float)(viewCenterStart.X + leftRight * lr.X + upDown * ud.X);
-            viewCenter.Y = (float)(viewCenterStart.Y + leftRight * lr.Y + upDown * ud.Y);
-            viewCenter.Z = (float)(viewCenterStart.Z + leftRight * lr.Z + upDown * ud.Z);
+            ViewCenter.X = (float)(viewCenterStart.X + leftRight * lr.X + upDown * ud.X);
+            ViewCenter.Y = (float)(viewCenterStart.Y + leftRight * lr.Y + upDown * ud.Y);
+            ViewCenter.Z = (float)(viewCenterStart.Z + leftRight * lr.Z + upDown * ud.Z);
         }
 
         public void FitPrinter()
@@ -228,7 +227,7 @@ namespace View3D.view
         public void FitBoundingBox(RHBoundingBox box)
         {
             RHVector3 shift = new RHVector3( -0.5 * SettingsService.Instance.Settings.PrintAreaWidth, -0.5 * SettingsService.Instance.Settings.PrintAreaDepth, -0.5 * SettingsService.Instance.Settings.PrintAreaHeight);
-            viewCenter = box.Center.asVector3();
+            ViewCenter = box.Center.asVector3();
             Distance = defaultDistance;
             int loops = 5;
             while (loops > 0)
@@ -236,10 +235,10 @@ namespace View3D.view
                 loops--;
                 double ratio = 1;
                 Vector3 camPos = CameraPosition;
-                Matrix4 lookAt = Matrix4.LookAt(camPos.X, camPos.Y, camPos.Z, viewCenter.X, viewCenter.Y, viewCenter.Z, 0, 0, 1.0f);
+                Matrix4 lookAt = Matrix4.LookAt(camPos.X, camPos.Y, camPos.Z, ViewCenter.X, ViewCenter.Y, ViewCenter.Z, 0, 0, 1.0f);
                 Matrix4 persp;
                 Vector3 dir = new Vector3();
-                Vector3.Subtract(in viewCenter, in camPos, out dir);
+                Vector3.Subtract(in ViewCenter, in camPos, out dir);
                 dir.Normalize();
                 float dist;
                 Vector3.Dot(in dir, in camPos, out dist);
@@ -296,7 +295,7 @@ namespace View3D.view
 
         void SetCameraDefaults()
         {
-            viewCenter = defaultCenter;
+            ViewCenter = defaultCenter;
             defaultDistance = 1.6f * (float)Math.Sqrt(
                 SettingsService.Instance.Settings.PrintAreaDepth * SettingsService.Instance.Settings.PrintAreaDepth +
                 SettingsService.Instance.Settings.PrintAreaWidth * SettingsService.Instance.Settings.PrintAreaWidth +
@@ -317,7 +316,7 @@ namespace View3D.view
 
         public Matrix4 GetViewMatrix()
         {
-            Matrix4 view = Matrix4.LookAt(CameraPosition, viewCenter, Vector3.UnitZ);
+            Matrix4 view = Matrix4.LookAt(CameraPosition, ViewCenter, Vector3.UnitZ);
 
 #if false // Fixed camera position for testing
               view = Matrix4.LookAt(

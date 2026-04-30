@@ -521,9 +521,9 @@ namespace View3D.view
             float fpx = (float)(nearHeight * 0.5 * aspectRatio * norm_x);
 
             Vector4 dirN = new Vector4(fpx, fpy, -nearDist, 0);
-            Vector3 camPos = threeDCam.CameraPosition;
-            Matrix4 ntrans = Matrix4.LookAt(camPos.X, camPos.Y, camPos.Z,
-                threeDCam.viewCenter.X, threeDCam.viewCenter.Y, threeDCam.viewCenter.Z, 0, 0, 1.0f);
+            Matrix4 ntrans = Matrix4.LookAt(threeDCam.CameraPosition.X, threeDCam.CameraPosition.Y, threeDCam.CameraPosition.Z,
+                                            threeDCam.ViewCenter.X,     threeDCam.ViewCenter.Y,     threeDCam.ViewCenter.Z, 
+                                            0, 0, 1.0f);
             ntrans = Matrix4.Invert(ntrans);
             Vector4 frontPoint = ntrans.Row3;
             Vector4 dirVec = dirN * ntrans;
