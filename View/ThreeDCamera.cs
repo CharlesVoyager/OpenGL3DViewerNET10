@@ -19,7 +19,15 @@ namespace View3D.view
         Vector3 viewCenterStart = new Vector3();
         double startTheta, startPhi, startDistance;
 
-        public ThreeDCamera() { }
+        public float BedRadius { get; set; } = 0;
+
+        public ThreeDCamera()  
+        {
+            BedRadius = (float)(0.75 * Math.Sqrt(
+                     SettingsService.Instance.Settings.PrintAreaDepth * SettingsService.Instance.Settings.PrintAreaDepth +
+                     SettingsService.Instance.Settings.PrintAreaHeight * SettingsService.Instance.Settings.PrintAreaHeight +
+                     SettingsService.Instance.Settings.PrintAreaWidth * SettingsService.Instance.Settings.PrintAreaWidth));
+        }
 
         public Vector3 CameraPosition
         {
@@ -215,7 +223,6 @@ namespace View3D.view
 
         public void FitBoundingBox(RHBoundingBox box)
         {
-            float bedRadius = (float)(1.5 * Math.Sqrt((SettingsService.Instance.Settings.PrintAreaDepth * SettingsService.Instance.Settings.PrintAreaDepth + SettingsService.Instance.Settings.PrintAreaHeight * SettingsService.Instance.Settings.PrintAreaHeight + SettingsService.Instance.Settings.PrintAreaWidth * SettingsService.Instance.Settings.PrintAreaWidth) * 0.25));
             RHVector3 shift = new RHVector3( -0.5 * SettingsService.Instance.Settings.PrintAreaWidth, -0.5 * SettingsService.Instance.Settings.PrintAreaDepth, -0.5 * SettingsService.Instance.Settings.PrintAreaHeight);
             viewCenter = box.Center.asVector3();
             distance = defaultDistance;
@@ -234,8 +241,8 @@ namespace View3D.view
                 Vector3.Dot(in dir, in camPos, out dist);
                 dist = -dist;
 
-                float nearDist = Math.Max(1, dist - bedRadius);
-                float farDist = Math.Max(bedRadius * 2, dist + bedRadius);
+                float nearDist = Math.Max(1, dist - BedRadius);
+                float farDist = Math.Max(BedRadius * 2, dist + BedRadius);
                 float nearHeight = 2.0f * (float)Math.Tan(angle) * dist;
 
                 persp = Matrix4.CreatePerspectiveFieldOfView((float)(angle * 1.9), (float)ratio, nearDist, farDist);
@@ -319,14 +326,9 @@ namespace View3D.view
 
         public Matrix4 GetProjMatrix()
         {
-            float bedRadius = (float)(1.5 * Math.Sqrt(
-                          (SettingsService.Instance.Settings.PrintAreaDepth * SettingsService.Instance.Settings.PrintAreaDepth +
-                           SettingsService.Instance.Settings.PrintAreaHeight * SettingsService.Instance.Settings.PrintAreaHeight +
-                           SettingsService.Instance.Settings.PrintAreaWidth * SettingsService.Instance.Settings.PrintAreaWidth) * 0.25));
-
             float dist = (float)distance;
-            float nearDist = Math.Max(1, dist - bedRadius);
-            float farDist = Math.Max(bedRadius * 2, dist + bedRadius);
+            float nearDist = Math.Max(1, dist - BedRadius);
+            float farDist = Math.Max(BedRadius * 2, dist + BedRadius);
             Vector2i size = MainWindow.main.threeDControl.Size;
             Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(
                             (float)angle * 2.0f,

@@ -507,14 +507,9 @@ namespace View3D.view
 
         // ── Pick / ray-cast ───────────────────────────────────────────────────
         void UpdatePickLine(int x, int y)
-        {
-            float bedRadius = (float)(1.5 * Math.Sqrt(
-                 (SettingsService.Instance.Settings.PrintAreaDepth * SettingsService.Instance.Settings.PrintAreaDepth +
-                  SettingsService.Instance.Settings.PrintAreaHeight * SettingsService.Instance.Settings.PrintAreaHeight +
-                  SettingsService.Instance.Settings.PrintAreaWidth * SettingsService.Instance.Settings.PrintAreaWidth) * 0.25));
-            
+        {          
             float dist = (float)threeDCam.distance;
-            float nearDist = Math.Max(1, dist - bedRadius);
+            float nearDist = Math.Max(1, dist - threeDCam.BedRadius);
             float midHeight = 2.0f * (float)Math.Tan(threeDCam.angle) * dist;
             float nearHeight = 2.0f * (float)Math.Tan(threeDCam.angle) * nearDist;
             float aspectRatio = (float)ClientSize.X / (float)ClientSize.Y;
