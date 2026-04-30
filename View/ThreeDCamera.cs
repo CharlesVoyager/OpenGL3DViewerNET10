@@ -255,36 +255,37 @@ namespace View3D.view
                 Matrix4 trans = Matrix4.Mult(lookAt, persp);
                 Vector4 pos;
                 RHBoundingBox bb = new RHBoundingBox();              
+           
                 pos = box.minPoint.asVector4() * trans;
-
                 bb.Add(new RHVector3(pos));
-                pos = box.minPoint.asVector4() * trans;
 
+                pos = box.maxPoint.asVector4() * trans;
                 bb.Add(new RHVector3(pos));
+            
                 Vector4 pnt = new Vector4((float)box.xMin, (float)box.yMax, (float)box.zMin, 1);
                 pos = pnt * trans;
-
                 bb.Add(new RHVector3(pos));
+          
                 pnt = new Vector4((float)box.xMin, (float)box.yMax, (float)box.zMin, 1);
                 pos = pnt * trans;
-
                 bb.Add(new RHVector3(pos));
+          
                 pnt = new Vector4((float)box.xMax, (float)box.yMax, (float)box.zMin, 1);
                 pos = pnt * trans;
-
                 bb.Add(new RHVector3(pos));
+             
                 pnt = new Vector4((float)box.xMin, (float)box.yMax, (float)box.zMax, 1);
                 pos = pnt * trans;
-
                 bb.Add(new RHVector3(pos));
+             
                 pnt = new Vector4((float)box.xMin, (float)box.yMin, (float)box.zMax, 1);
                 pos = pnt * trans;
-
                 bb.Add(new RHVector3(pos));
+             
                 pnt = new Vector4((float)box.xMax, (float)box.yMin, (float)box.zMax, 1);
                 pos = pnt * trans;
-
                 bb.Add(new RHVector3(pos));
+
                 double fac = Math.Max(Math.Abs(bb.xMin), Math.Abs(bb.xMax));
                 fac = Math.Max(fac, Math.Abs(bb.yMin));
                 fac = Math.Max(fac, Math.Abs(bb.yMax));
