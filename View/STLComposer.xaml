@@ -216,12 +216,12 @@
                                    Grid.Row="5" Grid.Column="1"
                                    Text="0" VerticalAlignment="Center"/>
 
-                        <!-- Row 6 – Shells -->
+                        <!-- Row 6 – Debug Info -->
                         <TextBlock Grid.Row="6" Grid.Column="0"
-                                   Text="Shells:" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="labelShells"
-                                   Grid.Row="6" Grid.Column="1"
-                                   Text="0" VerticalAlignment="Center"/>
+                                   Text="Debug Info:" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="txtDebugInfo"
+                                   Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="80,0,0,0"
+                                   Text="" VerticalAlignment="Center"/>
                     </Grid>
                 </GroupBox>
             </Border>
