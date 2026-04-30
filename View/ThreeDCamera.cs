@@ -12,10 +12,11 @@ namespace View3D.view
         Vector3 viewCenterStart = new Vector3();
         double startTheta, startPhi, startDistance;
 
+        double theta = 0;
+        double phi = 0;
+
         public Vector3 viewCenter = new Vector3(0, 0, 0);
         public double originDistance, distance, minDistance = 10, defaultDistance = 200;
-        public double theta = 0;
-        public double phi = 0;
 
         public float Angle { get; set; } = 0;
         public float BedRadius { get; set; } = 0;
