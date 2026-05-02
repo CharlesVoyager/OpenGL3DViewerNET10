@@ -12,10 +12,8 @@ namespace View3D.view
         double theta = 0;
         double phi = 0;
 
-        float startDistance;
-        float minDistance = 10, defaultDistance = 200;
-        
-        readonly Vector3 viewCenterDefault = new Vector3(0, 0, 0);
+        float minDistance, maxDistance;
+      
         Vector3 viewCenterStart = new Vector3();
         Vector3 viewCenter = new Vector3(0, 0, 0);
 
@@ -36,12 +34,22 @@ namespace View3D.view
 
         public ThreeDCamera()  
         {
+            SetCameraDefaults();
+        }
+
+        void SetCameraDefaults()
+        {
             Angle = (float)(15 * Math.PI / 180);
 
             BedRadius = (float)(0.75 * Math.Sqrt(
                      SettingsService.Instance.Settings.PrintAreaDepth * SettingsService.Instance.Settings.PrintAreaDepth +
                      SettingsService.Instance.Settings.PrintAreaHeight * SettingsService.Instance.Settings.PrintAreaHeight +
                      SettingsService.Instance.Settings.PrintAreaWidth * SettingsService.Instance.Settings.PrintAreaWidth));
+
+            FitPrinter();   // To set proper 'viewCenter' and 'Distance' to show the whole printer.
+
+            minDistance = 0.001f * Distance;
+            maxDistance = 6f * Distance;
         }
 
         public Vector3 EdgeTranslation()
@@ -63,108 +71,22 @@ namespace View3D.view
             return direction;
         }
 
-        void OrientFront()
-        {
-            theta = Math.PI / 2;
-            phi = Math.PI / 2;
-
-            viewCenter = viewCenterDefault;
-            float originDistance = Distance;
-            FitPrinter();
-            Distance = originDistance;
-        }
-
-        void OrientBack()
-        {
-            theta = -Math.PI / 2;
-            phi = Math.PI / 2;
-
-            viewCenter = viewCenterDefault;
-            float originDistance = Distance;
-            FitPrinter();
-            Distance = originDistance;
-        }
-
-        void OrientLeft()
-        {
-            theta = 0;
-            phi = Math.PI / 2;
-
-            viewCenter = viewCenterDefault;
-            float originDistance = Distance;
-            FitPrinter();
-            Distance = originDistance;
-        }
-
-        void OrientRight()
-        {
-            theta = Math.PI;
-            phi = Math.PI / 2;
-
-            viewCenter = viewCenterDefault;
-            float originDistance = Distance;
-            FitPrinter();
-            Distance = originDistance;
-        }
-
-        void OrientTop()
-        {
-            theta = -Math.PI / 2;
-            phi = 1e-5;
-
-            viewCenter = viewCenterDefault;
-            float originDistance = Distance;
-            FitPrinter();
-            Distance = originDistance;
-        }
-
-        void OrientBottom()
-        {
-            theta = -Math.PI / 2;
-            phi = Math.PI -1e-5;
-
-            viewCenter = viewCenterDefault;
-            float originDistance = Distance;
-            FitPrinter();
-            Distance = originDistance;
-        }
-
-        void OrientIsometric()
-        {
-            theta = -Math.PI * 1.25;
-            phi = Math.PI / 2.5;
-
-            viewCenter = viewCenterDefault;
-            Distance = defaultDistance;
-            FitPrinter();
-        }
-
-        void OrientIsometric2()
-        {
-            theta = -Math.PI * 1.25;
-            phi = Math.PI / 2.5;
-
-            viewCenter = viewCenterDefault;
-            float originDistance = Distance;
-            FitPrinter();
-            Distance = originDistance;
-        }
-
         public void PreparePanZoomRot()
         {
             viewCenterStart = viewCenter;
-            startDistance = Distance;
             startPhi = phi;
             startTheta = theta;
         }
 
         public void Zoom(float factor)
         {
-            Distance = startDistance * factor;
+            Distance = Distance * factor;
+
             if (Distance < minDistance)
                 Distance = minDistance;
-            if (Distance > 6 * defaultDistance)
-                Distance = 6 * defaultDistance;
+
+            if (Distance > maxDistance)
+                Distance = maxDistance;
         }
 
         public void Rotate(double side, double updown)
@@ -200,7 +122,7 @@ namespace View3D.view
             viewCenter.Z = (float)(viewCenterStart.Z + leftRight * lr.Z + upDown * ud.Z);
         }
 
-        public void FitPrinter()
+        void FitPrinter()
         {
             RHBoundingBox b = new RHBoundingBox();
             b.Add(0, 0, 0);
@@ -211,7 +133,7 @@ namespace View3D.view
             FitBoundingBox(b);
         }
 
-        public void FitObjects()
+        void FitObjects()
         {
             RHBoundingBox b = new RHBoundingBox();
 
@@ -226,10 +148,16 @@ namespace View3D.view
                 FitBoundingBox(b);
         }
 
-        public void FitBoundingBox(RHBoundingBox box)
+        // Set viewCenter and Distance to fit the given bounding box in the view. 
+        void FitBoundingBox(RHBoundingBox box)
         {
             viewCenter = box.Center.asVector3();
-            Distance = defaultDistance;
+
+            Distance = 1.6f * (float)Math.Sqrt(
+                SettingsService.Instance.Settings.PrintAreaDepth * SettingsService.Instance.Settings.PrintAreaDepth +
+                SettingsService.Instance.Settings.PrintAreaWidth * SettingsService.Instance.Settings.PrintAreaWidth +
+                SettingsService.Instance.Settings.PrintAreaHeight * SettingsService.Instance.Settings.PrintAreaHeight);
+
             for (int i = 0; i < 5; i++)
             {
                 Matrix4 lookAt = GetViewMatrix();
@@ -278,24 +206,74 @@ namespace View3D.view
             }
         }
 
-        void SetCameraDefaults()
+        // ── UI button event handlers ────────────────────────────────────────────────────
+        public void OnFrontView() 
         {
-            viewCenter = viewCenterDefault;
-            defaultDistance = 1.6f * (float)Math.Sqrt(
-                SettingsService.Instance.Settings.PrintAreaDepth * SettingsService.Instance.Settings.PrintAreaDepth +
-                SettingsService.Instance.Settings.PrintAreaWidth * SettingsService.Instance.Settings.PrintAreaWidth +
-                SettingsService.Instance.Settings.PrintAreaHeight * SettingsService.Instance.Settings.PrintAreaHeight);
-            minDistance = 0.001f * defaultDistance;
+            theta = Math.PI / 2;
+            phi = Math.PI / 2;
+            float originDistance = Distance;
+            SetCameraDefaults();
+            Distance = originDistance;
+            MainWindow.main.threeDControl.UpdateChanges(); 
         }
 
-        // ── UI button event handlers ────────────────────────────────────────────────────
-        public void OnFrontView() { SetCameraDefaults(); OrientFront(); MainWindow.main.threeDControl.UpdateChanges(); }
-        public void OnBackView() { SetCameraDefaults(); OrientBack(); MainWindow.main.threeDControl.UpdateChanges(); }
-        public void OnLeftView() { SetCameraDefaults(); OrientLeft(); MainWindow.main.threeDControl.UpdateChanges(); }
-        public void OnRightView() { SetCameraDefaults(); OrientRight(); MainWindow.main.threeDControl.UpdateChanges(); }
-        public void OnTopView() { SetCameraDefaults(); OrientTop(); MainWindow.main.threeDControl.UpdateChanges(); }
-        public void OnBottomView() { SetCameraDefaults(); OrientBottom(); MainWindow.main.threeDControl.UpdateChanges(); }
-        public void OnIsometricView() { SetCameraDefaults(); OrientIsometric(); MainWindow.main.threeDControl.UpdateChanges(); }
+        public void OnBackView() 
+        {
+            theta = -Math.PI / 2;
+            phi = Math.PI / 2;
+            float originDistance = Distance;
+            SetCameraDefaults();
+            Distance = originDistance;
+            MainWindow.main.threeDControl.UpdateChanges(); 
+        }
+
+        public void OnLeftView() 
+        {
+            theta = 0;
+            phi = Math.PI / 2;
+            float originDistance = Distance;
+            SetCameraDefaults();
+            Distance = originDistance;
+            MainWindow.main.threeDControl.UpdateChanges(); 
+        }
+
+        public void OnRightView() 
+        {
+            theta = Math.PI;
+            phi = Math.PI / 2;
+            float originDistance = Distance;
+            SetCameraDefaults();
+            Distance = originDistance;
+            MainWindow.main.threeDControl.UpdateChanges(); 
+        }
+        public void OnTopView() 
+        {
+            theta = -Math.PI / 2;
+            phi = 1e-5;
+            float originDistance = Distance;
+            SetCameraDefaults();
+            Distance = originDistance;
+            MainWindow.main.threeDControl.UpdateChanges(); 
+        }
+
+        public void OnBottomView() 
+        {
+            theta = -Math.PI / 2;
+            phi = Math.PI - 1e-5;
+
+            float originDistance = Distance;
+            SetCameraDefaults();
+            Distance = originDistance;
+            MainWindow.main.threeDControl.UpdateChanges(); 
+        }
+        public void OnIsometricView() 
+        {
+            theta = -Math.PI * 1.25;
+            phi = Math.PI / 2.5;
+
+            SetCameraDefaults();
+            MainWindow.main.threeDControl.UpdateChanges();
+        }
         // <>
 
 
