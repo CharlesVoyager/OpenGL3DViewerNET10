@@ -55,6 +55,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Include="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\bad16.png" />
     <Resource Include="Resources\bar1.png" />
     <Resource Include="Resources\bar2.png" />
